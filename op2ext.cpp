@@ -11,25 +11,6 @@
 
 EXPORT int StubExt = 0;
 
-// NATFIX
-const void *natFixLoc1 = (void*)0x004972C3;
-const unsigned char natFixBytes1[] = {0xE8, 0xF5, 0x78, 0x03, 0x00,	// CALL 004CEBBD
-	0x90,															// NOP
-	0x90															// NOP
-};
-
-const void *natFixLoc2 = (void*)0x004CEBBD;
-const unsigned char natFixBytes2[] = {0xC7, 0x43, 0x16, 0x03, 0x00, 0x00, 0x00,	// MOV DWORD [EBX+16], 3
-	0x8B, 0x44, 0x24, 0x18,														// MOV EAX, [ESP+18]
-	0x8B, 0x48, 0x04,															// MOV ECX, [EAX+4]
-	0x89, 0x8D, 0x64, 0x82, 0x00, 0x00,											// MOV [EBP+8264], ECX
-	0xC3																		// RET
-};
-
-//int extIP;
-//char newCall[] = {0xE8, 0x36, 0x7D, 0x03, 0x00};
-//char newMov[] = {0xC7, 0x47, 0x16};
-//char postIP[] = {0xE9, 0x86, 0x22, 0xFF, 0xFF};
 
 // Language table addresses
 // Game
@@ -55,7 +36,6 @@ BOOL WINAPI DllMain(HMODULE hMod, DWORD dwReason, LPVOID reserved)
 	// This will be called once the program is unpacked and running
 	if (dwReason == DLL_PROCESS_ATTACH)
 	{
-		//InstallNatFix();
 		InstallIpDropDown();
 
 		// Apply mod
@@ -97,38 +77,6 @@ BOOL WINAPI DllMain(HMODULE hMod, DWORD dwReason, LPVOID reserved)
 		UnApplyMod();
 	}
 	return TRUE;
-}
-
-void InstallNatFix() {
-	// Install NAT fix into Outpost2.exe memory
-	// Unprotect the memory
-	//DWORD oldAttr;
-	//VirtualProtect((LPVOID)natFixLoc1, 7, PAGE_EXECUTE_READWRITE, &oldAttr);
-	//VirtualProtect((LPVOID)natFixLoc2, 21, PAGE_EXECUTE_READWRITE, &oldAttr);	
-	// Patch the memory
-	//memcpy((void*)natFixLoc2, natFixBytes1, 7);
-	//memcpy((void*)natFixLoc2, natFixBytes2, 21);
-
-/*	// Check for NAT fix (NETWORK\ExternalIP != 0)
-	extIP = GetPrivateProfileInt("NETWORK", "ExternalIP", 0, ".\\outpost2.ini");
-
-	if (extIP)
-	{
-		// Apply the fix
-		DWORD oldAttr;
-		// Unprotect the memory
-		VirtualProtect((LPVOID)0x496E85, sizeof(newCall), PAGE_EXECUTE_READWRITE, &oldAttr);
-		VirtualProtect((LPVOID)0x4CEBC0, sizeof(newMov), PAGE_EXECUTE_READWRITE, &oldAttr);
-		VirtualProtect((LPVOID)0x4CEBC3, sizeof(extIP), PAGE_EXECUTE_READWRITE, &oldAttr);
-		VirtualProtect((LPVOID)0x4CEBC7, sizeof(postIP), PAGE_EXECUTE_READWRITE, &oldAttr);
-		
-		// Patch it
-		CopyMemory((void*)0x496E85, newCall, sizeof(newCall)); // new call
-		CopyMemory((void*)0x4CEBC0, newMov, sizeof(newMov)); // new mov
-		CopyMemory((void*)0x4CEBC3, &extIP, sizeof(extIP)); // new ip
-		CopyMemory((void*)0x4CEBC7, postIP, sizeof(postIP)); // post ip data
-	}
-	*/
 }
 
 void LocalizeStrings()
