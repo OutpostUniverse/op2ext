@@ -26,8 +26,6 @@ int afterLoc = 0x4CEBC7;
 
 extern VolList vols;
 
-void InstallNatFix();
-
 // NLS for OP2
 void LocalizeStrings();
 void ConvLangStr(char *instr, char *outstr);
