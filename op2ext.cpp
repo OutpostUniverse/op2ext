@@ -12,6 +12,9 @@
 EXPORT int StubExt = 0;
 
 
+void LoadIniMods();
+
+
 // Language table addresses
 // Game
 char **langTbl1 = (char**)0x004E88F8;
@@ -38,7 +41,10 @@ BOOL WINAPI DllMain(HMODULE hMod, DWORD dwReason, LPVOID reserved)
 	{
 		InstallIpDropDown();
 
-		// Apply mod
+		// Load all active modules from the .ini file
+		LoadIniMods();
+
+		// Load command line modules
 		char *modDir = GetCurrentModDir();
 		if (modDir != NULL)
 			ApplyMod(modDir);
