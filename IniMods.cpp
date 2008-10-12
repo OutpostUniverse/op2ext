@@ -4,7 +4,7 @@
 
 
 // Export (not absolutely required, but should be used if any additional parameters are read from the .ini file)
-typedef void (__stdcall *InitModFunc)(char* iniSectionName);
+typedef void (*InitModFunc)(char* iniSectionName);
 
 
 // Load all active modules specified in the .ini file
