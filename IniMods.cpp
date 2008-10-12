@@ -14,18 +14,18 @@ void LoadIniMods()
 	char dllName[MAX_PATH];
 	char modList[1024];
 	char errorMsg[1024];
-	char* mod;
+	char* sectionName;
 	InitModFunc initModFunc;
 
 	// Get list of mods to load
 	GetPrivateProfileString("Game", "LoadAddons", "", modList, sizeof(modList), ".\\Outpost2.ini");
 
 	// Process the string for each mod
-	mod = strtok(modList, " ,");
-	while (mod != 0)
+	sectionName = strtok(modList, " ,");
+	while (sectionName != 0)
 	{
 		// Get the DLL name from the corresponding section
-		GetPrivateProfileString(mod, "Dll", "", dllName, sizeof(dllName), ".\\Outpost2.ini");
+		GetPrivateProfileString(sectionName, "Dll", "", dllName, sizeof(dllName), ".\\Outpost2.ini");
 		// Try to load a DLL with the given name (possibly "")
 		hLib = LoadLibrary(dllName);
 		// Check if DLL loaded successfully
@@ -36,17 +36,17 @@ void LoadIniMods()
 			// Call the InitMod function if it exists
 			if (initModFunc != 0)
 			{
-				initModFunc(dllName);
+				initModFunc(sectionName);
 			}
 		}
 		else
 		{
 			// Error trying to load the DLL
-			_snprintf(errorMsg, sizeof(errorMsg), "Error trying to load mod [%s]: Dll = \"%s\"", mod, dllName);
+			_snprintf(errorMsg, sizeof(errorMsg), "Error trying to load mod [%s]: Dll = \"%s\"", sectionName, dllName);
 			MessageBox(0, errorMsg, "Module Load Error", 0);
 		}
 
 		// Get the next token
-		mod = strtok(0, " ,");
+		sectionName = strtok(0, " ,");
 	}
 }
