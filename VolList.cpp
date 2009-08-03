@@ -5,6 +5,12 @@
 #include "VolList.h"
 #include "op2ext.h"
 
+
+// Static buffer, to avoid dynamic memory allocation before heap is initialized
+const int VolSearchBufferSize = 32;
+VolSearchEntry buffer[VolSearchBufferSize];
+
+
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -13,32 +19,30 @@ VolList::VolList()
 {
 	// initialize variables
 	numItems = 0;
-	itemList = 0;
+	itemList = buffer;
 }
 
 VolList::~VolList()
 {
-	// uninitialize everything (except the last two entries)
-	for (unsigned int i = 0; i < numItems-2; i++)
-		free(itemList[i].pFileName);
-
-	// delete the list itself
-	free(itemList);
 }
+
 
 void VolList::AddItem(char *volToAdd)
 {
+	// Abort if too many items are added
+	if (numItems > VolSearchBufferSize-2)
+	{
+		MessageBox(0, "Too many .vol files loaded. Ignoring.", "Addon Vol file error", 0);
+		return;		// Abort
+	}
 	// Add a VOL to the list
 	numItems++;
 	
-	// Resize the array
-	itemList = (struct VolSearchEntry *)realloc(itemList, numItems * sizeof(struct VolSearchEntry));
-
 	// Initialize the element
 	itemList[numItems-1].unknown1 = 0;
 	itemList[numItems-1].flags = 1;
 	itemList[numItems-1].unknown2 = 0;
-	itemList[numItems-1].pFileName = strdup(volToAdd);
+	itemList[numItems-1].pFileName = volToAdd;
 
 	DBG("VolList::AddItem(\"");
 	DBG(volToAdd);
@@ -49,7 +53,6 @@ void VolList::EndList()
 {
 	// End the list
 	numItems += 2;
-	itemList = (struct VolSearchEntry *)realloc(itemList, numItems * sizeof(struct VolSearchEntry));
 
 	// allocate memory for the string
 	itemList[numItems-2].pFileName = (char*)0;
@@ -60,9 +63,6 @@ void VolList::EndList()
 	itemList[numItems-1].unknown1 = 0;
 	itemList[numItems-1].flags = 1;
 	itemList[numItems-1].unknown2 = 0;
-
-	//vol3 = itemList[numVols]->unknown1;
-	//vol4 = itemList[numVols+1];
 }
 
 void VolList::Install()

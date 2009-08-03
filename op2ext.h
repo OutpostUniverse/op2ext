@@ -2,20 +2,23 @@
 #ifndef OP2EXT_H_INCL
 #define OP2EXT_H_INCL
 
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-
 #include "VolList.h"
+
 
 // general stuff
 #define EXPORT extern "C" __declspec(dllexport) // qualifiers
+
 
 #ifdef DEBUG
 #define DBG(s) OutputDebugString(s)
 #else
 #define DBG(s)
 #endif
+
 
 /*
 int callLoc = 0x496E85;
@@ -40,5 +43,6 @@ EXPORT void SetSerialNumber(char num1, char num2, char num3);
 
 // Prototype for patch to LoadLibrary, where it loads OP2Shell.dll
 HINSTANCE __stdcall LoadLibraryNew(LPCTSTR lpLibFileName);
+
 
 #endif

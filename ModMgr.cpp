@@ -2,12 +2,12 @@
 #include "ModMgr.h"
 #include "op2ext.h"
 
+
 char newOut2resPath[MAX_PATH+1];
 char newOp2shresPath[MAX_PATH+1];
-
+char cmdLine[MAX_PATH+1];
 HMODULE modDllHandle = NULL;
 
-char cmdLine[MAX_PATH+1];
 
 EXPORT char* GetCurrentModDir()
 {
@@ -79,9 +79,6 @@ void ApplyMod(char *modDir)
 	// Set that magic DEBUG\ART_PATH value in the .ini
 	WritePrivateProfileString("DEBUG", "ART_PATH", modDir, ".\\outpost2.ini");
 
-	// Set default serial number of 0.0.0.1
-	SetSerialNumber(0, 0, 1);
-
 	// Load the mod dll
 	modDllHandle = LoadLibrary(strcat(modDir, "\\op2mod.dll"));
 
@@ -91,7 +88,6 @@ void ApplyMod(char *modDir)
 		FARPROC startFunc = GetProcAddress(modDllHandle, "mod_init");
 		if (startFunc)
 			startFunc();
-
 	}
 }
 

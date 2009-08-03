@@ -1,7 +1,7 @@
+#include <winsock.h>		// inet_addr, gethostbyname
 #include "IpDropDown.h"
 #include "op2ext.h"
 
-#include <winsock.h> // for inet_addr, gethostbyname
 
 char ipStrings[10][47];
 int numIpStrings = 0;
@@ -13,6 +13,7 @@ DWORD *saveIpTextAddr = (DWORD*)0x004C0E36;
 DWORD newInetAddr = (DWORD)inet_addrNew;
 
 void *nopDataAddr = (void*)0x0041988F;
+
 
 BOOL __stdcall EnableWindowNew(HWND hWnd, BOOL bEnable)
 {
@@ -33,6 +34,7 @@ BOOL __stdcall EnableWindowNew(HWND hWnd, BOOL bEnable)
 	}
 	return result;
 }
+
 
 unsigned long __stdcall inet_addrNew(const char *cp)
 {
@@ -78,6 +80,7 @@ unsigned long __stdcall inet_addrNew(const char *cp)
 
 	return result;
 }
+
 
 void InstallIpDropDown()
 {
