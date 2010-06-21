@@ -58,7 +58,7 @@ LINK32=link.exe
 # SUBTRACT LINK32 /nodefaultlib
 # Begin Special Build Tool
 SOURCE="$(InputPath)"
-PostBuild_Cmds=copy  Release\op2ext.dll  \Sierra\Outpost2\ 
+PostBuild_Cmds=copy   Release\op2ext.dll   \Sierra\Outpost2\ 
 # End Special Build Tool
 
 !ELSEIF  "$(CFG)" == "op2ext - Win32 Debug"
@@ -108,10 +108,6 @@ SOURCE=.\IniMods.cpp
 # Begin Source File
 
 SOURCE=.\IpDropDown.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\LangMod.cpp
 # End Source File
 # Begin Source File
 

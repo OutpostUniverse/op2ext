@@ -20,17 +20,10 @@
 #endif
 
 
-/*
-int callLoc = 0x496E85;
-int movLoc = 0x4CEBC0;
-int ipLoc = 0x4CEBC3;
-int afterLoc = 0x4CEBC7;
-*/
-
 extern VolList vols;
 
 // NLS for OP2
-void LocalizeStrings();
+//void LocalizeStrings();
 void ConvLangStr(char *instr, char *outstr);
 
 EXPORT void GetGameDir(char *buffer);
@@ -43,6 +36,12 @@ EXPORT void SetSerialNumber(char num1, char num2, char num3);
 
 // Prototype for patch to LoadLibrary, where it loads OP2Shell.dll
 HINSTANCE __stdcall LoadLibraryNew(LPCTSTR lpLibFileName);
+
+
+bool Op2MemCopy(void* destBaseAddr, void* sourceAddr, int size);
+bool Op2MemSet(void* destBaseAddr, unsigned char value, int size);
+bool Op2MemSetDword(void* destBaseAddr, int dword);
+bool Op2MemSetDword(void* destBaseAddr, void* dword);
 
 
 #endif

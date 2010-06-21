@@ -6,14 +6,6 @@
 char ipStrings[10][47];
 int numIpStrings = 0;
 
-DWORD *populateComboBoxAddr = (DWORD*)0x004197C1;
-DWORD newEnableWindowAddr = (DWORD)EnableWindowNew;
-
-DWORD *saveIpTextAddr = (DWORD*)0x004C0E36;
-DWORD newInetAddr = (DWORD)inet_addrNew;
-
-void *nopDataAddr = (void*)0x0041988F;
-
 
 BOOL __stdcall EnableWindowNew(HWND hWnd, BOOL bEnable)
 {
@@ -82,18 +74,18 @@ unsigned long __stdcall inet_addrNew(const char *cp)
 }
 
 
+
+// Data constants for following function
+DWORD newEnableWindowAddr = (DWORD)EnableWindowNew;
+DWORD newInetAddr = (DWORD)inet_addrNew;
+DWORD *populateComboBoxAddr = (DWORD*)0x004197C1;
+DWORD *saveIpTextAddr = (DWORD*)0x004C0E36;
+void *nopDataAddr = (void*)0x0041988F;
+
 void InstallIpDropDown()
 {
 	// patch the call to EnableWindow so we can add strings.
-	DWORD oldAttr;
-	if (VirtualProtect((LPVOID)populateComboBoxAddr, 4, PAGE_EXECUTE_READWRITE, &oldAttr))
-		*populateComboBoxAddr = (DWORD)&newEnableWindowAddr;
-
-	// patch the call to inet_addr so we can save strings.
-	if (VirtualProtect((LPVOID)saveIpTextAddr, 4, PAGE_EXECUTE_READWRITE, &oldAttr))
-		*saveIpTextAddr = (DWORD)&newInetAddr;
-
-	// fill the gethostbyname crap that comes afterwards with NOP's, since we call it for OP2.
-	if (VirtualProtect((LPVOID)nopDataAddr, 14, PAGE_EXECUTE_READWRITE, &oldAttr))
-		memset(nopDataAddr, 0x90, 14);
+	Op2MemSetDword(populateComboBoxAddr, (int)&newEnableWindowAddr);
+	Op2MemSetDword(saveIpTextAddr, (int)&newInetAddr);
+	Op2MemSet(nopDataAddr, 0x90, 14);
 }

@@ -14,7 +14,6 @@ struct VolSearchEntry {
 	int unknown2;
 };
 
-#define VOLMAGIC ((char *)0x004E3910) // game checks for this at end of list
 
 class VolList  
 {

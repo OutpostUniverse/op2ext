@@ -12,14 +12,14 @@ EXPORT int StubExt = 0;
 
 
 void LoadIniMods();
-void LocalizeStrings();
 
 // Shell HMODULE to load it before OP2 does
 //HMODULE hShellDll = NULL;
-DWORD *dataAddr = (DWORD*)0x00486E0A;
-DWORD procAddr = (DWORD)LoadLibraryNew;
+DWORD *loadLibraryDataAddr = (DWORD*)0x00486E0A;
+DWORD loadLibraryNewAddr = (DWORD)LoadLibraryNew;
 
-char *verAddr = (char*)0x004E973C;
+const int ExpectedOutpost2Addr = 0x00400000;
+int loadOffset = 0;
 
 static VolList vols;
 
@@ -31,6 +31,15 @@ BOOL WINAPI DllMain(HMODULE hMod, DWORD dwReason, LPVOID reserved)
 	// This will be called once the program is unpacked and running
 	if (dwReason == DLL_PROCESS_ATTACH)
 	{
+		// Adjust offsets in case Outpost2.exe module is relocated
+		void* op2ModuleBase = GetModuleHandle("Outpost2.exe");
+		if (op2ModuleBase == 0)
+		{
+			DoError("op2ext.cpp", __LINE__, "Could not find Outpost2.exe module base address.");
+		}
+		loadOffset = (int)op2ModuleBase - ExpectedOutpost2Addr;
+
+
 		InstallIpDropDown();
 
 		// Load all active modules from the .ini file
@@ -60,11 +69,8 @@ BOOL WINAPI DllMain(HMODULE hMod, DWORD dwReason, LPVOID reserved)
 		// Install the list into OP2
 		vols.Install();
 
-		// Patch the code where OP2 loads the library
-		DWORD oldAttr;
-		// Unprotect the memory
-		if (VirtualProtect((LPVOID)dataAddr, 4, PAGE_EXECUTE_READWRITE, &oldAttr))
-			*dataAddr = (DWORD)&procAddr;
+		// Replace call to LoadLibrary with custom routine (address is indirect)
+		Op2MemSetDword(loadLibraryDataAddr, (int)&loadLibraryNewAddr);
 
 		// Disable any more thread attach calls
 		DisableThreadLibraryCalls(hMod);
@@ -141,20 +147,17 @@ EXPORT void AddVolToList(char *volName)
 	}
 }
 
+
+char *verStrAddr = (char*)0x004E973C;
 EXPORT void SetSerialNumber(char num1, char num2, char num3)
 {
 	if (modStarting || num1 < 0 || num1 > 9 || num2 < 0 || num2 > 9 || num3 < 0 || num3 > 9)
 		DoError("op2ext.cpp", __LINE__, "SetSerialNumber failed. Invalid mod serial number or was called after game startup.");
 	else
 	{
-		DWORD oldAttr;
-		if (VirtualProtect((LPVOID)verAddr, 8, PAGE_EXECUTE_READWRITE, &oldAttr))
-		{
-			verAddr[0] = 48;
-			verAddr[2] = num1 + 48;
-			verAddr[4] = num2 + 48;
-			verAddr[6] = num3 + 48;
-		}
+		char buffer[8];
+		_snprintf(buffer, sizeof(buffer), "%i.%i.%i.%i", 0, num1, num2, num3);
+		Op2MemCopy(verStrAddr, buffer, sizeof(buffer));
 	}
 }
 
@@ -165,7 +168,7 @@ HINSTANCE __stdcall LoadLibraryNew(LPCTSTR lpLibFileName)
 
 	if (result) // if good, then setup the language data and call the mod
 	{
-		LocalizeStrings();
+		//LocalizeStrings();
 		modStarting = true;
 		ModStartup();
 	}
@@ -173,3 +176,65 @@ HINSTANCE __stdcall LoadLibraryNew(LPCTSTR lpLibFileName)
 	return result;
 }
 
+
+
+bool Op2MemCopy(void* destBaseAddr, void* sourceAddr, int size)
+{
+	DWORD oldAttr;
+	DWORD ignoredAttr;
+	BOOL bSuccess;
+	void* destAddr = (void*)(loadOffset + (int)destBaseAddr);
+
+	// Try to unprotect the memory
+	bSuccess = VirtualProtect(destAddr, size, PAGE_EXECUTE_READWRITE, &oldAttr);
+	if (!bSuccess){
+		char buffer[64];
+		_snprintf(buffer, sizeof(buffer), "Op2MemCopy: Error unprotecting memory at: %x", destAddr);
+		DoError("op2ext.cpp", __LINE__, buffer);
+		return false;	// Abort if failed
+	}
+
+	// Do the memory copy
+	memcpy(destAddr, sourceAddr, size);
+	
+	// Reprotect the memory with the original attributes
+	bSuccess = VirtualProtect(destAddr, size, oldAttr, &ignoredAttr);
+
+	return (bSuccess != 0);
+}
+
+bool Op2MemSetDword(void* destBaseAddr, int dword)
+{
+	// Just chain to the memory copy function
+	return Op2MemCopy(destBaseAddr, &dword, sizeof(dword));
+}
+
+bool Op2MemSetDword(void* destBaseAddr, void* dword)
+{
+	return Op2MemSetDword(destBaseAddr, (int)dword);
+}
+
+bool Op2MemSet(void* destBaseAddr, unsigned char value, int size)
+{
+	DWORD oldAttr;
+	DWORD ignoredAttr;
+	BOOL bSuccess;
+	void* destAddr = (void*)(loadOffset + (int)destBaseAddr);
+
+	// Try to unprotect the memory
+	bSuccess = VirtualProtect(destAddr, size, PAGE_EXECUTE_READWRITE, &oldAttr);
+	if (!bSuccess){
+		char buffer[64];
+		_snprintf(buffer, sizeof(buffer), "Op2MemSet: Error unprotecting memory at: %x", destAddr);
+		DoError("op2ext.cpp", __LINE__, buffer);
+		return false;	// Abort if failed
+	}
+	
+	// Do the memory copy
+	memset(destAddr, value, size);
+	
+	// Reprotect the memory with the original attributes
+	bSuccess = VirtualProtect(destAddr, size, oldAttr, &ignoredAttr);
+
+	return (bSuccess != 0);
+}
