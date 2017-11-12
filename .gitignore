@@ -1,0 +1,8 @@
+*.suo
+*.db
+*.opendb
+Debug
+*.user
+x64
+.vs
+Release
