@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2006
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "op2ext", "op2ext.vcxproj", "{6DE3610C-C9EE-4FD3-BBD7-66382C16FDE9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6DE3610C-C9EE-4FD3-BBD7-66382C16FDE9}.Debug|x86.ActiveCfg = Debug|Win32
+		{6DE3610C-C9EE-4FD3-BBD7-66382C16FDE9}.Debug|x86.Build.0 = Debug|Win32
+		{6DE3610C-C9EE-4FD3-BBD7-66382C16FDE9}.Release|x86.ActiveCfg = Release|Win32
+		{6DE3610C-C9EE-4FD3-BBD7-66382C16FDE9}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F42F7E47-E2ED-4FA2-94D7-BFE283D691D6}
+	EndGlobalSection
+EndGlobal
