@@ -1,12 +1,11 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
-
 #include "op2ext.h"
 #include "VolList.h"
 #include "ModMgr.h"
 #include "IpDropDown.h"
-
+#include <string>
 
 EXPORT int StubExt = 0;
 
@@ -51,18 +50,24 @@ BOOL WINAPI DllMain(HMODULE hMod, DWORD dwReason, LPVOID reserved)
 			ApplyMod(modDir);
 
 		// Add the default set of VOLs
-		vols.AddItem("maps04.vol");
-		vols.AddItem("maps03.vol");
-		vols.AddItem("maps02.vol");
-		vols.AddItem("maps01.vol");
-		vols.AddItem("maps.vol");
-		vols.AddItem("sheets.vol");
-		vols.AddItem("sound.vol");
-		vols.AddItem("voices.vol");
-		vols.AddItem("story.vol");
+		char gameDirectory[MAX_PATH + 1];
+		GetGameDir(gameDirectory);
+		std::string gameDirectoryStr(gameDirectory);
 
-		// Add any VOLs found in the \Addon folder in the OP2 dir
-		DetectAddonVols();
+		//vols.AddItem("maps04.vol");
+		//vols.AddItem("maps03.vol");
+		//vols.AddItem("maps02.vol");
+		//vols.AddItem("maps01.vol");
+		//vols.AddItem("maps.vol");
+		//vols.AddItem("sheets.vol");
+		//vols.AddItem("sound.vol");
+		//vols.AddItem("voices.vol");
+		//vols.AddItem("story.vol");
+		//LoadVolFiles("./");
+		LoadVolFiles(gameDirectoryStr);
+
+		// Load vol files found in the /Addon folder into the OP2 directory
+		//LoadVolFiles(gameDirectoryStr + "/Addon/");
 
 		vols.EndList();
 
@@ -79,14 +84,8 @@ BOOL WINAPI DllMain(HMODULE hMod, DWORD dwReason, LPVOID reserved)
 	{
 		// remove any loaded mod
 		UnApplyMod();
-}
+	}
 	return TRUE;
-}
-
-template <size_t size>
-void GetGameDir(char(&buffer)[size])
-{
-	GetGameDir(buffer, size);
 }
 
 EXPORT void GetGameDir(char* buffer, size_t size)
@@ -107,36 +106,28 @@ EXPORT void GetGameDir(char* buffer, size_t size)
 //	exit(1);
 //}
 
-void DetectAddonVols()
+void LoadVolFiles(std::string directory)
 {
 	// Get the game folder
-	char addonDir[MAX_PATH+1];
-	GetGameDir(addonDir);
-	strcat_s(addonDir, "Addon\\*.vol");
+	//strcat_s(addonDir, (directory + "*.vol").c_str());
 
 	WIN32_FIND_DATA fndData;
 	HANDLE hFind = INVALID_HANDLE_VALUE;
 
 	// Begin searching for files
-	hFind = FindFirstFile(addonDir, &fndData);
+	hFind = FindFirstFile((directory + "*.vol").c_str(), &fndData);
 	
 	// If error, or no files found, leave
 	if (hFind == INVALID_HANDLE_VALUE)
 		return;
-
-	// Add the first VOL found
-	char volName[MAX_PATH+1];
-	sprintf_s(volName, "Addon\\%s", fndData.cFileName);
-	vols.AddItem(volName);
 	
-	// Add any others
-	while (FindNextFile(hFind, &fndData))
+	// Add all vol files found in directory
+	do
 	{
-		sprintf_s(volName, "Addon\\%s", fndData.cFileName);
-		vols.AddItem(volName);
-	}
+		std::string volFilename(directory + fndData.cFileName);
+		vols.AddItem(volFilename.c_str());
+	} while (FindNextFile(hFind, &fndData));
 
-	// Finish up
 	FindClose(hFind);
 }
 
@@ -187,8 +178,6 @@ HINSTANCE __stdcall LoadLibraryNew(LPCTSTR lpLibFileName)
 
 	return result;
 }
-
-
 
 bool Op2MemCopy(void* destBaseAddr, void* sourceAddr, int size)
 {

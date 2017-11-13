@@ -8,7 +8,7 @@
 
 // VOL entry
 struct VolSearchEntry {
-	char *pFileName;
+	const char *pFileName;
 	int unknown1;
 	int flags;
 	int unknown2;
@@ -21,7 +21,7 @@ public:
 	VolList();
 	virtual ~VolList();
 
-	void AddItem(char *volToAdd);
+	void AddItem(const char *volToAdd);
 	void EndList();
 	void Install();
 

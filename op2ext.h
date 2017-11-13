@@ -2,12 +2,11 @@
 #ifndef OP2EXT_H_INCL
 #define OP2EXT_H_INCL
 
-
+#include "VolList.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "VolList.h"
-
+#include <string>
 
 // general stuff
 #define EXPORT extern "C" __declspec(dllexport) // qualifiers
@@ -27,10 +26,14 @@ extern VolList vols;
 void ConvLangStr(char *instr, char *outstr);
 
 template <size_t size>
-void GetGameDir(char(&buffer)[size]);
+void GetGameDir(char(&buffer)[size])
+{
+	GetGameDir(buffer, size);
+}
+
 EXPORT void GetGameDir(char *buffer, size_t size);
 //EXPORT void GetGameDir(char* buffer);	// Deprecated, will MessageBox error and exit
-void DetectAddonVols();
+void LoadVolFiles(std::string directory);
 
 void DoError(char *file, long line, char *text);
 

@@ -27,7 +27,7 @@ VolList::~VolList()
 }
 
 
-void VolList::AddItem(char *volToAdd)
+void VolList::AddItem(const char *volToAdd)
 {
 	// Abort if too many items are added
 	if (numItems > VolSearchBufferSize-2)
