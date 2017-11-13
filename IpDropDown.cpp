@@ -15,9 +15,10 @@ BOOL __stdcall EnableWindowNew(HWND hWnd, BOOL bEnable)
 	// populate the list with strings
 	char tmpStr[4];
 	numIpStrings = 0;
-	for (int i=0; i<10; i++)
+	for (int i = 0; i < 10; i++)
 	{
-		GetPrivateProfileString("IPHistory", itoa(i, tmpStr, 10), NULL, ipStrings[i], MAX_PATH, ".\\outpost2.ini");
+		_itoa_s(i, tmpStr, 10);
+		GetPrivateProfileString("IPHistory", tmpStr, NULL, ipStrings[i], MAX_PATH, ".\\outpost2.ini");
 		if (strlen(ipStrings[i]) > 0)
 		{
 			SendMessage(hWnd, CB_ADDSTRING, 0, (LPARAM)ipStrings[i]);
@@ -50,7 +51,7 @@ unsigned long __stdcall inet_addrNew(const char *cp)
 		
 		// found duplicate, push all the other items up on top of it
 		for (int j=i; j<numIpStrings-1; j++)
-			strcpy(ipStrings[j], ipStrings[j+1]);
+			strcpy_s(ipStrings[j], ipStrings[j+1]);
 		if (numIpStrings > 0)
 			numIpStrings--;
 	}
@@ -59,16 +60,18 @@ unsigned long __stdcall inet_addrNew(const char *cp)
 		numIpStrings++;
 
 	// Next, push everything else down
-	for (i=numIpStrings-1; i>0; i--)
-		strcpy(ipStrings[i], ipStrings[i-1]);
+	for (int i = numIpStrings - 1; i > 0; i--)
+		strcpy_s(ipStrings[i], ipStrings[i-1]);
 	
 	// Copy it in
-	strcpy(ipStrings[0], cp);
+	strcpy_s(ipStrings[0], cp);
 	// Now write all the strings out
 	WritePrivateProfileString("IPHistory", NULL, NULL, ".\\outpost2.ini");
 	char tmpStr[4];
-	for (i=0; i<numIpStrings; i++)
-		WritePrivateProfileString("IPHistory", itoa(i, tmpStr, 10), ipStrings[i], ".\\outpost2.ini");
+	for (int i = 0; i < numIpStrings; i++) {
+		_itoa_s(i, tmpStr, 10);
+		WritePrivateProfileString("IPHistory", tmpStr, ipStrings[i], ".\\outpost2.ini");
+	}
 
 	return result;
 }

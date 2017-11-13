@@ -83,7 +83,13 @@ BOOL WINAPI DllMain(HMODULE hMod, DWORD dwReason, LPVOID reserved)
 	return TRUE;
 }
 
-EXPORT void GetGameDir(char *buffer)
+template <size_t size>
+void GetGameDir(char(&buffer)[size])
+{
+	GetGameDir(buffer, size);
+}
+
+EXPORT void GetGameDir(char* buffer, size_t size)
 {
 	// Get the game dir
 	char modFileName[MAX_PATH+1];
@@ -91,16 +97,22 @@ EXPORT void GetGameDir(char *buffer)
 
 	char drive[_MAX_DRIVE];
 	char dir[_MAX_DIR];
-	_splitpath(modFileName, drive, dir, NULL, NULL);
-	sprintf(buffer, "%s%s", drive, dir);
+	_splitpath_s(modFileName, drive, _MAX_DRIVE, dir, _MAX_DIR, NULL, 0, NULL, 0);
+	sprintf_s(buffer, size, "%s%s", drive, dir);
 }
+
+//EXPORT void GetGameDir(char* buffer)
+//{
+//	MessageBox(NULL, "Deprecated use of GetGameDir", "OP2Ext Error", MB_ICONERROR | MB_OK);
+//	exit(1);
+//}
 
 void DetectAddonVols()
 {
 	// Get the game folder
 	char addonDir[MAX_PATH+1];
 	GetGameDir(addonDir);
-	strcat(addonDir, "Addon\\*.vol");
+	strcat_s(addonDir, "Addon\\*.vol");
 
 	WIN32_FIND_DATA fndData;
 	HANDLE hFind = INVALID_HANDLE_VALUE;
@@ -114,13 +126,13 @@ void DetectAddonVols()
 
 	// Add the first VOL found
 	char volName[MAX_PATH+1];
-	sprintf(volName, "Addon\\%s", fndData.cFileName);
+	sprintf_s(volName, "Addon\\%s", fndData.cFileName);
 	vols.AddItem(volName);
 	
 	// Add any others
 	while (FindNextFile(hFind, &fndData))
 	{
-		sprintf(volName, "Addon\\%s", fndData.cFileName);
+		sprintf_s(volName, "Addon\\%s", fndData.cFileName);
 		vols.AddItem(volName);
 	}
 
@@ -131,7 +143,7 @@ void DetectAddonVols()
 void DoError(char *file, long line, char *text)
 {
 	char errMsg[512];
-	sprintf(errMsg, "%s:%d:%s", file, line, text);
+	sprintf_s(errMsg, "%s:%d:%s", file, line, text);
 	MessageBoxA(NULL, errMsg, "Outpost 2 Error", MB_ICONERROR);
 }
 
@@ -156,7 +168,7 @@ EXPORT void SetSerialNumber(char num1, char num2, char num3)
 	else
 	{
 		char buffer[8];
-		_snprintf(buffer, sizeof(buffer), "%i.%i.%i.%i", 0, num1, num2, num3);
+		_snprintf_s(buffer, sizeof(buffer), "%i.%i.%i.%i", 0, num1, num2, num3);
 		Op2MemCopy(verStrAddr, buffer, sizeof(buffer));
 	}
 }
@@ -189,7 +201,7 @@ bool Op2MemCopy(void* destBaseAddr, void* sourceAddr, int size)
 	bSuccess = VirtualProtect(destAddr, size, PAGE_EXECUTE_READWRITE, &oldAttr);
 	if (!bSuccess){
 		char buffer[64];
-		_snprintf(buffer, sizeof(buffer), "Op2MemCopy: Error unprotecting memory at: %x", destAddr);
+		_snprintf_s(buffer, sizeof(buffer), "Op2MemCopy: Error unprotecting memory at: %x", reinterpret_cast<unsigned int>(destAddr));
 		DoError("op2ext.cpp", __LINE__, buffer);
 		return false;	// Abort if failed
 	}
@@ -225,7 +237,7 @@ bool Op2MemSet(void* destBaseAddr, unsigned char value, int size)
 	bSuccess = VirtualProtect(destAddr, size, PAGE_EXECUTE_READWRITE, &oldAttr);
 	if (!bSuccess){
 		char buffer[64];
-		_snprintf(buffer, sizeof(buffer), "Op2MemSet: Error unprotecting memory at: %x", destAddr);
+		_snprintf_s(buffer, sizeof(buffer), "Op2MemSet: Error unprotecting memory at: %x", reinterpret_cast<unsigned int>(destAddr));
 		DoError("op2ext.cpp", __LINE__, buffer);
 		return false;	// Abort if failed
 	}

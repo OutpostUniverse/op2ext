@@ -2,7 +2,6 @@
 #include "ModMgr.h"
 #include "op2ext.h"
 
-
 char newOut2resPath[MAX_PATH+1];
 char newOp2shresPath[MAX_PATH+1];
 char cmdLine[MAX_PATH+1];
@@ -14,10 +13,12 @@ EXPORT char* GetCurrentModDir()
 	DBG("In ModMgr.cpp: GetCurrentModDir()\n");
 
 	// Get the current command line
-	strncpy(cmdLine, GetCommandLineA(), MAX_PATH);
+	strncpy_s(cmdLine, GetCommandLineA(), MAX_PATH);
 
 	// Scan the string
-	char *part = strtok(cmdLine, " ");
+	char* strtokState;
+	char* part = strtok_s(cmdLine, " ", &strtokState);
+	//char *part = strtok(cmdLine, " ");
 	if (part == NULL)
 		return NULL;
 
@@ -28,10 +29,10 @@ EXPORT char* GetCurrentModDir()
 		if (part[0] == '/' || part[0] == '-')
 		{
 			// is the option data "loadmod"?
-			if (strcmpi(&part[1], "loadmod") == 0)
+			if (_strcmpi(&part[1], "loadmod") == 0)
 			{
 				// get the next part
-				char *modName = strtok(NULL, ": ");
+				char *modName = strtok_s(nullptr, ": ", &strtokState);
 				// Check for invalid chars and other things
 				if (modName == NULL)
 				{
@@ -47,7 +48,7 @@ EXPORT char* GetCurrentModDir()
 				// see if it's a real directory
 				char modDir[MAX_PATH+1];
 				GetGameDir(modDir);
-				strcat(modDir, modName);
+				strcat_s(modDir, modName);
 
 				if (GetFileAttributesA(modDir) == -1)
 				{
@@ -56,14 +57,14 @@ EXPORT char* GetCurrentModDir()
 				}
 
 				// Looks good.
-				return strdup(modDir);
+				return _strdup(modDir);
 			}
 		}
 		// get next argument
-		part = strtok(NULL, " ");
+		part = strtok_s(nullptr, " ", &strtokState);
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 void ApplyMod(char *modDir)
@@ -80,7 +81,10 @@ void ApplyMod(char *modDir)
 	WritePrivateProfileString("DEBUG", "ART_PATH", modDir, ".\\outpost2.ini");
 
 	// Load the mod dll
-	modDllHandle = LoadLibrary(strcat(modDir, "\\op2mod.dll"));
+	char dllName[MAX_PATH + 1];
+	strcpy_s(dllName, modDir);
+	strcat_s(dllName, "\\op2mod.dll");
+	modDllHandle = LoadLibrary(dllName);
 
 	if (modDllHandle)
 	{

@@ -21,7 +21,8 @@ void LoadIniMods()
 	GetPrivateProfileString("Game", "LoadAddons", "", modList, sizeof(modList), ".\\Outpost2.ini");
 
 	// Process the string for each mod
-	sectionName = strtok(modList, " ,");
+	char* strtokState;
+	sectionName = strtok_s(modList, " ,", &strtokState);
 	while (sectionName != 0)
 	{
 		// Get the DLL name from the corresponding section
@@ -42,11 +43,11 @@ void LoadIniMods()
 		else
 		{
 			// Error trying to load the DLL
-			_snprintf(errorMsg, sizeof(errorMsg), "Error trying to load mod [%s]: Dll = \"%s\"", sectionName, dllName);
+			_snprintf_s(errorMsg, sizeof(errorMsg), "Error trying to load mod [%s]: Dll = \"%s\"", sectionName, dllName);
 			MessageBox(0, errorMsg, "Module Load Error", 0);
 		}
 
 		// Get the next token
-		sectionName = strtok(0, " ,");
+		sectionName = strtok_s(nullptr, " ,", &strtokState);
 	}
 }

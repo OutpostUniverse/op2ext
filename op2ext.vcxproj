@@ -67,7 +67,7 @@
       <ProgramDataBaseFileName>.\Release\</ProgramDataBaseFileName>
     </ClCompile>
     <PostBuildEvent>
-      <Command>copy   Release\op2ext.dll   \Sierra\Outpost2\</Command>
+      <Command>copy   Release\op2ext.dll   ..\..\outpost2SVN\GameDownload\Outpost2\trunk\</Command>
     </PostBuildEvent>
     <Midl>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -93,7 +93,8 @@
       <ImportLibrary>.\Release\op2ext.lib</ImportLibrary>
       <AdditionalDependencies>wsock32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
-      <FixedBaseAddress>0x13000000</FixedBaseAddress>
+      <FixedBaseAddress>true</FixedBaseAddress>
+      <BaseAddress>0x10000000</BaseAddress>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -136,8 +137,12 @@
       <ImportLibrary>.\Debug\op2ext.lib</ImportLibrary>
       <AdditionalDependencies>odbc32.lib;odbccp32.lib;wsock32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
-      <FixedBaseAddress>0x13000000</FixedBaseAddress>
+      <FixedBaseAddress>true</FixedBaseAddress>
+      <BaseAddress>0x10000000</BaseAddress>
     </Link>
+    <PostBuildEvent>
+      <Command>copy   Release\op2ext.dll   ..\..\outpost2SVN\GameDownload\Outpost2\trunk\</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="IniMods.cpp" />

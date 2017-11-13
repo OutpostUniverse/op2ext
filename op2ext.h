@@ -26,7 +26,10 @@ extern VolList vols;
 //void LocalizeStrings();
 void ConvLangStr(char *instr, char *outstr);
 
-EXPORT void GetGameDir(char *buffer);
+template <size_t size>
+void GetGameDir(char(&buffer)[size]);
+EXPORT void GetGameDir(char *buffer, size_t size);
+//EXPORT void GetGameDir(char* buffer);	// Deprecated, will MessageBox error and exit
 void DetectAddonVols();
 
 void DoError(char *file, long line, char *text);
