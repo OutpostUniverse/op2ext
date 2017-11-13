@@ -67,7 +67,7 @@
       <ProgramDataBaseFileName>.\Release\</ProgramDataBaseFileName>
     </ClCompile>
     <PostBuildEvent>
-      <Command>copy   Release\op2ext.dll   ..\..\outpost2SVN\GameDownload\Outpost2\trunk\</Command>
+      <Command>copy "$(TargetPath)" ..\..\outpost2SVN\GameDownload\Outpost2\trunk\</Command>
     </PostBuildEvent>
     <Midl>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -141,7 +141,7 @@
       <BaseAddress>0x10000000</BaseAddress>
     </Link>
     <PostBuildEvent>
-      <Command>copy   Release\op2ext.dll   ..\..\outpost2SVN\GameDownload\Outpost2\trunk\</Command>
+      <Command>copy "$(TargetPath)" ..\..\outpost2SVN\GameDownload\Outpost2\trunk\</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
