@@ -1,7 +1,6 @@
-#include <winsock.h>		// inet_addr, gethostbyname
 #include "IpDropDown.h"
 #include "op2ext.h"
-
+#include <winsock.h> // From winsock.h, using functions inet_addr & gethostbyname.
 
 char ipStrings[10][47];
 int numIpStrings = 0;
