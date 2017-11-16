@@ -25,14 +25,16 @@ extern VolList vols;
 //void LocalizeStrings();
 void ConvLangStr(char *instr, char *outstr);
 
-template <size_t size>
-void GetGameDir(char(&buffer)[size])
-{
-	GetGameDir(buffer, size);
-}
+//template <size_t size>
+//void GetGameDir(char(&buffer)[size])
+//{
+//	GetGameDir(buffer, size);
+//}
 
-EXPORT void GetGameDir(char *buffer, size_t size);
-//EXPORT void GetGameDir(char* buffer);	// Deprecated, will MessageBox error and exit
+extern __declspec(dllexport) std::string GetGameDirectory();
+
+
+EXPORT [[deprecated("GetGameDir was deprecated in op2ext ver1.2.0. Use GetGameDirectory instead.")]] void GetGameDir(char *buffer);
 void LoadVolFiles(std::string directory);
 
 void DoError(char *file, long line, char *text);

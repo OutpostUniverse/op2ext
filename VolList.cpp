@@ -1,7 +1,3 @@
-// VolList.cpp: implementation of the VolList class.
-//
-//////////////////////////////////////////////////////////////////////
-
 #include "VolList.h"
 #include "op2ext.h"
 
@@ -17,58 +13,40 @@ VolSearchEntry buffer[VolSearchBufferSize];
 
 VolList::VolList()
 {
-	// initialize variables
-	numItems = 0;
-	itemList = buffer;
+	volSearchEntryList = buffer;
 }
 
-VolList::~VolList()
-{
-}
+VolList::~VolList() { }
 
-
-void VolList::AddItem(const char *volToAdd)
+void VolList::AddItem(std::string volPath)
 {
-	// Abort if too many items are added
-	if (numItems > VolSearchBufferSize-2)
-	{
-		MessageBox(0, "Too many .vol files loaded. Ignoring.", "Addon Vol file error", 0);
-		return;		// Abort
+	if (MaxVolFileCountReached()) {
+		return;
 	}
-	// Add a VOL to the list
-	numItems++;
 	
-	// Initialize the element
-	itemList[numItems-1].unknown1 = 0;
-	itemList[numItems-1].flags = 1;
-	itemList[numItems-1].unknown2 = 0;
-	itemList[numItems-1].pFileName = volToAdd;
+	volPaths.push_back(volPath);
+
+	InitializeVolSearchEntry(&volPath[0]);
 
 	DBG("VolList::AddItem(\"");
-	DBG(volToAdd);
+	DBG(volPath.c_str());
 	DBG("\");\n");
 }
 
 void VolList::EndList()
-{
-	// End the list
-	numItems += 1;
-
-	// allocate memory for the string
-	itemList[numItems-1].pFileName = (char*)0;
-	itemList[numItems-1].unknown1 = 0;
-	itemList[numItems-1].flags = 1;
-	itemList[numItems-1].unknown2 = 0;
+{	
+	// Add end of volFileEntries search item.
+	InitializeVolSearchEntry((char*)0);
 }
 
-void VolList::Install()
+void VolList::LoadVolFiles()
 {
-	// Install into OP2's memory
+	EndList();
 
-	VolSearchEntry *vol = &itemList[0];
-	int *vol2 = &itemList[0].unknown1;
-	int *vol3 = &itemList[numItems].unknown1;
-	VolSearchEntry *vol4 = &itemList[numItems-1];
+	VolSearchEntry *vol = &volSearchEntryList[0];
+	int *vol2 = &volSearchEntryList[0].unknown1;
+	int *vol3 = &volSearchEntryList[numberOfVolFiles].unknown1;
+	VolSearchEntry *vol4 = &volSearchEntryList[numberOfVolFiles - 1];
 
 	// Change operand of the MOV instruction
 	Op2MemSetDword((void*)0x00471070, vol);
@@ -93,4 +71,24 @@ void VolList::Install()
 	Op2MemSetDword((void*)0x00471457, vol3);
 
 	Op2MemSetDword((void*)0x0047111F, vol4);
+}
+
+bool VolList::MaxVolFileCountReached()
+{
+	if (numberOfVolFiles > VolSearchBufferSize - 2) {
+		MessageBox(0, "Too many .vol files loaded. Ignoring.", "Addon Vol file error", 0);
+		return true;
+	}
+
+	return false;
+}
+
+void VolList::InitializeVolSearchEntry(char* pVolPath)
+{
+	numberOfVolFiles++;
+
+	volSearchEntryList[numberOfVolFiles - 1].unknown1 = 0;
+	volSearchEntryList[numberOfVolFiles - 1].flags = 1;
+	volSearchEntryList[numberOfVolFiles - 1].unknown2 = 0;
+	volSearchEntryList[numberOfVolFiles - 1].pFilename = pVolPath;
 }

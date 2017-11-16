@@ -6,6 +6,11 @@
 #include "ModMgr.h"
 #include "IpDropDown.h"
 #include <string>
+#include <vector>
+#include <filesystem>
+#include <algorithm>
+
+namespace fs = std::experimental::filesystem;
 
 EXPORT int StubExt = 0;
 
@@ -24,7 +29,17 @@ static VolList vols;
 
 bool modStarting = false;
 
-
+//#include <string>
+//#include <iostream>
+//#include <filesystem>
+//namespace fs = std::filesystem;
+//
+//int main()
+//{
+//	std::string path = "path_to_directory";
+//	for (auto & p : fs::directory_iterator(path))
+//		std::cout << p << std::endl;
+//}
 BOOL WINAPI DllMain(HMODULE hMod, DWORD dwReason, LPVOID reserved)
 {
 	// This will be called once the program is unpacked and running
@@ -50,9 +65,9 @@ BOOL WINAPI DllMain(HMODULE hMod, DWORD dwReason, LPVOID reserved)
 			ApplyMod(modDir);
 
 		// Add the default set of VOLs
-		char gameDirectory[MAX_PATH + 1];
-		GetGameDir(gameDirectory);
-		std::string gameDirectoryStr(gameDirectory);
+		//char gameDirectory[MAX_PATH + 1];
+		//GetGameDir(gameDirectory);
+		std::string gameDirectoryStr = GetGameDirectory();
 
 		//vols.AddItem("maps04.vol");
 		//vols.AddItem("maps03.vol");
@@ -69,10 +84,7 @@ BOOL WINAPI DllMain(HMODULE hMod, DWORD dwReason, LPVOID reserved)
 		// Load vol files found in the /Addon folder into the OP2 directory
 		//LoadVolFiles(gameDirectoryStr + "/Addon/");
 
-		vols.EndList();
-
-		// Install the list into OP2
-		vols.Install();
+		vols.LoadVolFiles();
 
 		// Replace call to LoadLibrary with custom routine (address is indirect)
 		Op2MemSetDword(loadLibraryDataAddr, (int)&loadLibraryNewAddr);
@@ -88,47 +100,96 @@ BOOL WINAPI DllMain(HMODULE hMod, DWORD dwReason, LPVOID reserved)
 	return TRUE;
 }
 
-EXPORT void GetGameDir(char* buffer, size_t size)
-{
-	// Get the game dir
-	char modFileName[MAX_PATH+1];
-	GetModuleFileName(NULL, modFileName, MAX_PATH);
-
-	char drive[_MAX_DRIVE];
-	char dir[_MAX_DIR];
-	_splitpath_s(modFileName, drive, _MAX_DRIVE, dir, _MAX_DIR, NULL, 0, NULL, 0);
-	sprintf_s(buffer, size, "%s%s", drive, dir);
-}
-
-//EXPORT void GetGameDir(char* buffer)
+//EXPORT void GetGameDir(char* buffer, size_t size)
 //{
-//	MessageBox(NULL, "Deprecated use of GetGameDir", "OP2Ext Error", MB_ICONERROR | MB_OK);
-//	exit(1);
+//	// Get the game dir
+//	char modFileName[MAX_PATH+1];
+//	GetModuleFileName(NULL, modFileName, MAX_PATH);
+//
+//	char drive[_MAX_DRIVE];
+//	char dir[_MAX_DIR];
+//	_splitpath_s(modFileName, drive, _MAX_DRIVE, dir, _MAX_DIR, NULL, 0, NULL, 0);
+//	sprintf_s(buffer, size, "%s%s", drive, dir);
 //}
 
+__declspec(dllexport) std::string GetGameDirectory()
+{
+	char moduleFilename[MAX_PATH];
+	GetModuleFileName(NULL, moduleFilename, MAX_PATH);
+
+	// Adding "\\" to end of directory is required for backward compatibility.
+	return fs::path(moduleFilename).remove_filename().string() + "\\";
+}
+
+EXPORT void GetGameDir(char* buffer)
+{
+	std::string gameDirectory = GetGameDirectory();
+
+	// Unable to use the newer funciton strcpy_s since we do not know the size of buffer,
+	// causing a security concern.
+#pragma warning( push )
+#pragma warning( disable : 4996 ) // Disable warning "The compiler encountered a deprecated declaration." 
+	strcpy(buffer, gameDirectory.c_str());
+#pragma warning ( pop )
+}
+
+std::vector<char> chars;
 void LoadVolFiles(std::string directory)
 {
 	// Get the game folder
 	//strcat_s(addonDir, (directory + "*.vol").c_str());
 
-	WIN32_FIND_DATA fndData;
-	HANDLE hFind = INVALID_HANDLE_VALUE;
+	//WIN32_FIND_DATA fndData;
+	//HANDLE hFind = INVALID_HANDLE_VALUE;
 
 	// Begin searching for files
-	hFind = FindFirstFile((directory + "*.vol").c_str(), &fndData);
+	//hFind = FindFirstFile((directory + "*.vol").c_str(), &fndData);
 	
-	// If error, or no files found, leave
-	if (hFind == INVALID_HANDLE_VALUE)
-		return;
+	// If error, or no files found, return
+	//if (hFind == INVALID_HANDLE_VALUE)
+	//	return;
 	
-	// Add all vol files found in directory
-	do
+	//	std::string path = "path_to_directory";
+	for (auto & p : fs::directory_iterator(directory))
 	{
-		std::string volFilename(directory + fndData.cFileName);
-		vols.AddItem(volFilename.c_str());
-	} while (FindNextFile(hFind, &fndData));
+		std::string extension = p.path().extension().string();
+		std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
 
-	FindClose(hFind);
+		if (extension == ".vol")
+		{
+			std::string filename = p.path().filename().string();
+			//vols.AddItem(filename.c_str());
+		}
+	}
+	
+	std::string mapsString("maps.vol");
+	chars = std::vector<char>(mapsString.c_str(), mapsString.c_str() + mapsString.size() + 1u);
+	// use &chars[0] as a char*
+	vols.AddItem(&chars[0]);
+
+	char* mapsChars = "maps.vol";
+	char mapsChar[]{ "maps.vol" };
+	vols.AddItem("maps04.vol");
+	vols.AddItem("maps03.vol");
+	vols.AddItem("maps02.vol");
+	vols.AddItem("maps01.vol");
+	//vols.AddItem(&mapsString[0]);
+	//vols.AddItem(mapsString.point);
+	//vols.AddItem(mapsChar);
+	//vols.AddItem("maps.vol");
+	vols.AddItem("sheets.vol");
+	vols.AddItem("sound.vol");
+	vols.AddItem("voices.vol");
+	vols.AddItem("story.vol");
+
+	// Add all vol files found in directory
+	//do
+	//{
+	//	std::string volFilename(directory + fndData.cFileName);
+	//	vols.AddItem(volFilename.c_str());
+	//} while (FindNextFile(hFind, &fndData));
+
+	//FindClose(hFind);
 }
 
 void DoError(char *file, long line, char *text)
