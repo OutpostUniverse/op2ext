@@ -30,7 +30,7 @@ void VolList::AddVolFile(std::string volPath)
 	
 	volPaths.push_back(std::vector<char>(volPath.c_str(), volPath.c_str() + volPath.size() + 1u));
 	
-	InitializeVolSearchEntry(&volPaths[volPaths.size() - 1][0]);
+	InitializeVolSearchEntry(&volPaths.back()[0]);
 
 	DBG("VolList::AddItem(\"");
 	DBG(volPath.c_str());
