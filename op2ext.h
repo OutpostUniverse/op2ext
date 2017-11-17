@@ -25,19 +25,17 @@ extern VolList vols;
 //void LocalizeStrings();
 void ConvLangStr(char *instr, char *outstr);
 
-//template <size_t size>
-//void GetGameDir(char(&buffer)[size])
-//{
-//	GetGameDir(buffer, size);
-//}
+void InitializeOP2Ext(HMODULE hMod);
+
+void SetLoadOffset();
 
 extern __declspec(dllexport) std::string GetGameDirectory();
 
+EXPORT [[deprecated("GetGameDir was deprecated in op2ext ver1.1.0. Use GetGameDirectory instead.")]] void GetGameDir(char *buffer);
 
-EXPORT [[deprecated("GetGameDir was deprecated in op2ext ver1.2.0. Use GetGameDirectory instead.")]] void GetGameDir(char *buffer);
-void LoadVolFiles(std::string directory);
+void LocateVolFiles(std::string relativeDirectory = "");
 
-void DoError(char *file, long line, char *text);
+void PostErrorMessage(char* filename, long lineInSourceCode, char* errorMessage);
 
 EXPORT void AddVolToList(char *volName);
 EXPORT void SetSerialNumber(char num1, char num2, char num3);

@@ -21,13 +21,13 @@ public:
 	VolList();
 	virtual ~VolList();
 
-	void AddItem(std::string volPath);
+	void AddVolFile(std::string volPath);
 
 	// Load all identified vol files into Outpost 2's memory.
 	void LoadVolFiles();
 
 private:
-	std::vector<std::string> volPaths;
+	std::vector<std::vector<char>> volPaths;
 	unsigned int numberOfVolFiles;
 	VolSearchEntry* volSearchEntryList;
 
