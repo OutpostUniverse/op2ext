@@ -17,7 +17,7 @@ BOOL __stdcall EnableWindowNew(HWND hWnd, BOOL bEnable)
 	for (int i = 0; i < 10; i++)
 	{
 		_itoa_s(i, tmpStr, 10);
-		GetPrivateProfileString("IPHistory", tmpStr, NULL, ipStrings[i], MAX_PATH, ".\\outpost2.ini");
+		GetPrivateProfileString("IPHistory", tmpStr, nullptr, ipStrings[i], MAX_PATH, ".\\outpost2.ini");
 		if (strlen(ipStrings[i]) > 0)
 		{
 			SendMessage(hWnd, CB_ADDSTRING, 0, (LPARAM)ipStrings[i]);
@@ -65,7 +65,7 @@ unsigned long __stdcall inet_addrNew(const char *cp)
 	// Copy it in
 	strcpy_s(ipStrings[0], cp);
 	// Now write all the strings out
-	WritePrivateProfileString("IPHistory", NULL, NULL, ".\\outpost2.ini");
+	WritePrivateProfileString("IPHistory", nullptr, nullptr, ".\\outpost2.ini");
 	char tmpStr[4];
 	for (int i = 0; i < numIpStrings; i++) {
 		_itoa_s(i, tmpStr, 10);

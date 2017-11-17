@@ -2,10 +2,10 @@
 #include "ModMgr.h"
 #include "op2ext.h"
 
-char newOut2resPath[MAX_PATH+1];
-char newOp2shresPath[MAX_PATH+1];
-char cmdLine[MAX_PATH+1];
-HMODULE modDllHandle = NULL;
+char newOut2resPath[MAX_PATH + 1];
+char newOp2shresPath[MAX_PATH + 1];
+char cmdLine[MAX_PATH + 1];
+HMODULE modDllHandle = nullptr;
 
 
 EXPORT char* GetCurrentModDir()
@@ -110,7 +110,7 @@ void UnApplyMod()
 	}
 
 	// Destroy the DEBUG section
-	WritePrivateProfileString("DEBUG", NULL, NULL, ".\\outpost2.ini");
+	WritePrivateProfileString("DEBUG", nullptr, nullptr, ".\\outpost2.ini");
 }
 
 void ModStartup()

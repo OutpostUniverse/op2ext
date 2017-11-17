@@ -53,7 +53,7 @@ void InitializeOP2Ext(HMODULE hMod)
 
 	// Load command line modules
 	char *modDir = GetCurrentModDir();
-	if (modDir != NULL) {
+	if (modDir != nullptr) {
 		ApplyMod(modDir);
 	}
 
@@ -84,7 +84,7 @@ void SetLoadOffset()
 __declspec(dllexport) std::string GetGameDirectory()
 {
 	char moduleFilename[MAX_PATH];
-	GetModuleFileName(NULL, moduleFilename, MAX_PATH);
+	GetModuleFileName(nullptr, moduleFilename, MAX_PATH);
 
 	// Adding "\\" to end of directory is required for backward compatibility.
 	return fs::path(moduleFilename).remove_filename().string() + "\\";
@@ -129,7 +129,7 @@ void PostErrorMessage(char* filename, long lineInSourceCode, char* errorMessage)
 {
 	char errMsg[512];
 	sprintf_s(errMsg, "%s:%d:%s", filename, lineInSourceCode, errorMessage);
-	MessageBoxA(NULL, errMsg, "Outpost 2 Error", MB_ICONERROR);
+	MessageBoxA(nullptr, errMsg, "Outpost 2 Error", MB_ICONERROR);
 }
 
 EXPORT void AddVolToList(char *volName)

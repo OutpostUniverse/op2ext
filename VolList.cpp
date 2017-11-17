@@ -18,12 +18,16 @@ VolList::VolList()
 
 VolList::~VolList() { }
 
+//std::vector<std::string> strings;
 void VolList::AddVolFile(std::string volPath)
 {
 	if (MaxVolFileCountReached()) {
 		return;
 	}
 
+	//strings.push_back(volPath);
+	//InitializeVolSearchEntry(strings.back().c_str());
+	
 	volPaths.push_back(std::vector<char>(volPath.c_str(), volPath.c_str() + volPath.size() + 1u));
 	
 	InitializeVolSearchEntry(&volPaths[volPaths.size() - 1][0]);
