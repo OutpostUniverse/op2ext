@@ -18,9 +18,10 @@ EXPORT char* GetCurrentModDir()
 	// Scan the string
 	char* strtokState;
 	char* part = strtok_s(cmdLine, " ", &strtokState);
-	//char *part = strtok(cmdLine, " ");
-	if (part == NULL)
-		return NULL;
+
+	if (part == nullptr) {
+		return nullptr;
+	}
 
 	// While there are more parts to the string left...
 	while (part)
@@ -32,28 +33,28 @@ EXPORT char* GetCurrentModDir()
 			if (_strcmpi(&part[1], "loadmod") == 0)
 			{
 				// get the next part
-				char *modName = strtok_s(nullptr, ": ", &strtokState);
+				char* modName = strtok_s(nullptr, ": ", &strtokState);
 				// Check for invalid chars and other things
-				if (modName == NULL)
+				if (modName == nullptr)
 				{
-					DoError("ModMgr.cpp", __LINE__, "Argument missing");
-					return NULL;
+					PostErrorMessage("ModMgr.cpp", __LINE__, "Argument missing");
+					return nullptr;
 				}
-				if (strpbrk(modName, "\\/:*?\"<>|") != NULL)
+				if (strpbrk(modName, "\\/:*?\"<>|") != nullptr)
 				{
-					DoError("ModMgr.cpp", __LINE__, "Invalid directory name");
-					return NULL;
+					PostErrorMessage("ModMgr.cpp", __LINE__, "Invalid directory name");
+					return nullptr;
 				}
 
 				// see if it's a real directory
-				char modDir[MAX_PATH+1];
+				char modDir[MAX_PATH + 1];
 				GetGameDir(modDir);
 				strcat_s(modDir, modName);
 
 				if (GetFileAttributesA(modDir) == -1)
 				{
-					DoError("ModMgr.cpp", __LINE__, "Mod directory does not exist");
-					return NULL;
+					PostErrorMessage("ModMgr.cpp", __LINE__, "Mod directory does not exist");
+					return nullptr;
 				}
 
 				// Looks good.
@@ -73,7 +74,7 @@ void ApplyMod(char *modDir)
 
 	if (GetFileAttributesA(modDir) == -1)
 	{
-		DoError("ModMgr.cpp", __LINE__, "Mod directory does not exist");
+		PostErrorMessage("ModMgr.cpp", __LINE__, "Mod directory does not exist");
 		return;
 	}
 

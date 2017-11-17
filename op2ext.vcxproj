@@ -65,6 +65,7 @@
       <PrecompiledHeaderOutputFile>.\Release\op2ext.pch</PrecompiledHeaderOutputFile>
       <ObjectFileName>.\Release\</ObjectFileName>
       <ProgramDataBaseFileName>.\Release\</ProgramDataBaseFileName>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <PostBuildEvent>
       <Command>copy "$(TargetPath)" ..\..\outpost2SVN\GameDownload\Outpost2\trunk\</Command>
@@ -111,6 +112,7 @@
       <PrecompiledHeaderOutputFile>.\Debug\op2ext.pch</PrecompiledHeaderOutputFile>
       <ObjectFileName>.\Debug\</ObjectFileName>
       <ProgramDataBaseFileName>.\Debug\</ProgramDataBaseFileName>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Midl>
       <SuppressStartupBanner>true</SuppressStartupBanner>

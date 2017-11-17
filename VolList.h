@@ -4,11 +4,11 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include <string>
+#include <vector>
 
-
-// VOL entry
 struct VolSearchEntry {
-	char *pFileName;
+	char* pFilename;
 	int unknown1;
 	int flags;
 	int unknown2;
@@ -21,13 +21,19 @@ public:
 	VolList();
 	virtual ~VolList();
 
-	void AddItem(char *volToAdd);
+	void AddVolFile(std::string volPath);
+
+	// Load all identified vol files into Outpost 2's memory.
+	void LoadVolFiles();
+
+private:
+	std::vector<std::vector<char>> volPaths;
+	unsigned int numberOfVolFiles;
+	VolSearchEntry* volSearchEntryList;
+
+	bool MaxVolFileCountReached();
+	void InitializeVolSearchEntry(char* pVolPath);
 	void EndList();
-	void Install();
-
-	unsigned int numItems;
-	VolSearchEntry *itemList;
-
 };
 
 

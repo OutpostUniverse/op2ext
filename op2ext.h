@@ -2,12 +2,11 @@
 #ifndef OP2EXT_H_INCL
 #define OP2EXT_H_INCL
 
-
+#include "VolList.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "VolList.h"
-
+#include <string>
 
 // general stuff
 #define EXPORT extern "C" __declspec(dllexport) // qualifiers
@@ -26,13 +25,17 @@ extern VolList vols;
 //void LocalizeStrings();
 void ConvLangStr(char *instr, char *outstr);
 
-template <size_t size>
-void GetGameDir(char(&buffer)[size]);
-EXPORT void GetGameDir(char *buffer, size_t size);
-//EXPORT void GetGameDir(char* buffer);	// Deprecated, will MessageBox error and exit
-void DetectAddonVols();
+void InitializeOP2Ext(HMODULE hMod);
 
-void DoError(char *file, long line, char *text);
+void SetLoadOffset();
+
+extern __declspec(dllexport) std::string GetGameDirectory();
+
+EXPORT [[deprecated("GetGameDir was deprecated in op2ext ver1.1.0. Use GetGameDirectory instead.")]] void GetGameDir(char *buffer);
+
+void LocateVolFiles(std::string relativeDirectory = "");
+
+void PostErrorMessage(char* filename, long lineInSourceCode, char* errorMessage);
 
 EXPORT void AddVolToList(char *volName);
 EXPORT void SetSerialNumber(char num1, char num2, char num3);

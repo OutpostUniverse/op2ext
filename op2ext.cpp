@@ -1,12 +1,15 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
-
 #include "op2ext.h"
-#include "VolList.h"
 #include "ModMgr.h"
 #include "IpDropDown.h"
+#include <string>
+#include <vector>
+#include <filesystem>
+#include <algorithm>
 
+namespace fs = std::experimental::filesystem;
 
 EXPORT int StubExt = 0;
 
@@ -29,133 +32,113 @@ bool modStarting = false;
 BOOL WINAPI DllMain(HMODULE hMod, DWORD dwReason, LPVOID reserved)
 {
 	// This will be called once the program is unpacked and running
-	if (dwReason == DLL_PROCESS_ATTACH)
-	{
-		// Adjust offsets in case Outpost2.exe module is relocated
-		void* op2ModuleBase = GetModuleHandle("Outpost2.exe");
-		if (op2ModuleBase == 0)
-		{
-			DoError("op2ext.cpp", __LINE__, "Could not find Outpost2.exe module base address.");
-		}
-		loadOffset = (int)op2ModuleBase - ExpectedOutpost2Addr;
-
-
-		InstallIpDropDown();
-
-		// Load all active modules from the .ini file
-		LoadIniMods();
-
-		// Load command line modules
-		char *modDir = GetCurrentModDir();
-		if (modDir != NULL)
-			ApplyMod(modDir);
-
-		// Add the default set of VOLs
-		vols.AddItem("maps04.vol");
-		vols.AddItem("maps03.vol");
-		vols.AddItem("maps02.vol");
-		vols.AddItem("maps01.vol");
-		vols.AddItem("maps.vol");
-		vols.AddItem("sheets.vol");
-		vols.AddItem("sound.vol");
-		vols.AddItem("voices.vol");
-		vols.AddItem("story.vol");
-
-		// Add any VOLs found in the \Addon folder in the OP2 dir
-		DetectAddonVols();
-
-		vols.EndList();
-
-		// Install the list into OP2
-		vols.Install();
-
-		// Replace call to LoadLibrary with custom routine (address is indirect)
-		Op2MemSetDword(loadLibraryDataAddr, (int)&loadLibraryNewAddr);
-
-		// Disable any more thread attach calls
-		DisableThreadLibraryCalls(hMod);
+	if (dwReason == DLL_PROCESS_ATTACH) {
+		InitializeOP2Ext(hMod);
 	}
-	else if (dwReason == DLL_PROCESS_DETACH)
-	{
-		// remove any loaded mod
+	else if (dwReason == DLL_PROCESS_DETACH) {
 		UnApplyMod();
-}
+	}
+
 	return TRUE;
 }
 
-template <size_t size>
-void GetGameDir(char(&buffer)[size])
+void InitializeOP2Ext(HMODULE hMod)
 {
-	GetGameDir(buffer, size);
-}
+	SetLoadOffset();
 
-EXPORT void GetGameDir(char* buffer, size_t size)
-{
-	// Get the game dir
-	char modFileName[MAX_PATH+1];
-	GetModuleFileName(NULL, modFileName, MAX_PATH);
+	InstallIpDropDown();
 
-	char drive[_MAX_DRIVE];
-	char dir[_MAX_DIR];
-	_splitpath_s(modFileName, drive, _MAX_DRIVE, dir, _MAX_DIR, NULL, 0, NULL, 0);
-	sprintf_s(buffer, size, "%s%s", drive, dir);
-}
+	// Load all active modules from the .ini file
+	LoadIniMods();
 
-//EXPORT void GetGameDir(char* buffer)
-//{
-//	MessageBox(NULL, "Deprecated use of GetGameDir", "OP2Ext Error", MB_ICONERROR | MB_OK);
-//	exit(1);
-//}
-
-void DetectAddonVols()
-{
-	// Get the game folder
-	char addonDir[MAX_PATH+1];
-	GetGameDir(addonDir);
-	strcat_s(addonDir, "Addon\\*.vol");
-
-	WIN32_FIND_DATA fndData;
-	HANDLE hFind = INVALID_HANDLE_VALUE;
-
-	// Begin searching for files
-	hFind = FindFirstFile(addonDir, &fndData);
-	
-	// If error, or no files found, leave
-	if (hFind == INVALID_HANDLE_VALUE)
-		return;
-
-	// Add the first VOL found
-	char volName[MAX_PATH+1];
-	sprintf_s(volName, "Addon\\%s", fndData.cFileName);
-	vols.AddItem(volName);
-	
-	// Add any others
-	while (FindNextFile(hFind, &fndData))
-	{
-		sprintf_s(volName, "Addon\\%s", fndData.cFileName);
-		vols.AddItem(volName);
+	// Load command line modules
+	char *modDir = GetCurrentModDir();
+	if (modDir != NULL) {
+		ApplyMod(modDir);
 	}
 
-	// Finish up
-	FindClose(hFind);
+	LocateVolFiles();
+	LocateVolFiles("Addon");
+
+	vols.LoadVolFiles();
+
+	// Replace call to LoadLibrary with custom routine (address is indirect)
+	Op2MemSetDword(loadLibraryDataAddr, (int)&loadLibraryNewAddr);
+
+	// Disable any more thread attach calls
+	DisableThreadLibraryCalls(hMod);
 }
 
-void DoError(char *file, long line, char *text)
+// Adjust offsets in case Outpost2.exe module is relocated
+void SetLoadOffset()
+{
+	void* op2ModuleBase = GetModuleHandle("Outpost2.exe");
+
+	if (op2ModuleBase == 0) {
+		PostErrorMessage("op2ext.cpp", __LINE__, "Could not find Outpost2.exe module base address.");
+	}
+
+	loadOffset = (int)op2ModuleBase - ExpectedOutpost2Addr;
+}
+
+__declspec(dllexport) std::string GetGameDirectory()
+{
+	char moduleFilename[MAX_PATH];
+	GetModuleFileName(NULL, moduleFilename, MAX_PATH);
+
+	// Adding "\\" to end of directory is required for backward compatibility.
+	return fs::path(moduleFilename).remove_filename().string() + "\\";
+}
+
+EXPORT void GetGameDir(char* buffer)
+{
+	std::string gameDirectory = GetGameDirectory();
+
+	// Unable to use the newer funciton strcpy_s since we do not know the size of buffer,
+	// causing a security concern.
+#pragma warning( push )
+#pragma warning( disable : 4996 ) // Disable warning "The compiler encountered a deprecated declaration." 
+	strcpy(buffer, gameDirectory.c_str());
+#pragma warning ( pop )
+}
+
+/**
+Prepares all vol files found within the supplied relative directory from the Outpost 2 executable
+for inclusion in Outpost 2. Does not recursively search subdirectories.
+
+@param relativeDirectory A directory relative to the Outpost 2 exectuable. Default value is an empty string.
+*/
+void LocateVolFiles(std::string relativeSearchDirectory)
+{
+	std::string gameDirectory = GetGameDirectory();
+
+	for (auto & p : fs::directory_iterator(fs::path(gameDirectory).append(relativeSearchDirectory)))
+	{
+		fs::path filePath(p.path());
+
+		std::string extension = filePath.extension().string();
+		std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
+
+		if (extension == ".vol") {
+			vols.AddVolFile(fs::path(relativeSearchDirectory).append(filePath.filename()).string());
+		}
+	}
+}
+
+void PostErrorMessage(char* filename, long lineInSourceCode, char* errorMessage)
 {
 	char errMsg[512];
-	sprintf_s(errMsg, "%s:%d:%s", file, line, text);
+	sprintf_s(errMsg, "%s:%d:%s", filename, lineInSourceCode, errorMessage);
 	MessageBoxA(NULL, errMsg, "Outpost 2 Error", MB_ICONERROR);
 }
 
 EXPORT void AddVolToList(char *volName)
 {
-	if (!modStarting)
-	{
-		vols.AddItem(volName);
+	if (modStarting) {
+		PostErrorMessage("op2ext.cpp", __LINE__, "VOLs may not be added to the list after game startup.");
 	}
-	else
-	{
-		DoError("op2ext.cpp", __LINE__, "VOLs may not be added to the list after game startup.");
+	else {
+		vols.AddVolFile(volName);
 	}
 }
 
@@ -163,10 +146,10 @@ EXPORT void AddVolToList(char *volName)
 char *verStrAddr = (char*)0x004E973C;
 EXPORT void SetSerialNumber(char num1, char num2, char num3)
 {
-	if (modStarting || num1 < 0 || num1 > 9 || num2 < 0 || num2 > 9 || num3 < 0 || num3 > 9)
-		DoError("op2ext.cpp", __LINE__, "SetSerialNumber failed. Invalid mod serial number or was called after game startup.");
-	else
-	{
+	if (modStarting || num1 < 0 || num1 > 9 || num2 < 0 || num2 > 9 || num3 < 0 || num3 > 9) {
+		PostErrorMessage("op2ext.cpp", __LINE__, "SetSerialNumber failed. Invalid mod serial number or was called after game startup.");
+	}
+	else {
 		char buffer[8];
 		_snprintf_s(buffer, sizeof(buffer), "%i.%i.%i.%i", 0, num1, num2, num3);
 		Op2MemCopy(verStrAddr, buffer, sizeof(buffer));
@@ -188,8 +171,6 @@ HINSTANCE __stdcall LoadLibraryNew(LPCTSTR lpLibFileName)
 	return result;
 }
 
-
-
 bool Op2MemCopy(void* destBaseAddr, void* sourceAddr, int size)
 {
 	DWORD oldAttr;
@@ -202,7 +183,7 @@ bool Op2MemCopy(void* destBaseAddr, void* sourceAddr, int size)
 	if (!bSuccess){
 		char buffer[64];
 		_snprintf_s(buffer, sizeof(buffer), "Op2MemCopy: Error unprotecting memory at: %x", reinterpret_cast<unsigned int>(destAddr));
-		DoError("op2ext.cpp", __LINE__, buffer);
+		PostErrorMessage("op2ext.cpp", __LINE__, buffer);
 		return false;	// Abort if failed
 	}
 
@@ -238,7 +219,7 @@ bool Op2MemSet(void* destBaseAddr, unsigned char value, int size)
 	if (!bSuccess){
 		char buffer[64];
 		_snprintf_s(buffer, sizeof(buffer), "Op2MemSet: Error unprotecting memory at: %x", reinterpret_cast<unsigned int>(destAddr));
-		DoError("op2ext.cpp", __LINE__, buffer);
+		PostErrorMessage("op2ext.cpp", __LINE__, buffer);
 		return false;	// Abort if failed
 	}
 	
