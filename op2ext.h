@@ -1,6 +1,4 @@
-// DLL description: extensions for Outpost2.exe
-#ifndef OP2EXT_H_INCL
-#define OP2EXT_H_INCL
+#pragma once
 
 #include "VolList.h"
 #include <stdlib.h>
@@ -48,6 +46,3 @@ bool Op2MemCopy(void* destBaseAddr, void* sourceAddr, int size);
 bool Op2MemSet(void* destBaseAddr, unsigned char value, int size);
 bool Op2MemSetDword(void* destBaseAddr, int dword);
 bool Op2MemSetDword(void* destBaseAddr, void* dword);
-
-
-#endif
