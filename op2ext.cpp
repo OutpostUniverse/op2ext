@@ -42,6 +42,12 @@ BOOL WINAPI DllMain(HMODULE hMod, DWORD dwReason, LPVOID reserved)
 	return TRUE;
 }
 
+/// <summary>
+/// Checks if command is pressed on keyboard or controller. 
+/// Also checks if command released on mouse.
+/// </summary>
+/// <param name="hMod">test</param>
+/// <returns></returns>
 void InitializeOP2Ext(HMODULE hMod)
 {
 	SetLoadOffset();
@@ -140,7 +146,6 @@ EXPORT void AddVolToList(char *volName)
 		vols.AddVolFile(volName);
 	}
 }
-
 
 char *verStrAddr = (char*)0x004E973C;
 EXPORT void SetSerialNumber(char num1, char num2, char num3)
