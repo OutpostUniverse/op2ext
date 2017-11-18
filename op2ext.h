@@ -33,7 +33,7 @@ EXPORT [[deprecated("GetGameDir was deprecated in op2ext ver1.1.0. Use GetGameDi
 
 void LocateVolFiles(std::string relativeDirectory = "");
 
-void PostErrorMessage(char* filename, long lineInSourceCode, char* errorMessage);
+void PostErrorMessage(std::string sourceFilename, long lineInSourceCode, std::string errorMessage);
 
 EXPORT void AddVolToList(char *volName);
 EXPORT void SetSerialNumber(char num1, char num2, char num3);

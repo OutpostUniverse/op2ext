@@ -125,11 +125,10 @@ void LocateVolFiles(std::string relativeSearchDirectory)
 	}
 }
 
-void PostErrorMessage(char* filename, long lineInSourceCode, char* errorMessage)
+void PostErrorMessage(std::string sourceFilename, long lineInSourceCode, std::string errorMessage)
 {
-	char errMsg[512];
-	sprintf_s(errMsg, "%s:%d:%s", filename, lineInSourceCode, errorMessage);
-	MessageBoxA(nullptr, errMsg, "Outpost 2 Error", MB_ICONERROR);
+	std::string formattedMessage = sourceFilename + ", Line: " + std::to_string(lineInSourceCode) + ": " + errorMessage;
+	MessageBoxA(nullptr, formattedMessage.c_str(), "Outpost 2 Error", MB_ICONERROR);
 }
 
 EXPORT void AddVolToList(char *volName)
