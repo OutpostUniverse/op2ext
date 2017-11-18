@@ -157,7 +157,11 @@
     <ClInclude Include="IpDropDown.h" />
     <ClInclude Include="ModMgr.h" />
     <ClInclude Include="op2ext.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="VolList.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="op2ext.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
