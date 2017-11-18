@@ -80,7 +80,7 @@ void VolList::LoadVolFiles()
 bool VolList::MaxVolFileCountReached()
 {
 	if (numberOfVolFiles > VolSearchBufferSize - 2) {
-		MessageBox(0, "Too many .vol files loaded. Ignoring.", "Addon Vol file error", 0);
+		PostErrorMessage("VolList.cpp", __LINE__, "Too many vol files loaded. Ignoring this vol file.");
 		return true;
 	}
 
