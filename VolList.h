@@ -29,7 +29,7 @@ private:
 	unsigned int numberOfVolFiles;
 	VolSearchEntry* volSearchEntryList;
 
-	bool MaxVolFileCountReached();
+	bool MaxVolFileCountReached(std::string volPath);
 	void InitializeVolSearchEntry(char* pVolPath);
 	void EndList();
 };

@@ -1,7 +1,6 @@
 #include "VolList.h"
 #include "op2ext.h"
 
-
 // Static buffer, to avoid dynamic memory allocation before heap is initialized
 const int VolSearchBufferSize = 32;
 VolSearchEntry buffer[VolSearchBufferSize];
@@ -21,7 +20,7 @@ VolList::~VolList() { }
 //std::vector<std::string> strings;
 void VolList::AddVolFile(std::string volPath)
 {
-	if (MaxVolFileCountReached()) {
+	if (MaxVolFileCountReached(volPath)) {
 		return;
 	}
 
@@ -77,10 +76,10 @@ void VolList::LoadVolFiles()
 	Op2MemSetDword((void*)0x0047111F, vol4);
 }
 
-bool VolList::MaxVolFileCountReached()
+bool VolList::MaxVolFileCountReached(std::string volPath)
 {
 	if (numberOfVolFiles > VolSearchBufferSize - 2) {
-		PostErrorMessage("VolList.cpp", __LINE__, "Too many vol files loaded. Ignoring this vol file.");
+		PostErrorMessage("VolList.cpp", __LINE__, "Too many vol files loaded. Ignoring the vol file '" + volPath + "'");
 		return true;
 	}
 
