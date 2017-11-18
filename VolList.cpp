@@ -1,17 +1,13 @@
 #include "VolList.h"
 #include "op2ext.h"
 
-// Static buffer, to avoid dynamic memory allocation before heap is initialized
-const int VolSearchBufferSize = 32;
-VolSearchEntry buffer[VolSearchBufferSize];
-
-
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
 VolList::VolList()
 {
+	buffer[VolSearchBufferSize];
 	volSearchEntryList = buffer;
 }
 
