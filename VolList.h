@@ -30,8 +30,8 @@ private:
 	VolSearchEntry* volSearchEntryList;
 	
 	// Static buffer, to avoid dynamic memory allocation before heap is initialized
-	const unsigned int VolSearchBufferSize = 32;
-	VolSearchEntry buffer[];
+	static const unsigned int VolSearchBufferSize = 32;
+	VolSearchEntry buffer[VolSearchBufferSize];
 
 	bool MaxVolFileCountReached(std::string volPath);
 	void InitializeVolSearchEntry(char* pVolPath);

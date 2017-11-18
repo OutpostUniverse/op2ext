@@ -44,7 +44,6 @@ BOOL WINAPI DllMain(HMODULE hMod, DWORD dwReason, LPVOID reserved)
 
 /// <summary>
 /// Checks if command is pressed on keyboard or controller. 
-/// Also checks if command released on mouse.
 /// </summary>
 /// <param name="hMod">test</param>
 /// <returns></returns>
