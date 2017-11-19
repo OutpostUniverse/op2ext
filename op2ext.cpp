@@ -1,10 +1,11 @@
+#include "op2ext.h"
+
+#include "ModMgr.h"
+#include "IpDropDown.h"
+
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
-#include "op2ext.h"
-#include "ModMgr.h"
-#include "IpDropDown.h"
-#include <string>
 #include <vector>
 #include <filesystem>
 #include <algorithm>
@@ -29,8 +30,12 @@ static VolList vols;
 bool modStarting = false;
 CommandLineModuleManager modManager;
 
+#include <direct.h>
+
 BOOL WINAPI DllMain(HMODULE hMod, DWORD dwReason, LPVOID reserved)
 {
+	_chdir(GetGameDirectory().c_str());
+
 	// This will be called once the program is unpacked and running
 	if (dwReason == DLL_PROCESS_ATTACH) {
 		InitializeOP2Ext(hMod);
@@ -230,4 +235,9 @@ bool Op2MemSet(void* destBaseAddr, unsigned char value, int size)
 	bSuccess = VirtualProtect(destAddr, size, oldAttr, &ignoredAttr);
 
 	return (bSuccess != 0);
+}
+
+std::string GetOutpost2IniPath()
+{
+	return fs::path(GetGameDirectory()).append("outpost2.ini").string();
 }

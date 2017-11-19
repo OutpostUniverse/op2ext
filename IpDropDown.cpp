@@ -1,6 +1,11 @@
 #include "IpDropDown.h"
+
 #include "op2ext.h"
 #include <winsock.h> // From winsock.h, using functions inet_addr & gethostbyname.
+#include <string>
+#include <filesystem>
+
+namespace fs = std::experimental::filesystem;
 
 char ipStrings[10][47];
 int numIpStrings = 0;
@@ -8,7 +13,7 @@ int numIpStrings = 0;
 
 BOOL __stdcall EnableWindowNew(HWND hWnd, BOOL bEnable)
 {
-	// enable the window, of course
+	// enable the window
 	BOOL result = EnableWindow(hWnd, bEnable);
 
 	// populate the list with strings
@@ -17,7 +22,7 @@ BOOL __stdcall EnableWindowNew(HWND hWnd, BOOL bEnable)
 	for (int i = 0; i < 10; i++)
 	{
 		_itoa_s(i, tmpStr, 10);
-		GetPrivateProfileString("IPHistory", tmpStr, nullptr, ipStrings[i], MAX_PATH, ".\\outpost2.ini");
+		GetPrivateProfileString("IPHistory", tmpStr, nullptr, ipStrings[i], MAX_PATH, GetOutpost2IniPath().c_str());
 		if (strlen(ipStrings[i]) > 0)
 		{
 			SendMessage(hWnd, CB_ADDSTRING, 0, (LPARAM)ipStrings[i]);
@@ -36,10 +41,12 @@ unsigned long __stdcall inet_addrNew(const char *cp)
 	{
 		// try to gethostbyname it
 		hostent *he = gethostbyname(cp);
-		if (!he)
+		if (!he) {
 			return INADDR_NONE;
-		else
+		}
+		else {
 			result = (unsigned long)*he->h_addr_list[0];
+		}
 	}
 
 	// IP lookup ok, so look for duplicates and remove from list
@@ -49,27 +56,34 @@ unsigned long __stdcall inet_addrNew(const char *cp)
 			continue;
 		
 		// found duplicate, push all the other items up on top of it
-		for (int j=i; j<numIpStrings-1; j++)
-			strcpy_s(ipStrings[j], ipStrings[j+1]);
-		if (numIpStrings > 0)
+		for (int j = i; j < numIpStrings - 1; j++) {
+			strcpy_s(ipStrings[j], ipStrings[j + 1]);
+		}
+		if (numIpStrings > 0) {
 			numIpStrings--;
+		}
 	}
 
-	if (numIpStrings < 10)
+	if (numIpStrings < 10) {
 		numIpStrings++;
+	}
 
 	// Next, push everything else down
-	for (int i = numIpStrings - 1; i > 0; i--)
-		strcpy_s(ipStrings[i], ipStrings[i-1]);
-	
+	for (int i = numIpStrings - 1; i > 0; i--) {
+		strcpy_s(ipStrings[i], ipStrings[i - 1]);
+	}
+
 	// Copy it in
 	strcpy_s(ipStrings[0], cp);
 	// Now write all the strings out
-	WritePrivateProfileString("IPHistory", nullptr, nullptr, ".\\outpost2.ini");
+
+	std::string iniFilename = GetGameDirectory();
+
+	WritePrivateProfileString("IPHistory", nullptr, nullptr, GetOutpost2IniPath().c_str());
 	char tmpStr[4];
 	for (int i = 0; i < numIpStrings; i++) {
 		_itoa_s(i, tmpStr, 10);
-		WritePrivateProfileString("IPHistory", tmpStr, ipStrings[i], ".\\outpost2.ini");
+		WritePrivateProfileString("IPHistory", tmpStr, ipStrings[i], GetOutpost2IniPath().c_str());
 	}
 
 	return result;

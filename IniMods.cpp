@@ -1,7 +1,9 @@
+#include "op2ext.h"
+
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-#include <stdio.h>
 
+#include <stdio.h>
 
 // Export (not absolutely required, but should be used if any additional parameters are read from the .ini file)
 typedef void (*InitModFunc)(char* iniSectionName);
@@ -18,7 +20,8 @@ void LoadIniMods()
 	InitModFunc initModFunc;
 
 	// Get list of mods to load
-	GetPrivateProfileString("Game", "LoadAddons", "", modList, sizeof(modList), ".\\Outpost2.ini");
+	std::string iniPath = GetOutpost2IniPath();
+	GetPrivateProfileString("Game", "LoadAddons", "", modList, sizeof(modList), iniPath.c_str());
 
 	// Process the string for each mod
 	char* strtokState;
@@ -26,7 +29,7 @@ void LoadIniMods()
 	while (sectionName != 0)
 	{
 		// Get the DLL name from the corresponding section
-		GetPrivateProfileString(sectionName, "Dll", "", dllName, sizeof(dllName), ".\\Outpost2.ini");
+		GetPrivateProfileString(sectionName, "Dll", "", dllName, sizeof(dllName), iniPath.c_str());
 		// Try to load a DLL with the given name (possibly "")
 		hLib = LoadLibrary(dllName);
 		// Check if DLL loaded successfully

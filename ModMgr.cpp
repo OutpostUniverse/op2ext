@@ -127,12 +127,8 @@ void CommandLineModuleManager::ApplyMod(std::string modDir)
 		return;
 	}
 
-	// BRETT208 18NOV17: THIS DEBUG LINE IS NOT DELETED WHEN OP2 IS CLOSED OUT. 
-	//    IT CAUSES STOCK COLONY MAPS NOT TO WORK ON FOLLOWON USES WHEN NO MOD IS LOADED AFTER A SESSION LOADING MULTITEK2.
-	//    IT APPEARS THE DEBUG SECTION IS NOT DELETED BY LINE 163 EVEN THOUGH THAT CODE RUNS WHEN OUTPOST 2 EXITS.
-	//    I BELIEVE THE DESTROY FUNCTION IS ATTEMPTING TO DESTROY IT IN THE CURRENT WORKING DIRECTORY AND NOT THE EXECUTABLE'S DIRECTORY.
 	// Set that magic DEBUG\ART_PATH value in the .ini
-	WritePrivateProfileString("DEBUG", "ART_PATH", modDir.c_str(), ".\\outpost2.ini");
+	WritePrivateProfileString("DEBUG", "ART_PATH", modDir.c_str(), GetOutpost2IniPath().c_str());
 
 	std::string dllName = fs::path(modDir).append("\\op2mod.dll").string();
 	modDllHandle = LoadLibrary(dllName.c_str());
@@ -161,7 +157,7 @@ void CommandLineModuleManager::UnApplyMod()
 	}
 
 	// Destroy the DEBUG section
-	WritePrivateProfileString("DEBUG", nullptr, nullptr, ".\\outpost2.ini");
+	WritePrivateProfileString("DEBUG", nullptr, nullptr, GetOutpost2IniPath().c_str());
 }
 
 void CommandLineModuleManager::ModStartup()
