@@ -27,7 +27,7 @@ int loadOffset = 0;
 static VolList vols;
 
 bool modStarting = false;
-
+CommandLineModuleManager modManager;
 
 BOOL WINAPI DllMain(HMODULE hMod, DWORD dwReason, LPVOID reserved)
 {
@@ -36,7 +36,7 @@ BOOL WINAPI DllMain(HMODULE hMod, DWORD dwReason, LPVOID reserved)
 		InitializeOP2Ext(hMod);
 	}
 	else if (dwReason == DLL_PROCESS_DETACH) {
-		UnApplyMod();
+		modManager.UnApplyMod();
 	}
 
 	return TRUE;
@@ -57,10 +57,7 @@ void InitializeOP2Ext(HMODULE hMod)
 	LoadIniMods();
 
 	// Load command line modules
-	char *modDir = GetCurrentModDir();
-	if (modDir != nullptr) {
-		ApplyMod(modDir);
-	}
+	modManager.ApplyMods();
 
 	LocateVolFiles();
 	LocateVolFiles("Addon");
@@ -168,7 +165,7 @@ HINSTANCE __stdcall LoadLibraryNew(LPCTSTR lpLibFileName)
 	{
 		//LocalizeStrings();
 		modStarting = true;
-		ModStartup();
+		modManager.ModStartup();
 	}
 
 	return result;

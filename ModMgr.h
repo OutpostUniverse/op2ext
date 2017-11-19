@@ -7,11 +7,19 @@
 #include <vector>
 
 EXPORT char* GetCurrentModDir();
-void ApplyMod(char *modDir);
-void UnApplyMod();
-void ModStartup();
 
-// private:
-void parseCommandLine(std::vector<std::string>& arguments);
-bool ParseArgumentName(std::string& argument);
-std::string ParseLoadModCommand(std::vector<std::string> arguments);
+class CommandLineModuleManager {
+public:
+	void ApplyMods();
+	void UnApplyMod();
+	void ModStartup();
+	std::string GetCurrentModuleDirectory();
+
+private:
+	HMODULE modDllHandle = nullptr;
+
+	void ApplyMod(std::string modDir);
+	void ParseCommandLine(std::vector<std::string>& arguments);
+	bool ParseArgumentName(std::string& argument);
+	std::string ParseLoadModCommand(std::vector<std::string> arguments);
+};
