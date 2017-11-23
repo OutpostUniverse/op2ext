@@ -92,10 +92,11 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <OutputFile>.\Release\op2ext.dll</OutputFile>
       <ImportLibrary>.\Release\op2ext.lib</ImportLibrary>
-      <AdditionalDependencies>wsock32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Outpost2DLL.lib;wsock32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <FixedBaseAddress>true</FixedBaseAddress>
       <BaseAddress>0x10000000</BaseAddress>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -137,10 +138,11 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <OutputFile>.\Debug\op2ext.dll</OutputFile>
       <ImportLibrary>.\Debug\op2ext.lib</ImportLibrary>
-      <AdditionalDependencies>odbc32.lib;odbccp32.lib;wsock32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Outpost2DLL.lib;odbc32.lib;odbccp32.lib;wsock32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <FixedBaseAddress>true</FixedBaseAddress>
       <BaseAddress>0x10000000</BaseAddress>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <PostBuildEvent>
       <Command>copy "$(TargetPath)" ..\..\outpost2SVN\GameDownload\Outpost2\trunk\</Command>
