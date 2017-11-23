@@ -9,16 +9,35 @@
 #include <vector>
 #include <filesystem>
 #include <algorithm>
+#include <direct.h>
 
 namespace fs = std::experimental::filesystem;
 
 EXPORT int StubExt = 0;
 
+class __declspec(dllimport) TApp
+{
+public:
+	int Init();
+	void ShutDown();
+};
+
+int __fastcall ExtInit(TApp *thisPtr, int);
+void __fastcall ExtShutDown(TApp *thisPtr, int);
+
 
 void LoadIniMods();
+bool UnloadIniMods();
 
 // Shell HMODULE to load it before OP2 does
 //HMODULE hShellDll = NULL;
+DWORD *tAppInitCallAddr = (DWORD*)0x004A8878;
+DWORD tAppInitNewAddr = (DWORD)ExtInit;
+
+DWORD *tAppShutDownCallAddr = (DWORD*)0x004A88A6;
+DWORD tAppShutDownNewAddr = (DWORD)ExtShutDown;
+
+
 DWORD *loadLibraryDataAddr = (DWORD*)0x00486E0A;
 DWORD loadLibraryNewAddr = (DWORD)LoadLibraryNew;
 
@@ -30,18 +49,13 @@ static VolList vols;
 bool modStarting = false;
 CommandLineModuleManager modManager;
 
-#include <direct.h>
-
 BOOL WINAPI DllMain(HMODULE hMod, DWORD dwReason, LPVOID reserved)
 {
-	_chdir(GetGameDirectory().c_str());
+	//_chdir(GetGameDirectory().c_str());
 
 	// This will be called once the program is unpacked and running
 	if (dwReason == DLL_PROCESS_ATTACH) {
 		InitializeOP2Ext(hMod);
-	}
-	else if (dwReason == DLL_PROCESS_DETACH) {
-		modManager.UnApplyMod();
 	}
 
 	return TRUE;
@@ -55,6 +69,32 @@ BOOL WINAPI DllMain(HMODULE hMod, DWORD dwReason, LPVOID reserved)
 void InitializeOP2Ext(HMODULE hMod)
 {
 	SetLoadOffset();
+
+	// Replace call to gTApp.Init with custom routine
+	Op2MemSetDword(tAppInitCallAddr, tAppInitNewAddr - (loadOffset + (DWORD)tAppInitCallAddr + sizeof(void*)));
+
+	// Disable any more thread attach calls
+	DisableThreadLibraryCalls(hMod);
+}
+
+// Adjust offsets in case Outpost2.exe module is relocated
+void SetLoadOffset()
+{
+	void* op2ModuleBase = GetModuleHandle("Outpost2.exe");
+
+	if (op2ModuleBase == 0) {
+		PostErrorMessage("op2ext.cpp", __LINE__, "Could not find Outpost2.exe module base address.");
+	}
+
+	loadOffset = (int)op2ModuleBase - ExpectedOutpost2Addr;
+}
+
+int __fastcall ExtInit(TApp *thisPtr, int)
+{
+	DWORD ignoredAttr;
+
+	// Set the execute flag on the DSEG section so DEP doesn't terminate the game
+	VirtualProtect((void*)(loadOffset + 0x00585000), 0x00587000 - 0x00585000, PAGE_EXECUTE_READWRITE, &ignoredAttr);
 
 	InstallIpDropDown();
 
@@ -72,20 +112,23 @@ void InitializeOP2Ext(HMODULE hMod)
 	// Replace call to LoadLibrary with custom routine (address is indirect)
 	Op2MemSetDword(loadLibraryDataAddr, (int)&loadLibraryNewAddr);
 
-	// Disable any more thread attach calls
-	DisableThreadLibraryCalls(hMod);
+	// Replace call to gTApp.ShutDown with custom routine
+	Op2MemSetDword(tAppShutDownCallAddr, tAppShutDownNewAddr - (loadOffset + (DWORD)tAppShutDownCallAddr + sizeof(void*)));
+
+	// Call original function
+	return thisPtr->Init();
 }
 
-// Adjust offsets in case Outpost2.exe module is relocated
-void SetLoadOffset()
+void __fastcall ExtShutDown(TApp *thisPtr, int)
 {
-	void* op2ModuleBase = GetModuleHandle("Outpost2.exe");
+	// Call original function
+	thisPtr->ShutDown();
 
-	if (op2ModuleBase == 0) {
-		PostErrorMessage("op2ext.cpp", __LINE__, "Could not find Outpost2.exe module base address.");
-	}
+	// Remove any loaded command line mod
+	modManager.UnApplyMod();
 
-	loadOffset = (int)op2ModuleBase - ExpectedOutpost2Addr;
+	// Remove any active modules from the .ini file
+	UnloadIniMods();
 }
 
 __declspec(dllexport) std::string GetGameDirectory()
