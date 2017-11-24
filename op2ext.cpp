@@ -51,8 +51,6 @@ CommandLineModuleManager modManager;
 
 BOOL WINAPI DllMain(HMODULE hMod, DWORD dwReason, LPVOID reserved)
 {
-	//_chdir(GetGameDirectory().c_str());
-
 	// This will be called once the program is unpacked and running
 	if (dwReason == DLL_PROCESS_ATTACH) {
 		InitializeOP2Ext(hMod);
@@ -199,7 +197,7 @@ EXPORT void SetSerialNumber(char num1, char num2, char num3)
 	}
 	else {
 		char buffer[8];
-		_snprintf_s(buffer, sizeof(buffer), "%i.%i.%i.%i", 0, num1, num2, num3);
+		_snprintf_s(buffer, sizeof(buffer), "%i.%i.%i.%i", num1, num2, 0, num3);
 		Op2MemCopy(verStrAddr, buffer, sizeof(buffer));
 	}
 }
