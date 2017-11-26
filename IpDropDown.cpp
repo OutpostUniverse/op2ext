@@ -10,7 +10,6 @@ namespace fs = std::experimental::filesystem;
 char ipStrings[10][47];
 int numIpStrings = 0;
 
-
 BOOL __stdcall EnableWindowNew(HWND hWnd, BOOL bEnable)
 {
 	// enable the window
@@ -29,32 +28,33 @@ BOOL __stdcall EnableWindowNew(HWND hWnd, BOOL bEnable)
 			numIpStrings++;
 		}
 	}
+
 	return result;
 }
 
 
-unsigned long __stdcall inet_addrNew(const char *cp)
+unsigned long __stdcall inet_addrNew(const char* cp)
 {
-	// First of all see if the IP or hostname was valid
+	// Check if the IP or hostname was valid
 	unsigned long result = inet_addr(cp);
 	if (result == INADDR_NONE)
 	{
-		// try to gethostbyname it
-		hostent *he = gethostbyname(cp);
+		hostent* he = gethostbyname(cp);
+
 		if (!he) {
 			return INADDR_NONE;
 		}
-		else {
-			result = (unsigned long)*he->h_addr_list[0];
-		}
+		
+		result = (unsigned long)*he->h_addr_list[0];
 	}
 
 	// IP lookup ok, so look for duplicates and remove from list
-	for (int i=0; i<numIpStrings; i++)
+	for (int i = 0; i < numIpStrings; i++)
 	{
-		if (strcmp(ipStrings[i], cp) != 0)
+		if (strcmp(ipStrings[i], cp) != 0) {
 			continue;
-		
+		}
+
 		// found duplicate, push all the other items up on top of it
 		for (int j = i; j < numIpStrings - 1; j++) {
 			strcpy_s(ipStrings[j], ipStrings[j + 1]);
@@ -75,28 +75,26 @@ unsigned long __stdcall inet_addrNew(const char *cp)
 
 	// Copy it in
 	strcpy_s(ipStrings[0], cp);
+
 	// Now write all the strings out
+	std::string iniPath = GetOutpost2IniPath();
 
-	std::string iniFilename = GetGameDirectory();
-
-	WritePrivateProfileString("IPHistory", nullptr, nullptr, GetOutpost2IniPath().c_str());
+	WritePrivateProfileString("IPHistory", nullptr, nullptr, iniPath.c_str());
 	char tmpStr[4];
 	for (int i = 0; i < numIpStrings; i++) {
 		_itoa_s(i, tmpStr, 10);
-		WritePrivateProfileString("IPHistory", tmpStr, ipStrings[i], GetOutpost2IniPath().c_str());
+		WritePrivateProfileString("IPHistory", tmpStr, ipStrings[i], iniPath.c_str());
 	}
 
 	return result;
 }
 
-
-
-// Data constants for following function
+// Data constants for InstallIpDropDown
 DWORD newEnableWindowAddr = (DWORD)EnableWindowNew;
 DWORD newInetAddr = (DWORD)inet_addrNew;
-DWORD *populateComboBoxAddr = (DWORD*)0x004197C1;
-DWORD *saveIpTextAddr = (DWORD*)0x004C0E36;
-void *nopDataAddr = (void*)0x0041988F;
+DWORD* populateComboBoxAddr = (DWORD*)0x004197C1;
+DWORD* saveIpTextAddr = (DWORD*)0x004C0E36;
+void* nopDataAddr = (void*)0x0041988F;
 
 void InstallIpDropDown()
 {
