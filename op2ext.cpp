@@ -25,10 +25,6 @@ public:
 int __fastcall ExtInit(TApp *thisPtr, int);
 void __fastcall ExtShutDown(TApp *thisPtr, int);
 
-
-void LoadIniMods();
-bool UnloadIniMods();
-
 // Shell HMODULE to load it before OP2 does
 //HMODULE hShellDll = NULL;
 DWORD *tAppInitCallAddr = (DWORD*)0x004A8878;
@@ -45,6 +41,7 @@ const int ExpectedOutpost2Addr = 0x00400000;
 int loadOffset = 0;
 
 static VolList vols;
+static IniModuleLoader iniModuleLoader;
 
 bool modStarting = false;
 CommandLineModuleManager modManager;
@@ -97,7 +94,7 @@ int __fastcall ExtInit(TApp *thisPtr, int)
 	InstallIpDropDown();
 
 	// Load all active modules from the .ini file
-	LoadIniMods();
+	iniModuleLoader.LoadIniMods();
 
 	// Load command line modules
 	modManager.ApplyMods();
@@ -126,7 +123,7 @@ void __fastcall ExtShutDown(TApp *thisPtr, int)
 	modManager.UnApplyMod();
 
 	// Remove any active modules from the .ini file
-	UnloadIniMods();
+	iniModuleLoader.UnloadIniMods();
 }
 
 __declspec(dllexport) std::string GetGameDirectory()
@@ -281,4 +278,55 @@ bool Op2MemSet(void* destBaseAddr, unsigned char value, int size)
 std::string GetOutpost2IniPath()
 {
 	return fs::path(GetGameDirectory()).append("outpost2.ini").string();
+}
+
+// Calls Windows Macro GetPrivateProfileSring.
+// Hides implementation detail of creating a buffer. 
+std::string GetPrivateProfileStdString(std::string appName, std::string key, std::string filename)
+{
+	char buffer[1024];
+	int returnSize = GetPrivateProfileString(appName.c_str(), key.c_str(), "", buffer, sizeof(buffer), filename.c_str());
+
+	//Brett 26Nov17: https://msdn.microsoft.com/en-us/library/windows/desktop/ms724353(v=vs.85).aspx
+	//GetPrivateProfileString is provided only for compatibility with 16 - bit Windows - based applications.
+	// Applications should store initialization information in the registry now.
+
+	//GetPrivateProfileString's return value is the number of characters copied to the buffer, 
+	// not including the terminating null character.
+	// if either lpAppName or lpKeyName are NULL & the supplied buffer is too small, the return will be nSize - 2;
+
+	//size_t bufferInterval = 1024;
+	//size_t currentBufferSize = 0;
+	//char* buffer = nullptr;
+
+	//do
+	//{
+		//currentBufferSize += bufferInterval;
+		//delete buffer;
+		//char* buffer = new char[currentBufferSize];
+
+		//int returnSize = GetPrivateProfileString(appName.c_str(), key.c_str(), "", buffer, currentBufferSize, filename.c_str());
+	//} while (std::strlen(&buffer[0]) + 2 >= currentBufferSize);
+
+	//delete buffer;
+
+	return std::string(buffer);
+}
+
+#include <sstream>
+#include <iostream>
+
+std::vector<std::string> SplitString(std::string stringToSplit, char delimiter)
+{
+	std::vector<std::string> strings;
+
+	std::istringstream stringStream(stringToSplit);
+	std::string currentToken;
+
+	while (std::getline(stringStream, currentToken, delimiter)) {
+		std::cout << currentToken << std::endl;
+		strings.push_back(currentToken);
+	}
+
+	return strings;
 }

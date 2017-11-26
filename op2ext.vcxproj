@@ -149,13 +149,14 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="IniMods.cpp" />
+    <ClCompile Include="IniModuleLoader.cpp" />
     <ClCompile Include="IpDropDown.cpp" />
     <ClCompile Include="ModMgr.cpp" />
     <ClCompile Include="op2ext.cpp" />
     <ClCompile Include="VolList.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="IniModuleLoader.h" />
     <ClInclude Include="IpDropDown.h" />
     <ClInclude Include="ModMgr.h" />
     <ClInclude Include="op2ext.h" />

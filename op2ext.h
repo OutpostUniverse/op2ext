@@ -1,5 +1,6 @@
 #pragma once
 
+#include "IniModuleLoader.h"
 #include "VolList.h"
 #include <stdlib.h>
 #include <stdio.h>
@@ -18,6 +19,7 @@
 
 
 extern VolList vols;
+extern IniModuleLoader iniModuleLoader;
 
 // NLS for OP2
 //void LocalizeStrings();
@@ -33,6 +35,8 @@ EXPORT [[deprecated("GetGameDir was deprecated in op2ext ver1.1.0. Use GetGameDi
 void GetGameDir(char *buffer);
 
 std::string GetOutpost2IniPath();
+std::string GetPrivateProfileStdString(std::string appName, std::string key, std::string filename);
+std::vector<std::string> SplitString(std::string stringToSplit, char delimiter);
 
 void LocateVolFiles(std::string relativeDirectory = "");
 
