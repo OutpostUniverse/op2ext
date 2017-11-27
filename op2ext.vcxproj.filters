@@ -36,6 +36,9 @@
     <ClCompile Include="GlobalDefines.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="OP2Memory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IpDropDown.h">
@@ -60,6 +63,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GlobalDefines.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OP2Memory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

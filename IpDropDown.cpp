@@ -1,7 +1,7 @@
 #include "IpDropDown.h"
 
 #include "FileSystemHelper.h"
-#include "op2ext.h" 
+#include "OP2Memory.h"
 #include <winsock.h> // From winsock.h, using functions inet_addr & gethostbyname.
 #include <string>
 #include <filesystem>

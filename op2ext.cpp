@@ -3,6 +3,7 @@
 #include "ModMgr.h"
 #include "IpDropDown.h"
 #include "FileSystemHelper.h"
+#include "OP2Memory.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -28,18 +29,14 @@ void __fastcall ExtShutDown(TApp *thisPtr, int);
 
 // Shell HMODULE to load it before OP2 does
 //HMODULE hShellDll = NULL;
-DWORD *tAppInitCallAddr = (DWORD*)0x004A8878;
+DWORD* tAppInitCallAddr = (DWORD*)0x004A8878;
 DWORD tAppInitNewAddr = (DWORD)ExtInit;
 
-DWORD *tAppShutDownCallAddr = (DWORD*)0x004A88A6;
+DWORD* tAppShutDownCallAddr = (DWORD*)0x004A88A6;
 DWORD tAppShutDownNewAddr = (DWORD)ExtShutDown;
 
-
-DWORD *loadLibraryDataAddr = (DWORD*)0x00486E0A;
+DWORD* loadLibraryDataAddr = (DWORD*)0x00486E0A;
 DWORD loadLibraryNewAddr = (DWORD)LoadLibraryNew;
-
-const int ExpectedOutpost2Addr = 0x00400000;
-int loadOffset = 0;
 
 static VolList vols;
 static IniModuleLoader iniModuleLoader;
@@ -61,18 +58,6 @@ BOOL WINAPI DllMain(HMODULE hMod, DWORD dwReason, LPVOID reserved)
 	}
 
 	return TRUE;
-}
-
-// Adjust offsets in case Outpost2.exe module is relocated
-void SetLoadOffset()
-{
-	void* op2ModuleBase = GetModuleHandle("Outpost2.exe");
-
-	if (op2ModuleBase == 0) {
-		PostErrorMessage("op2ext.cpp", __LINE__, "Could not find Outpost2.exe module base address.");
-	}
-
-	loadOffset = (int)op2ModuleBase - ExpectedOutpost2Addr;
 }
 
 int __fastcall ExtInit(TApp *thisPtr, int)
@@ -140,13 +125,13 @@ void LocateVolFiles(std::string relativeSearchDirectory)
 	}
 }
 
-EXPORT void AddVolToList(char *volName)
+EXPORT void AddVolToList(char* volFilename)
 {
 	if (modStarting) {
 		PostErrorMessage("op2ext.cpp", __LINE__, "VOLs may not be added to the list after game startup.");
 	}
 	else {
-		vols.AddVolFile(volName);
+		vols.AddVolFile(volFilename);
 	}
 }
 
@@ -176,65 +161,4 @@ HINSTANCE __stdcall LoadLibraryNew(LPCTSTR lpLibFileName)
 	}
 
 	return result;
-}
-
-bool Op2MemCopy(void* destBaseAddr, void* sourceAddr, int size)
-{
-	DWORD oldAttr;
-	DWORD ignoredAttr;
-	BOOL bSuccess;
-	void* destAddr = (void*)(loadOffset + (int)destBaseAddr);
-
-	// Try to unprotect the memory
-	bSuccess = VirtualProtect(destAddr, size, PAGE_EXECUTE_READWRITE, &oldAttr);
-	if (!bSuccess){
-		char buffer[64];
-		_snprintf_s(buffer, sizeof(buffer), "Op2MemCopy: Error unprotecting memory at: %x", reinterpret_cast<unsigned int>(destAddr));
-		PostErrorMessage("op2ext.cpp", __LINE__, buffer);
-		return false;	// Abort if failed
-	}
-
-	// Do the memory copy
-	memcpy(destAddr, sourceAddr, size);
-	
-	// Reprotect the memory with the original attributes
-	bSuccess = VirtualProtect(destAddr, size, oldAttr, &ignoredAttr);
-
-	return (bSuccess != 0);
-}
-
-bool Op2MemSetDword(void* destBaseAddr, int dword)
-{
-	// Just chain to the memory copy function
-	return Op2MemCopy(destBaseAddr, &dword, sizeof(dword));
-}
-
-bool Op2MemSetDword(void* destBaseAddr, void* dword)
-{
-	return Op2MemSetDword(destBaseAddr, (int)dword);
-}
-
-bool Op2MemSet(void* destBaseAddr, unsigned char value, int size)
-{
-	DWORD oldAttr;
-	DWORD ignoredAttr;
-	BOOL bSuccess;
-	void* destAddr = (void*)(loadOffset + (int)destBaseAddr);
-
-	// Try to unprotect the memory
-	bSuccess = VirtualProtect(destAddr, size, PAGE_EXECUTE_READWRITE, &oldAttr);
-	if (!bSuccess){
-		char buffer[64];
-		_snprintf_s(buffer, sizeof(buffer), "Op2MemSet: Error unprotecting memory at: %x", reinterpret_cast<unsigned int>(destAddr));
-		PostErrorMessage("op2ext.cpp", __LINE__, buffer);
-		return false;	// Abort if failed
-	}
-	
-	// Do the memory copy
-	memset(destAddr, value, size);
-	
-	// Reprotect the memory with the original attributes
-	bSuccess = VirtualProtect(destAddr, size, oldAttr, &ignoredAttr);
-
-	return (bSuccess != 0);
 }

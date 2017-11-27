@@ -155,6 +155,7 @@
     <ClCompile Include="IpDropDown.cpp" />
     <ClCompile Include="ModMgr.cpp" />
     <ClCompile Include="op2ext.cpp" />
+    <ClCompile Include="OP2Memory.cpp" />
     <ClCompile Include="VolList.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -164,6 +165,7 @@
     <ClInclude Include="IpDropDown.h" />
     <ClInclude Include="ModMgr.h" />
     <ClInclude Include="op2ext.h" />
+    <ClInclude Include="OP2Memory.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="VolList.h" />
   </ItemGroup>
