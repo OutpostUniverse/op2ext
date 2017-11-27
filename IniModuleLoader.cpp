@@ -5,13 +5,13 @@
 #include <stdio.h>
 
 // Load all active modules specified in the .ini file
-void IniModuleLoader::LoadIniMods()
+void IniModuleLoader::LoadModules()
 {
 	std::vector<std::string> sectionNames = GetModuleNames();
 
 	for (std::string sectionName : sectionNames)
 	{
-		IniModEntry moduleEntry;
+		IniModuleEntry moduleEntry;
 		if (!LoadModuleDll(moduleEntry, sectionName)) {
 			continue;
 		}
@@ -22,16 +22,16 @@ void IniModuleLoader::LoadIniMods()
 		moduleEntry.destroyModFunc = (DestroyModFunc)GetProcAddress(moduleEntry.handle, "DestroyMod");
 
 		// Store mod's HINSTANCE, and its destroy function if it exists
-		iniModList.push_front(moduleEntry);
+		moduleList.push_front(moduleEntry);
 	}
 }
 
 // Unload all active modules specified in the .ini file
-bool IniModuleLoader::UnloadIniMods()
+bool IniModuleLoader::UnloadModules()
 {
 	bool result = true;
 
-	for (std::list<IniModEntry>::iterator moduleEntry = iniModList.begin(); moduleEntry != iniModList.end(); ++moduleEntry)
+	for (std::list<IniModuleEntry>::iterator moduleEntry = moduleList.begin(); moduleEntry != moduleList.end(); ++moduleEntry)
 	{
 		// Call the DestroyMod function if it exists
 		if (moduleEntry->destroyModFunc != 0)
@@ -45,20 +45,20 @@ bool IniModuleLoader::UnloadIniMods()
 		FreeLibrary(moduleEntry->handle);
 	}
 
-	iniModList.clear();
+	moduleList.clear();
 
 	return result;
 }
 
 std::vector<std::string> IniModuleLoader::GetModuleNames()
 {
-	std::string modList = GetPrivateProfileStdString("Game", "LoadAddons", GetOutpost2IniPath());
-	std::vector<std::string> sectionNames = SplitString(modList, ',');
+	std::string ModuleNames = GetPrivateProfileStdString("Game", "LoadAddons", GetOutpost2IniPath());
+	std::vector<std::string> moduleNamesSplit = SplitString(ModuleNames, ',');
 
-	return sectionNames;
+	return moduleNamesSplit;
 }
 
-bool IniModuleLoader::LoadModuleDll(IniModEntry& moduleEntry, std::string sectionName)
+bool IniModuleLoader::LoadModuleDll(IniModuleEntry& moduleEntry, std::string sectionName)
 {
 	// Get the DLL name from the corresponding section
 	std::string dllName = GetPrivateProfileStdString(sectionName, "Dll", GetOutpost2IniPath());
@@ -74,7 +74,7 @@ bool IniModuleLoader::LoadModuleDll(IniModEntry& moduleEntry, std::string sectio
 	return true;
 }
 
-void IniModuleLoader::CallModuleInitialization(IniModEntry& currentModule, std::string sectionName)
+void IniModuleLoader::CallModuleInitialization(IniModuleEntry& currentModule, std::string sectionName)
 {
 	// Try to find an initialization function
 	InitModFunc initModFunc = (InitModFunc)GetProcAddress(currentModule.handle, "InitMod");

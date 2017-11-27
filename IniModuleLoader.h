@@ -15,23 +15,23 @@ To load a single module for a single game session, use the ModMgr.
 class IniModuleLoader
 {
 public:
-	void LoadIniMods();
-	bool UnloadIniMods();
+	void LoadModules();
+	bool UnloadModules();
 
 private:
 	// Export (not absolutely required, but should be used if any additional parameters are read from the .ini file)
 	typedef void(*InitModFunc)(char* iniSectionName);
 	typedef bool(*DestroyModFunc)();
 
-	struct IniModEntry
+	struct IniModuleEntry
 	{
 		HINSTANCE handle;
 		DestroyModFunc destroyModFunc;
 	};
 
-	std::list<IniModEntry> iniModList;
+	std::list<IniModuleEntry> moduleList;
 
 	std::vector<std::string> GetModuleNames();
-	bool LoadModuleDll(IniModEntry& moduleEntry, std::string sectionName);
-	void CallModuleInitialization(IniModEntry& currentModule, std::string sectionName);
+	bool LoadModuleDll(IniModuleEntry& moduleEntry, std::string sectionName);
+	void CallModuleInitialization(IniModuleEntry& currentModule, std::string sectionName);
 };

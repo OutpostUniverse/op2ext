@@ -70,7 +70,7 @@ int __fastcall ExtInit(TApp *thisPtr, int)
 	InstallIpDropDown();
 
 	// Load all active modules from the .ini file
-	iniModuleLoader.LoadIniMods();
+	iniModuleLoader.LoadModules();
 
 	// Load command line modules
 	modManager.ApplyMods();
@@ -99,7 +99,7 @@ void __fastcall ExtShutDown(TApp *thisPtr, int)
 	modManager.UnApplyMod();
 
 	// Remove any active modules from the .ini file
-	iniModuleLoader.UnloadIniMods();
+	iniModuleLoader.UnloadModules();
 }
 
 /**
