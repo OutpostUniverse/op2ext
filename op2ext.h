@@ -2,20 +2,11 @@
 
 #include "IniModuleLoader.h"
 #include "VolList.h"
+#include "GlobalDefines.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <string>
-
-// general stuff
-#define EXPORT extern "C" __declspec(dllexport) // qualifiers
-
-
-#ifdef DEBUG
-#define DBG(s) OutputDebugString(s)
-#else
-#define DBG(s)
-#endif
 
 
 extern VolList vols;
@@ -27,25 +18,13 @@ void ConvLangStr(char *instr, char *outstr);
 
 void SetLoadOffset();
 
-extern __declspec(dllexport) std::string GetGameDirectory();
-
-EXPORT [[deprecated("GetGameDir was deprecated in op2ext ver1.1.0. Use GetGameDirectory instead.")]] 
-void GetGameDir(char *buffer);
-
-std::string GetOutpost2IniPath();
-std::string GetPrivateProfileStdString(std::string appName, std::string key, std::string filename);
-std::vector<std::string> SplitString(std::string stringToSplit, char delimiter);
-
 void LocateVolFiles(std::string relativeDirectory = "");
-
-void PostErrorMessage(std::string sourceFilename, long lineInSourceCode, std::string errorMessage);
 
 EXPORT void AddVolToList(char *volName);
 EXPORT void SetSerialNumber(char num1, char num2, char num3);
 
 // Prototype for patch to LoadLibrary, where it loads OP2Shell.dll
 HINSTANCE __stdcall LoadLibraryNew(LPCTSTR lpLibFileName);
-
 
 bool Op2MemCopy(void* destBaseAddr, void* sourceAddr, int size);
 bool Op2MemSet(void* destBaseAddr, unsigned char value, int size);

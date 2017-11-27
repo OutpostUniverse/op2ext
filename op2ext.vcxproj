@@ -149,6 +149,8 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="FileSystemHelper.cpp" />
+    <ClCompile Include="GlobalDefines.cpp" />
     <ClCompile Include="IniModuleLoader.cpp" />
     <ClCompile Include="IpDropDown.cpp" />
     <ClCompile Include="ModMgr.cpp" />
@@ -156,6 +158,8 @@
     <ClCompile Include="VolList.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="FileSystemHelper.h" />
+    <ClInclude Include="GlobalDefines.h" />
     <ClInclude Include="IniModuleLoader.h" />
     <ClInclude Include="IpDropDown.h" />
     <ClInclude Include="ModMgr.h" />

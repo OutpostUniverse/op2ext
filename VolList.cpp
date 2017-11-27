@@ -1,4 +1,5 @@
 #include "VolList.h"
+#include "GlobalDefines.h"
 #include "op2ext.h"
 
 VolList::VolList()
