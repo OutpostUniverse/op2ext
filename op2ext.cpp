@@ -50,26 +50,16 @@ BOOL WINAPI DllMain(HMODULE hMod, DWORD dwReason, LPVOID reserved)
 {
 	// This will be called once the program is unpacked and running
 	if (dwReason == DLL_PROCESS_ATTACH) {
-		InitializeOP2Ext(hMod);
+		SetLoadOffset();
+
+		// Replace call to gTApp.Init with custom routine
+		Op2MemSetDword(tAppInitCallAddr, tAppInitNewAddr - (loadOffset + (DWORD)tAppInitCallAddr + sizeof(void*)));
+
+		// Disable any more thread attach calls
+		DisableThreadLibraryCalls(hMod);
 	}
 
 	return TRUE;
-}
-
-/// <summary>
-/// Checks if command is pressed on keyboard or controller. 
-/// </summary>
-/// <param name="hMod">test</param>
-/// <returns></returns>
-void InitializeOP2Ext(HMODULE hMod)
-{
-	SetLoadOffset();
-
-	// Replace call to gTApp.Init with custom routine
-	Op2MemSetDword(tAppInitCallAddr, tAppInitNewAddr - (loadOffset + (DWORD)tAppInitCallAddr + sizeof(void*)));
-
-	// Disable any more thread attach calls
-	DisableThreadLibraryCalls(hMod);
 }
 
 // Adjust offsets in case Outpost2.exe module is relocated
@@ -284,33 +274,30 @@ std::string GetOutpost2IniPath()
 // Hides implementation detail of creating a buffer. 
 std::string GetPrivateProfileStdString(std::string appName, std::string key, std::string filename)
 {
-	char buffer[1024];
-	int returnSize = GetPrivateProfileString(appName.c_str(), key.c_str(), "", buffer, sizeof(buffer), filename.c_str());
+	size_t bufferInterval = 1024;
+	size_t currentBufferSize = bufferInterval;
+	char* buffer = new char[currentBufferSize];
 
-	//Brett 26Nov17: https://msdn.microsoft.com/en-us/library/windows/desktop/ms724353(v=vs.85).aspx
-	//GetPrivateProfileString is provided only for compatibility with 16 - bit Windows - based applications.
-	// Applications should store initialization information in the registry now.
+	while (true)
+	{
+		int returnSize = GetPrivateProfileString(appName.c_str(), key.c_str(), "", buffer, currentBufferSize, filename.c_str());
 
-	//GetPrivateProfileString's return value is the number of characters copied to the buffer, 
-	// not including the terminating null character.
-	// if either lpAppName or lpKeyName are NULL & the supplied buffer is too small, the return will be nSize - 2;
+		//GetPrivateProfileString's return value is the number of characters copied to the buffer, 
+		// not including the terminating null character.
+		// A full buffer could be nSize - 2 if either lpAppName or lpKeyName are NULL AND the supplied buffer is too small
+		if (std::strlen(&buffer[0]) + 2 < currentBufferSize) {
+			break;
+		}
 
-	//size_t bufferInterval = 1024;
-	//size_t currentBufferSize = 0;
-	//char* buffer = nullptr;
+		delete buffer;
+		currentBufferSize += bufferInterval;
+		buffer = new char[currentBufferSize];
+	}
+	
+	std::string profileString(buffer);
+	delete buffer;
 
-	//do
-	//{
-		//currentBufferSize += bufferInterval;
-		//delete buffer;
-		//char* buffer = new char[currentBufferSize];
-
-		//int returnSize = GetPrivateProfileString(appName.c_str(), key.c_str(), "", buffer, currentBufferSize, filename.c_str());
-	//} while (std::strlen(&buffer[0]) + 2 >= currentBufferSize);
-
-	//delete buffer;
-
-	return std::string(buffer);
+	return profileString;	
 }
 
 #include <sstream>

@@ -25,8 +25,6 @@ extern IniModuleLoader iniModuleLoader;
 //void LocalizeStrings();
 void ConvLangStr(char *instr, char *outstr);
 
-void InitializeOP2Ext(HMODULE hMod);
-
 void SetLoadOffset();
 
 extern __declspec(dllexport) std::string GetGameDirectory();
