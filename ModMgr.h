@@ -6,8 +6,6 @@
 #include <string>
 #include <vector>
 
-EXPORT char* GetCurrentModDir();
-
 class CommandLineModuleManager {
 public:
 	void ApplyMods();
@@ -23,3 +21,7 @@ private:
 	bool ParseArgumentName(std::string& argument);
 	std::string ParseLoadModCommand(std::vector<std::string> arguments);
 };
+
+extern CommandLineModuleManager modManager;
+
+EXPORT char* GetCurrentModDir();

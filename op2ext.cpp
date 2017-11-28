@@ -42,7 +42,6 @@ static VolList vols;
 static IniModuleLoader iniModuleLoader;
 
 bool modStarting = false;
-CommandLineModuleManager modManager;
 
 BOOL WINAPI DllMain(HMODULE hMod, DWORD dwReason, LPVOID reserved)
 {
