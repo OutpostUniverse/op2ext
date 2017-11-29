@@ -20,6 +20,7 @@ private:
 	void ParseCommandLine(std::vector<std::string>& arguments);
 	bool ParseArgumentName(std::string& argument);
 	std::string ParseLoadModCommand(std::vector<std::string> arguments);
+	std::string FormModRelativeDirectory(std::vector<std::string> arguments);
 };
 
 extern CommandLineModuleManager modManager;

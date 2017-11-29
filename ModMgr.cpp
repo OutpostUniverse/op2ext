@@ -95,16 +95,11 @@ std::string CommandLineModuleManager::ParseLoadModCommand(std::vector<std::strin
 		return std::string();
 	}
 
-	fs::path p(GetGameDirectory());
-
-	std::string modRelativeDirectory;
-	for (auto & argument : arguments) {
-		modRelativeDirectory += argument;
-	}
-
 	try
 	{
-		std::string modDirectory = p.append(modRelativeDirectory).string();
+		std::string modRelativeDirectory = FormModRelativeDirectory(arguments);
+
+		std::string modDirectory = fs::path(GetGameDirectory()).append(modRelativeDirectory).string();
 
 		if (GetFileAttributesA(modDirectory.c_str()) == -1) {
 			PostErrorMessage("ModMgr.cpp", __LINE__, "Mod directory does not exist: " + modDirectory);
@@ -118,6 +113,21 @@ std::string CommandLineModuleManager::ParseLoadModCommand(std::vector<std::strin
 		PostErrorMessage("ModMgr.cpp", __LINE__, "Unable to parse mod directory");
 		return std::string();
 	}
+}
+
+std::string CommandLineModuleManager::FormModRelativeDirectory(std::vector<std::string> arguments)
+{
+	std::string modRelativeDirectory;
+
+	for (size_t i = 0; i < arguments.size(); i++) {
+		modRelativeDirectory += arguments[i];
+
+		if (i < arguments.size() - 1) {
+			modRelativeDirectory += " ";
+		}
+	}
+
+	return modRelativeDirectory;
 }
 
 void CommandLineModuleManager::ApplyMod(std::string modDir)
