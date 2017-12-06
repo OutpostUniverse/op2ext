@@ -3,13 +3,18 @@
 #include "FileSystemHelper.h"
 #include "OP2Memory.h"
 #include <winsock.h> // From winsock.h, using functions inet_addr & gethostbyname.
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
 #include <string>
-#include <filesystem>
 
-namespace fs = std::experimental::filesystem;
+
+BOOL __stdcall EnableWindowNew(HWND hWnd, BOOL bEnable);
+unsigned long __stdcall inet_addrNew(const char* cp);
+void WriteAddressesToIniFile();
 
 char ipStrings[10][47];
 int numIpStrings = 0;
+
 
 BOOL __stdcall EnableWindowNew(HWND hWnd, BOOL bEnable)
 {
@@ -22,7 +27,9 @@ BOOL __stdcall EnableWindowNew(HWND hWnd, BOOL bEnable)
 	for (int i = 0; i < 10; i++)
 	{
 		_itoa_s(i, tmpStr, 10);
-		GetPrivateProfileString("IPHistory", tmpStr, nullptr, ipStrings[i], MAX_PATH, GetOutpost2IniPath().c_str());
+		std::string ipString = GetPrivateProfileStdString("IPHistory", tmpStr, GetOutpost2IniPath().c_str());
+		ipString.copy(ipStrings[i], ipString.size());
+
 		if (strlen(ipStrings[i]) > 0)
 		{
 			SendMessage(hWnd, CB_ADDSTRING, 0, (LPARAM)ipStrings[i]);
@@ -32,7 +39,6 @@ BOOL __stdcall EnableWindowNew(HWND hWnd, BOOL bEnable)
 
 	return result;
 }
-
 
 unsigned long __stdcall inet_addrNew(const char* cp)
 {
@@ -60,6 +66,7 @@ unsigned long __stdcall inet_addrNew(const char* cp)
 		for (int j = i; j < numIpStrings - 1; j++) {
 			strcpy_s(ipStrings[j], ipStrings[j + 1]);
 		}
+
 		if (numIpStrings > 0) {
 			numIpStrings--;
 		}
@@ -77,17 +84,21 @@ unsigned long __stdcall inet_addrNew(const char* cp)
 	// Copy it in
 	strcpy_s(ipStrings[0], cp);
 
-	// Now write all the strings out
+	WriteAddressesToIniFile();
+
+	return result;
+}
+
+void WriteAddressesToIniFile()
+{
+	// Write IP addresses to .ini file
 	std::string iniPath = GetOutpost2IniPath();
 
 	WritePrivateProfileString("IPHistory", nullptr, nullptr, iniPath.c_str());
-	char tmpStr[4];
-	for (int i = 0; i < numIpStrings; i++) {
-		_itoa_s(i, tmpStr, 10);
-		WritePrivateProfileString("IPHistory", tmpStr, ipStrings[i], iniPath.c_str());
-	}
 
-	return result;
+	for (int i = 0; i < numIpStrings; i++) {
+		WritePrivateProfileString("IPHistory", std::to_string(i).c_str(), ipStrings[i], iniPath.c_str());
+	}
 }
 
 // Data constants for InstallIpDropDown
