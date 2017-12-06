@@ -1,19 +1,37 @@
 #include "op2ext.h"
 
+#include "IniModuleLoader.h"
+#include "VolList.h"
 #include "ModMgr.h"
 #include "IpDropDown.h"
 #include "FileSystemHelper.h"
 #include "OP2Memory.h"
-
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <string>
 #include <vector>
 #include <filesystem>
 #include <algorithm>
 #include <direct.h>
 
 namespace fs = std::experimental::filesystem;
+
+
+extern IniModuleLoader iniModuleLoader;
+
+void LocateVolFiles(std::string relativeDirectory = "");
+
+// Declaration for patch to LoadLibrary, where it loads OP2Shell.dll
+HINSTANCE __stdcall LoadLibraryNew(LPCTSTR lpLibFileName);
+
+// Brett208 12Dec17: Following code for adding multiple language support to Outpost 2 menus. 
+// Code is incomplete.
+// NLS for OP2
+//void LocalizeStrings();
+void ConvLangStr(char *instr, char *outstr);
 
 EXPORT int StubExt = 0;
 
@@ -38,7 +56,7 @@ DWORD tAppShutDownNewAddr = (DWORD)ExtShutDown;
 DWORD* loadLibraryDataAddr = (DWORD*)0x00486E0A;
 DWORD loadLibraryNewAddr = (DWORD)LoadLibraryNew;
 
-static VolList vols;
+static VolList volList;
 static IniModuleLoader iniModuleLoader;
 
 bool modStarting = false;
@@ -77,7 +95,7 @@ int __fastcall ExtInit(TApp *thisPtr, int)
 	LocateVolFiles();
 	LocateVolFiles("Addon");
 
-	vols.LoadVolFiles();
+	volList.LoadVolFiles();
 
 	// Replace call to LoadLibrary with custom routine (address is indirect)
 	Op2MemSetDword(loadLibraryDataAddr, (int)&loadLibraryNewAddr);
@@ -119,7 +137,7 @@ void LocateVolFiles(std::string relativeSearchDirectory)
 		std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
 
 		if (extension == ".vol") {
-			vols.AddVolFile(fs::path(relativeSearchDirectory).append(filePath.filename()).string());
+			volList.AddVolFile(fs::path(relativeSearchDirectory).append(filePath.filename()).string());
 		}
 	}
 }
@@ -130,7 +148,7 @@ EXPORT void AddVolToList(char* volFilename)
 		PostErrorMessage("op2ext.cpp", __LINE__, "VOLs may not be added to the list after game startup.");
 	}
 	else {
-		vols.AddVolFile(volFilename);
+		volList.AddVolFile(volFilename);
 	}
 }
 
