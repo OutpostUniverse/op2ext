@@ -149,6 +149,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="DllMain.cpp" />
     <ClCompile Include="FileSystemHelper.cpp" />
     <ClCompile Include="GlobalDefines.cpp" />
     <ClCompile Include="IniModuleLoader.cpp" />

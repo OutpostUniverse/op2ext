@@ -3,6 +3,8 @@
 #include "OP2Memory.h"
 #include "GlobalDefines.h"
 
+VolList volList;
+
 VolList::VolList()
 {
 	volSearchEntryList = buffer;
