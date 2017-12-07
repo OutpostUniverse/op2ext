@@ -12,6 +12,7 @@ extern ConsoleModuleLoader consoleModLoader;
 extern VolList volList;
 extern bool modStarting;
 
+//Dummy export for linking requirements from Outpost2.exe and OP2Shell.dll. Forces Outpost2.exe to load op2ext.dll.
 EXPORT int StubExt = 0;
 
 EXPORT bool GetGameDir_s(char* buffer, unsigned int bufferSize)
