@@ -7,7 +7,7 @@
 
 namespace fs = std::experimental::filesystem;
 
-__declspec(dllexport) std::string GetGameDirectory()
+std::string GetGameDirectory()
 {
 	char moduleFilename[MAX_PATH];
 	GetModuleFileName(nullptr, moduleFilename, MAX_PATH);
