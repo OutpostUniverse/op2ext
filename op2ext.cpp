@@ -1,10 +1,10 @@
 #include "op2ext.h"
 
+#include "ConsoleModuleLoader.h"
 #include "IniModuleLoader.h"
-#include "ModMgr.h"
 #include "VolList.h"
-#include "FileSystemHelper.h"
 #include "OP2Memory.h"
+#include "FileSystemHelper.h"
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 

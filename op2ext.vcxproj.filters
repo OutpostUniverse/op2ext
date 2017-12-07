@@ -18,9 +18,6 @@
     <ClCompile Include="IpDropDown.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ModMgr.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="op2ext.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -42,12 +39,12 @@
     <ClCompile Include="DllMain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ConsoleModuleLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IpDropDown.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ModMgr.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="op2ext.h">
@@ -69,6 +66,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="OP2Memory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ConsoleModuleLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
