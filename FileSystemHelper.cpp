@@ -13,19 +13,7 @@ __declspec(dllexport) std::string GetGameDirectory()
 	GetModuleFileName(nullptr, moduleFilename, MAX_PATH);
 
 	// Adding "\\" to end of directory is required for backward compatibility.
-	return fs::path(moduleFilename).remove_filename().string() + "\\";
-}
-
-EXPORT void GetGameDir(char* buffer)
-{
-	std::string gameDirectory = GetGameDirectory();
-
-	// Unable to use the newer funciton strcpy_s since we do not know the size of buffer,
-	// causing a security concern.
-#pragma warning( push )
-#pragma warning( disable : 4996 ) // Disable warning "The compiler encountered a deprecated declaration." 
-	strcpy(buffer, gameDirectory.c_str());
-#pragma warning ( pop )
+	return fs::path(moduleFilename).remove_filename().string();// +"\\";
 }
 
 

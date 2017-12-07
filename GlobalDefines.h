@@ -3,8 +3,6 @@
 #include <string>
 #include <vector>
 
-#define EXPORT extern "C" __declspec(dllexport) // qualifiers
-
 
 #ifdef DEBUG
 #define DBG(s) OutputDebugString(s)

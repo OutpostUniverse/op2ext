@@ -10,26 +10,9 @@ namespace fs = std::experimental::filesystem;
 
 CommandLineModuleManager modManager;
 
-// GetCurrentModDir exists outside of ModMgr class to maintain backwards compatibility.
-EXPORT char* GetCurrentModDir()
-{ 
-	std::string modDirectory = modManager.GetCurrentModuleDirectory();
-
-	if (modDirectory.empty()) {
-		return nullptr;
-	}
-
-	char* cStr = new char[modDirectory.length() + 1];
-	strcpy_s(cStr, modDirectory.length() + 1, modDirectory.c_str());
-
-	return cStr;
-}
-
-// Returns an empty string if either no module is found or the module request is ill-formed.
+// Returns an empty string if no module is found or if the module request is ill-formed.
 std::string CommandLineModuleManager::GetCurrentModuleDirectory()
 {
-	DBG("In ModMgr.cpp: GetCurrentModDir()\n");
-
 	std::vector<std::string> arguments;
 	ParseCommandLine(arguments);
 

@@ -15,6 +15,41 @@ extern bool modStarting;
 
 EXPORT int StubExt = 0;
 
+EXPORT bool GetGameDir_s(char* buffer, unsigned int bufferSize)
+{
+	std::string gameDirectory = GetGameDirectory();
+
+	strcpy_s(buffer, bufferSize, gameDirectory.c_str());
+
+	return bufferSize >= gameDirectory.size();
+}
+
+EXPORT void GetGameDir(char* buffer)
+{
+	std::string gameDirectory = GetGameDirectory();
+
+	// Unable to use the newer funciton strcpy_s since we do not know the size of buffer,
+	// causing a security concern.
+#pragma warning( push )
+#pragma warning( disable : 4996 ) // Disable warning "The compiler encountered a deprecated declaration." 
+	strcpy(buffer, gameDirectory.c_str());
+#pragma warning ( pop )
+}
+
+EXPORT char* GetCurrentModDir()
+{
+	std::string modDirectory = modManager.GetCurrentModuleDirectory();
+
+	if (modDirectory.empty()) {
+		return nullptr;
+	}
+
+	char* cStr = new char[modDirectory.length() + 1];
+	strcpy_s(cStr, modDirectory.length() + 1, modDirectory.c_str());
+
+	return cStr;
+}
+
 EXPORT void AddVolToList(char* volFilename)
 {
 	if (modStarting) {

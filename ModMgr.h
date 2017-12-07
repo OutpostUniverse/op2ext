@@ -24,5 +24,3 @@ private:
 };
 
 extern CommandLineModuleManager modManager;
-
-EXPORT char* GetCurrentModDir();
