@@ -14,7 +14,7 @@
 
 namespace fs = std::experimental::filesystem;
 
-extern CommandLineModuleManager modManager;
+extern ConsoleModuleLoader consoleModLoader;
 
 void LocateVolFiles(std::string relativeDirectory = "");
 
@@ -82,7 +82,7 @@ int __fastcall ExtInit(TApp *thisPtr, int)
 	iniModuleLoader.LoadModules();
 
 	// Load command line modules
-	modManager.ApplyMods();
+	consoleModLoader.ApplyMods();
 
 	LocateVolFiles();
 	LocateVolFiles("Addon");
@@ -105,7 +105,7 @@ void __fastcall ExtShutDown(TApp *thisPtr, int)
 	thisPtr->ShutDown();
 
 	// Remove any loaded command line mod
-	modManager.UnApplyMod();
+	consoleModLoader.UnApplyMod();
 
 	// Remove any active modules from the .ini file
 	iniModuleLoader.UnloadModules();
@@ -143,7 +143,7 @@ HINSTANCE __stdcall LoadLibraryNew(LPCTSTR lpLibFileName)
 	{
 		//LocalizeStrings();
 		modStarting = true;
-		modManager.ModStartup();
+		consoleModLoader.ModStartup();
 	}
 
 	return result;

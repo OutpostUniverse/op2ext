@@ -8,7 +8,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
-extern CommandLineModuleManager modManager;
+extern ConsoleModuleLoader consoleModLoader;
 extern VolList volList;
 extern bool modStarting;
 
@@ -37,7 +37,7 @@ EXPORT void GetGameDir(char* buffer)
 
 EXPORT char* GetCurrentModDir()
 {
-	std::string modDirectory = modManager.GetCurrentModuleDirectory();
+	std::string modDirectory = consoleModLoader.GetCurrentModuleDirectory();
 
 	if (modDirectory.empty()) {
 		return nullptr;

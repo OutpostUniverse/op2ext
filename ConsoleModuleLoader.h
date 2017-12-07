@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-class CommandLineModuleManager {
+class ConsoleModuleLoader {
 public:
 	void ApplyMods();
 	void UnApplyMod();
@@ -23,4 +23,4 @@ private:
 	std::string FormModRelativeDirectory(std::vector<std::string> arguments);
 };
 
-extern CommandLineModuleManager modManager;
+extern ConsoleModuleLoader consoleModLoader;

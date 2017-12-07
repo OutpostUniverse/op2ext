@@ -8,10 +8,10 @@
 
 namespace fs = std::experimental::filesystem;
 
-CommandLineModuleManager modManager;
+ConsoleModuleLoader consoleModLoader;
 
 // Returns an empty string if no module is found or if the module request is ill-formed.
-std::string CommandLineModuleManager::GetCurrentModuleDirectory()
+std::string ConsoleModuleLoader::GetCurrentModuleDirectory()
 {
 	std::vector<std::string> arguments;
 	ParseCommandLine(arguments);
@@ -35,7 +35,7 @@ std::string CommandLineModuleManager::GetCurrentModuleDirectory()
 	return ParseLoadModCommand(arguments);
 }
 
-void CommandLineModuleManager::ApplyMods()
+void ConsoleModuleLoader::ApplyMods()
 {
 	std::string modDir = GetCurrentModuleDirectory();
 
@@ -46,7 +46,7 @@ void CommandLineModuleManager::ApplyMods()
 	ApplyMod(modDir);
 }
 
-void CommandLineModuleManager::ParseCommandLine(std::vector<std::string>& arguments)
+void ConsoleModuleLoader::ParseCommandLine(std::vector<std::string>& arguments)
 {
 	//Function GetCommandLineA returns a LPSTR (long pointer to a string). For use in ANSI (A postfix).
 	std::string commandLine = GetCommandLineA();
@@ -57,7 +57,7 @@ void CommandLineModuleManager::ParseCommandLine(std::vector<std::string>& argume
 	arguments.erase(arguments.begin()); //Remove Application Name from arguments.
 }
 
-bool CommandLineModuleManager::ParseArgumentName(std::string& argument)
+bool ConsoleModuleLoader::ParseArgumentName(std::string& argument)
 {
 	if (argument[0] != '/' && argument[0] != '-') {
 		PostErrorMessage("ModMgr.cpp", __LINE__, "A switch was expected but not found. Prefix switch name with '/' or '-'.");
@@ -71,7 +71,7 @@ bool CommandLineModuleManager::ParseArgumentName(std::string& argument)
 	return true;
 }
 
-std::string CommandLineModuleManager::ParseLoadModCommand(std::vector<std::string> arguments)
+std::string ConsoleModuleLoader::ParseLoadModCommand(std::vector<std::string> arguments)
 {
 	if (arguments.empty()) {
 		PostErrorMessage("ModMgr.cpp", __LINE__, "No relative directory argument provided for the switch loadmod");
@@ -98,7 +98,7 @@ std::string CommandLineModuleManager::ParseLoadModCommand(std::vector<std::strin
 	}
 }
 
-std::string CommandLineModuleManager::FormModRelativeDirectory(std::vector<std::string> arguments)
+std::string ConsoleModuleLoader::FormModRelativeDirectory(std::vector<std::string> arguments)
 {
 	std::string modRelativeDirectory;
 
@@ -113,7 +113,7 @@ std::string CommandLineModuleManager::FormModRelativeDirectory(std::vector<std::
 	return modRelativeDirectory;
 }
 
-void CommandLineModuleManager::ApplyMod(std::string modDir)
+void ConsoleModuleLoader::ApplyMod(std::string modDir)
 {
 	// Check if directory exists.
 	if (GetFileAttributesA(modDir.c_str()) == -1) {
@@ -136,7 +136,7 @@ void CommandLineModuleManager::ApplyMod(std::string modDir)
 	}
 }
 
-void CommandLineModuleManager::UnApplyMod()
+void ConsoleModuleLoader::UnApplyMod()
 {
 	// Call the mod DLL mod_destroy func
 	if (modDllHandle)
@@ -154,7 +154,7 @@ void CommandLineModuleManager::UnApplyMod()
 	WritePrivateProfileString("DEBUG", nullptr, nullptr, GetOutpost2IniPath().c_str());
 }
 
-void CommandLineModuleManager::ModStartup()
+void ConsoleModuleLoader::ModStartup()
 {
 	// Startup a module by calling its run func
 	if (modDllHandle)
