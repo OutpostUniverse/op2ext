@@ -9,7 +9,6 @@
 #include <windows.h>
 
 extern CommandLineModuleManager modManager;
-extern IniModuleLoader iniModuleLoader;
 extern VolList volList;
 extern bool modStarting;
 
