@@ -13,6 +13,8 @@ Summary
 
 Outpost 2 Extension is a dynamic link (DLL) library written in C++. Source code may be found at https://github.com/OutpostUniverse/op2ext. OP2Ext compiles against x86 Windows. The current solution/project files use Visual Studio.
 
+Outpost 2 requires loading libraries to fixed base addresses. Modern compilers default to randomized base addresses. To prevent possible interference with other libraries associated with Outpost 2, op2ext is designed to load into address 0x10000000. 
+
 The following extensions are implemented for Outpost 2:
 
  * Addon a single module using the command line argument /loadmod
