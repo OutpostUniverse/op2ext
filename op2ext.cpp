@@ -17,7 +17,7 @@ extern bool modStarting;
 // It is not used in any way, but must exist to prevent Windows loader errors.
 OP2EXT_API int StubExt = 0;
 
-EXPORT bool GetGameDir_s(char* buffer, unsigned int bufferSize)
+OP2EXT_API bool GetGameDir_s(char* buffer, unsigned int bufferSize)
 {
 	std::string gameDirectory = GetGameDirectory();
 
@@ -26,7 +26,7 @@ EXPORT bool GetGameDir_s(char* buffer, unsigned int bufferSize)
 	return bufferSize >= gameDirectory.size();
 }
 
-EXPORT void GetGameDir(char* buffer)
+OP2EXT_API void GetGameDir(char* buffer)
 {
 	std::string gameDirectory = GetGameDirectory();
 
@@ -38,9 +38,9 @@ EXPORT void GetGameDir(char* buffer)
 #pragma warning ( pop )
 }
 
-EXPORT char* GetCurrentModDir()
+OP2EXT_API char* GetCurrentModDir()
 {
-	std::string modDirectory = consoleModLoader.GetCurrentModuleDirectory();
+	std::string modDirectory = consoleModLoader.GetModuleDirectory();
 
 	if (modDirectory.empty()) {
 		return nullptr;
@@ -52,7 +52,7 @@ EXPORT char* GetCurrentModDir()
 	return cStr;
 }
 
-EXPORT void AddVolToList(char* volFilename)
+OP2EXT_API void AddVolToList(char* volFilename)
 {
 	if (modStarting) {
 		PostErrorMessage("op2ext.cpp", __LINE__, "VOLs may not be added to the list after game startup.");
@@ -62,8 +62,8 @@ EXPORT void AddVolToList(char* volFilename)
 	}
 }
 
-char *verStrAddr = (char*)0x004E973C;
-EXPORT void SetSerialNumber(char num1, char num2, char num3)
+char* verStrAddr = (char*)0x004E973C;
+OP2EXT_API void SetSerialNumber(char num1, char num2, char num3)
 {
 	if (modStarting || num1 < 0 || num1 > 9 || num2 < 0 || num2 > 9 || num3 < 0 || num3 > 9) {
 		PostErrorMessage("op2ext.cpp", __LINE__, "SetSerialNumber failed. Invalid mod serial number or was called after game startup.");
