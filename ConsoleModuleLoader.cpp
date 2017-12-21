@@ -10,8 +10,18 @@ namespace fs = std::experimental::filesystem;
 
 ConsoleModuleLoader consoleModLoader;
 
+ConsoleModuleLoader::ConsoleModuleLoader()
+{
+	moduleDirectory = FindModuleDirectory();
+}
+
+std::string ConsoleModuleLoader::GetModuleDirectory()
+{
+	return moduleDirectory;
+}
+
 // Returns an empty string if no module is found or if the module request is ill-formed.
-std::string ConsoleModuleLoader::GetCurrentModuleDirectory()
+std::string ConsoleModuleLoader::FindModuleDirectory()
 {
 	std::vector<std::string> arguments;
 	ParseCommandLine(arguments);
@@ -37,19 +47,17 @@ std::string ConsoleModuleLoader::GetCurrentModuleDirectory()
 
 void ConsoleModuleLoader::ApplyMods()
 {
-	std::string modDir = GetCurrentModuleDirectory();
-
-	if (modDir.empty()) {
+	if (moduleDirectory.empty()) {
 		return;
 	}
 
-	ApplyMod(modDir);
+	ApplyMod(moduleDirectory);
 }
 
 void ConsoleModuleLoader::ParseCommandLine(std::vector<std::string>& arguments)
 {
 	//Function GetCommandLineA returns a LPSTR (long pointer to a string). For use in ANSI (A postfix).
-	std::string commandLine = GetCommandLineA();
+	std::string commandLine = GetCommandLine();
 
 	std::istringstream iss(commandLine);
 	std::copy(std::istream_iterator<std::string>(iss), std::istream_iterator<std::string>(), std::back_inserter(arguments));
@@ -60,7 +68,7 @@ void ConsoleModuleLoader::ParseCommandLine(std::vector<std::string>& arguments)
 bool ConsoleModuleLoader::ParseArgumentName(std::string& argument)
 {
 	if (argument[0] != '/' && argument[0] != '-') {
-		PostErrorMessage("ModMgr.cpp", __LINE__, "A switch was expected but not found. Prefix switch name with '/' or '-'.");
+		PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, "A switch was expected but not found. Prefix switch name with '/' or '-'.");
 		argument.clear();
 		return false;
 	}
@@ -117,7 +125,7 @@ void ConsoleModuleLoader::ApplyMod(std::string modDir)
 {
 	// Check if directory exists.
 	if (GetFileAttributesA(modDir.c_str()) == -1) {
-		PostErrorMessage("ModMgr.cpp", __LINE__, "Mod directory does not exist");
+		PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, "Mod directory does not exist");
 		return;
 	}
 

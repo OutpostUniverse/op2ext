@@ -8,14 +8,17 @@
 
 class ConsoleModuleLoader {
 public:
+	ConsoleModuleLoader();
 	void ApplyMods();
 	void UnApplyMod();
 	void ModStartup();
-	std::string GetCurrentModuleDirectory();
+	std::string GetModuleDirectory();
 
 private:
+	std::string moduleDirectory;
 	HMODULE modDllHandle = nullptr;
 
+	std::string FindModuleDirectory();
 	void ApplyMod(std::string modDir);
 	void ParseCommandLine(std::vector<std::string>& arguments);
 	bool ParseArgumentName(std::string& argument);
