@@ -2,6 +2,6 @@
 
 void TestGetGameDir_s();
 void TestGetGameDir(); //Deprecated
-void TestGetModuleDir();
+void TestGetConsoleModuleDirectory();
 void TestInvalidVolFileName();
 void TestTooManyVolFilesLoaded();

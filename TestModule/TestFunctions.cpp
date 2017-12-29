@@ -29,7 +29,7 @@ void TestGetGameDir()
 	OutputDebugString(gameDirectoryReport.c_str());
 }
 
-void TestGetModuleDir()
+void TestGetConsoleModuleDirectory()
 {
 	char* moduleDirectory = GetCurrentModDir();
 	std::string modDirectoryReport("GetCurrentModDir reports: " + std::string(moduleDirectory) + "\n");
@@ -43,7 +43,17 @@ void TestInvalidVolFileName()
 
 void TestTooManyVolFilesLoaded()
 {
-	for (int i = 1; i < 30; i++)
+	AddVolToList("maps.vol");
+	AddVolToList("maps01.vol");
+	AddVolToList("maps02.vol");
+	AddVolToList("maps03.vol");
+	AddVolToList("maps04.vol");
+	AddVolToList("sound.vol");
+	AddVolToList("story.vol");
+	AddVolToList("sheets.vol");
+	AddVolToList("voices.vol");
+
+	for (int i = 1; i < 20; i++)
 	{
 		std::string volFilename("./TestModule/moduleTest" + std::to_string(i) + ".vol");
 		char* charPointer = new char[volFilename.size() + 1];
