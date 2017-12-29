@@ -26,3 +26,16 @@ std::vector<std::string> SplitString(std::string stringToSplit, char delimiter)
 
 	return strings;
 }
+
+// Trims both leading and trailing whitespace. The 'whitespace' character may be custom defined.
+std::string TrimString(const std::string& stringToTrim, const std::string& whitespace)
+{
+	const auto strBegin = stringToTrim.find_first_not_of(whitespace);
+	if (strBegin == std::string::npos)
+		return ""; // no content provided
+
+	const auto strEnd = stringToTrim.find_last_not_of(whitespace);
+	const auto strRange = strEnd - strBegin + 1;
+
+	return stringToTrim.substr(strBegin, strRange);
+}

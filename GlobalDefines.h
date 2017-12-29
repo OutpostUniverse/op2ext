@@ -12,3 +12,4 @@
 
 void PostErrorMessage(std::string sourceFilename, long lineInSourceCode, std::string errorMessage);
 std::vector<std::string> SplitString(std::string stringToSplit, char delimiter);
+std::string TrimString(const std::string& stringToTrim, const std::string& whitespace = " \t");
