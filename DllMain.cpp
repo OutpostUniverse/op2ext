@@ -1,35 +1,30 @@
 #include "IpDropDown.h"
-#include "ConsoleModuleLoader.h"
+
 #include "IniModuleLoader.h"
-#include "VolList.h"
 #include "OP2Memory.h"
 #include "FileSystemHelper.h"
+#include "op2ext-Internal.h"
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <string>
-#include <vector>
 #include <filesystem>
 #include <algorithm>
-#include <direct.h>
 
 namespace fs = std::experimental::filesystem;
 
-extern ConsoleModuleLoader consoleModLoader;
 
 void LocateVolFiles(std::string relativeDirectory = "");
 
 // Declaration for patch to LoadLibrary, where it loads OP2Shell.dll
 HINSTANCE __stdcall LoadLibraryNew(LPCTSTR lpLibFileName);
 
-// Brett208 12Dec17: Following code for adding multiple language support to Outpost 2 menus. 
+// Brett208 12Dec17: Following code allows adding multiple language support to Outpost 2 menus. 
 // Code is incomplete.
 // NLS for OP2
 //void LocalizeStrings();
 void ConvLangStr(char *instr, char *outstr);
 
-// Indicates if all modules and Outpost 2 is running. Attempting further initialization commands will cause errors.
-bool modulesRunning = false;
-
+// TApp is an exported class from Outpost2.exe. Referenced through Outpost2Dll.lib
 class __declspec(dllimport) TApp
 {
 public:
@@ -40,7 +35,7 @@ public:
 int __fastcall ExtInit(TApp *thisPtr, int);
 void __fastcall ExtShutDown(TApp *thisPtr, int);
 
-// Shell HMODULE to load it before OP2 does
+// Shell HMODULE to load it before OP2 loads it
 //HMODULE hShellDll = NULL;
 DWORD* tAppInitCallAddr = (DWORD*)0x004A8878;
 DWORD tAppInitNewAddr = (DWORD)ExtInit;
@@ -51,8 +46,8 @@ DWORD tAppShutDownNewAddr = (DWORD)ExtShutDown;
 DWORD* loadLibraryDataAddr = (DWORD*)0x00486E0A;
 DWORD loadLibraryNewAddr = (DWORD)LoadLibraryNew;
 
-extern VolList volList;
 static IniModuleLoader iniModuleLoader;
+
 
 BOOL WINAPI DllMain(HMODULE hMod, DWORD dwReason, LPVOID reserved)
 {
@@ -116,7 +111,7 @@ void __fastcall ExtShutDown(TApp *thisPtr, int)
 Prepares all vol files found within the supplied relative directory from the Outpost 2 executable
 for inclusion in Outpost 2. Does not recursively search subdirectories.
 
-@param relativeDirectory A directory relative to the Outpost 2 exectuable. Default value is an empty string.
+@param relativeSearchDirectory A directory relative to the Outpost 2 exectuable. Default value is an empty string.
 */
 void LocateVolFiles(std::string relativeSearchDirectory)
 {

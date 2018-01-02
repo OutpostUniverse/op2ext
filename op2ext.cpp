@@ -1,16 +1,11 @@
 #include "op2ext.h"
 
-#include "ConsoleModuleLoader.h"
-#include "IniModuleLoader.h"
-#include "VolList.h"
 #include "OP2Memory.h"
 #include "FileSystemHelper.h"
+#include "op2ext-Internal.h"
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
-extern ConsoleModuleLoader consoleModLoader;
-extern VolList volList;
-extern bool modulesRunning;
 
 // Dummy export for linking requirements from Outpost2.exe and OP2Shell.dll. 
 // Outpost2.exe and OP2Shell.dll reference this dummy entry, causing op2ext.dll to load. 

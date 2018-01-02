@@ -25,5 +25,3 @@ private:
 	std::string FormModRelativeDirectory(std::vector<std::string> arguments);
 	void SetArtPath();
 };
-
-extern ConsoleModuleLoader consoleModLoader;

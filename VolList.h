@@ -37,5 +37,3 @@ private:
 	void InitializeVolSearchEntry(char* pVolPath);
 	void EndList();
 };
-
-extern VolList volList;

@@ -11,8 +11,6 @@ namespace fs = std::experimental::filesystem;
 
 std::string moduleDirectory;
 
-ConsoleModuleLoader consoleModLoader;
-
 ConsoleModuleLoader::ConsoleModuleLoader()
 {
 	moduleDirectory = FindModuleDirectory();
