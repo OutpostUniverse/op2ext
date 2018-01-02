@@ -31,14 +31,14 @@ std::string ConsoleModuleLoader::FindModuleDirectory()
 	}
 
 	std::string switchName = arguments[0];
-	arguments.erase(arguments.begin());
+	arguments.erase(arguments.begin()); ; //Remove switchName from arguments
 
 	if (!ParseArgumentName(switchName)) {
 		return std::string();
 	}
 
 	if (switchName != "loadmod") {
-		PostErrorMessage("ModMgr.cpp", __LINE__, "Provided switch is not supported: " + switchName);
+		PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, "Provided switch is not supported: " + switchName);
 		return std::string();
 	}
 
@@ -82,7 +82,7 @@ bool ConsoleModuleLoader::ParseArgumentName(std::string& argument)
 std::string ConsoleModuleLoader::ParseLoadModCommand(std::vector<std::string> arguments)
 {
 	if (arguments.empty()) {
-		PostErrorMessage("ModMgr.cpp", __LINE__, "No relative directory argument provided for the switch loadmod");
+		PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, "No relative directory argument provided for the switch loadmod");
 		return std::string();
 	}
 
@@ -93,7 +93,7 @@ std::string ConsoleModuleLoader::ParseLoadModCommand(std::vector<std::string> ar
 		std::string modDirectory = fs::path(GetGameDirectory()).append(modRelativeDirectory).string();
 
 		if (GetFileAttributesA(modDirectory.c_str()) == -1) {
-			PostErrorMessage("ModMgr.cpp", __LINE__, "Mod directory does not exist: " + modDirectory);
+			PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, "Module directory does not exist: " + modDirectory);
 			return std::string();
 		}
 
@@ -101,7 +101,7 @@ std::string ConsoleModuleLoader::ParseLoadModCommand(std::vector<std::string> ar
 	}
 	catch (std::exception e)
 	{
-		PostErrorMessage("ModMgr.cpp", __LINE__, "Unable to parse mod directory");
+		PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, "Unable to parse module directory");
 		return std::string();
 	}
 }
@@ -129,7 +129,9 @@ void ConsoleModuleLoader::ApplyMod(std::string modDir)
 		return;
 	}
 
-	// Set that magic DEBUG\ART_PATH value in the .ini
+	// Set the ART_PATH value in the .ini DEBUG section.
+	// If ART_PATH is set, Outpost 2 will search for resources first at the ART_PATH provided directory.
+	// If a resource is not found at the ART_PATH directory, then the directory containing Outpost2.exe will be searched.
 	WritePrivateProfileString("DEBUG", "ART_PATH", modDir.c_str(), GetOutpost2IniPath().c_str());
 
 	std::string dllName = fs::path(modDir).append("\\op2mod.dll").string();
