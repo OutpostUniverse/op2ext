@@ -38,7 +38,7 @@ std::string ConsoleModuleLoader::FindModuleDirectory()
 	}
 
 	std::string switchName = arguments[0];
-	arguments.erase(arguments.begin()); ; //Remove switchName from arguments
+	arguments.erase(arguments.begin()); //Remove switchName from arguments
 
 	if (!ParseArgumentName(switchName)) {
 		return std::string();
@@ -52,13 +52,30 @@ std::string ConsoleModuleLoader::FindModuleDirectory()
 	return ParseLoadModCommand(arguments);
 }
 
-void ConsoleModuleLoader::ApplyMods()
+void ConsoleModuleLoader::LoadModule()
 {
 	if (moduleDirectory.empty()) {
 		return;
 	}
 
-	ApplyMod(moduleDirectory);
+	// Check if directory exists.
+	if (GetFileAttributesA(moduleDirectory.c_str()) == -1) {
+		PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, "Module directory does not exist");
+		return;
+	}
+
+	SetArtPath();
+
+	std::string dllName = fs::path(moduleDirectory).append("\\op2mod.dll").string();
+	modDllHandle = LoadLibrary(dllName.c_str());
+
+	if (modDllHandle) {
+		// Call its mod_init func
+		FARPROC startFunc = GetProcAddress(modDllHandle, "mod_init");
+		if (startFunc) {
+			startFunc();
+		}
+	}
 }
 
 void ConsoleModuleLoader::ParseCommandLine(std::vector<std::string>& arguments)
@@ -127,28 +144,6 @@ std::string ConsoleModuleLoader::FormModRelativeDirectory(std::vector<std::strin
 	return modRelativeDirectory;
 }
 
-void ConsoleModuleLoader::ApplyMod(std::string modDir)
-{
-	// Check if directory exists.
-	if (GetFileAttributesA(modDir.c_str()) == -1) {
-		PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, "Module directory does not exist");
-		return;
-	}
-
-	SetArtPath();
-
-	std::string dllName = fs::path(modDir).append("\\op2mod.dll").string();
-	modDllHandle = LoadLibrary(dllName.c_str());
-
-	if (modDllHandle) {
-		// Call its mod_init func
-		FARPROC startFunc = GetProcAddress(modDllHandle, "mod_init");
-		if (startFunc) {
-			startFunc();
-		}
-	}
-}
-
 // Sets a directory called ART_PATH that is searched before looking in the root executable's directory.
 // If an asset (vol, clm, video file, music1.wav, etc) is found in ART_PATH's directory, it is loaded instead
 void ConsoleModuleLoader::SetArtPath()
@@ -163,20 +158,20 @@ void ConsoleModuleLoader::SetArtPath()
 	Op2MemSetDword((void*)0x00471B87, (DWORD)&GetArtPath - (loadOffset + (DWORD)0x00471B87 + sizeof(void*)));
 }
 
-void ConsoleModuleLoader::UnApplyMod()
+void ConsoleModuleLoader::UnloadModule()
 {
 	if (modDllHandle)
 	{
-		FARPROC stopFunc = GetProcAddress(modDllHandle, "mod_destroy");
-		if (stopFunc) {
-			stopFunc();
+		FARPROC destroyModFunc = GetProcAddress(modDllHandle, "mod_destroy");
+		if (destroyModFunc) {
+			destroyModFunc();
 		}
 
 		FreeLibrary(modDllHandle);
 	}
 }
 
-void ConsoleModuleLoader::ModStartup()
+void ConsoleModuleLoader::RunModule()
 {
 	// Startup a module by calling its run func
 	if (modDllHandle)

@@ -78,7 +78,7 @@ int __fastcall ExtInit(TApp *thisPtr, int)
 	iniModuleLoader.LoadModules();
 
 	// Load command line modules
-	consoleModLoader.ApplyMods();
+	consoleModLoader.LoadModule();
 
 	LocateVolFiles();
 	LocateVolFiles("Addon");
@@ -101,7 +101,7 @@ void __fastcall ExtShutDown(TApp *thisPtr, int)
 	thisPtr->ShutDown();
 
 	// Remove any loaded command line mod
-	consoleModLoader.UnApplyMod();
+	consoleModLoader.UnloadModule();
 
 	// Remove any active modules from the .ini file
 	iniModuleLoader.UnloadModules();
@@ -139,7 +139,7 @@ HINSTANCE __stdcall LoadLibraryNew(LPCTSTR lpLibFileName)
 	{
 		//LocalizeStrings();
 		modulesRunning = true;
-		consoleModLoader.ModStartup();
+		consoleModLoader.RunModule();
 	}
 
 	return result;
