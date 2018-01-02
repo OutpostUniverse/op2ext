@@ -12,8 +12,7 @@ std::string GetGameDirectory()
 	char moduleFilename[MAX_PATH];
 	GetModuleFileName(nullptr, moduleFilename, MAX_PATH);
 
-	// Adding "\\" to end of directory is required for backward compatibility.
-	return fs::path(moduleFilename).remove_filename().string();// +"\\";
+	return fs::path(moduleFilename).remove_filename().string();
 }
 
 

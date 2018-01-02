@@ -34,6 +34,8 @@ void TestGetConsoleModuleDirectory()
 	char* moduleDirectory = GetCurrentModDir();
 	std::string modDirectoryReport("GetCurrentModDir reports: " + std::string(moduleDirectory) + "\n");
 	OutputDebugString(modDirectoryReport.c_str());
+
+	free(moduleDirectory);
 }
 
 void TestInvalidVolFileName()
