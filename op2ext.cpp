@@ -19,7 +19,8 @@ OP2EXT_API int StubExt = 0;
 
 OP2EXT_API bool GetGameDir_s(char* buffer, unsigned int bufferSize)
 {
-	std::string gameDirectory = GetGameDirectory();
+	// Adding "\\" to end of directory is required for backward compatibility.
+	std::string gameDirectory = GetGameDirectory() + "\\";
 
 	strcpy_s(buffer, bufferSize, gameDirectory.c_str());
 
@@ -28,7 +29,8 @@ OP2EXT_API bool GetGameDir_s(char* buffer, unsigned int bufferSize)
 
 OP2EXT_API void GetGameDir(char* buffer)
 {
-	std::string gameDirectory = GetGameDirectory();
+	// Adding "\\" to end of directory is required for backward compatibility.
+	std::string gameDirectory = GetGameDirectory() + "\\";
 
 	// Unable to use the newer funciton strcpy_s since we do not know the size of buffer,
 	// causing a security concern.
@@ -62,7 +64,7 @@ OP2EXT_API void AddVolToList(char* volFilename)
 	}
 }
 
-char* verStrAddr = (char*)0x004E973C;
+char* multiplayerVersionStringAddress = (char*)0x004E973C;
 OP2EXT_API void SetSerialNumber(char num1, char num2, char num3)
 {
 	if (modulesRunning || num1 < 0 || num1 > 9 || num2 < 0 || num2 > 9 || num3 < 0 || num3 > 9) {
@@ -71,6 +73,6 @@ OP2EXT_API void SetSerialNumber(char num1, char num2, char num3)
 	else {
 		char buffer[8];
 		_snprintf_s(buffer, sizeof(buffer), "%i.%i.%i.%i", num1, num2, 0, num3);
-		Op2MemCopy(verStrAddr, buffer, sizeof(buffer));
+		Op2MemCopy(multiplayerVersionStringAddress, buffer, sizeof(buffer));
 	}
 }
