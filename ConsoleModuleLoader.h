@@ -15,7 +15,6 @@ public:
 	std::string GetModuleDirectory();
 
 private:
-	std::string moduleDirectory;
 	HMODULE modDllHandle = nullptr;
 
 	std::string FindModuleDirectory();
@@ -24,6 +23,7 @@ private:
 	bool ParseArgumentName(std::string& argument);
 	std::string ParseLoadModCommand(std::vector<std::string> arguments);
 	std::string FormModRelativeDirectory(std::vector<std::string> arguments);
+	void SetArtPath();
 };
 
 extern ConsoleModuleLoader consoleModLoader;

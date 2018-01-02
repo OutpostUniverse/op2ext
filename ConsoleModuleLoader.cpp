@@ -1,5 +1,6 @@
 #include "ConsoleModuleLoader.h"
 
+#include "OP2Memory.h"
 #include "FileSystemHelper.h"
 #include <sstream>
 #include <algorithm>
@@ -7,6 +8,8 @@
 #include <filesystem>
 
 namespace fs = std::experimental::filesystem;
+
+std::string moduleDirectory;
 
 ConsoleModuleLoader consoleModLoader;
 
@@ -18,6 +21,12 @@ ConsoleModuleLoader::ConsoleModuleLoader()
 std::string ConsoleModuleLoader::GetModuleDirectory()
 {
 	return moduleDirectory;
+}
+
+int __fastcall GetArtPath(void*, int, char*, char*, char *destBuffer, int bufferSize, char *defaultValue) 
+{
+	strcpy_s(destBuffer, bufferSize, moduleDirectory.c_str());
+	return moduleDirectory.size();
 }
 
 // Returns an empty string if no module is found or if the module request is ill-formed.
@@ -56,7 +65,6 @@ void ConsoleModuleLoader::ApplyMods()
 
 void ConsoleModuleLoader::ParseCommandLine(std::vector<std::string>& arguments)
 {
-	//Function GetCommandLineA returns a LPSTR (long pointer to a string). For use in ANSI (A postfix).
 	std::string commandLine = GetCommandLine();
 
 	std::istringstream iss(commandLine);
@@ -125,14 +133,11 @@ void ConsoleModuleLoader::ApplyMod(std::string modDir)
 {
 	// Check if directory exists.
 	if (GetFileAttributesA(modDir.c_str()) == -1) {
-		PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, "Mod directory does not exist");
+		PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, "Module directory does not exist");
 		return;
 	}
 
-	// Set the ART_PATH value in the .ini DEBUG section.
-	// If ART_PATH is set, Outpost 2 will search for resources first at the ART_PATH provided directory.
-	// If a resource is not found at the ART_PATH directory, then the directory containing Outpost2.exe will be searched.
-	WritePrivateProfileString("DEBUG", "ART_PATH", modDir.c_str(), GetOutpost2IniPath().c_str());
+	SetArtPath();
 
 	std::string dllName = fs::path(modDir).append("\\op2mod.dll").string();
 	modDllHandle = LoadLibrary(dllName.c_str());
@@ -146,9 +151,22 @@ void ConsoleModuleLoader::ApplyMod(std::string modDir)
 	}
 }
 
+// Sets a directory called ART_PATH that is searched before looking in the root executable's directory.
+// If an asset (vol, clm, video file, music1.wav, etc) is found in ART_PATH's directory, it is loaded instead
+void ConsoleModuleLoader::SetArtPath()
+{
+	// This value may also be set using the DEBUG section of the .ini file, using the property ART_PATH.
+	// If set in .ini file, ART_PATH must be deleted at end of session or will persist between plays.
+
+	// Insert hooks to make OP2 look for files in the module's directory
+	// In ResManager::GetFilePath
+	Op2MemSetDword((void*)0x004715C5, (DWORD)&GetArtPath - (loadOffset + (DWORD)0x004715C5 + sizeof(void*)));
+	// In ResManager::CreateStream
+	Op2MemSetDword((void*)0x00471B87, (DWORD)&GetArtPath - (loadOffset + (DWORD)0x00471B87 + sizeof(void*)));
+}
+
 void ConsoleModuleLoader::UnApplyMod()
 {
-	// Call the mod DLL mod_destroy func
 	if (modDllHandle)
 	{
 		FARPROC stopFunc = GetProcAddress(modDllHandle, "mod_destroy");
@@ -156,12 +174,8 @@ void ConsoleModuleLoader::UnApplyMod()
 			stopFunc();
 		}
 
-		// Unload the DLL
 		FreeLibrary(modDllHandle);
 	}
-
-	// Destroy the DEBUG section
-	WritePrivateProfileString("DEBUG", nullptr, nullptr, GetOutpost2IniPath().c_str());
 }
 
 void ConsoleModuleLoader::ModStartup()
