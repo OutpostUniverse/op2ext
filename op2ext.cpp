@@ -10,7 +10,7 @@
 
 extern ConsoleModuleLoader consoleModLoader;
 extern VolList volList;
-extern bool modStarting;
+extern bool modulesRunning;
 
 // Dummy export for linking requirements from Outpost2.exe and OP2Shell.dll. 
 // Outpost2.exe and OP2Shell.dll reference this dummy entry, causing op2ext.dll to load. 
@@ -54,7 +54,7 @@ OP2EXT_API char* GetCurrentModDir()
 
 OP2EXT_API void AddVolToList(char* volFilename)
 {
-	if (modStarting) {
+	if (modulesRunning) {
 		PostErrorMessage("op2ext.cpp", __LINE__, "VOLs may not be added to the list after game startup.");
 	}
 	else {
@@ -65,7 +65,7 @@ OP2EXT_API void AddVolToList(char* volFilename)
 char* verStrAddr = (char*)0x004E973C;
 OP2EXT_API void SetSerialNumber(char num1, char num2, char num3)
 {
-	if (modStarting || num1 < 0 || num1 > 9 || num2 < 0 || num2 > 9 || num3 < 0 || num3 > 9) {
+	if (modulesRunning || num1 < 0 || num1 > 9 || num2 < 0 || num2 > 9 || num3 < 0 || num3 > 9) {
 		PostErrorMessage("op2ext.cpp", __LINE__, "SetSerialNumber failed. Invalid mod serial number or was called after game startup.");
 	}
 	else {

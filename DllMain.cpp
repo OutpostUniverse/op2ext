@@ -27,7 +27,8 @@ HINSTANCE __stdcall LoadLibraryNew(LPCTSTR lpLibFileName);
 //void LocalizeStrings();
 void ConvLangStr(char *instr, char *outstr);
 
-bool modStarting = false;
+// Indicates if all modules and Outpost 2 is running. Attempting further initialization commands will cause errors.
+bool modulesRunning = false;
 
 class __declspec(dllimport) TApp
 {
@@ -142,7 +143,7 @@ HINSTANCE __stdcall LoadLibraryNew(LPCTSTR lpLibFileName)
 	if (result) // if good, then setup the language data and call the mod
 	{
 		//LocalizeStrings();
-		modStarting = true;
+		modulesRunning = true;
 		consoleModLoader.ModStartup();
 	}
 
