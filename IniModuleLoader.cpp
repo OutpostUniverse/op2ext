@@ -2,7 +2,6 @@
 
 #include "FileSystemHelper.h"
 #include "GlobalDefines.h"
-#include <stdio.h>
 
 // Load all active modules specified in the .ini file
 void IniModuleLoader::LoadModules()
