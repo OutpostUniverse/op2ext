@@ -1,7 +1,6 @@
 #include "OP2Memory.h"
 
 #include "GlobalDefines.h"
-
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
@@ -14,7 +13,7 @@ void SetLoadOffset()
 	void* op2ModuleBase = GetModuleHandle("Outpost2.exe");
 
 	if (op2ModuleBase == 0) {
-		PostErrorMessage("op2ext.cpp", __LINE__, "Could not find Outpost2.exe module base address.");
+		PostErrorMessage("OP2Memory.cpp", __LINE__, "Could not find Outpost2.exe module base address.");
 	}
 
 	loadOffset = (int)op2ModuleBase - ExpectedOutpost2Addr;
@@ -47,7 +46,7 @@ bool Op2MemCopy(void* destBaseAddr, void* sourceAddr, int size)
 
 bool Op2MemSetDword(void* destBaseAddr, int dword)
 {
-	// Just chain to the memory copy function
+	// Chain to the memory copy function
 	return Op2MemCopy(destBaseAddr, &dword, sizeof(dword));
 }
 

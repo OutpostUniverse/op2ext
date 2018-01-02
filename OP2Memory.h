@@ -1,3 +1,5 @@
+// Facilitates common tasks involved in the memory manipulation of Outpost 2.
+
 #pragma once
 
 extern int loadOffset;
