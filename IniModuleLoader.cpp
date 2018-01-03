@@ -52,7 +52,7 @@ bool IniModuleLoader::UnloadModules()
 std::vector<std::string> IniModuleLoader::GetModuleNames()
 {
 	std::string ModuleNames = GetPrivateProfileStdString("Game", "LoadAddons", GetOutpost2IniPath());
-	std::vector<std::string> moduleNamesSplit = SplitString(ModuleNames, ',');
+	std::vector<std::string> moduleNamesSplit = SplitString(ModuleNames, ',', TrimOption::Both);
 
 	return moduleNamesSplit;
 }

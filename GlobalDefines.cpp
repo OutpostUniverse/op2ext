@@ -2,9 +2,7 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-
 #include <sstream>
-#include <iostream>
 
 void PostErrorMessage(std::string sourceFilename, long lineInSourceCode, std::string errorMessage)
 {
@@ -12,7 +10,7 @@ void PostErrorMessage(std::string sourceFilename, long lineInSourceCode, std::st
 	MessageBoxA(nullptr, formattedMessage.c_str(), "Outpost 2 Error", MB_ICONERROR);
 }
 
-std::vector<std::string> SplitString(std::string stringToSplit, char delimiter)
+std::vector<std::string> SplitString(std::string stringToSplit, char delimiter, TrimOption trimOption)
 {
 	std::vector<std::string> strings;
 
@@ -20,7 +18,7 @@ std::vector<std::string> SplitString(std::string stringToSplit, char delimiter)
 	std::string currentToken;
 
 	while (std::getline(stringStream, currentToken, delimiter)) {
-		std::cout << currentToken << std::endl;
+		currentToken = TrimString(currentToken, trimOption);
 		strings.push_back(currentToken);
 	}
 
@@ -28,14 +26,25 @@ std::vector<std::string> SplitString(std::string stringToSplit, char delimiter)
 }
 
 // Trims both leading and trailing whitespace. The 'whitespace' character may be custom defined.
-std::string TrimString(const std::string& stringToTrim, const std::string& whitespace)
+std::string TrimString(const std::string& stringToTrim, TrimOption trimOption, const std::string& whitespace)
 {
-	const auto strBegin = stringToTrim.find_first_not_of(whitespace);
-	if (strBegin == std::string::npos)
+	if (trimOption == TrimOption::None) {
+		return "";
+	}
+
+	size_t stringBegin = 0;
+	if (trimOption == TrimOption::Leading || trimOption == TrimOption::Both) {
+		stringBegin = stringToTrim.find_first_not_of(whitespace);
+	}
+
+	if (stringBegin == std::string::npos)
 		return ""; // no content provided
 
-	const auto strEnd = stringToTrim.find_last_not_of(whitespace);
-	const auto strRange = strEnd - strBegin + 1;
+	size_t stringEnd = stringToTrim.length();
+	if (trimOption == TrimOption::Trailing || trimOption == TrimOption::Both)
+		stringEnd = stringToTrim.find_last_not_of(whitespace);
 
-	return stringToTrim.substr(strBegin, strRange);
+	const auto range = stringEnd - stringBegin + 1;
+
+	return stringToTrim.substr(stringBegin, range);
 }
