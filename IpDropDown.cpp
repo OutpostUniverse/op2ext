@@ -28,7 +28,7 @@ BOOL __stdcall EnableWindowNew(HWND hWnd, BOOL bEnable)
 	{
 		_itoa_s(i, tmpStr, 10);
 		std::string ipString = GetOP2PrivateProfileString("IPHistory", tmpStr);
-		ipString.copy(ipStrings[i], ipString.size());
+		strcpy_s(ipStrings[i], ipString.c_str());
 
 		if (strlen(ipStrings[i]) > 0)
 		{
