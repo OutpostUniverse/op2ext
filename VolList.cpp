@@ -10,15 +10,11 @@ VolList::VolList()
 
 VolList::~VolList() { }
 
-//std::vector<std::string> strings;
 void VolList::AddVolFile(std::string volPath)
 {
 	if (MaxVolFileCountReached(volPath)) {
 		return;
 	}
-
-	//strings.push_back(volPath);
-	//InitializeVolSearchEntry(strings.back().c_str());
 	
 	volPaths.push_back(std::vector<char>(volPath.c_str(), volPath.c_str() + volPath.size() + 1u));
 	
@@ -27,12 +23,6 @@ void VolList::AddVolFile(std::string volPath)
 	DBG("VolList::AddItem(\"");
 	DBG(volPath.c_str());
 	DBG("\");\n");
-}
-
-void VolList::EndList()
-{	
-	// Add end of volFileEntries search item.
-	InitializeVolSearchEntry((char*)0);
 }
 
 void VolList::LoadVolFiles()
@@ -87,4 +77,10 @@ void VolList::InitializeVolSearchEntry(char* pVolPath)
 	volSearchEntryList[numberOfVolFiles - 1].flags = 1;
 	volSearchEntryList[numberOfVolFiles - 1].unknown2 = 0;
 	volSearchEntryList[numberOfVolFiles - 1].pFilename = pVolPath;
+}
+
+void VolList::EndList()
+{
+	// Add end of volFileEntries search item.
+	InitializeVolSearchEntry((char*)0);
 }
