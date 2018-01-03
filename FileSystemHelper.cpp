@@ -2,10 +2,12 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-
 #include <filesystem>
 
 namespace fs = std::experimental::filesystem;
+
+std::string GetPrivateProfileStdString(std::string sectionName, std::string key, std::string filename);
+
 
 std::string GetGameDirectory()
 {
@@ -15,15 +17,14 @@ std::string GetGameDirectory()
 	return fs::path(moduleFilename).remove_filename().string();
 }
 
-
 std::string GetOutpost2IniPath()
 {
 	return fs::path(GetGameDirectory()).append("outpost2.ini").string();
 }
 
 // Calls Windows Macro GetPrivateProfileSring.
-// Hides implementation detail of creating a buffer. 
-std::string GetPrivateProfileStdString(std::string appName, std::string key, std::string filename)
+// Hides implementation detail of creating a buffer. Wraps call in std::string arguments and return. 
+std::string GetPrivateProfileStdString(std::string sectionName, std::string key, std::string filename)
 {
 	size_t bufferInterval = 1024;
 	size_t currentBufferSize = bufferInterval;
@@ -31,7 +32,7 @@ std::string GetPrivateProfileStdString(std::string appName, std::string key, std
 
 	while (true)
 	{
-		int returnSize = GetPrivateProfileString(appName.c_str(), key.c_str(), "", buffer, currentBufferSize, filename.c_str());
+		int returnSize = GetPrivateProfileString(sectionName.c_str(), key.c_str(), "", buffer, currentBufferSize, filename.c_str());
 
 		//GetPrivateProfileString's return value is the number of characters copied to the buffer, 
 		// not including the terminating null character.
@@ -49,4 +50,9 @@ std::string GetPrivateProfileStdString(std::string appName, std::string key, std
 	delete buffer;
 
 	return profileString;
+}
+
+std::string GetOP2PrivateProfileString(std::string sectionName, std::string key)
+{
+	return GetPrivateProfileStdString(sectionName, key, GetOutpost2IniPath());
 }

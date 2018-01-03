@@ -51,7 +51,7 @@ bool IniModuleLoader::UnloadModules()
 
 std::vector<std::string> IniModuleLoader::GetModuleNames()
 {
-	std::string ModuleNames = GetPrivateProfileStdString("Game", "LoadAddons", GetOutpost2IniPath());
+	std::string ModuleNames = GetOP2PrivateProfileString("Game", "LoadAddons");
 	std::vector<std::string> moduleNamesSplit = SplitString(ModuleNames, ',', TrimOption::Both);
 
 	return moduleNamesSplit;
@@ -60,7 +60,7 @@ std::vector<std::string> IniModuleLoader::GetModuleNames()
 bool IniModuleLoader::LoadModuleDll(IniModuleEntry& moduleEntry, std::string sectionName)
 {
 	// Get the DLL name from the corresponding section
-	std::string dllName = GetPrivateProfileStdString(sectionName, "Dll", GetOutpost2IniPath());
+	std::string dllName = GetOP2PrivateProfileString(sectionName, "Dll");
 
 	// Try to load a DLL with the given name (possibly "")
 	moduleEntry.handle = LoadLibrary(dllName.c_str());
