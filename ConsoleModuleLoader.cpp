@@ -2,6 +2,7 @@
 
 #include "OP2Memory.h"
 #include "FileSystemHelper.h"
+#include "GlobalDefines.h"
 #include <sstream>
 #include <algorithm>
 #include <iterator>

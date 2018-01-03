@@ -2,6 +2,7 @@
 
 #include "OP2Memory.h"
 #include "FileSystemHelper.h"
+#include "GlobalDefines.h"
 #include "op2ext-Internal.h"
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
