@@ -3,7 +3,9 @@
 #include "op2ext.h"
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-#include <string>
+
+std::string GetOP2IniPath();
+
 
 void TestGetGameDir_s()
 {
@@ -29,6 +31,7 @@ void TestGetGameDir()
 	OutputDebugString(gameDirectoryReport.c_str());
 }
 
+// GetCurrentModDir only returns the directory of a module loaded through the console switch /loadmod
 void TestGetConsoleModuleDirectory()
 {
 	char* moduleDirectory = GetCurrentModDir();
@@ -63,4 +66,29 @@ void TestTooManyVolFilesLoaded()
 
 		AddVolToList(charPointer);
 	}
+}
+
+void TestIniSectionName(std::string sectionName)
+{
+	OutputDebugString(("Passed IniSection name: " + sectionName + "\n").c_str());
+
+
+	const int bufferSize = 1024;
+	char buffer[bufferSize];
+
+	GetPrivateProfileString(sectionName.c_str(), "Initialized", "", buffer, bufferSize, GetOP2IniPath().c_str());
+
+	std::string iniPropertyString = "Initialized Property from Outpost2.ini: " + std::string(buffer) + "\n";
+	OutputDebugString(iniPropertyString.c_str());
+}
+
+std::string GetOP2IniPath()
+{
+	char gameDirectory[MAX_PATH];
+	GetGameDir_s(gameDirectory, MAX_PATH);
+
+	std::string iniPath(gameDirectory);
+	iniPath += "\\Outpost2.ini";
+
+	return iniPath;
 }
