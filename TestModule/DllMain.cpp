@@ -26,17 +26,6 @@ Initialized = "True"
 std::string GetOP2IniPath();
 void TestPublicInterface();
 
-//std::string iniSectionName = "TestModule";
-
-//BOOL WINAPI DllMain(HMODULE hMod, DWORD dwReason, LPVOID reserved)
-//{
-//	//if (dwReason == DLL_PROCESS_ATTACH) {
-//	//	WritePrivateProfileString(iniSectionName.c_str(), "Initialized", "True", GetOP2IniPath().c_str());
-//	//}
-//	//else if (dwReason == DLL_PROCESS_DETACH) {
-//	//	WritePrivateProfileString(iniSectionName.c_str(), nullptr, nullptr, GetOP2IniPath().c_str());
-//	//}
-//}
 
 // Console Switch Mod Function Hooks
 // ---------------------------------
