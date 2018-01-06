@@ -10,7 +10,7 @@
 LoadAddons = ". . . other modules . . ., ModuleSectionName"
 . . .
 
-[TestModule]
+[ModuleSectionName]
 Dll = "ModuleSectionName\ModuleDllName.dll"
 . . . Other settings as desired . . .
 */
