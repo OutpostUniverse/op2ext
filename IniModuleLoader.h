@@ -20,7 +20,7 @@ public:
 
 private:
 	// Export (not absolutely required, but should be used if any additional parameters are read from the .ini file)
-	typedef void(*InitModFunc)(char* iniSectionName);
+	typedef void(*InitModFunc)(const char* iniSectionName);
 	typedef bool(*DestroyModFunc)();
 
 	struct IniModuleEntry
