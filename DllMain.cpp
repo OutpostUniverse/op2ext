@@ -74,14 +74,18 @@ int __fastcall ExtInit(TApp *thisPtr, int)
 
 	InstallIpDropDown();
 
-	// Load all active modules from the .ini file
-	iniModuleLoader.LoadModules();
+	// Order of precedence for loading vol files is: 
+	// ART_PATH (from console module), Addon directory, Console Module, Ini Modules
+
+	LocateVolFiles("Addon");
 
 	// Load command line modules
 	consoleModLoader.LoadModule();
 
+	// Load all active modules from the .ini file
+	iniModuleLoader.LoadModules();
+
 	LocateVolFiles();
-	LocateVolFiles("Addon");
 
 	volList.LoadVolFiles();
 
@@ -125,7 +129,8 @@ void LocateVolFiles(std::string relativeSearchDirectory)
 		std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
 
 		if (extension == ".vol") {
-			volList.AddVolFile(fs::path(relativeSearchDirectory).append(filePath.filename()).string());
+			std::string relativeVolPath = fs::path(relativeSearchDirectory).append(filePath.filename()).string();
+			volList.AddVolFile(relativeVolPath);
 		}
 	}
 }
