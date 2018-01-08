@@ -146,7 +146,8 @@ std::string ConsoleModuleLoader::FormModRelativeDirectory(std::vector<std::strin
 }
 
 // Sets a directory called ART_PATH that is searched before looking in the root executable's directory.
-// If an asset (vol, clm, video file, music1.wav, etc) is found in ART_PATH's directory, it is loaded instead
+// If an asset (vol, clm, video file, music1.wav, .map, tech file, etc) is found in ART_PATH's directory, 
+// it is loaded instead
 void ConsoleModuleLoader::SetArtPath()
 {
 	// This value may also be set using the DEBUG section of the .ini file, using the property ART_PATH.
