@@ -105,7 +105,15 @@ Vol files are a custom Outpost 2 storage format used to store in game files like
 
 Vol files must be loaded into Outpost 2 before the game initializes. A module should accomplish this by adding vol files to Outpost 2 within the function mod_init/InitMod by calling AddVolToList. Alternatively, the addon directory or simply placing vol files in the Console Module's directory will load them automatically.
 
-Outpost 2 only supports 31 vol files. If loading more than 31 vol files is requested, op2ext will not load any vol file past 31 and will warn the user on which vol files were not loaded. Outpost 2 will continue to load, but depending on what data was contained in the discarded vol file(s), the program may or may not be able to function normally.
+Outpost 2 only supports 30 vol files. If loading more than 30 vol files is requested, op2ext will not load any vol file past 30 and will warn the user on which vol files were not loaded. Outpost 2 will continue to load, but depending on what data was contained in the discarded vol file(s), the program may or may not be able to function normally.
+
+Order of vol file precedence is below:
+
+ - vol files loaded through ART_PATH via a Console Module. (loose vol files in root directory of console module)
+ - vol files in ./Addon directory
+ - vol files specified in console module's DLL (if DLL exists)
+ - vol files specified in ini module DLLs
+ - vol files in the root directory of Outpost 2
 
 
 Change Log
@@ -115,13 +123,15 @@ Version 2.0.0
 
  * Add ability to load vol files with any name into Outpost 2 from the root directory.
  * Deprecated function GetGameDir(char* buffer).
+ * Change public callable function InitMod to have a const char* variable - void InitMod(const char* iniSectionName) 
  * Allow retrieving data from Outpost2.ini that is greater in size than 1024 characters.
  * Fix bug in SetSerialNumber function.
  * Improve error messages when Outpost 2 has difficulty loading a module or vol files.
- * Add an .ini module sample.
+ * Add an ini module sample.
  * Fix errors in console switch module sample.
  * Move external callable functions from public.h to op2ext.h.
  * Write a TestModule that is included with the project. 
+ * Introduce C++11/14 practices into code base.
 
 Version 1.0.0
 
