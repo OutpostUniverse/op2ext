@@ -3,16 +3,20 @@
 #include "op2ext.h"
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include <filesystem>
+
+namespace fs = std::experimental::filesystem;
 
 std::string GetOP2IniPath();
+std::string GetGameDirStdString();
+size_t CountVolFilesInGameDirectory();
 
 
 void TestGetGameDir_s()
 {
-	char gameDirectory[MAX_PATH];
-	GetGameDir_s(gameDirectory, MAX_PATH);
+	std::string gameDirectory = GetGameDirStdString(); // Calls GetGameDir_s internally
 
-	std::string gameDirectoryReport("GetGameDir_s reports: " + std::string(gameDirectory) + "\n");
+	std::string gameDirectoryReport("GetGameDir_s reports: " + gameDirectory + "\n");
 	OutputDebugString(gameDirectoryReport.c_str());
 }
 
@@ -43,26 +47,21 @@ void TestGetConsoleModuleDirectory()
 
 void TestInvalidVolFileName()
 {
-	AddVolToList("moduleTestFail.vol");
+	AddVolToList("VolumeLoadFail.vol");
 }
 
+// This function will cause Outpost 2 to not load properly if an essential vol file is not properly loaded.
+// Recommend adding a vol file that is alphabetically after voices.vol. This way voices.vol and all essential 
+// vol files are loaded into Outpost 2.
 void TestTooManyVolFilesLoaded()
 {
-	AddVolToList("maps.vol");
-	AddVolToList("maps01.vol");
-	AddVolToList("maps02.vol");
-	AddVolToList("maps03.vol");
-	AddVolToList("maps04.vol");
-	AddVolToList("sound.vol");
-	AddVolToList("story.vol");
-	AddVolToList("sheets.vol");
-	AddVolToList("voices.vol");
+	size_t volsInGameDirectory = CountVolFilesInGameDirectory();
 
-	for (int i = 1; i < 20; i++)
+	std::string volPath("./TestModule/TestVolume.vol");
+	for (size_t i = volsInGameDirectory; i < 30; i++)
 	{
-		std::string volFilename("./TestModule/moduleTest" + std::to_string(i) + ".vol");
-		char* charPointer = new char[volFilename.size() + 1];
-		strcpy_s(charPointer, volFilename.size() + 1, volFilename.c_str());
+		char* charPointer = new char[volPath.size() + 1];
+		strcpy_s(charPointer, volPath.size() + 1, volPath.c_str());
 
 		AddVolToList(charPointer);
 	}
@@ -71,7 +70,6 @@ void TestTooManyVolFilesLoaded()
 void TestIniSectionName(std::string sectionName)
 {
 	OutputDebugString(("Passed IniSection name: " + sectionName + "\n").c_str());
-
 
 	const int bufferSize = 1024;
 	char buffer[bufferSize];
@@ -91,4 +89,32 @@ std::string GetOP2IniPath()
 	iniPath += "\\Outpost2.ini";
 
 	return iniPath;
+}
+
+std::string GetGameDirStdString()
+{
+	char gameDirectory[MAX_PATH];
+	GetGameDir_s(gameDirectory, MAX_PATH);
+
+	return std::string(gameDirectory);
+}
+
+size_t CountVolFilesInGameDirectory()
+{
+	std::string gameDirectory = GetGameDirStdString();
+	size_t volsInGameDirectory = 0;
+
+	for (auto & p : fs::directory_iterator(fs::path(gameDirectory)))
+	{
+		fs::path filePath(p.path());
+
+		std::string extension = filePath.extension().string();
+		std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
+
+		if (extension == ".vol") {
+			volsInGameDirectory++;
+		}
+	}
+
+	return volsInGameDirectory;
 }
