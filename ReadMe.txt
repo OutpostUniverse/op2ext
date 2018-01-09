@@ -112,9 +112,9 @@ Outpost 2 only supports 31 vol files. If loading more than 31 vol files is reque
 Order of vol file precedence is below:
 
  - vol files loaded through ART_PATH via a Console Module. (loose vol files in root directory of console module)
- - vol files in ./Addon directory
  - vol files specified in console module's DLL (if DLL exists)
  - vol files specified in ini module DLLs
+ - vol files in ./Addon directory
  - vol files in the root directory of Outpost 2
 
 

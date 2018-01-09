@@ -75,9 +75,7 @@ int __fastcall ExtInit(TApp *thisPtr, int)
 	InstallIpDropDown();
 
 	// Order of precedence for loading vol files is: 
-	// ART_PATH (from console module), Addon directory, Console Module, Ini Modules
-
-	LocateVolFiles("Addon");
+	// ART_PATH (from console module), Console Module, Ini Modules, Addon directory, Game directory
 
 	// Load command line modules
 	consoleModLoader.LoadModule();
@@ -85,7 +83,8 @@ int __fastcall ExtInit(TApp *thisPtr, int)
 	// Load all active modules from the .ini file
 	iniModuleLoader.LoadModules();
 
-	LocateVolFiles();
+	LocateVolFiles("Addon");
+	LocateVolFiles(); //Searches root directory
 
 	volList.LoadVolFiles();
 
