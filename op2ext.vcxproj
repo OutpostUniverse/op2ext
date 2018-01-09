@@ -68,7 +68,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <PostBuildEvent>
-      <Command>copy "$(TargetPath)" ..\..\outpost2SVN\GameDownload\Outpost2\trunk\</Command>
+      <Command>copy "$(TargetPath)" ".\Outpost2"</Command>
     </PostBuildEvent>
     <Midl>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -145,7 +145,7 @@
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(TargetPath)" ..\..\outpost2SVN\GameDownload\Outpost2\trunk\</Command>
+      <Command>copy "$(TargetPath)" ".\Outpost2"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

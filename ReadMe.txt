@@ -15,6 +15,8 @@ Outpost 2 Extension is a dynamic link (DLL) library written in C++. Source code 
 
 Outpost 2 requires loading libraries to fixed base addresses. Modern compilers default to randomized base addresses. To prevent possible interference with other libraries associated with Outpost 2, op2ext is designed to load into address 0x10000000.
 
+Both the op2ext and TestModule projects use post build event scripts to copy files into the Outpost 2 directoy. The default expected location is ./Outpost2/. If you plan on testing op2ext against a copy of Outpost 2 in a different directory, review and adjust the post build scripts before compiling.
+
 op2ext provides the following extensions for Outpost 2:
 
  * Override default vol files and loading new vol files by placing them in the folder ./Addons.

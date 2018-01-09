@@ -1,10 +1,11 @@
+Debug
+Release
+Outpost2
 *.suo
 *.db
 *.opendb
-Debug
 *.user
 x64
 .vs
-Release
 /*.ini
 *.aps
