@@ -9,6 +9,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "op2ext", "op2ext.vcxproj", 
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestModule", "TestModule\TestModule.vcxproj", "{19622CEB-6837-4B41-81E2-21969D813C6A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6DE3610C-C9EE-4FD3-BBD7-66382C16FDE9} = {6DE3610C-C9EE-4FD3-BBD7-66382C16FDE9}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Outpost2DLL", "Submodules\Outpost2DLL\Outpost2DLL.vcxproj", "{B3F40368-F3CC-4EC5-A758-F5DAD08FEDDC}"
 EndProject
