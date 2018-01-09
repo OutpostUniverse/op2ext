@@ -105,7 +105,7 @@ Vol files are a custom Outpost 2 storage format used to store in game files like
 
 Vol files must be loaded into Outpost 2 before the game initializes. A module should accomplish this by adding vol files to Outpost 2 within the function mod_init/InitMod by calling AddVolToList. Alternatively, the addon directory or simply placing vol files in the Console Module's directory will load them automatically.
 
-Outpost 2 only supports 30 vol files. If loading more than 30 vol files is requested, op2ext will not load any vol file past 30 and will warn the user on which vol files were not loaded. Outpost 2 will continue to load, but depending on what data was contained in the discarded vol file(s), the program may or may not be able to function normally.
+Outpost 2 only supports 31 vol files. If loading more than 31 vol files is requested, op2ext will not load any vol file past 31 and will warn the user on which vol files were not loaded. Outpost 2 will continue to load, but depending on what data was contained in the discarded vol file(s), the program may or may not be able to function normally.
 
 Order of vol file precedence is below:
 

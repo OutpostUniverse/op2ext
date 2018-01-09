@@ -58,7 +58,7 @@ void TestTooManyVolFilesLoaded()
 	size_t volsInGameDirectory = CountVolFilesInGameDirectory();
 
 	std::string volPath("./TestModule/TestVolume.vol");
-	for (size_t i = volsInGameDirectory; i < 30; i++)
+	for (size_t i = volsInGameDirectory; i < 32; i++)
 	{
 		char* charPointer = new char[volPath.size() + 1];
 		strcpy_s(charPointer, volPath.size() + 1, volPath.c_str());

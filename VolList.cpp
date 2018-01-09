@@ -61,7 +61,7 @@ void VolList::LoadVolFiles()
 
 bool VolList::MaxVolFileCountReached(std::string volPath)
 {
-	if (numberOfVolFiles > VolSearchBufferSize - 2) {
+	if (numberOfVolFiles > VolSearchBufferSize - 1) {
 		PostErrorMessage("VolList.cpp", __LINE__, "Too many vol files loaded. Ignoring the vol file '" + volPath + "'");
 		return true;
 	}
