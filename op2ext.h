@@ -41,4 +41,4 @@ OP2EXT_API void AddVolToList(char* volFilename);
 // Overwrites the default Outpost 2 version string.
 // Required if the module affects multiplayer to detect incompatibilities between different copies of Outpost 2. 
 // See the ReadMe for detailed usage. Each variable must be a numeric value between 0-9 and not an ASCII character.
-OP2EXT_API void SetSerialNumber(char num1, char num2, char num3);
+OP2EXT_API void SetSerialNumber(char major, char minor, char patch);

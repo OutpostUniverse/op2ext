@@ -61,14 +61,14 @@ OP2EXT_API void AddVolToList(char* volFilename)
 }
 
 char* multiplayerVersionStringAddress = (char*)0x004E973C;
-OP2EXT_API void SetSerialNumber(char num1, char num2, char num3)
+OP2EXT_API void SetSerialNumber(char major, char minor, char patch)
 {
-	if (modulesRunning || num1 < 0 || num1 > 9 || num2 < 0 || num2 > 9 || num3 < 0 || num3 > 9) {
+	if (modulesRunning || major < 0 || major > 9 || minor < 0 || minor > 9 || patch < 0 || patch > 9) {
 		PostErrorMessage("op2ext.cpp", __LINE__, "SetSerialNumber failed. Invalid mod serial number or was called after game startup.");
 	}
 	else {
 		char buffer[8];
-		_snprintf_s(buffer, sizeof(buffer), "%i.%i.%i.%i", num1, num2, 0, num3);
+		_snprintf_s(buffer, sizeof(buffer), "%i.%i.%i.%i", major, minor, 0, patch);
 		Op2MemCopy(multiplayerVersionStringAddress, buffer, sizeof(buffer));
 	}
 }
