@@ -69,12 +69,12 @@ bool VolList::MaxVolFileCountReached(std::string volPath)
 
 void VolList::InitializeVolSearchEntry(char* pVolPath)
 {
-	numberOfVolFiles++;
+	volSearchEntryList[numberOfVolFiles].unknown1 = 0;
+	volSearchEntryList[numberOfVolFiles].flags = 1;
+	volSearchEntryList[numberOfVolFiles].unknown2 = 0;
+	volSearchEntryList[numberOfVolFiles].pFilename = pVolPath;
 
-	volSearchEntryList[numberOfVolFiles - 1].unknown1 = 0;
-	volSearchEntryList[numberOfVolFiles - 1].flags = 1;
-	volSearchEntryList[numberOfVolFiles - 1].unknown2 = 0;
-	volSearchEntryList[numberOfVolFiles - 1].pFilename = pVolPath;
+	numberOfVolFiles++;
 }
 
 void VolList::EndList()
