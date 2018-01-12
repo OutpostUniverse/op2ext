@@ -4,6 +4,13 @@
 #include <windows.h>
 #include <sstream>
 
+void OutputDebug(std::string message)
+{
+#ifdef DEBUG
+	OutputDebugString(message.c_str());
+#endif
+}
+
 void PostErrorMessage(std::string sourceFilename, long lineInSourceCode, std::string errorMessage)
 {
 	std::string formattedMessage = sourceFilename + ", Line: " + std::to_string(lineInSourceCode) + ": " + errorMessage;

@@ -3,12 +3,7 @@
 #include <string>
 #include <vector>
 
-
-#ifdef DEBUG
-#define DBG(s) OutputDebugString(s)
-#else
-#define DBG(s)
-#endif
+void OutputDebug(std::string message);
 
 // Defines how leading and trailing characters of a string are trimmed. 
 enum class TrimOption

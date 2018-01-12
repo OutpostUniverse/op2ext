@@ -2,8 +2,6 @@
 
 #include "OP2Memory.h"
 #include "GlobalDefines.h"
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
 
 VolList::VolList()
 {
@@ -22,9 +20,7 @@ void VolList::AddVolFile(std::string volPath)
 	
 	InitializeVolSearchEntry(&volPaths.back()[0]);
 
-	DBG("VolList::AddItem(\"");
-	DBG(volPath.c_str());
-	DBG("\");\n");
+	OutputDebug("Add file to VolList: " + volPath + "\n");
 }
 
 void VolList::LoadVolFiles()
