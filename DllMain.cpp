@@ -35,8 +35,8 @@ public:
 int __fastcall ExtInit(TApp *thisPtr, int);
 void __fastcall ExtShutDown(TApp *thisPtr, int);
 
-// Shell HMODULE to load it before OP2 loads it
-//HMODULE hShellDll = NULL;
+// Shell HINSTANCE to load it before OP2 loads it
+//HINSTANCE hShellDll = NULL;
 DWORD* tAppInitCallAddr = (DWORD*)0x004A8878;
 DWORD tAppInitNewAddr = (DWORD)ExtInit;
 
@@ -49,7 +49,7 @@ DWORD loadLibraryNewAddr = (DWORD)LoadLibraryNew;
 static IniModuleLoader iniModuleLoader;
 
 
-BOOL WINAPI DllMain(HMODULE hMod, DWORD dwReason, LPVOID reserved)
+BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 {
 	// This will be called once the program is unpacked and running
 	if (dwReason == DLL_PROCESS_ATTACH) {
@@ -59,7 +59,7 @@ BOOL WINAPI DllMain(HMODULE hMod, DWORD dwReason, LPVOID reserved)
 		Op2MemSetDword(tAppInitCallAddr, tAppInitNewAddr - (loadOffset + (DWORD)tAppInitCallAddr + sizeof(void*)));
 
 		// Disable any more thread attach calls
-		DisableThreadLibraryCalls(hMod);
+		DisableThreadLibraryCalls(hInstance);
 	}
 
 	return TRUE;

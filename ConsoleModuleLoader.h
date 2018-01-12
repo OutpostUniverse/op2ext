@@ -15,7 +15,7 @@ public:
 	std::string GetModuleDirectory();
 
 private:
-	HMODULE modDllHandle = nullptr;
+	HINSTANCE modDllHandle = nullptr;
 
 	std::string FindModuleDirectory();
 	void ParseCommandLine(std::vector<std::string>& arguments);
