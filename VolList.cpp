@@ -12,7 +12,8 @@ VolList::~VolList() { }
 
 void VolList::AddVolFile(std::string volPath)
 {
-	if (MaxVolFileCountReached(volPath)) {
+	if (MaxVolFileCountReached()) {
+		PostErrorMessage("VolList.cpp", __LINE__, "Too many vol files loaded. Ignoring the vol file '" + volPath + "'");
 		return;
 	}
 	
@@ -57,14 +58,9 @@ void VolList::LoadVolFiles()
 	Op2MemSetDword((void*)0x0047111F, vol4);
 }
 
-bool VolList::MaxVolFileCountReached(std::string volPath)
+bool VolList::MaxVolFileCountReached()
 {
-	if (numberOfVolFiles > VolSearchBufferSize - 1) {
-		PostErrorMessage("VolList.cpp", __LINE__, "Too many vol files loaded. Ignoring the vol file '" + volPath + "'");
-		return true;
-	}
-
-	return false;
+	return numberOfVolFiles > VolSearchBufferSize - 1;
 }
 
 void VolList::InitializeVolSearchEntry(char* pVolPath)
