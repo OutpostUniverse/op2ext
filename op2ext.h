@@ -16,7 +16,7 @@
 
 // Retrieves the current absolute directory of the Outpost 2 executable with a trailing slash. 
 // If bufferSize is smaller than required to copy entire path, buffer is provided as much of path as possible and false is returned.
-OP2EXT_API bool GetGameDir_s(char* buffer, unsigned int bufferSize);
+OP2EXT_API bool GetGameDir_s(char* buffer, size_t bufferSize);
 
 
 // DEPRECATED as of version 2.0.0. Use GetGameDir_s instead.
