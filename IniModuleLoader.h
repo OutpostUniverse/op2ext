@@ -7,8 +7,8 @@
 #include <vector>
 
 /**
-Loads all modules defined in the Outpost2.ini file. 
-Modules defined in the Outpost2.ini file are meant to be in use all the time with the game. 
+Loads all modules defined in the Outpost2.ini file.
+Modules defined in the Outpost2.ini file are meant to be in use all the time with the game.
 To load a single module for a single game session, use the ModMgr.
 */
 class IniModuleLoader
@@ -33,5 +33,5 @@ private:
 	std::vector<std::string> GetModuleNames();
 	bool LoadModuleDll(IniModuleEntry& moduleEntry, std::string sectionName);
 	void CallModuleInitialization(IniModuleEntry& currentModule, std::string sectionName);
-	bool IniModuleLoader::CallModuleDestruction(IniModuleEntry& currentModule);
+	bool CallModuleDestruction(IniModuleEntry& currentModule);
 };
