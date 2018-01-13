@@ -13,6 +13,8 @@
 #define OP2EXT_API extern "C" __declspec(dllimport) 
 #endif
 
+#include <stddef.h>
+
 
 // Retrieves the current absolute directory of the Outpost 2 executable with a trailing slash. 
 // If bufferSize is smaller than required to copy entire path, buffer is provided as much of path as possible and false is returned.
