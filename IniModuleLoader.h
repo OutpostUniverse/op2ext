@@ -5,7 +5,6 @@
 
 #include <string>
 #include <vector>
-#include <list>
 
 /**
 Loads all modules defined in the Outpost2.ini file. 
@@ -29,9 +28,10 @@ private:
 		DestroyModFunc destroyModFunc;
 	};
 
-	std::list<IniModuleEntry> moduleList;
+	std::vector<IniModuleEntry> modules;
 
 	std::vector<std::string> GetModuleNames();
 	bool LoadModuleDll(IniModuleEntry& moduleEntry, std::string sectionName);
 	void CallModuleInitialization(IniModuleEntry& currentModule, std::string sectionName);
+	bool IniModuleLoader::CallModuleDestruction(IniModuleEntry& currentModule);
 };

@@ -21,7 +21,7 @@ void IniModuleLoader::LoadModules()
 		moduleEntry.destroyModFunc = (DestroyModFunc)GetProcAddress(moduleEntry.handle, "DestroyMod");
 
 		// Store mod's HINSTANCE, and its destroy function if it exists
-		moduleList.push_front(moduleEntry);
+		modules.push_back(moduleEntry);
 	}
 }
 
@@ -30,21 +30,17 @@ bool IniModuleLoader::UnloadModules()
 {
 	bool result = true;
 
-	for (std::list<IniModuleEntry>::iterator moduleEntry = moduleList.begin(); moduleEntry != moduleList.end(); ++moduleEntry)
+	for (IniModuleEntry moduleEntry : modules)
 	{
-		// Call the DestroyMod function if it exists
-		if (moduleEntry->destroyModFunc != 0)
-		{
-			if (moduleEntry->destroyModFunc() == false) {
-				result = false;
-			}
+		if (!CallModuleDestruction(moduleEntry)) {
+			result = false;
 		}
 
 		// Unload the mod DLL
-		FreeLibrary(moduleEntry->handle);
+		FreeLibrary(moduleEntry.handle);
 	}
 
-	moduleList.clear();
+	modules.clear();
 
 	return result;
 }
@@ -73,16 +69,22 @@ bool IniModuleLoader::LoadModuleDll(IniModuleEntry& moduleEntry, std::string sec
 	return true;
 }
 
-void IniModuleLoader::CallModuleInitialization(IniModuleEntry& currentModule, std::string sectionName)
+void IniModuleLoader::CallModuleInitialization(IniModuleEntry& moduleEntry, std::string sectionName)
 {
 	// Try to find an initialization function
-	InitModFunc initModFunc = (InitModFunc)GetProcAddress(currentModule.handle, "InitMod");
+	InitModFunc initModFunc = (InitModFunc)GetProcAddress(moduleEntry.handle, "InitMod");
 
 	// Call the InitMod function if it exists
 	if (initModFunc != 0) {
-		char* cStr = new char[sectionName.length() + 1];
-		strcpy_s(cStr, sectionName.length() + 1, sectionName.c_str());
-
-		initModFunc(cStr);
+		initModFunc(sectionName.c_str());
 	}
+}
+
+bool IniModuleLoader::CallModuleDestruction(IniModuleEntry& moduleEntry)
+{
+	if (moduleEntry.destroyModFunc != 0) {
+		return moduleEntry.destroyModFunc();
+	}
+
+	return true;
 }
