@@ -31,7 +31,7 @@ private:
 	static const unsigned int VolSearchBufferSize = 32;
 	VolSearchEntry buffer[VolSearchBufferSize];
 
-	bool MaxVolFileCountReached();
+	bool IsFull();
 	void InitializeVolSearchEntry(char* pVolPath);
 	void EndList();
 };

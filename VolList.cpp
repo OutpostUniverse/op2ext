@@ -12,7 +12,7 @@ VolList::~VolList() { }
 
 void VolList::AddVolFile(std::string volPath)
 {
-	if (MaxVolFileCountReached()) {
+	if (IsFull()) {
 		PostErrorMessage("VolList.cpp", __LINE__, "Too many vol files loaded. Ignoring the vol file '" + volPath + "'");
 		return;
 	}
@@ -58,7 +58,7 @@ void VolList::LoadVolFiles()
 	Op2MemSetDword((void*)0x0047111F, vol4);
 }
 
-bool VolList::MaxVolFileCountReached()
+bool VolList::IsFull()
 {
 	return numberOfVolFiles > VolSearchBufferSize - 1;
 }
