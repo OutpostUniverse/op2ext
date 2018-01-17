@@ -7,10 +7,14 @@
 
 #pragma once
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef OP2EXT_INTERNAL_BUILD  // Defined in op2ext project settings
-#define OP2EXT_API extern "C" __declspec(dllexport)
+#define OP2EXT_API __declspec(dllexport)
 #else
-#define OP2EXT_API extern "C" __declspec(dllimport) 
+#define OP2EXT_API __declspec(dllimport) 
 #endif
 
 #include <stddef.h>
@@ -44,3 +48,8 @@ OP2EXT_API void AddVolToList(char* volFilename);
 // Required if the module affects multiplayer to detect incompatibilities between different copies of Outpost 2. 
 // See the ReadMe for detailed usage. Each variable must be a numeric value between 0-9 and not an ASCII character.
 OP2EXT_API void SetSerialNumber(char major, char minor, char patch);
+
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
