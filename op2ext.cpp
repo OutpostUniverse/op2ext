@@ -11,7 +11,7 @@
 // Dummy export for linking requirements from Outpost2.exe and OP2Shell.dll. 
 // Outpost2.exe and OP2Shell.dll reference this dummy entry, causing op2ext.dll to load. 
 // It is not used in any way, but must exist to prevent Windows loader errors.
-OP2EXT_API int StubExt = 0;
+extern "C" OP2EXT_API int StubExt = 0;
 
 OP2EXT_API bool GetGameDir_s(char* buffer, size_t bufferSize)
 {
