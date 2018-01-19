@@ -10,6 +10,11 @@
 #include <filesystem>
 #include <algorithm>
 
+//Test external interface is compatible with C compiler.
+#ifdef DEBUG
+#include "CompatibilityTest.c"
+#endif
+
 namespace fs = std::experimental::filesystem;
 
 
