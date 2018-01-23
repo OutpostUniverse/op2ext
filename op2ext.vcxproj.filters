@@ -45,9 +45,6 @@
     <ClCompile Include="op2ext-Internal.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CompatibilityTest.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IpDropDown.h">

@@ -149,10 +149,6 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CompatibilityTest.c">
-      <SubType>
-      </SubType>
-    </ClCompile>
     <ClCompile Include="DllMain.cpp" />
     <ClCompile Include="FileSystemHelper.cpp" />
     <ClCompile Include="GlobalDefines.cpp" />

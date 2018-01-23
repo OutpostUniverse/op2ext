@@ -21,6 +21,9 @@ Initialized = "True"
 #include <windows.h>
 #include <string>
 
+//Test external interface is compatible with C compiler.
+#include "CompatibilityTest.c"
+
 #define EXPORT extern "C" __declspec(dllexport)
 
 std::string GetOP2IniPath();
