@@ -13,14 +13,19 @@
 // It is not used in any way, but must exist to prevent Windows loader errors.
 extern "C" OP2EXT_API int StubExt = 0;
 
-OP2EXT_API int GetGameDir_s(char* buffer, size_t bufferSize)
+OP2EXT_API size_t GetGameDir_s(char* buffer, size_t bufferSize)
 {
 	// Adding "\\" to end of directory is required for backward compatibility.
 	std::string gameDirectory = GetGameDirectory() + "\\";
 
 	strcpy_s(buffer, bufferSize, gameDirectory.c_str());
 
-	return bufferSize >= gameDirectory.size();
+	// Buffer must be one character larger than std::string since std::string does not include the null terminator.
+	if (bufferSize > gameDirectory.size()) {
+		return 0;
+	}
+		
+	return gameDirectory.size() + 1;
 }
 
 OP2EXT_API void GetGameDir(char* buffer)
