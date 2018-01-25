@@ -48,7 +48,7 @@ Each new module for Outpost 2 should be placed in a separate directory that resi
 
 The two types of modules, console and .ini modules, use different function hooks to pass data into op2ext. They both have access to the same set of op2ext exported functions. To gain access to op2ext's exported functions, include op2ext.h in your project. Detailed usage instructions for the functions are contained in op2ext.h.
 
- - void GetGameDir_s(char* buffer, int bufferSize);
+ - size_t GetGameDir_s(char* buffer, size_t bufferSize);
  - [DEPRECATED] void GetGameDir(char* buffer);
  - char* GetCurrentModDir(); - Returns the directory of the console loaded module only (if one exists)
  - void AddVolToList(char* volName);
