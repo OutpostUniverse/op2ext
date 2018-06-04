@@ -22,4 +22,6 @@ private:
 	std::string ParseLoadModCommand(std::vector<std::string> arguments);
 	std::string FormModRelativeDirectory(std::vector<std::string> arguments);
 	void SetArtPath();
+
+	static bool ConvertLPWToString(std::string& stringOut, const LPWSTR pw, UINT codepage = CP_ACP);
 };
