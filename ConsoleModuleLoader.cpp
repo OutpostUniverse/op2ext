@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <iterator>
 #include <filesystem>
+#include <stdexcept>
 
 namespace fs = std::experimental::filesystem;
 
@@ -79,20 +80,58 @@ void ConsoleModuleLoader::LoadModule()
 	}
 }
 
+bool ConvertLPWToString(std::string& stringOut, const LPWSTR pw, UINT codepage = CP_ACP)
+{
+	bool result = false;
+	char* p = 0;
+
+	int bsz = WideCharToMultiByte(codepage, 0, pw, -1, 0, 0, 0, 0);
+
+	if (bsz > 0) {
+		p = new char[bsz];
+		int rc = WideCharToMultiByte(codepage, 0, pw, -1, p, bsz, 0, 0);
+		if (rc != 0) {
+			p[bsz - 1] = 0;
+			stringOut = p;
+			result = true;
+		}
+	}
+
+	delete[] p;
+
+	return result;
+}
+
 void ConsoleModuleLoader::ParseCommandLine(std::vector<std::string>& arguments)
 {
-	std::string commandLine = GetCommandLine();
+	arguments.clear();
+	int argumentCount;
 
-	std::istringstream iss(commandLine);
-	std::copy(std::istream_iterator<std::string>(iss), std::istream_iterator<std::string>(), std::back_inserter(arguments));
+	LPWSTR *commandLineArgs = CommandLineToArgvW(GetCommandLineW(), &argumentCount);
+	if (commandLineArgs == nullptr) {
+		PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, "Unable to retrieve command line arguments attached to Outpost2.exe.");
+	}
+	else {
+		// Ignore the first argument, which is the path of the executable.
+		for (int i = 1; i < argumentCount; i++) {
+			std::string argument;
+			if (!ConvertLPWToString(argument, commandLineArgs[i])) {
+				PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, "Unable to cast the " + std::to_string(i) + 
+					" command line argument from LPWSTR to char*. Further parsing of command line arguments aborted.");
+				break;
+			}
+			arguments.push_back(argument);
+		}
+	}
 
-	arguments.erase(arguments.begin()); //Remove Application Name from arguments.
+	LocalFree(commandLineArgs);
 }
 
 bool ConsoleModuleLoader::ParseArgumentName(std::string& argument)
 {
 	if (argument[0] != '/' && argument[0] != '-') {
-		PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, "A switch was expected but not found. Prefix switch name with '/' or '-'.");
+		std::string message("A switch was expected but not found. Prefix switch name with '/' or '-'. The following statement was found instead: " + argument);
+		PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, message);
 		argument.clear();
 		return false;
 	}
