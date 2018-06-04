@@ -90,15 +90,22 @@ void ConsoleModuleLoader::ParseCommandLine(std::vector<std::string>& arguments)
 		PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, "Unable to retrieve command line arguments attached to Outpost2.exe.");
 	}
 	else {
-		// Ignore the first argument, which is the path of the executable.
-		for (int i = 1; i < argumentCount; i++) {
-			std::string argument;
-			if (!ConvertLPWToString(argument, commandLineArgs[i])) {
-				PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, "Unable to cast the " + std::to_string(i) + 
-					" command line argument from LPWSTR to char*. Further parsing of command line arguments aborted.");
-				break;
+		try {
+			// Ignore the first argument, which is the path of the executable.
+			for (int i = 1; i < argumentCount; i++) {
+				std::string argument;
+				if (!ConvertLPWToString(argument, commandLineArgs[i])) {
+					PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, "Unable to cast the " + std::to_string(i) +
+						" command line argument from LPWSTR to char*. Further parsing of command line arguments aborted.");
+					break;
+				}
+				arguments.push_back(argument);
 			}
-			arguments.push_back(argument);
+		}
+		// Catch and STL produced exceptions.
+		catch (std::exception& e) {
+			PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, "Error occurred attempting to parse command line arguments. Further parshing of command line arguments aborted. Internal Error: " + std::string(e.what()));
+			LocalFree(commandLineArgs);
 		}
 	}
 
