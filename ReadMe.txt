@@ -121,6 +121,10 @@ Order of vol file precedence is below:
 Change Log
 ------------------------------------------
 
+Version 2.0.1
+
+ * Fix bug in Console Mod Loader that separated the executable's path into multiple arguments if the path included a space.
+
 Version 2.0.0
 
  * Add ability to load vol files with any name into Outpost 2 from the root directory.
