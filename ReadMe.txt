@@ -3,7 +3,7 @@ Outpost 2 Extension Module
 
 Outpost 2 extension modules (op2ext) allows modifying and extending Outpost 2 through loading of alternate game resources or injecting indecently compiled C/C++ DLLs. The current version of Outpost 2 is maintained by the Outpost 2 community and may be found at https://www.outpost2.net/.
 
-Authors: BlackBox( op2hacker)
+Authors: BlackBox (op2hacker)
          Hooman
          Arklon
          Brett208 (Vagabond)
