@@ -35,10 +35,8 @@ OP2EXT_API void GetGameDir(char* buffer)
 
 	// Unable to use the newer funciton strcpy_s since we do not know the size of buffer,
 	// causing a security concern.
-#pragma warning( push )
-#pragma warning( disable : 4996 ) // Disable warning "The compiler encountered a deprecated declaration." 
+#pragma warning( suppress : 4996 ) // Disable warning "The compiler encountered a deprecated declaration." 
 	strcpy(buffer, gameDirectory.c_str());
-#pragma warning ( pop )
 }
 
 OP2EXT_API char* GetCurrentModDir()
