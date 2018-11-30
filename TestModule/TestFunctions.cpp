@@ -11,6 +11,10 @@ std::string GetOP2IniPath();
 std::string GetGameDirStdString();
 size_t CountVolFilesInGameDirectory();
 
+void TestLoggingMessage()
+{
+	Log("TestModule", "Test adding a message to log file");
+}
 
 void TestGetGameDir_s()
 {

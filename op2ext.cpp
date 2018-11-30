@@ -75,3 +75,8 @@ OP2EXT_API void SetSerialNumber(char major, char minor, char patch)
 		Op2MemCopy(multiplayerVersionStringAddress, buffer, sizeof(buffer));
 	}
 }
+
+OP2EXT_API void Log(char* moduleName, char* message)
+{
+	logger.Log(moduleName, message);
+}

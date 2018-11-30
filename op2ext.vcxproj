@@ -155,6 +155,7 @@
     <ClCompile Include="IniModuleLoader.cpp" />
     <ClCompile Include="IpDropDown.cpp" />
     <ClCompile Include="ConsoleModuleLoader.cpp" />
+    <ClCompile Include="Logger.cpp" />
     <ClCompile Include="op2ext-Internal.cpp" />
     <ClCompile Include="op2ext.cpp" />
     <ClCompile Include="OP2Memory.cpp" />
@@ -166,6 +167,7 @@
     <ClInclude Include="IniModuleLoader.h" />
     <ClInclude Include="IpDropDown.h" />
     <ClInclude Include="ConsoleModuleLoader.h" />
+    <ClInclude Include="Logger.h" />
     <ClInclude Include="op2ext-Internal.h" />
     <ClInclude Include="op2ext.h" />
     <ClInclude Include="OP2Memory.h" />

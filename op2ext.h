@@ -50,6 +50,8 @@ OP2EXT_API void AddVolToList(char* volFilename);
 // See the ReadMe for detailed usage. Each variable must be a numeric value between 0-9 and not an ASCII character.
 OP2EXT_API void SetSerialNumber(char major, char minor, char patch);
 
+// Log a message in Outpost2Log.txt.
+OP2EXT_API void Log(char* moduleName, char* message);
 
 #ifdef __cplusplus
 } // extern "C"

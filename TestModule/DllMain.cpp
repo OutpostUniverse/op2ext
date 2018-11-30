@@ -73,6 +73,8 @@ EXPORT void DestroyMod()
 
 void TestPublicInterface()
 {
+	TestLoggingMessage();
+
 	TestGetGameDir_s();
 	TestGetGameDir();
 
