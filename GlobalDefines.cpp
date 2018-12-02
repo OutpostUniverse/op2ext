@@ -44,12 +44,14 @@ std::string TrimString(const std::string& stringToTrim, TrimOption trimOption, c
 		stringBegin = stringToTrim.find_first_not_of(whitespace);
 	}
 
-	if (stringBegin == std::string::npos)
+	if (stringBegin == std::string::npos) {
 		return ""; // no content provided
+	}
 
 	size_t stringEnd = stringToTrim.length();
-	if (trimOption == TrimOption::Trailing || trimOption == TrimOption::Both)
+	if (trimOption == TrimOption::Trailing || trimOption == TrimOption::Both) {
 		stringEnd = stringToTrim.find_last_not_of(whitespace);
+	}
 
 	const auto range = stringEnd - stringBegin + 1;
 
