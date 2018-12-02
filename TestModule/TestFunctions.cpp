@@ -3,13 +3,14 @@
 #include "op2ext.h"
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include <cstddef>
 #include <filesystem>
 
 namespace fs = std::experimental::filesystem;
 
 std::string GetOP2IniPath();
 std::string GetGameDirStdString();
-size_t CountVolFilesInGameDirectory();
+std::size_t CountVolFilesInGameDirectory();
 
 
 void TestGetGameDir_s()
@@ -55,10 +56,10 @@ void TestInvalidVolFileName()
 // vol files are loaded into Outpost 2.
 void TestTooManyVolFilesLoaded()
 {
-	size_t volsInGameDirectory = CountVolFilesInGameDirectory();
+	auto volsInGameDirectory = CountVolFilesInGameDirectory();
 
 	std::string volPath("./TestModule/TestVolume.vol");
-	for (size_t i = volsInGameDirectory; i < 32; i++)
+	for (auto i = volsInGameDirectory; i < 32; i++)
 	{
 		char* charPointer = new char[volPath.size() + 1];
 		strcpy_s(charPointer, volPath.size() + 1, volPath.c_str());
@@ -99,10 +100,10 @@ std::string GetGameDirStdString()
 	return std::string(gameDirectory);
 }
 
-size_t CountVolFilesInGameDirectory()
+std::size_t CountVolFilesInGameDirectory()
 {
 	std::string gameDirectory = GetGameDirStdString();
-	size_t volsInGameDirectory = 0;
+	std::size_t volsInGameDirectory = 0;
 
 	for (auto & p : fs::directory_iterator(fs::path(gameDirectory)))
 	{

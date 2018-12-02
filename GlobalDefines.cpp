@@ -3,6 +3,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <sstream>
+#include <cstddef>
 
 void OutputDebug(std::string message)
 {
@@ -39,7 +40,7 @@ std::string TrimString(const std::string& stringToTrim, TrimOption trimOption, c
 		return "";
 	}
 
-	size_t stringBegin = 0;
+	std::size_t stringBegin = 0;
 	if (trimOption == TrimOption::Leading || trimOption == TrimOption::Both) {
 		stringBegin = stringToTrim.find_first_not_of(whitespace);
 	}
@@ -48,7 +49,7 @@ std::string TrimString(const std::string& stringToTrim, TrimOption trimOption, c
 		return ""; // no content provided
 	}
 
-	size_t stringEnd = stringToTrim.length();
+	auto stringEnd = stringToTrim.length();
 	if (trimOption == TrimOption::Trailing || trimOption == TrimOption::Both) {
 		stringEnd = stringToTrim.find_last_not_of(whitespace);
 	}
