@@ -2,6 +2,7 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include <cstddef>
 #include <filesystem>
 
 namespace fs = std::experimental::filesystem;
@@ -26,8 +27,8 @@ std::string GetOutpost2IniPath()
 // Hides implementation detail of creating a buffer. Wraps call in std::string arguments and return. 
 std::string GetPrivateProfileStdString(std::string sectionName, std::string key, std::string filename)
 {
-	size_t bufferInterval = 1024;
-	size_t currentBufferSize = bufferInterval;
+	const std::size_t bufferInterval = 1024;
+	auto currentBufferSize = bufferInterval;
 	char* buffer = new char[currentBufferSize];
 
 	while (true)

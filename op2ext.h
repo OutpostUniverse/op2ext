@@ -17,7 +17,7 @@ extern "C" {
 #define OP2EXT_API __declspec(dllimport) 
 #endif
 
-#include <stddef.h>
+#include <stddef.h> // size_t (C specific variant)
 
 
 // Retrieves the current absolute directory of the Outpost 2 executable with a trailing slash. 
