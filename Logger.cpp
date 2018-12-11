@@ -1,6 +1,7 @@
 #include "Logger.h"
 
 #include "GlobalDefines.h"
+#include "WindowsModule.h"
 #include <cstddef>
 #include <chrono>
 #include <ctime> //gmtime
@@ -19,8 +20,10 @@ Logger::~Logger()
 	logFile.close();
 }
 
-void Logger::Log(const std::string& moduleName, const std::string& message)
-{	
+void Logger::Log(const std::string& message)
+{
+	void* returnAddress = static_cast<void*>(&returnAddress + 1);
+	std::string moduleName = FindModuleName(returnAddress);
 	logFile << GetSystemDateTime() << " UTC [" << moduleName << "] " << message << std::endl;
 }
 
