@@ -76,7 +76,7 @@ OP2EXT_API void SetSerialNumber(char major, char minor, char patch)
 	}
 }
 
-OP2EXT_API void Log(char* moduleName, char* message)
+OP2EXT_API void Log(char* message)
 {
-	logger.Log(moduleName, message);
+	logger.Log(message);
 }

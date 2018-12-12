@@ -51,7 +51,7 @@ OP2EXT_API void AddVolToList(char* volFilename);
 OP2EXT_API void SetSerialNumber(char major, char minor, char patch);
 
 // Log a message in Outpost2Log.txt.
-OP2EXT_API void Log(char* moduleName, char* message);
+OP2EXT_API void Log(char* message);
 
 #ifdef __cplusplus
 } // extern "C"

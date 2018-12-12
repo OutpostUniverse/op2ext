@@ -160,6 +160,7 @@
     <ClCompile Include="op2ext.cpp" />
     <ClCompile Include="OP2Memory.cpp" />
     <ClCompile Include="VolList.cpp" />
+    <ClCompile Include="WindowsModule.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FileSystemHelper.h" />
@@ -173,6 +174,7 @@
     <ClInclude Include="OP2Memory.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="VolList.h" />
+    <ClInclude Include="WindowsModule.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="op2ext.rc" />

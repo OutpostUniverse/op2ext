@@ -13,7 +13,7 @@ size_t CountVolFilesInGameDirectory();
 
 void TestLoggingMessage()
 {
-	Log("TestModule", "Test adding a message to log file");
+	Log("Test adding a message to log file");
 }
 
 void TestGetGameDir_s()
