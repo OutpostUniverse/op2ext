@@ -47,7 +47,7 @@ OP2EXT_API char* GetCurrentModDir()
 		return nullptr;
 	}
 
-	char* cStr = new char[modDirectory.length() + 1];
+	char* cStr = static_cast<char*>(malloc(modDirectory.length() + 1));
 	strcpy_s(cStr, modDirectory.length() + 1, modDirectory.c_str());
 
 	return cStr;
