@@ -2,11 +2,11 @@
 #include <windows.h>
 #include <tlhelp32.h> // CreateToolhelp32Snapshot, Module32First, Module32Next
 
-std::string FindModuleName(void* address, HANDLE hModuleSnap);
-bool containsAddress(MODULEENTRY32 const& moduleEntry, const void* address);
+std::string FindModuleName(const void* const address, HANDLE hModuleSnap);
+bool containsAddress(MODULEENTRY32 const& moduleEntry, const void* const address);
 
 
-std::string FindModuleName(void* address) {
+std::string FindModuleName(const void* const address) {
 	// Get all modules for current process (processId can be 0)
 	auto hModuleSnap = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, 0);
 	if (hModuleSnap == INVALID_HANDLE_VALUE) {
@@ -17,7 +17,7 @@ std::string FindModuleName(void* address) {
 	return moduleName;
 }
 
-std::string FindModuleName(void* address, HANDLE hModuleSnap) {
+std::string FindModuleName(const void* const address, HANDLE hModuleSnap) {
 	MODULEENTRY32 moduleEntry;
 	moduleEntry.dwSize = sizeof(moduleEntry);
 	if (Module32First(hModuleSnap, &moduleEntry)) {
@@ -31,7 +31,7 @@ std::string FindModuleName(void* address, HANDLE hModuleSnap) {
 	return std::string("<Module lookup failed>");
 }
 
-bool containsAddress(const MODULEENTRY32& moduleEntry, const void* address) {
+bool containsAddress(const MODULEENTRY32& moduleEntry, const void* const address) {
 	return
 		(moduleEntry.modBaseAddr <= address) &&
 		(moduleEntry.modBaseAddr + moduleEntry.modBaseSize > address);

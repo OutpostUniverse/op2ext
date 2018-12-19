@@ -1,3 +1,3 @@
 #include <string>
 
-std::string FindModuleName(void* address);
+std::string FindModuleName(const void* const address);
