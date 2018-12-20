@@ -2,7 +2,7 @@
 #include <windows.h>
 #include <tlhelp32.h> // CreateToolhelp32Snapshot, Module32First, Module32Next
 
-std::string FindModuleName(const void* address, HANDLE hModuleSnap);
+std::string FindModuleName(HANDLE hModuleSnap, const void* address);
 bool containsAddress(MODULEENTRY32 const& moduleEntry, const void* address);
 
 
@@ -12,12 +12,12 @@ std::string FindModuleName(const void* address) {
 	if (hModuleSnap == INVALID_HANDLE_VALUE) {
 		return std::string("<Unable to create module snapshot>");
 	}
-	auto moduleName = FindModuleName(address, hModuleSnap);
+	auto moduleName = FindModuleName(hModuleSnap, address);
 	CloseHandle(hModuleSnap);
 	return moduleName;
 }
 
-std::string FindModuleName(const void* address, HANDLE hModuleSnap) {
+std::string FindModuleName(HANDLE hModuleSnap, const void* address) {
 	MODULEENTRY32 moduleEntry;
 	moduleEntry.dwSize = sizeof(moduleEntry);
 	if (Module32First(hModuleSnap, &moduleEntry)) {
