@@ -8,6 +8,7 @@
 #include <iterator>
 #include <filesystem>
 #include <stdexcept>
+#include <cstddef>
 
 namespace fs = std::experimental::filesystem;
 
@@ -157,7 +158,7 @@ std::string ConsoleModuleLoader::FormModRelativeDirectory(std::vector<std::strin
 {
 	std::string modRelativeDirectory;
 
-	for (size_t i = 0; i < arguments.size(); i++) {
+	for (std::size_t i = 0; i < arguments.size(); i++) {
 		modRelativeDirectory += arguments[i];
 
 		if (i < arguments.size() - 1) {
