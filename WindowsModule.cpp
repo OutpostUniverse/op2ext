@@ -3,7 +3,7 @@
 #include <tlhelp32.h> // CreateToolhelp32Snapshot, Module32First, Module32Next
 
 std::string FindModuleName(const void* address, HANDLE hModuleSnap);
-bool containsAddress(MODULEENTRY32 const& moduleEntry, const void* const address);
+bool containsAddress(MODULEENTRY32 const& moduleEntry, const void* address);
 
 
 std::string FindModuleName(const void* address) {
