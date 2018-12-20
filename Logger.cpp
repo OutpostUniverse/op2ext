@@ -23,8 +23,7 @@ Logger::~Logger()
 
 void Logger::Log(const std::string& message)
 {
-	const void* returnAddress = _ReturnAddress();
-	std::string moduleName = FindModuleName(returnAddress);
+	std::string moduleName = FindModuleName(_ReturnAddress());
 	logFile << GetSystemDateTime() << " UTC [" << moduleName << "] " << message << std::endl;
 }
 
