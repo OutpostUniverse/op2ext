@@ -9,7 +9,7 @@ public:
 	Logger();
 	~Logger();
 
-	void Log(const std::string& message, void* messageSource);
+	void Log(const std::string& message, const void* messageSource);
 
 private:
 	std::ofstream logFile;

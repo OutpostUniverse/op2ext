@@ -20,7 +20,7 @@ Logger::~Logger()
 	logFile.close();
 }
 
-void Logger::Log(const std::string& message, void* messageSource)
+void Logger::Log(const std::string& message, const void* messageSource)
 {
 	std::string moduleName = FindModuleName(messageSource);
 	logFile << GetSystemDateTime() << " UTC [" << moduleName << "] " << message << std::endl;
