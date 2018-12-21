@@ -1,5 +1,3 @@
-#include "op2ext.h"
-
 #include <windows.h>
 
 #include <string>
