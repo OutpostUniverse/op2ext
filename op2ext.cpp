@@ -6,6 +6,8 @@
 #include "op2ext-Internal.h"
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include <intrin.h> // _ReturnAddress
+
 
 
 // Dummy export for linking requirements from Outpost2.exe and OP2Shell.dll. 
@@ -78,5 +80,5 @@ OP2EXT_API void SetSerialNumber(char major, char minor, char patch)
 
 OP2EXT_API void Log(char* message)
 {
-	logger.Log(message);
+	logger.Log(message, _ReturnAddress());
 }

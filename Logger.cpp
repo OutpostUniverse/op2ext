@@ -7,7 +7,6 @@
 #include <ctime> //gmtime
 #include <iomanip> //put_time
 #include <sstream> // stringstream
-#include <intrin.h> // _ReturnAddress
 
 Logger::Logger() : logFile("Outpost2Log.txt", std::ios::app | std::ios::out | std::ios::binary) 
 {
@@ -21,9 +20,9 @@ Logger::~Logger()
 	logFile.close();
 }
 
-void Logger::Log(const std::string& message)
+void Logger::Log(const std::string& message, void* messageSource)
 {
-	std::string moduleName = FindModuleName(_ReturnAddress());
+	std::string moduleName = FindModuleName(messageSource);
 	logFile << GetSystemDateTime() << " UTC [" << moduleName << "] " << message << std::endl;
 }
 
