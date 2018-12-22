@@ -35,7 +35,7 @@ void TestGetGameDir()
 }
 
 // GetCurrentModDir only returns the directory of a module loaded through the console switch /loadmod
-void TestGetConsoleModuleDirectory()
+void TestGetConsoleModDir()
 {
 #pragma warning(suppress : 4996)
 	char* moduleDirectory = GetCurrentModDir();
