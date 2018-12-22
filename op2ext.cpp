@@ -10,6 +10,7 @@
 #include <intrin.h> // _ReturnAddress
 
 
+size_t CopyStdStringIntoCharBuffer(const std::string& stringToCopy, char* buffer, size_t bufferSize);
 
 // Dummy export for linking requirements from Outpost2.exe and OP2Shell.dll. 
 // Outpost2.exe and OP2Shell.dll reference this dummy entry, causing op2ext.dll to load. 
@@ -19,16 +20,24 @@ extern "C" OP2EXT_API int StubExt = 0;
 OP2EXT_API size_t GetGameDir_s(char* buffer, size_t bufferSize)
 {
 	// Adding "\\" to end of directory is required for backward compatibility.
-	std::string gameDirectory = GetGameDirectory() + "\\";
+	return CopyStdStringIntoCharBuffer(GetGameDirectory() + "\\", buffer, bufferSize);
+}
 
-	strcpy_s(buffer, bufferSize, gameDirectory.c_str());
+OP2EXT_API size_t GetConsoleModDir_s(char* buffer, size_t bufferSize)
+{
+	return CopyStdStringIntoCharBuffer(consoleModLoader.GetModuleDirectory() + "\\", buffer, bufferSize);
+}
+
+size_t CopyStdStringIntoCharBuffer(const std::string& stringToCopy, char* buffer, size_t bufferSize)
+{
+	strcpy_s(buffer, bufferSize, stringToCopy.c_str());
 
 	// Buffer must be one character larger than std::string since std::string does not include the null terminator.
-	if (bufferSize > gameDirectory.size()) {
+	if (bufferSize > stringToCopy.size()) {
 		return 0;
 	}
-		
-	return gameDirectory.size() + 1;
+
+	return stringToCopy.size() + 1;
 }
 
 OP2EXT_API void GetGameDir(char* buffer)

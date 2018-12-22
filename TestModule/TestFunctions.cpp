@@ -25,25 +25,34 @@ void TestGetGameDir_s()
 	OutputDebugString(gameDirectoryReport.c_str());
 }
 
+void TestGetConsoleModDir_s()
+{
+	char consoleModDir[MAX_PATH];
+	GetConsoleModDir_s(consoleModDir, MAX_PATH);
+
+	std::string consoleModDirReport("GetConsoleModDir_s reports: " + std::string(consoleModDir) + "\n");
+	OutputDebugString(consoleModDirReport.c_str());
+}
+
 void TestGetGameDir()
 {
 	char gameDirectory[MAX_PATH];
 
 	// Since GetGameDir is deprecated, C4996 must be suppressed before
 	// calling the function to prevent a compile time error.
-#pragma warning( push )
 #pragma warning(suppress : 4996)
 	GetGameDir(gameDirectory);
-#pragma warning ( pop )
 
 	std::string gameDirectoryReport("GetGameDir reports: " + std::string(gameDirectory) + "\n");
 	OutputDebugString(gameDirectoryReport.c_str());
 }
 
 // GetCurrentModDir only returns the directory of a module loaded through the console switch /loadmod
-void TestGetConsoleModuleDirectory()
+void TestGetConsoleModDir()
 {
+#pragma warning(suppress : 4996)
 	char* moduleDirectory = GetCurrentModDir();
+
 	std::string modDirectoryReport("GetCurrentModDir reports: " + std::string(moduleDirectory) + "\n");
 	OutputDebugString(modDirectoryReport.c_str());
 

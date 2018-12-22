@@ -39,7 +39,8 @@ EXPORT void mod_init()
 
 	TestPublicInterface();
 
-	TestGetConsoleModuleDirectory();
+	TestGetConsoleModDir_s();
+	TestGetConsoleModDir();
 }
 
 EXPORT void mod_run()
