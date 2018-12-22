@@ -2,6 +2,7 @@
 
 #include <string>
 
+void TestLoggingMessage();
 void TestGetGameDir_s();
 void TestGetGameDir(); //Deprecated
 void TestGetConsoleModuleDirectory();

@@ -4,8 +4,11 @@
 #include "FileSystemHelper.h"
 #include "GlobalDefines.h"
 #include "op2ext-Internal.h"
+#include "WindowsModule.h"
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include <intrin.h> // _ReturnAddress
+
 
 
 // Dummy export for linking requirements from Outpost2.exe and OP2Shell.dll. 
@@ -74,4 +77,23 @@ OP2EXT_API void SetSerialNumber(char major, char minor, char patch)
 		_snprintf_s(buffer, sizeof(buffer), "%i.%i.%i.%i", major, minor, 0, patch);
 		Op2MemCopy(multiplayerVersionStringAddress, buffer, sizeof(buffer));
 	}
+}
+
+OP2EXT_API void Log(char* message)
+{
+	// The return address will (normally) point into the code section
+	// of the caller. The address can then be used to lookup which
+	// module's code section contains the origin of the call.
+
+	// Note:
+	// The return address might not point back towards the origin of the
+	// call in the presence of certain optimizations. An example being
+	// tail call elimination. Such optimizations may jump to the target
+	// routine, without pushing a new return address onto the stack.
+	// The return address may then end up being the caller of the caller,
+	// or some other value loaded at the correct location on the stack.
+	// These optimizations are however extremely unlikely when making
+	// calls across a module boundary (such as to exported methods).
+
+	logger.Log(message, FindModuleName(_ReturnAddress()));
 }
