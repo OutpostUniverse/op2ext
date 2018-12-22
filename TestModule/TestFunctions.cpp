@@ -78,6 +78,8 @@ void TestTooManyVolFilesLoaded()
 		strcpy_s(charPointer, volPath.size() + 1, volPath.c_str());
 
 		AddVolToList(charPointer);
+
+		delete charPointer;
 	}
 }
 

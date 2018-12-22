@@ -48,6 +48,7 @@ OP2EXT_API char* GetCurrentModDir();
 // initializes. Typically should be called in module's mod_init (InitMod) function.
 // @param volFilename The vol filename ending in a null terminated string. 
 //                    Must be a relative path from the directory containing the Outpost 2 executable.
+//                    op2ext will create a local copy of volFilename. After function runs, volFilename may be deallocated.
 OP2EXT_API void AddVolToList(char* volFilename);
 
 
