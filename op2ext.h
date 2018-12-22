@@ -26,7 +26,6 @@ extern "C" {
 OP2EXT_API size_t GetGameDir_s(char* buffer, size_t bufferSize);
 
 
-// DEPRECATED as of version 2.0.0. Use GetGameDir_s instead.
 // Retrieves the current absolute directory of the Outpost 2 executable with a trailing slash. 
 // @param buffer Pass a buffer of size MAX_PATH length.
 __declspec(deprecated("GetGameDir was deprecated in op2ext ver2.0.0. Use GetGameDir_s instead."))
