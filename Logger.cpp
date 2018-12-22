@@ -1,7 +1,6 @@
 #include "Logger.h"
 
 #include "GlobalDefines.h"
-#include "WindowsModule.h"
 #include <cstddef>
 #include <chrono>
 #include <ctime> //gmtime
