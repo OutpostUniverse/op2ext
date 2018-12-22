@@ -27,10 +27,8 @@ void TestGetGameDir()
 
 	// Since GetGameDir is deprecated, C4996 must be suppressed before
 	// calling the function to prevent a compile time error.
-#pragma warning( push )
 #pragma warning(suppress : 4996)
 	GetGameDir(gameDirectory);
-#pragma warning ( pop )
 
 	std::string gameDirectoryReport("GetGameDir reports: " + std::string(gameDirectory) + "\n");
 	OutputDebugString(gameDirectoryReport.c_str());
