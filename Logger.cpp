@@ -24,7 +24,7 @@ void Logger::Log(const std::string& moduleName, const std::string& message)
 	logFile << GetSystemDateTime() << " [" << moduleName << "] " << message << std::endl;
 }
 
-std::string Logger::GetSystemDateTime() const
+std::string Logger::GetSystemDateTime()
 {
 	auto currentClock = std::chrono::system_clock::now();
 	auto time = std::chrono::system_clock::to_time_t(currentClock);
