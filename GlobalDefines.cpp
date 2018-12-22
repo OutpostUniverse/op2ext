@@ -1,5 +1,6 @@
 #include "GlobalDefines.h"
 
+#include "op2ext-Internal.h"
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <sstream>
@@ -14,7 +15,8 @@ void OutputDebug(std::string message)
 
 void PostErrorMessage(std::string sourceFilename, long lineInSourceCode, std::string errorMessage)
 {
-	std::string formattedMessage = sourceFilename + ", Line: " + std::to_string(lineInSourceCode) + ": " + errorMessage;
+	const std::string formattedMessage = sourceFilename + ", Line: " + std::to_string(lineInSourceCode) + ": " + errorMessage;
+	logger.Log(formattedMessage);
 	MessageBoxA(nullptr, formattedMessage.c_str(), "Outpost 2 Error", MB_ICONERROR);
 }
 

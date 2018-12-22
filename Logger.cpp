@@ -22,7 +22,7 @@ Logger::~Logger()
 	logFile.close();
 }
 
-void Logger::Log(const std::string& moduleName, const std::string& message)
+void Logger::Log(const std::string& message, const std::string& moduleName)
 {	
 	logFile << GetSystemDateTime() << " [" << moduleName << "] " << message << std::endl;
 }
