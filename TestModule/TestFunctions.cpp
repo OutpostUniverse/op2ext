@@ -21,6 +21,15 @@ void TestGetGameDir_s()
 	OutputDebugString(gameDirectoryReport.c_str());
 }
 
+void TestGetConsoleModDir_s()
+{
+	char consoleModDir[MAX_PATH];
+	GetConsoleModDir_s(consoleModDir, MAX_PATH);
+
+	std::string consoleModDirReport("GetConsoleModDir_s reports: " + std::string(consoleModDir) + "\n");
+	OutputDebugString(consoleModDirReport.c_str());
+}
+
 void TestGetGameDir()
 {
 	char gameDirectory[MAX_PATH];
