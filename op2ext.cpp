@@ -4,6 +4,7 @@
 #include "FileSystemHelper.h"
 #include "GlobalDefines.h"
 #include "op2ext-Internal.h"
+#include "WindowsModule.h"
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <intrin.h> // _ReturnAddress
@@ -80,5 +81,5 @@ OP2EXT_API void SetSerialNumber(char major, char minor, char patch)
 
 OP2EXT_API void Log(char* message)
 {
-	logger.Log(message, _ReturnAddress());
+	logger.Log(message, FindModuleName(_ReturnAddress()));
 }
