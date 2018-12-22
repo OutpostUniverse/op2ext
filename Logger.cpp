@@ -21,7 +21,7 @@ Logger::~Logger()
 
 void Logger::Log(const std::string& moduleName, const std::string& message)
 {	
-	logFile << GetSystemDateTime() << " UTC [" << moduleName << "] " << message << std::endl;
+	logFile << GetSystemDateTime() << " [" << moduleName << "] " << message << std::endl;
 }
 
 std::string Logger::GetSystemDateTime() const
@@ -30,7 +30,7 @@ std::string Logger::GetSystemDateTime() const
 	auto time = std::chrono::system_clock::to_time_t(currentClock);
 
 	std::stringstream stringStream;
-	stringStream << std::put_time(std::gmtime(&time), "%F %T");
+	stringStream << std::put_time(std::gmtime(&time), "%F %T UTC");
 
 	return stringStream.str();
 }
