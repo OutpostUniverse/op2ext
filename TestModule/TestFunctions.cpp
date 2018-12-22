@@ -37,7 +37,9 @@ void TestGetGameDir()
 // GetCurrentModDir only returns the directory of a module loaded through the console switch /loadmod
 void TestGetConsoleModuleDirectory()
 {
+#pragma warning(suppress : 4996)
 	char* moduleDirectory = GetCurrentModDir();
+
 	std::string modDirectoryReport("GetCurrentModDir reports: " + std::string(moduleDirectory) + "\n");
 	OutputDebugString(modDirectoryReport.c_str());
 

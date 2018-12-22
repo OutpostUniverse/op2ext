@@ -32,8 +32,15 @@ __declspec(deprecated("GetGameDir was deprecated in op2ext ver2.0.0. Use GetGame
 OP2EXT_API void GetGameDir(char* buffer);
 
 
+// Retrieves the absolute directory of the command line module with a trailing slash.
+// If bufferSize is smaller than required to copy entire path, buffer is provided as much of path as possible.
+// Returns 0 on success. Returns the required minimum size of the buffer on failure.
+OP2EXT_API size_t GetConsoleModDir_s(char* buffer, size_t bufferSize);
+
+
 // Returns the absolute directory of the command line module through a pointer to a buffer
 // The consumer must free the buffer when finished with it.
+__declspec(deprecated("GetCurrentModDir was deprecated in op2ext ver2.1.0. Use GetConsoleModDir_s instead."))
 OP2EXT_API char* GetCurrentModDir();
 
 
