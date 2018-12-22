@@ -13,6 +13,4 @@ public:
 
 private:
 	std::ofstream logFile;
-
-	static std::string GetSystemDateTime();
 };
