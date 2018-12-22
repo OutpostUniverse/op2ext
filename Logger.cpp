@@ -32,9 +32,13 @@ std::string GetSystemDateTime()
 {
 	auto currentClock = std::chrono::system_clock::now();
 	auto time = std::chrono::system_clock::to_time_t(currentClock);
+	std::tm unpackedTime;
+	if(gmtime_s(&unpackedTime, &time)) {
+		return "<Time conversion failed>";
+	}
 
 	std::stringstream stringStream;
-	stringStream << std::put_time(std::gmtime(&time), "%F %T UTC");
+	stringStream << std::put_time(&unpackedTime, "%F %T UTC");
 
 	return stringStream.str();
 }
