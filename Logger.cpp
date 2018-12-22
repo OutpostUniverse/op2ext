@@ -30,7 +30,7 @@ std::string Logger::GetSystemDateTime() const
 	auto time = std::chrono::system_clock::to_time_t(currentClock);
 
 	std::stringstream stringStream;
-	stringStream << std::put_time(std::gmtime(&time), "%Y-%m-%d %X");
+	stringStream << std::put_time(std::gmtime(&time), "%F %T");
 
 	return stringStream.str();
 }
