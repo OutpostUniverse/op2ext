@@ -65,7 +65,7 @@ OP2EXT_API char* GetCurrentModDir()
 	return cStr;
 }
 
-OP2EXT_API void AddVolToList(char* volFilename)
+OP2EXT_API void AddVolToList(const char* volFilename)
 {
 	if (modulesRunning) {
 		PostErrorMessage("op2ext.cpp", __LINE__, "VOLs may not be added to the list after game startup.");
@@ -88,7 +88,7 @@ OP2EXT_API void SetSerialNumber(char major, char minor, char patch)
 	}
 }
 
-OP2EXT_API void Log(char* message)
+OP2EXT_API void Log(const char* message)
 {
 	// The return address will (normally) point into the code section
 	// of the caller. The address can then be used to lookup which
