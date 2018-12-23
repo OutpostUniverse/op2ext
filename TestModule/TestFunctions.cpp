@@ -4,13 +4,10 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <cstddef>
-#include <filesystem>
-
-namespace fs = std::experimental::filesystem;
 
 std::string GetOP2IniPath();
 std::string GetGameDirStdString();
-std::size_t CountVolFilesInGameDirectory();
+std::size_t CountFilesByTypeInDirectory(const std::string& directory, std::string extension);
 
 void TestLoggingMessage()
 {
@@ -69,7 +66,7 @@ void TestInvalidVolFileName()
 // vol files are loaded into Outpost 2.
 void TestTooManyVolFilesLoaded()
 {
-	auto volsInGameDirectory = CountVolFilesInGameDirectory();
+	auto volsInGameDirectory = CountFilesByTypeInDirectory(GetGameDirStdString(), ".vol");
 
 	std::string volPath("./TestModule/TestVolume.vol");
 	for (auto i = volsInGameDirectory; i < 31; i++)
@@ -113,24 +110,4 @@ std::string GetGameDirStdString()
 	GetGameDir_s(gameDirectory, MAX_PATH);
 
 	return std::string(gameDirectory);
-}
-
-std::size_t CountVolFilesInGameDirectory()
-{
-	std::string gameDirectory = GetGameDirStdString();
-	std::size_t volsInGameDirectory = 0;
-
-	for (auto & p : fs::directory_iterator(fs::path(gameDirectory)))
-	{
-		fs::path filePath(p.path());
-
-		std::string extension = filePath.extension().string();
-		std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
-
-		if (extension == ".vol") {
-			volsInGameDirectory++;
-		}
-	}
-
-	return volsInGameDirectory;
 }
