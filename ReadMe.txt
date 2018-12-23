@@ -39,6 +39,7 @@ op2ext provides the following extensions for Outpost 2:
 
     - Allows saving previously used IP address in a drop-down menu for easy selection when joining repeat matches.
 
+ * Unified message logging
 	
 Writing Custom Modules
 ------------------------------------------
@@ -48,13 +49,16 @@ Each new module for Outpost 2 should be placed in a separate directory that resi
 
 The two types of modules, console and .ini modules, use different function hooks to pass data into op2ext. They both have access to the same set of op2ext exported functions. To gain access to op2ext's exported functions, include op2ext.h in your project. Detailed usage instructions for the functions are contained in op2ext.h.
 
- - size_t GetGameDir_s(char* buffer, size_t bufferSize);
- - [DEPRECATED] void GetGameDir(char* buffer);
- - char* GetCurrentModDir(); - Returns the directory of the console loaded module only (if one exists)
- - void AddVolToList(char* volName);
- - void SetSerialNumber(char major, char minor, char revision);
+ - size_t GetGameDir_s(char* buffer, size_t bufferSize)
+ - size_t GetConsoleModDir_s(char* buffer, size_t bufferSize)
+ - void AddVolToList(const char* volName)
+ - void SetSerialNumber(char major, char minor, char revision)
+ - void Log(const char* message)
+ - [DEPRECATED] void GetGameDir(char* buffer)
+ - [DEPRECATED] char* GetCurrentModDir(); - Returns the directory of the console loaded module only (if one exists)
 
-
+Custom modules are encouraged to use the Log function to log useful information for troubleshooting various failures or degraded states. op2ext itself uses the logger as well. The log file will be named Outpost2Log.txt and will be created in the same directory as Outpost2.exe.
+ 
 Console Modules
 ------------------------------------------
 If the module needs to redirect where Outpost 2 looks for standard game resources without using a custom DLL and/or should not always be included with Outpost 2, consider making it a console module. 
@@ -120,6 +124,13 @@ Order of vol file precedence is below:
 
 Change Log
 ------------------------------------------
+
+Version 2.1.0
+
+ * Add message logger usable by op2ext and external modules.
+ * Deprecate GetCurrentModDir due to improper memory management across DLL boundaries.
+ * Add external API function GetConsoleModDir_s to replace deprecated GetCurrentModDir.
+ * Mark argument volName from function AddVolToList argument as const. This allows passing const values into the function.
 
 Version 2.0.1
 
