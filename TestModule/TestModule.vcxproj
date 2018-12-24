@@ -142,6 +142,7 @@ copy "$(ProjectDir)TestVolume.vol" "..\Outpost2\TestModule\TestVolume.vol"</Comm
     <ClCompile Include="CountFilesByTypeInDirectory.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CountFilesByTypeInDirectory.h" />
     <ClInclude Include="TestFunctions.h" />
   </ItemGroup>
   <ItemGroup>
