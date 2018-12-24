@@ -1,4 +1,5 @@
 #include "TestFunctions.h"
+#include "CountFilesByTypeInDirectory.h"
 
 #include "op2ext.h"
 #define WIN32_LEAN_AND_MEAN
@@ -7,7 +8,6 @@
 
 std::string GetOP2IniPath();
 std::string GetGameDirStdString();
-std::size_t CountFilesByTypeInDirectory(const std::string& directory, std::string extension);
 
 void TestLoggingMessage()
 {

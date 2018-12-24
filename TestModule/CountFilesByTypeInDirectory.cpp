@@ -1,3 +1,4 @@
+#include "CountFilesByTypeInDirectory.h"
 #include <string>
 #include <algorithm>
 #include <experimental/filesystem>
