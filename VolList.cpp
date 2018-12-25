@@ -60,7 +60,7 @@ void VolList::LoadVolFiles()
 
 bool VolList::IsFull() const
 {
-	return volFileCount >= VolSearchBufferSize - 1;
+	return volFileCount >= MaxVolumeCount;
 }
 
 void VolList::InitializeVolSearchEntry(char* pVolPath)
