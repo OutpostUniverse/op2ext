@@ -24,7 +24,7 @@ public:
 
 private:
 	std::vector<std::vector<char>> volPaths;
-	unsigned int numberOfVolFiles;
+	unsigned int volFileCount;
 	VolSearchEntry* volSearchEntryList;
 	
 	// Static buffer, to avoid dynamic memory allocation before heap is initialized
