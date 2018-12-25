@@ -58,7 +58,7 @@ void VolList::LoadVolFiles()
 	Op2MemSetDword((void*)0x0047111F, vol4);
 }
 
-bool VolList::IsFull()
+bool VolList::IsFull() const
 {
 	return numberOfVolFiles >= VolSearchBufferSize - 1;
 }

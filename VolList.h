@@ -31,7 +31,7 @@ private:
 	static const unsigned int VolSearchBufferSize = 32;
 	VolSearchEntry buffer[VolSearchBufferSize];
 
-	bool IsFull();
+	bool IsFull() const;
 	void InitializeVolSearchEntry(char* pVolPath);
 	void EndList();
 };
