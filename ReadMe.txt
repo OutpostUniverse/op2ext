@@ -131,7 +131,8 @@ Version 2.1.0
  * Deprecate GetCurrentModDir due to improper memory management across DLL boundaries.
  * Add external API function GetConsoleModDir_s to replace deprecated GetCurrentModDir.
  * Mark argument volName from function AddVolToList argument as const. This allows passing const values into the function.
-
+ * Update max accepted volumes to be 31. It was set at 32, which would cause Outpost 2 to crash on closing when 32 volumes were loaded.
+ 
 Version 2.0.1
 
  * Fix bug in Console Mod Loader that separated the executable's path into multiple arguments if the path included a space.
