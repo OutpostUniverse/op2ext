@@ -1,6 +1,6 @@
 #include "TestFunctions.h"
 #include "CountFilesByTypeInDirectory.h"
-
+#include "VolList.h"
 #include "op2ext.h"
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -56,20 +56,18 @@ void TestGetConsoleModDir()
 	free(moduleDirectory);
 }
 
-void TestInvalidVolFileName()
+void TestLoadingVolumes()
 {
+	// Test Invalid volume filename (volume doesn't exist in directory)
 	AddVolToList("VolumeLoadFail.vol");
-}
 
-// This function will cause Outpost 2 to not load properly if an essential vol file is not properly loaded.
-// Recommend adding a vol file that is alphabetically after voices.vol. This way voices.vol and all essential 
-// vol files are loaded into Outpost 2.
-void TestTooManyVolFilesLoaded()
-{
-	auto volsInGameDirectory = CountFilesByTypeInDirectory(GetGameDirStdString(), ".vol");
+	// Reserve enough space to load existing volumes in Outpost 2 directory.
+	// Outpost 2 will not load properly if certain files contained in volumes are not present.
+	auto loadedVolumes = CountFilesByTypeInDirectory(GetGameDirStdString(), ".vol");
+	loadedVolumes++; // Reserve space for VolumeLoadFail.vol
 
 	std::string volPath("./TestModule/TestVolume.vol");
-	for (auto i = volsInGameDirectory; i < 31; i++)
+	for (auto i = loadedVolumes; i < VolList::MaxVolumeCount + 1; ++i)
 	{
 		AddVolToList(volPath.c_str());
 	}
