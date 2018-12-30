@@ -76,5 +76,5 @@ void VolList::InitializeVolSearchEntry(char* pVolPath)
 void VolList::EndList()
 {
 	// Add end of volFileEntries search item.
-	InitializeVolSearchEntry((char*)0);
+	InitializeVolSearchEntry(nullptr);
 }
