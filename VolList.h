@@ -29,8 +29,8 @@ private:
 	unsigned int volFileCount;
 	VolSearchEntry* volSearchEntryList;
 	
-	// Static buffer, to avoid dynamic memory allocation before heap is initialized
-	// buffer size must include an extra entry for an end of list marker 
+	// Static size, to avoid dynamic memory allocation before heap is initialized
+	// Buffer must include an extra terminator entry for an end of list marker 
 	VolSearchEntry buffer[MaxVolumeCount + 1];
 
 	bool IsFull() const;
