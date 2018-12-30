@@ -66,8 +66,10 @@ void TestLoadingVolumes()
 	auto loadedVolumes = CountFilesByTypeInDirectory(GetGameDirStdString(), ".vol");
 	loadedVolumes++; // Reserve space for VolumeLoadFail.vol
 
-	std::string volPath("./TestModule/TestVolume.vol");
-	for (auto i = loadedVolumes; i < VolList::MaxVolumeCount + 1; ++i)
+	const std::string volPath("./TestModule/TestVolume.vol");
+	const auto exceededVolCountLimit = VolList::MaxVolumeCount + 1;
+
+	for (auto i = loadedVolumes; i < exceededVolCountLimit; ++i)
 	{
 		AddVolToList(volPath.c_str());
 	}
