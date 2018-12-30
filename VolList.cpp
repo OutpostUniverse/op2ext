@@ -30,8 +30,8 @@ void VolList::LoadVolFiles()
 
 	VolSearchEntry *vol = &volSearchEntryList[0];
 	int *vol2 = &volSearchEntryList[0].unknown1;
-	int *vol3 = &volSearchEntryList[numberOfVolFiles].unknown1;
-	VolSearchEntry *vol4 = &volSearchEntryList[numberOfVolFiles - 1];
+	int *vol3 = &volSearchEntryList[volFileCount].unknown1;
+	VolSearchEntry *vol4 = &volSearchEntryList[volFileCount - 1];
 
 	// Change operand of the MOV instruction
 	Op2MemSetDword((void*)0x00471070, vol);
@@ -58,19 +58,19 @@ void VolList::LoadVolFiles()
 	Op2MemSetDword((void*)0x0047111F, vol4);
 }
 
-bool VolList::IsFull()
+bool VolList::IsFull() const
 {
-	return numberOfVolFiles >= VolSearchBufferSize - 1;
+	return volFileCount >= MaxVolumeCount;
 }
 
 void VolList::InitializeVolSearchEntry(char* pVolPath)
 {
-	volSearchEntryList[numberOfVolFiles].unknown1 = 0;
-	volSearchEntryList[numberOfVolFiles].flags = 1;
-	volSearchEntryList[numberOfVolFiles].unknown2 = 0;
-	volSearchEntryList[numberOfVolFiles].pFilename = pVolPath;
+	volSearchEntryList[volFileCount].unknown1 = 0;
+	volSearchEntryList[volFileCount].flags = 1;
+	volSearchEntryList[volFileCount].unknown2 = 0;
+	volSearchEntryList[volFileCount].pFilename = pVolPath;
 
-	numberOfVolFiles++;
+	volFileCount++;
 }
 
 void VolList::EndList()

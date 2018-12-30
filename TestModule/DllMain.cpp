@@ -79,8 +79,7 @@ void TestPublicInterface()
 	TestGetGameDir_s();
 	TestGetGameDir();
 
-	TestInvalidVolFileName();
-	TestTooManyVolFilesLoaded();
+	TestLoadingVolumes();
 
 	// Test SetSerialNumber by attempting to start a multiplayer match. 
 	// One copy of Outpost 2 stock, and one with the serial number modified. 
