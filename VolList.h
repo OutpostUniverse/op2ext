@@ -25,7 +25,7 @@ public:
 	static const unsigned MaxVolumeCount = 31;
 
 private:
-	std::vector<std::vector<char>> volPaths;
+	std::vector<std::string> volPaths;
 	unsigned int volFileCount;
 	VolSearchEntry* volSearchEntryList;
 	

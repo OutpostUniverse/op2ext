@@ -17,9 +17,8 @@ void VolList::AddVolFile(std::string volPath)
 		return;
 	}
 	
-	volPaths.push_back(std::vector<char>(volPath.c_str(), volPath.c_str() + volPath.size() + 1u));
-	
-	InitializeVolSearchEntry(&volPaths.back()[0]);
+	volPaths.push_back(volPath);
+	InitializeVolSearchEntry(volPaths.back().c_str());
 
 	OutputDebug("Add file to VolList: " + volPath + "\n");
 }
