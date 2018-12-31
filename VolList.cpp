@@ -7,6 +7,9 @@
 VolList::VolList()
 {
 	volSearchEntryList = buffer;
+	// Bug workaround: Pre-allocate space for all strings so there is no resizing
+	// Resizing can move strings around, which invalidates the c_str() pointer
+	volPaths.reserve(MaxVolumeCount);
 }
 
 VolList::~VolList() { }
