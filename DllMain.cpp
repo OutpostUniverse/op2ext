@@ -120,9 +120,9 @@ void LocateVolFiles(std::string relativeSearchDirectory)
 {
 	std::string gameDirectory = GetGameDirectory();
 
-	for (auto& dirEntry : fs::directory_iterator(fs::path(gameDirectory).append(relativeSearchDirectory)))
+	for (const auto& dirEntry : fs::directory_iterator(fs::path(gameDirectory).append(relativeSearchDirectory)))
 	{
-		fs::path filePath(dirEntry.path());
+		const auto& filePath = dirEntry.path();
 
 		std::string extension = filePath.extension().string();
 		std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
