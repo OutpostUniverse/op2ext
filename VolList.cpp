@@ -1,7 +1,8 @@
 #include "VolList.h"
-
 #include "OP2Memory.h"
 #include "GlobalDefines.h"
+#include <utility>
+
 
 VolList::VolList()
 {
@@ -17,7 +18,7 @@ void VolList::AddVolFile(std::string volPath)
 		return;
 	}
 	
-	volPaths.push_back(volPath);
+	volPaths.push_back(std::move(volPath));
 	InitializeVolSearchEntry(volPaths.back().c_str());
 
 	OutputDebug("Add file to VolList: " + volPath + "\n");
