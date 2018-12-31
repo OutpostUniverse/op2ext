@@ -9,7 +9,6 @@
 #include <string>
 #include <filesystem>
 #include <algorithm>
-#include <utility>
 
 namespace fs = std::experimental::filesystem;
 
@@ -129,8 +128,7 @@ void LocateVolFiles(std::string relativeSearchDirectory)
 		std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
 
 		if (extension == ".vol") {
-			std::string relativeVolPath = (fs::path(relativeSearchDirectory) / filePath.filename()).string();
-			volList.AddVolFile(std::move(relativeVolPath));
+			volList.AddVolFile((fs::path(relativeSearchDirectory) / filePath.filename()).string());
 		}
 	}
 }
