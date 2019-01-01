@@ -4,7 +4,7 @@
 #include <vector>
 
 struct VolSearchEntry {
-	char* pFilename;
+	const char* pFilename;
 	int unknown1;
 	int flags;
 	int unknown2;
@@ -34,6 +34,6 @@ private:
 	VolSearchEntry buffer[MaxVolumeCount + 1];
 
 	bool IsFull() const;
-	void InitializeVolSearchEntry(char* pVolPath);
+	void InitializeVolSearchEntry(const char* pVolPath);
 	void EndList();
 };

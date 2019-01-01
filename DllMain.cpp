@@ -128,8 +128,7 @@ void LocateVolFiles(std::string relativeSearchDirectory)
 		std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
 
 		if (extension == ".vol") {
-			std::string relativeVolPath = fs::path(relativeSearchDirectory).append(filePath.filename()).string();
-			volList.AddVolFile(relativeVolPath);
+			volList.AddVolFile((fs::path(relativeSearchDirectory) / filePath.filename()).string());
 		}
 	}
 }

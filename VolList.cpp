@@ -63,7 +63,7 @@ bool VolList::IsFull() const
 	return volFileCount >= MaxVolumeCount;
 }
 
-void VolList::InitializeVolSearchEntry(char* pVolPath)
+void VolList::InitializeVolSearchEntry(const char* pVolPath)
 {
 	volSearchEntryList[volFileCount].unknown1 = 0;
 	volSearchEntryList[volFileCount].flags = 1;
