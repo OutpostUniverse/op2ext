@@ -1,25 +1,25 @@
 
-# Set compiler default to mingw
-# Can still override from command line or environment variables
-ifeq ($(origin CXX),default)
-	CXX := clang++-6.0
-endif
+# Set compiler to mingw (can still override from command line)
+CXX := i686-w64-mingw32-g++
 
-SRCDIR := src
+SRCDIR := .
 BUILDDIR := .build
 BINDIR := $(BUILDDIR)/bin
 OBJDIR := $(BUILDDIR)/obj
-DEPDIR := $(BUILDDIR)/deps
-OUTPUT := libOP2Utility.a
+DEPDIR := $(BUILDDIR)/obj
+OUTPUT := op2ext.dll
 
-CXXFLAGS := -std=c++14 -g -Wall -Wno-unknown-pragmas
+CPPFLAGS := -DOP2EXT_INTERNAL_BUILD
+CXXFLAGS := -std=c++17 -g -Wall -Wno-unknown-pragmas
+LDFLAGS := -LSubmodules/Outpost2DLL/Lib/
+LDLIBS := -lOutpost2DLL -lstdc++fs -lws2_32
 
 DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.Td
 
-COMPILE.cpp = $(CXX) $(DEPFLAGS) $(CXXFLAGS) $(TARGET_ARCH) -c
+COMPILE.cpp = $(CXX) $(DEPFLAGS) $(CPPFLAGS) $(CXXFLAGS) $(TARGET_ARCH) -c
 POSTCOMPILE = @mv -f $(DEPDIR)/$*.Td $(DEPDIR)/$*.d && touch $@
 
-SRCS := $(shell find $(SRCDIR) -name '*.cpp')
+SRCS := $(shell find $(SRCDIR) -maxdepth 1 -name '*.cpp')
 OBJS := $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(SRCS))
 FOLDERS := $(sort $(dir $(SRCS)))
 
@@ -27,7 +27,7 @@ all: $(OUTPUT)
 
 $(OUTPUT): $(OBJS)
 	@mkdir -p ${@D}
-	ar rcs $@ $^
+	$(CXX) $^ $(LDFLAGS) -o $@ $(LDLIBS)
 
 $(OBJS): $(OBJDIR)/%.o : $(SRCDIR)/%.cpp $(DEPDIR)/%.d | build-folder
 	$(COMPILE.cpp) $(OUTPUT_OPTION) $<
@@ -60,17 +60,17 @@ GTESTDIR := $(BUILDDIR)/gtest
 .PHONY:gtest
 gtest:
 	mkdir -p $(GTESTDIR)
-	cd $(GTESTDIR) && cmake -DCMAKE_CXX_FLAGS="-std=c++14" /usr/src/gtest/
+	cd $(GTESTDIR) && cmake -DCMAKE_CXX_FLAGS="-std=c++17" /usr/src/gtest/
 	make -C $(GTESTDIR)
 
 
 TESTDIR := test
 TESTOBJDIR := $(BUILDDIR)/testObj
-TESTSRCS := $(shell find $(TESTDIR) -name '*.cpp')
+TESTSRCS := #$(shell find $(TESTDIR) -name '*.cpp')
 TESTOBJS := $(patsubst $(TESTDIR)/%.cpp,$(TESTOBJDIR)/%.o,$(TESTSRCS))
 TESTFOLDERS := $(sort $(dir $(TESTSRCS)))
 TESTLDFLAGS := -L./ -L$(GTESTDIR)
-TESTLIBS := -lgtest -lgtest_main -lpthread -lOP2Utility -lstdc++fs
+TESTLIBS := -lgtest -lgtest_main -lpthread -lstdc++fs
 TESTOUTPUT := $(BUILDDIR)/testBin/runTests
 
 TESTDEPFLAGS = -MT $@ -MMD -MP -MF $(TESTOBJDIR)/$*.Td
