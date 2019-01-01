@@ -2,14 +2,11 @@
 #include "OP2Memory.h"
 #include "GlobalDefines.h"
 #include <utility>
-
+#include <cstddef>
 
 VolList::VolList()
 {
 	volSearchEntryList = buffer;
-	// Bug workaround: Pre-allocate space for all strings so there is no resizing
-	// Resizing can move strings around, which invalidates the c_str() pointer
-	volPaths.reserve(MaxVolumeCount);
 }
 
 VolList::~VolList() { }
@@ -22,19 +19,18 @@ void VolList::AddVolFile(std::string volPath)
 	}
 	
 	volPaths.push_back(std::move(volPath));
-	InitializeVolSearchEntry(volPaths.back().c_str());
 
 	OutputDebug("Add file to VolList: " + volPath + "\n");
 }
 
 void VolList::LoadVolFiles()
 {
-	EndList();
+	CreateVolSearchEntryList();
 
 	VolSearchEntry *vol = &volSearchEntryList[0];
 	int *vol2 = &volSearchEntryList[0].unknown1;
-	int *vol3 = &volSearchEntryList[volFileCount].unknown1;
-	VolSearchEntry *vol4 = &volSearchEntryList[volFileCount - 1];
+	int *vol3 = &volSearchEntryList[volPaths.size() - 1].unknown1;
+	VolSearchEntry *vol4 = &volSearchEntryList[volPaths.size() - 2];
 
 	// Change operand of the MOV instruction
 	Op2MemSetDword((void*)0x00471070, vol);
@@ -63,21 +59,17 @@ void VolList::LoadVolFiles()
 
 bool VolList::IsFull() const
 {
-	return volFileCount >= MaxVolumeCount;
+	return volPaths.size() >= MaxVolumeCount;
 }
 
-void VolList::InitializeVolSearchEntry(const char* pVolPath)
+// After calling CreateVolSearchEntryList, do not change the contents of volPaths. 
+// If Small String Optimization (SSO) is applied by the compiler, the associated pointers will become invalid.
+void VolList::CreateVolSearchEntryList()
 {
-	volSearchEntryList[volFileCount].unknown1 = 0;
-	volSearchEntryList[volFileCount].flags = 1;
-	volSearchEntryList[volFileCount].unknown2 = 0;
-	volSearchEntryList[volFileCount].pFilename = pVolPath;
+	for (std::size_t i = 0; i < volPaths.size(); ++i) {
+		volSearchEntryList[i] = VolSearchEntry{ volPaths[i].c_str(), 0, 1, 0 };
+	}
 
-	volFileCount++;
-}
-
-void VolList::EndList()
-{
 	// Add end of volFileEntries search item.
-	InitializeVolSearchEntry(nullptr);
+	volSearchEntryList[volPaths.size()] = VolSearchEntry{ nullptr, 0, 1, 0 };
 }

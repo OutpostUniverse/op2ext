@@ -26,7 +26,6 @@ public:
 
 private:
 	std::vector<std::string> volPaths;
-	unsigned int volFileCount;
 	VolSearchEntry* volSearchEntryList;
 	
 	// Static size, to avoid dynamic memory allocation before heap is initialized
@@ -34,6 +33,5 @@ private:
 	VolSearchEntry buffer[MaxVolumeCount + 1];
 
 	bool IsFull() const;
-	void InitializeVolSearchEntry(const char* pVolPath);
-	void EndList();
+	void CreateVolSearchEntryList();
 };
