@@ -29,7 +29,7 @@ void VolList::LoadVolFiles()
 
 	Op2MemSetDword((void*)0x00471070, arrayStart1);
 
-	//memcpy((void*)0x00471142, &arrayStart2, 4);
+	Op2MemSetDword((void*)0x00471142, arrayStart2);
 	Op2MemSetDword((void*)0x004711DA, arrayStart2);
 	Op2MemSetDword((void*)0x00471206, arrayStart2);
 	Op2MemSetDword((void*)0x0047136C, arrayStart2);
@@ -38,6 +38,7 @@ void VolList::LoadVolFiles()
 	Op2MemSetDword((void*)0x00471439, arrayStart2);
 	Op2MemSetDword((void*)0x00471474, arrayStart2);
 
+	Op2MemSetDword((void*)0x0047115E, arrayEnd1);
 	Op2MemSetDword((void*)0x0047126E, arrayEnd1);
 	Op2MemSetDword((void*)0x0047128B, arrayEnd1);
 	Op2MemSetDword((void*)0x00471389, arrayEnd1);
