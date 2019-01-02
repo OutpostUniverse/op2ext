@@ -12,6 +12,8 @@ void VolList::AddVolFile(std::string volPath)
 	OutputDebug("Add file to VolList: " + volPath + "\n");
 }
 
+// Patch reference to the original VolSearchEntry[] in Outpost2.exe to point to a replacement
+// Note: Addresses of the original array (at various offsets) are hardcoded into several instructions
 void VolList::LoadVolFiles()
 {
 	std::size_t volEntryListSize = CreateVolSearchEntryList();
@@ -21,10 +23,10 @@ void VolList::LoadVolFiles()
 	int *vol3 = &volSearchEntryList[volEntryListSize].unknown1;
 	VolSearchEntry *vol4 = &volSearchEntryList[volEntryListSize - 1];
 
-	// Change operand of the MOV instruction
+	// Patch instruction references to old array
+
 	Op2MemSetDword((void*)0x00471070, vol);
 
-	// VolumeList+4 a bunch of other subs want. Better change those
 	//memcpy((void*)0x00471142, &vol2, 4);
 	Op2MemSetDword((void*)0x004711DA, vol2);
 	Op2MemSetDword((void*)0x00471206, vol2);
@@ -34,7 +36,6 @@ void VolList::LoadVolFiles()
 	Op2MemSetDword((void*)0x00471439, vol2);
 	Op2MemSetDword((void*)0x00471474, vol2);
 
-	// The 2nd element of the null entry some stuff wants
 	Op2MemSetDword((void*)0x0047126E, vol3);
 	Op2MemSetDword((void*)0x0047128B, vol3);
 	Op2MemSetDword((void*)0x00471389, vol3);
@@ -46,8 +47,10 @@ void VolList::LoadVolFiles()
 	Op2MemSetDword((void*)0x0047111F, vol4);
 }
 
-// After calling CreateVolSearchEntryList, do not change the contents of volPaths. 
-// If Small String Optimization (SSO) is applied by the compiler, the associated pointers will become invalid.
+// After calling CreateVolSearchEntryList, do not change the contents of volPaths.
+// Changes to strings (such as by a vector re-allocation which moves strings), will invalidate cached c_str() pointers.
+// In particular, MSVC and other compilers implement the Small String Optimization (SSO).
+// SSO will exhibit problems for small strings when improperly cached c_str() pointers are invalidated by a move.
 std::size_t VolList::CreateVolSearchEntryList()
 {
 	// Buffer must include an extra terminator entry for an end of list marker
