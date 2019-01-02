@@ -14,14 +14,14 @@ void VolList::AddVolFile(std::string volPath)
 // Note: Addresses of the original array (at various offsets) are hardcoded into several instructions
 void VolList::LoadVolFiles()
 {
-	std::size_t volEntryListSize = CreateVolSearchEntryList();
+	CreateVolSearchEntryList();
 
 	// Addresses at the start of the array are used for loop initial conditions
 	auto* arrayStart1 = &volSearchEntryList[0];
 	auto* arrayStart2 = &volSearchEntryList[0].unknown1;
 	// Addresses at the end of the array are used for loop termination conditions
-	auto* arrayEnd1 = &volSearchEntryList[volEntryListSize - 1];
-	auto* arrayEnd2 = &volSearchEntryList[volEntryListSize].unknown1;
+	auto* arrayEnd1 = &volSearchEntryList[volSearchEntryList.size() - 1];
+	auto* arrayEnd2 = &volSearchEntryList[volSearchEntryList.size() - 1].unknown1;
 
 	// Patch instructions so hardcoded references to old array now point to new array
 
@@ -52,19 +52,14 @@ void VolList::LoadVolFiles()
 // Changes to strings (such as by a vector re-allocation which moves strings), will invalidate cached c_str() pointers.
 // In particular, MSVC and other compilers implement the Small String Optimization (SSO).
 // SSO will exhibit problems for small strings when improperly cached c_str() pointers are invalidated by a move.
-std::size_t VolList::CreateVolSearchEntryList()
+void VolList::CreateVolSearchEntryList()
 {
-	// Buffer must include an extra terminator entry for an end of list marker
-	volSearchEntryList = std::make_unique<VolSearchEntry[]>(volPaths.size() + 1);
+	volSearchEntryList.clear();
 
-	std::size_t volEntryListSize = 0;
-	for (volEntryListSize; volEntryListSize < volPaths.size(); ++volEntryListSize) {
-		volSearchEntryList[volEntryListSize] = VolSearchEntry{ volPaths[volEntryListSize].c_str(), 0, 1, 0 };
+	for (const auto& volPath : volPaths) {
+		volSearchEntryList.push_back(VolSearchEntry{ volPath.c_str(), 0, 1, 0 });
 	}
 
-	// Add end of volFileEntries search item.
-	volSearchEntryList[volEntryListSize] = VolSearchEntry{ nullptr, 0, 1, 0 };
-	volEntryListSize++;
-
-	return volEntryListSize;
+	// Add end of volFileEntries search item (terminator entry)
+	volSearchEntryList.push_back(VolSearchEntry{ nullptr, 0, 1, 0 });
 }

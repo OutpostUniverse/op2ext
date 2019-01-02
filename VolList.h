@@ -2,8 +2,6 @@
 
 #include <string>
 #include <vector>
-#include <cstddef>
-#include <memory>
 
 struct VolSearchEntry {
 	const char* pFilename;
@@ -23,8 +21,8 @@ public:
 
 private:
 	std::vector<std::string> volPaths;
-	std::unique_ptr<VolSearchEntry[]> volSearchEntryList;
+	std::vector<VolSearchEntry> volSearchEntryList;
 
 	// Return size of VolSearchEntryList
-	std::size_t CreateVolSearchEntryList();
+	void CreateVolSearchEntryList();
 };
