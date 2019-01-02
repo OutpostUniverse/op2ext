@@ -18,10 +18,10 @@ void VolList::LoadVolFiles()
 {
 	std::size_t volEntryListSize = CreateVolSearchEntryList();
 
-	VolSearchEntry *vol = &volSearchEntryList[0];
-	int *vol2 = &volSearchEntryList[0].unknown1;
-	int *vol3 = &volSearchEntryList[volEntryListSize].unknown1;
-	VolSearchEntry *vol4 = &volSearchEntryList[volEntryListSize - 1];
+	auto* vol = &volSearchEntryList[0];
+	auto* vol2 = &volSearchEntryList[0].unknown1;
+	auto* vol3 = &volSearchEntryList[volEntryListSize].unknown1;
+	auto* vol4 = &volSearchEntryList[volEntryListSize - 1];
 
 	// Patch instruction references to old array
 
