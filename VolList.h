@@ -2,6 +2,8 @@
 
 #include <string>
 #include <vector>
+#include <cstddef>
+#include <memory>
 
 struct VolSearchEntry {
 	const char* pFilename;
@@ -14,7 +16,6 @@ struct VolSearchEntry {
 class VolList  
 {
 public:
-	VolList();
 	virtual ~VolList();
 
 	void AddVolFile(std::string volPath);
@@ -22,18 +23,10 @@ public:
 	// Load all identified vol files into Outpost 2's memory.
 	void LoadVolFiles();
 
-	static const unsigned MaxVolumeCount = 31;
-
 private:
 	std::vector<std::string> volPaths;
-	unsigned int volFileCount;
-	VolSearchEntry* volSearchEntryList;
-	
-	// Static size, to avoid dynamic memory allocation before heap is initialized
-	// Buffer must include an extra terminator entry for an end of list marker 
-	VolSearchEntry buffer[MaxVolumeCount + 1];
+	std::unique_ptr<VolSearchEntry[]> volSearchEntryList;
 
-	bool IsFull() const;
-	void InitializeVolSearchEntry(const char* pVolPath);
-	void EndList();
+	// Return size of VolSearchEntryList
+	std::size_t CreateVolSearchEntryList();
 };

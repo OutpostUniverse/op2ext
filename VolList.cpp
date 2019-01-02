@@ -3,43 +3,30 @@
 #include "GlobalDefines.h"
 #include <utility>
 
-
-VolList::VolList()
-{
-	volSearchEntryList = buffer;
-	// Bug workaround: Pre-allocate space for all strings so there is no resizing
-	// Resizing can move strings around, which invalidates the c_str() pointer
-	volPaths.reserve(MaxVolumeCount);
-}
-
 VolList::~VolList() { }
 
 void VolList::AddVolFile(std::string volPath)
 {
-	if (IsFull()) {
-		PostErrorMessage("VolList.cpp", __LINE__, "Too many vol files loaded. Ignoring the vol file '" + volPath + "'");
-		return;
-	}
-	
 	volPaths.push_back(std::move(volPath));
-	InitializeVolSearchEntry(volPaths.back().c_str());
 
 	OutputDebug("Add file to VolList: " + volPath + "\n");
 }
 
+// Patch reference to the original VolSearchEntry[] in Outpost2.exe to point to a replacement
+// Note: Addresses of the original array (at various offsets) are hardcoded into several instructions
 void VolList::LoadVolFiles()
 {
-	EndList();
+	std::size_t volEntryListSize = CreateVolSearchEntryList();
 
 	VolSearchEntry *vol = &volSearchEntryList[0];
 	int *vol2 = &volSearchEntryList[0].unknown1;
-	int *vol3 = &volSearchEntryList[volFileCount].unknown1;
-	VolSearchEntry *vol4 = &volSearchEntryList[volFileCount - 1];
+	int *vol3 = &volSearchEntryList[volEntryListSize].unknown1;
+	VolSearchEntry *vol4 = &volSearchEntryList[volEntryListSize - 1];
 
-	// Change operand of the MOV instruction
+	// Patch instruction references to old array
+
 	Op2MemSetDword((void*)0x00471070, vol);
 
-	// VolumeList+4 a bunch of other subs want. Better change those
 	//memcpy((void*)0x00471142, &vol2, 4);
 	Op2MemSetDword((void*)0x004711DA, vol2);
 	Op2MemSetDword((void*)0x00471206, vol2);
@@ -49,7 +36,6 @@ void VolList::LoadVolFiles()
 	Op2MemSetDword((void*)0x00471439, vol2);
 	Op2MemSetDword((void*)0x00471474, vol2);
 
-	// The 2nd element of the null entry some stuff wants
 	Op2MemSetDword((void*)0x0047126E, vol3);
 	Op2MemSetDword((void*)0x0047128B, vol3);
 	Op2MemSetDword((void*)0x00471389, vol3);
@@ -61,23 +47,23 @@ void VolList::LoadVolFiles()
 	Op2MemSetDword((void*)0x0047111F, vol4);
 }
 
-bool VolList::IsFull() const
+// After calling CreateVolSearchEntryList, do not change the contents of volPaths.
+// Changes to strings (such as by a vector re-allocation which moves strings), will invalidate cached c_str() pointers.
+// In particular, MSVC and other compilers implement the Small String Optimization (SSO).
+// SSO will exhibit problems for small strings when improperly cached c_str() pointers are invalidated by a move.
+std::size_t VolList::CreateVolSearchEntryList()
 {
-	return volFileCount >= MaxVolumeCount;
-}
+	// Buffer must include an extra terminator entry for an end of list marker
+	volSearchEntryList = std::make_unique<VolSearchEntry[]>(volPaths.size() + 1);
 
-void VolList::InitializeVolSearchEntry(const char* pVolPath)
-{
-	volSearchEntryList[volFileCount].unknown1 = 0;
-	volSearchEntryList[volFileCount].flags = 1;
-	volSearchEntryList[volFileCount].unknown2 = 0;
-	volSearchEntryList[volFileCount].pFilename = pVolPath;
+	std::size_t volEntryListSize = 0;
+	for (volEntryListSize; volEntryListSize < volPaths.size(); ++volEntryListSize) {
+		volSearchEntryList[volEntryListSize] = VolSearchEntry{ volPaths[volEntryListSize].c_str(), 0, 1, 0 };
+	}
 
-	volFileCount++;
-}
-
-void VolList::EndList()
-{
 	// Add end of volFileEntries search item.
-	InitializeVolSearchEntry(nullptr);
+	volSearchEntryList[volEntryListSize] = VolSearchEntry{ nullptr, 0, 1, 0 };
+	volEntryListSize++;
+
+	return volEntryListSize;
 }
