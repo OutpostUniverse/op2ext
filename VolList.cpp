@@ -22,8 +22,8 @@ void VolList::LoadVolFiles()
 	auto* arrayStart1 = &volSearchEntryList[0];
 	auto* arrayStart2 = &volSearchEntryList[0].unknown1;
 	// Addresses at the end of the array are used for loop termination conditions
-	auto* arrayEnd1 = &volSearchEntryList[volEntryListSize].unknown1;
-	auto* arrayEnd2 = &volSearchEntryList[volEntryListSize - 1];
+	auto* arrayEnd1 = &volSearchEntryList[volEntryListSize - 1];
+	auto* arrayEnd2 = &volSearchEntryList[volEntryListSize].unknown1;
 
 	// Patch instructions so hardcoded references to old array now point to new array
 
@@ -38,16 +38,16 @@ void VolList::LoadVolFiles()
 	Op2MemSetDword((void*)0x00471439, arrayStart2);
 	Op2MemSetDword((void*)0x00471474, arrayStart2);
 
-	Op2MemSetDword((void*)0x0047115E, arrayEnd1);
-	Op2MemSetDword((void*)0x0047126E, arrayEnd1);
-	Op2MemSetDword((void*)0x0047128B, arrayEnd1);
-	Op2MemSetDword((void*)0x00471389, arrayEnd1);
-	Op2MemSetDword((void*)0x004713E8, arrayEnd1);
-	Op2MemSetDword((void*)0x004713EF, arrayEnd1);
-	Op2MemSetDword((void*)0x00471408, arrayEnd1);
-	Op2MemSetDword((void*)0x00471457, arrayEnd1);
+	Op2MemSetDword((void*)0x0047111F, arrayEnd1);
 
-	Op2MemSetDword((void*)0x0047111F, arrayEnd2);
+	Op2MemSetDword((void*)0x0047115E, arrayEnd2);
+	Op2MemSetDword((void*)0x0047126E, arrayEnd2);
+	Op2MemSetDword((void*)0x0047128B, arrayEnd2);
+	Op2MemSetDword((void*)0x00471389, arrayEnd2);
+	Op2MemSetDword((void*)0x004713E8, arrayEnd2);
+	Op2MemSetDword((void*)0x004713EF, arrayEnd2);
+	Op2MemSetDword((void*)0x00471408, arrayEnd2);
+	Op2MemSetDword((void*)0x00471457, arrayEnd2);
 }
 
 // After calling CreateVolSearchEntryList, do not change the contents of volPaths.
