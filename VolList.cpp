@@ -3,21 +3,10 @@
 #include "GlobalDefines.h"
 #include <utility>
 
-
-VolList::VolList()
-{
-	volSearchEntryList = buffer;
-}
-
 VolList::~VolList() { }
 
 void VolList::AddVolFile(std::string volPath)
 {
-	if (IsFull()) {
-		PostErrorMessage("VolList.cpp", __LINE__, "Too many vol files loaded. Ignoring the vol file '" + volPath + "'");
-		return;
-	}
-	
 	volPaths.push_back(std::move(volPath));
 
 	OutputDebug("Add file to VolList: " + volPath + "\n");
@@ -57,15 +46,13 @@ void VolList::LoadVolFiles()
 	Op2MemSetDword((void*)0x0047111F, vol4);
 }
 
-bool VolList::IsFull() const
-{
-	return volPaths.size() >= MaxVolumeCount;
-}
-
 // After calling CreateVolSearchEntryList, do not change the contents of volPaths. 
 // If Small String Optimization (SSO) is applied by the compiler, the associated pointers will become invalid.
 std::size_t VolList::CreateVolSearchEntryList()
 {
+	// Buffer must include an extra terminator entry for an end of list marker
+	volSearchEntryList = std::make_unique<VolSearchEntry[]>(volPaths.size() + 1);
+
 	std::size_t volEntryListSize = 0;
 	for (volEntryListSize; volEntryListSize < volPaths.size(); ++volEntryListSize) {
 		volSearchEntryList[volEntryListSize] = VolSearchEntry{ volPaths[volEntryListSize].c_str(), 0, 1, 0 };

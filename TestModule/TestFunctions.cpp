@@ -1,6 +1,5 @@
 #include "TestFunctions.h"
 #include "CountFilesByTypeInDirectory.h"
-#include "VolList.h"
 #include "op2ext.h"
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -67,9 +66,9 @@ void TestLoadingVolumes()
 	loadedVolumes++; // Reserve space for VolumeLoadFail.vol
 
 	const std::string volPath("./TestModule/TestVolume.vol");
-	const auto exceededVolCountLimit = VolList::MaxVolumeCount + 1;
-
-	for (auto i = loadedVolumes; i < exceededVolCountLimit; ++i)
+	
+	// Test loading 100 volumes
+	for (auto i = loadedVolumes; i < 100; ++i)
 	{
 		AddVolToList(volPath.c_str());
 	}
