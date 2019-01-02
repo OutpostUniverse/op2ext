@@ -3,7 +3,6 @@
 #include "GlobalDefines.h"
 #include <utility>
 
-VolList::~VolList() { }
 
 void VolList::AddVolFile(std::string volPath)
 {

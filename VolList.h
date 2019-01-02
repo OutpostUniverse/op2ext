@@ -16,8 +16,6 @@ struct VolSearchEntry {
 class VolList  
 {
 public:
-	virtual ~VolList();
-
 	void AddVolFile(std::string volPath);
 
 	// Load all identified vol files into Outpost 2's memory.
