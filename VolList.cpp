@@ -2,7 +2,7 @@
 #include "OP2Memory.h"
 #include "GlobalDefines.h"
 #include <utility>
-#include <cstddef>
+
 
 VolList::VolList()
 {
@@ -25,12 +25,12 @@ void VolList::AddVolFile(std::string volPath)
 
 void VolList::LoadVolFiles()
 {
-	CreateVolSearchEntryList();
+	std::size_t volEntryListSize = CreateVolSearchEntryList();
 
 	VolSearchEntry *vol = &volSearchEntryList[0];
 	int *vol2 = &volSearchEntryList[0].unknown1;
-	int *vol3 = &volSearchEntryList[volPaths.size() - 1].unknown1;
-	VolSearchEntry *vol4 = &volSearchEntryList[volPaths.size() - 2];
+	int *vol3 = &volSearchEntryList[volEntryListSize].unknown1;
+	VolSearchEntry *vol4 = &volSearchEntryList[volEntryListSize - 1];
 
 	// Change operand of the MOV instruction
 	Op2MemSetDword((void*)0x00471070, vol);
@@ -64,12 +64,16 @@ bool VolList::IsFull() const
 
 // After calling CreateVolSearchEntryList, do not change the contents of volPaths. 
 // If Small String Optimization (SSO) is applied by the compiler, the associated pointers will become invalid.
-void VolList::CreateVolSearchEntryList()
+std::size_t VolList::CreateVolSearchEntryList()
 {
-	for (std::size_t i = 0; i < volPaths.size(); ++i) {
-		volSearchEntryList[i] = VolSearchEntry{ volPaths[i].c_str(), 0, 1, 0 };
+	std::size_t volEntryListSize = 0;
+	for (volEntryListSize; volEntryListSize < volPaths.size(); ++volEntryListSize) {
+		volSearchEntryList[volEntryListSize] = VolSearchEntry{ volPaths[volEntryListSize].c_str(), 0, 1, 0 };
 	}
 
 	// Add end of volFileEntries search item.
-	volSearchEntryList[volPaths.size()] = VolSearchEntry{ nullptr, 0, 1, 0 };
+	volSearchEntryList[volEntryListSize] = VolSearchEntry{ nullptr, 0, 1, 0 };
+	volEntryListSize++;
+
+	return volEntryListSize;
 }

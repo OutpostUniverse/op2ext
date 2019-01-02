@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <cstddef>
 
 struct VolSearchEntry {
 	const char* pFilename;
@@ -27,11 +28,13 @@ public:
 private:
 	std::vector<std::string> volPaths;
 	VolSearchEntry* volSearchEntryList;
-	
+
 	// Static size, to avoid dynamic memory allocation before heap is initialized
 	// Buffer must include an extra terminator entry for an end of list marker 
 	VolSearchEntry buffer[MaxVolumeCount + 1];
 
 	bool IsFull() const;
-	void CreateVolSearchEntryList();
+
+	// Return size of VolSearchEntryList
+	std::size_t CreateVolSearchEntryList();
 };
