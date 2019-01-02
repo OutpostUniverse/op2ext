@@ -25,7 +25,7 @@ void VolList::LoadVolFiles()
 	auto* arrayEnd1 = &volSearchEntryList[volEntryListSize].unknown1;
 	auto* arrayEnd2 = &volSearchEntryList[volEntryListSize - 1];
 
-	// Patch instruction references to old array
+	// Patch instructions so hardcoded references to old array now point to new array
 
 	Op2MemSetDword((void*)0x00471070, arrayStart1);
 
