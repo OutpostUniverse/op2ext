@@ -18,33 +18,35 @@ void VolList::LoadVolFiles()
 {
 	std::size_t volEntryListSize = CreateVolSearchEntryList();
 
-	auto* vol = &volSearchEntryList[0];
-	auto* vol2 = &volSearchEntryList[0].unknown1;
-	auto* vol3 = &volSearchEntryList[volEntryListSize].unknown1;
-	auto* vol4 = &volSearchEntryList[volEntryListSize - 1];
+	// Addresses at the start of the array are used for loop initial conditions
+	auto* arrayStart1 = &volSearchEntryList[0];
+	auto* arrayStart2 = &volSearchEntryList[0].unknown1;
+	// Addresses at the end of the array are used for loop termination conditions
+	auto* arrayEnd1 = &volSearchEntryList[volEntryListSize].unknown1;
+	auto* arrayEnd2 = &volSearchEntryList[volEntryListSize - 1];
 
 	// Patch instruction references to old array
 
-	Op2MemSetDword((void*)0x00471070, vol);
+	Op2MemSetDword((void*)0x00471070, arrayStart1);
 
-	//memcpy((void*)0x00471142, &vol2, 4);
-	Op2MemSetDword((void*)0x004711DA, vol2);
-	Op2MemSetDword((void*)0x00471206, vol2);
-	Op2MemSetDword((void*)0x0047136C, vol2);
-	Op2MemSetDword((void*)0x004713AA, vol2);
-	Op2MemSetDword((void*)0x004713D1, vol2);
-	Op2MemSetDword((void*)0x00471439, vol2);
-	Op2MemSetDword((void*)0x00471474, vol2);
+	//memcpy((void*)0x00471142, &arrayStart2, 4);
+	Op2MemSetDword((void*)0x004711DA, arrayStart2);
+	Op2MemSetDword((void*)0x00471206, arrayStart2);
+	Op2MemSetDword((void*)0x0047136C, arrayStart2);
+	Op2MemSetDword((void*)0x004713AA, arrayStart2);
+	Op2MemSetDword((void*)0x004713D1, arrayStart2);
+	Op2MemSetDword((void*)0x00471439, arrayStart2);
+	Op2MemSetDword((void*)0x00471474, arrayStart2);
 
-	Op2MemSetDword((void*)0x0047126E, vol3);
-	Op2MemSetDword((void*)0x0047128B, vol3);
-	Op2MemSetDword((void*)0x00471389, vol3);
-	Op2MemSetDword((void*)0x004713E8, vol3);
-	Op2MemSetDword((void*)0x004713EF, vol3);
-	Op2MemSetDword((void*)0x00471408, vol3);
-	Op2MemSetDword((void*)0x00471457, vol3);
+	Op2MemSetDword((void*)0x0047126E, arrayEnd1);
+	Op2MemSetDword((void*)0x0047128B, arrayEnd1);
+	Op2MemSetDword((void*)0x00471389, arrayEnd1);
+	Op2MemSetDword((void*)0x004713E8, arrayEnd1);
+	Op2MemSetDword((void*)0x004713EF, arrayEnd1);
+	Op2MemSetDword((void*)0x00471408, arrayEnd1);
+	Op2MemSetDword((void*)0x00471457, arrayEnd1);
 
-	Op2MemSetDword((void*)0x0047111F, vol4);
+	Op2MemSetDword((void*)0x0047111F, arrayEnd2);
 }
 
 // After calling CreateVolSearchEntryList, do not change the contents of volPaths.
