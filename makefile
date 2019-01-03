@@ -11,7 +11,7 @@ OUTPUT := op2ext.dll
 
 CPPFLAGS := -DOP2EXT_INTERNAL_BUILD
 CXXFLAGS := -std=c++17 -g -Wall -Wno-unknown-pragmas
-LDFLAGS := -LSubmodules/Outpost2DLL/Lib/
+LDFLAGS := -shared -LSubmodules/Outpost2DLL/Lib/
 LDLIBS := -lOutpost2DLL -lstdc++fs -lws2_32
 
 DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.Td
