@@ -20,8 +20,8 @@ void VolList::LoadVolFiles()
 	auto* arrayStart1 = &volSearchEntryList[0];
 	auto* arrayStart2 = &volSearchEntryList[0].unknown1;
 	// Addresses at the end of the array are used for loop termination conditions
-	auto* arrayEnd1 = &volSearchEntryList[volSearchEntryList.size() - 1];
-	auto* arrayEnd2 = &volSearchEntryList[volSearchEntryList.size() - 1].unknown1;
+	auto* arrayEnd1 = &volSearchEntryList[volSearchEntryList.size()];
+	auto* arrayEnd2 = &volSearchEntryList[volSearchEntryList.size()].unknown1;
 
 	// Patch instructions so hardcoded references to old array now point to new array
 
