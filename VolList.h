@@ -4,8 +4,10 @@
 #include <vector>
 
 struct VolSearchEntry {
+	class VolFileRStream;	// Incomplete type
+
 	const char* pFilename;
-	int unknown1;
+	VolFileRStream* volFileRStream;
 	int flags;
 	int unknown2;
 };

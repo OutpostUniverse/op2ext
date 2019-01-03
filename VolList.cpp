@@ -17,11 +17,11 @@ void VolList::LoadVolFiles()
 	CreateVolSearchEntryList();
 
 	// Addresses at the start of the array are used for loop initial conditions
-	auto* arrayStart1 = &volSearchEntryList[0];
-	auto* arrayStart2 = &volSearchEntryList[0].unknown1;
+	auto* arrayStart1 = &volSearchEntryList[0].pFilename;
+	auto* arrayStart2 = &volSearchEntryList[0].volFileRStream;
 	// Addresses at the end of the array are used for loop termination conditions
-	auto* arrayEnd1 = &volSearchEntryList[volSearchEntryList.size()];
-	auto* arrayEnd2 = &volSearchEntryList[volSearchEntryList.size()].unknown1;
+	auto* arrayEnd1 = &volSearchEntryList[volSearchEntryList.size()].pFilename;
+	auto* arrayEnd2 = &volSearchEntryList[volSearchEntryList.size()].volFileRStream;
 
 	// Patch instructions so hardcoded references to old array now point to new array
 
