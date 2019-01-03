@@ -3,19 +3,6 @@
 #include <string>
 #include <vector>
 
-struct VolSearchEntry {
-	class VolFileRStream;	// Incomplete type
-
-	const char* pFilename;
-	VolFileRStream* volFileRStream;
-	int flags;
-	int unknown2;
-
-	static VolSearchEntry Init(const char* filename) {
-		return {filename, nullptr, 1, 0};
-	}
-};
-
 
 class VolList  
 {
@@ -26,6 +13,19 @@ public:
 	void LoadVolFiles();
 
 private:
+	struct VolSearchEntry {
+		class VolFileRStream;	// Incomplete type
+
+		const char* pFilename;
+		VolFileRStream* volFileRStream;
+		int flags;
+		int unknown2;
+
+		static VolSearchEntry Init(const char* filename) {
+			return {filename, nullptr, 1, 0};
+		}
+	};
+
 	std::vector<std::string> volPaths;
 	std::vector<VolSearchEntry> volSearchEntryList;
 
