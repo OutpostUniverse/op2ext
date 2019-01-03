@@ -10,6 +10,10 @@ struct VolSearchEntry {
 	VolFileRStream* volFileRStream;
 	int flags;
 	int unknown2;
+
+	static VolSearchEntry Init(const char* filename) {
+		return {filename, nullptr, 1, 0};
+	}
 };
 
 

@@ -57,9 +57,9 @@ void VolList::CreateVolSearchEntryList()
 	volSearchEntryList.clear();
 
 	for (const auto& volPath : volPaths) {
-		volSearchEntryList.push_back(VolSearchEntry{ volPath.c_str(), 0, 1, 0 });
+		volSearchEntryList.push_back(VolSearchEntry::Init(volPath.c_str()));
 	}
 
 	// Add end of volFileEntries search item (terminator entry)
-	volSearchEntryList.push_back(VolSearchEntry{ nullptr, 0, 1, 0 });
+	volSearchEntryList.push_back(VolSearchEntry::Init(nullptr));
 }
