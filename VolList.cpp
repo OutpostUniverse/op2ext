@@ -20,8 +20,11 @@ void VolList::LoadVolFiles()
 	auto* arrayStart1 = &volSearchEntryList[0].pFilename;
 	auto* arrayStart2 = &volSearchEntryList[0].volFileRStream;
 	// Addresses at the end of the array are used for loop termination conditions
-	auto* arrayEnd1 = &volSearchEntryList.end()->pFilename;
-	auto* arrayEnd2 = &volSearchEntryList.end()->volFileRStream;
+	// Due to MSVC error checks, we use back (the last entry) rather than end (one past the last)
+	// Doing so means loops stop processing before touching the terminator entry,
+	// which although different, should be fine
+	auto* arrayEnd1 = &volSearchEntryList.back().pFilename;
+	auto* arrayEnd2 = &volSearchEntryList.back().volFileRStream;
 
 	// Patch instructions so hardcoded references to old array now point to new array
 
