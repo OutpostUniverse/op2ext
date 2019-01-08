@@ -30,6 +30,10 @@ SRCS := $(shell find $(SRCDIR) -maxdepth 1 -name '*.cpp')
 OBJS := $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(SRCS))
 FOLDERS := $(sort $(dir $(SRCS)))
 
+# Default is to only compile, not link. MinGW is unable to link this project.
+# This is unlikely to be fixed anytime soon, so a default compile only step
+# can be used to scan the code for errors and warnings, without failing.
+default: $(OBJS)
 all: $(OUTPUT)
 
 $(OUTPUT): $(OBJS)
