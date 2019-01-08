@@ -1,3 +1,10 @@
+# =====
+# Note: This makefile fails at the link step due to name mangling differences
+# between MSVC and MinGW. This affects the import of TApp related functions.
+# Additionally there is a link error for _ReturnAddress.
+# Nevertheless, the makefile is useful for testing changes from Linux,
+# as it provides compiler feedback for syntax errors and warnings.
+# =====
 
 # Set compiler to mingw (can still override from command line)
 CXX := i686-w64-mingw32-g++
