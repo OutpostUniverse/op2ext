@@ -62,7 +62,7 @@ void ConsoleModuleLoader::LoadModule()
 	}
 
 	// Check if directory exists.
-	if (GetFileAttributesA(moduleDirectory.c_str()) == -1) {
+	if (GetFileAttributesA(moduleDirectory.c_str()) == INVALID_FILE_ATTRIBUTES) {
 		PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, "Module directory does not exist");
 		return;
 	}
@@ -140,7 +140,7 @@ std::string ConsoleModuleLoader::ParseLoadModCommand(std::vector<std::string> ar
 
 		std::string modDirectory = fs::path(GetGameDirectory()).append(modRelativeDirectory).string();
 
-		if (GetFileAttributesA(modDirectory.c_str()) == -1) {
+		if (GetFileAttributesA(modDirectory.c_str()) == INVALID_FILE_ATTRIBUTES) {
 			PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, "Module directory does not exist: " + modDirectory);
 			return std::string();
 		}
