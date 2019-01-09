@@ -2,7 +2,6 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-#include <cstring>
 #include <cstddef>
 #include <experimental/filesystem>
 
@@ -34,12 +33,12 @@ std::string GetPrivateProfileStdString(std::string sectionName, std::string key,
 
 	while (true)
 	{
-		int returnSize = GetPrivateProfileString(sectionName.c_str(), key.c_str(), "", buffer, currentBufferSize, filename.c_str());
+		DWORD returnSize = GetPrivateProfileString(sectionName.c_str(), key.c_str(), "", buffer, currentBufferSize, filename.c_str());
 
 		//GetPrivateProfileString's return value is the number of characters copied to the buffer, 
 		// not including the terminating null character.
 		// A full buffer could be nSize - 2 if either lpAppName or lpKeyName are NULL AND the supplied buffer is too small
-		if (std::strlen(&buffer[0]) + 2 < currentBufferSize) {
+		if (returnSize + 2 < currentBufferSize) {
 			break;
 		}
 
