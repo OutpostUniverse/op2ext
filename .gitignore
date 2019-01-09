@@ -1,6 +1,7 @@
 Debug
 Release
 Outpost2
+.build/
 *.suo
 *.db
 *.opendb
