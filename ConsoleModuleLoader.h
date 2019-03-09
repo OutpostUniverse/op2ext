@@ -15,6 +15,7 @@ private:
 	HINSTANCE modDllHandle = nullptr;
 
 	std::string FindModuleDirectory();
+	void LoadModuleDll();
 	void ParseCommandLine(std::vector<std::string>& arguments);
 	bool ParseArgumentName(std::string& argument);
 	std::string ParseLoadModCommand(std::vector<std::string> arguments);

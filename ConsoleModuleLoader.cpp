@@ -69,15 +69,28 @@ void ConsoleModuleLoader::LoadModule()
 
 	SetArtPath();
 
-	std::string dllName = fs::path(moduleDirectory).append("\\op2mod.dll").string();
+	LoadModuleDll();
+}
+
+void ConsoleModuleLoader::LoadModuleDll()
+{
+	const std::string dllName = fs::path(moduleDirectory).append("\\op2mod.dll").string();
+
+	if (!fs::exists(dllName)) {
+		return; // Some console modules do not contain dlls
+	}
+
 	modDllHandle = LoadLibrary(dllName.c_str());
 
 	if (modDllHandle) {
-		// Call its mod_init func
+		// Call module's mod_init function
 		FARPROC startFunc = GetProcAddress(modDllHandle, "mod_init");
 		if (startFunc) {
 			startFunc();
 		}
+	}
+	else {
+		PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, "Unable to load console module's dll from " + dllName);
 	}
 }
 
