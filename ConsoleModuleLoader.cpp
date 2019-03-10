@@ -1,5 +1,6 @@
 #include "ConsoleModuleLoader.h"
 #include "StringConversion.h"
+#include "WindowsErrorCode.h"
 #include "OP2Memory.h"
 #include "FileSystemHelper.h"
 #include "GlobalDefines.h"
@@ -90,7 +91,10 @@ void ConsoleModuleLoader::LoadModuleDll()
 		}
 	}
 	else {
-		PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, "Unable to load console module's dll from " + dllName);
+		const std::string errorMessage("Unable to load console module's dll from " + dllName + 
+			". " + GetLastErrorStdString(TEXT("LoadLibrary")));
+
+		PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, errorMessage);
 	}
 }
 

@@ -1,5 +1,5 @@
 #include "IniModuleLoader.h"
-
+#include "WindowsErrorCode.h"
 #include "FileSystemHelper.h"
 #include "GlobalDefines.h"
 #include <stdexcept>
@@ -70,7 +70,8 @@ void IniModuleLoader::LoadModuleDll(IniModuleEntry& moduleEntry, std::string sec
 	moduleEntry.handle = LoadLibrary(dllName.c_str());
 
 	if (moduleEntry.handle == 0) {
-		throw std::runtime_error("Unable to load DLL " + dllName + " from ini module section " + sectionName + ".");
+		throw std::runtime_error("Unable to load DLL " + dllName + " from ini module section " + 
+			sectionName + "." + GetLastErrorStdString(TEXT("LoadLibrary")));
 	}
 }
 
