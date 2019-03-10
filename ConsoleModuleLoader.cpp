@@ -116,7 +116,7 @@ void ConsoleModuleLoader::ParseCommandLine(std::vector<std::string>& arguments)
 				arguments.push_back(argument);
 			}
 		}
-		// Catch and STL produced exceptions.
+		// Catch STL produced exceptions
 		catch (std::exception& e) {
 			PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, "Error occurred attempting to parse command line arguments. Further parshing of command line arguments aborted. Internal Error: " + std::string(e.what()));
 		}
