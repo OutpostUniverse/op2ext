@@ -1,5 +1,14 @@
 #include "StringConversion.h"
 
+std::string ConvertLpctstrToString(LPCSTR str)
+{
+#if defined(UNICODE) || defined(_UNICODE) 
+	throw std::runtime_error("Unicode is not supported");
+#endif
+
+	return std::string(str);
+}
+
 bool ConvertLPWToString(std::string& stringOut, const LPWSTR pw, UINT codepage)
 {
 	// Code adapted from: https://gist.github.com/icreatetoeducate/4019717
