@@ -1,5 +1,6 @@
 #include "ConsoleModuleLoader.h"
-
+#include "StringConversion.h"
+#include "WindowsErrorCode.h"
 #include "OP2Memory.h"
 #include "FileSystemHelper.h"
 #include "GlobalDefines.h"
@@ -90,7 +91,10 @@ void ConsoleModuleLoader::LoadModuleDll()
 		}
 	}
 	else {
-		PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, "Unable to load console module's dll from " + dllName);
+		const std::string errorMessage("Unable to load console module's dll from " + dllName + 
+			". " + GetLastErrorStdString(TEXT("LoadLibrary")));
+
+		PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, errorMessage);
 	}
 }
 
@@ -116,7 +120,7 @@ void ConsoleModuleLoader::ParseCommandLine(std::vector<std::string>& arguments)
 				arguments.push_back(argument);
 			}
 		}
-		// Catch and STL produced exceptions.
+		// Catch STL produced exceptions
 		catch (std::exception& e) {
 			PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, "Error occurred attempting to parse command line arguments. Further parshing of command line arguments aborted. Internal Error: " + std::string(e.what()));
 		}
@@ -221,28 +225,4 @@ void ConsoleModuleLoader::RunModule()
 			runFunc();
 		}
 	}
-}
-
-bool ConsoleModuleLoader::ConvertLPWToString(std::string& stringOut, const LPWSTR pw, UINT codepage)
-{
-	// Code adapted from: https://gist.github.com/icreatetoeducate/4019717
-
-	bool result = false;
-	char* p = 0;
-
-	int bsz = WideCharToMultiByte(codepage, 0, pw, -1, 0, 0, 0, 0);
-
-	if (bsz > 0) {
-		p = new char[bsz];
-		int rc = WideCharToMultiByte(codepage, 0, pw, -1, p, bsz, 0, 0);
-		if (rc != 0) {
-			p[bsz - 1] = 0;
-			stringOut = p;
-			result = true;
-		}
-	}
-
-	delete[] p;
-
-	return result;
 }
