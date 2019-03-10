@@ -51,6 +51,9 @@
     <ClCompile Include="WindowsModule.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="WindowsErrorCode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="StringConversion.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -90,6 +93,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="WindowsModule.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowsErrorCode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StringConversion.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
