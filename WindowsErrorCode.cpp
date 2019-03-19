@@ -2,7 +2,7 @@
 #include "StringConversion.h"
 #include <strsafe.h> //Header requires WindowsXP SP2 or greater
 
-std::string GetLastErrorStdString(LPTSTR lpszFunction)
+std::string GetLastErrorStdString(LPCTSTR lpszFunction)
 {
 	// Adapted from https://docs.microsoft.com/en-us/windows/desktop/Debug/retrieving-the-last-error-code
 
@@ -20,7 +20,7 @@ std::string GetLastErrorStdString(LPTSTR lpszFunction)
 		0, NULL);
 
 	LPVOID lpDisplayBuf = (LPVOID)LocalAlloc(LMEM_ZEROINIT,
-		(lstrlen((LPCTSTR)lpMsgBuf) + lstrlen((LPCTSTR)lpszFunction) + 40) * sizeof(TCHAR));
+		(lstrlen((LPCTSTR)lpMsgBuf) + lstrlen(lpszFunction) + 40) * sizeof(TCHAR));
 	
 	StringCchPrintf((LPTSTR)lpDisplayBuf,
 		LocalSize(lpDisplayBuf) / sizeof(TCHAR),
