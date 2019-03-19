@@ -19,15 +19,15 @@ std::string GetLastErrorStdString(LPCTSTR lpszFunction)
 		reinterpret_cast<LPTSTR>(&lpMsgBuf),
 		0, NULL);
 
-	LPVOID lpDisplayBuf = (LPVOID)LocalAlloc(LMEM_ZEROINIT,
-		(lstrlen(lpMsgBuf) + lstrlen(lpszFunction) + 40) * sizeof(TCHAR));
+	LPTSTR lpDisplayBuf = static_cast<LPTSTR>(LocalAlloc(LMEM_ZEROINIT,
+		(lstrlen(lpMsgBuf) + lstrlen(lpszFunction) + 40) * sizeof(TCHAR)));
 	
-	StringCchPrintf((LPTSTR)lpDisplayBuf,
+	StringCchPrintf(lpDisplayBuf,
 		LocalSize(lpDisplayBuf) / sizeof(TCHAR),
 		TEXT("%s failed with error %d: %s"),
 		lpszFunction, dw, lpMsgBuf);
 
-	std::string errorMessage = ConvertLpctstrToString(static_cast<LPCTSTR>(lpDisplayBuf));
+	std::string errorMessage = ConvertLpctstrToString(lpDisplayBuf);
 
 	LocalFree(lpMsgBuf);
 	LocalFree(lpDisplayBuf);
