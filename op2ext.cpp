@@ -14,8 +14,8 @@
 // Returns needed buffer size (including space for null terminator) if the destination buffer is too small
 size_t CopyStdStringIntoCharBuffer(const std::string& stringToCopy, char* buffer, size_t bufferSize)
 {
-	// Precheck non-zero buffer size to avoid wrap around or null termination problems
-	if (bufferSize > 0) {
+	// Precheck valid pointer and non-zero buffer size to avoid wrap around or null termination problems
+	if (buffer != nullptr && bufferSize > 0) {
 		// Copy as much of the buffer as possible
 		buffer[stringToCopy.copy(buffer, bufferSize - 1)] = 0;
 		// Return success if there was sufficient room
