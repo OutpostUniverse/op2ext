@@ -60,10 +60,13 @@
       <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>mkdir "..\Outpost2\TestModule"
-
-copy "$(TargetPath)" "..\Outpost2\TestModule\$(TargetFileName)"
-copy "$(ProjectDir)TestVolume.vol" "..\Outpost2\TestModule\TestVolume.vol"</Command>
+      <Command>if defined Outpost2Path (
+    echo f | xcopy /y /d "$(TargetPath)" "$(Outpost2Path)\TestModule\$(TargetFileName)"
+    echo f | xcopy /y /d "$(ProjectDir)TestVolume.vol" "$(Outpost2Path)\TestModule\TestVolume.vol"
+) else (
+    echo Outpost2Path environment variable not defined. Skipping Post Build Copy.
+)</Command>
+      <Message>Copy test module and volume into Outpost2Path</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -82,10 +85,13 @@ copy "$(ProjectDir)TestVolume.vol" "..\Outpost2\TestModule\TestVolume.vol"</Comm
       <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>mkdir "..\Outpost2\TestModule"
-
-copy "$(TargetPath)" "..\Outpost2\TestModule\$(TargetFileName)"
-copy "$(ProjectDir)TestVolume.vol" "..\Outpost2\TestModule\TestVolume.vol"</Command>
+      <Command>if defined Outpost2Path (
+    echo f | xcopy /y /d "$(TargetPath)" "$(Outpost2Path)\TestModule\$(TargetFileName)"
+    echo f | xcopy /y /d "$(ProjectDir)TestVolume.vol" "$(Outpost2Path)\TestModule\TestVolume.vol"
+) else (
+    echo Outpost2Path environment variable not defined. Skipping Post Build Copy.
+)</Command>
+      <Message>Copy test module and volume into Outpost2Path</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
