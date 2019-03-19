@@ -23,6 +23,7 @@ size_t CopyStdStringIntoCharBuffer(const std::string& stringToCopy, char* buffer
 			return 0;
 		}
 	}
+	// Unable to copy the whole string, so return needed buffer size
 	return stringToCopy.size() + 1;
 }
 
