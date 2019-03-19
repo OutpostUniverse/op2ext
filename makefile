@@ -93,9 +93,9 @@ TESTPOSTCOMPILE = @mv -f $(TESTOBJDIR)/$*.Td $(TESTOBJDIR)/$*.d && touch $@
 check: $(TESTOUTPUT)
 	cd test && ../$(TESTOUTPUT)
 
-$(TESTOUTPUT): $(TESTOBJS) $(OUTPUT)
+$(TESTOUTPUT): $(TESTOBJS) $(OBJS)
 	@mkdir -p ${@D}
-	$(CXX) $(TESTOBJS) $(TESTLDFLAGS) $(TESTLIBS) -o $@
+	$(CXX) $^ $(TESTLDFLAGS) $(TESTLIBS) -o $@
 
 $(TESTOBJS): $(TESTOBJDIR)/%.o : $(TESTDIR)/%.cpp $(TESTOBJDIR)/%.d | test-build-folder
 	$(TESTCOMPILE.cpp) $(OUTPUT_OPTION) -I$(SRCDIR) $<
