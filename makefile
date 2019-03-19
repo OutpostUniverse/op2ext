@@ -62,13 +62,18 @@ clean-all: clean
 	-rm -f $(OUTPUT)
 
 
+GTESTSRCDIR := /usr/src/gtest/
+GTESTINCDIR := /usr/include/gtest/
 GTESTDIR := $(BUILDDIR)/gtest
+GTESTLOCALINCDIR := $(BUILDDIR)/include/
 
 .PHONY:gtest
 gtest:
 	mkdir -p $(GTESTDIR)
-	cd $(GTESTDIR) && cmake -DCMAKE_CXX_FLAGS="-std=c++17" -DCMAKE_SYSTEM_NAME="Windows" -Dgtest_disable_pthreads=ON /usr/src/gtest
+	cd $(GTESTDIR) && cmake -DCMAKE_CXX_FLAGS="-std=c++17" -DCMAKE_SYSTEM_NAME="Windows" -Dgtest_disable_pthreads=ON $(GTESTSRCDIR)
 	make -C $(GTESTDIR)
+	mkdir -p $(GTESTLOCALINCDIR)
+	cp -r $(GTESTINCDIR) $(GTESTLOCALINCDIR)
 
 
 TESTDIR := test
