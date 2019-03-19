@@ -10,15 +10,19 @@
 #include <intrin.h> // _ReturnAddress
 
 
+// Returns 0 on success
+// Returns needed buffer size (including space for null terminator) if the destination buffer is too small
 size_t CopyStdStringIntoCharBuffer(const std::string& stringToCopy, char* buffer, size_t bufferSize)
 {
-	strcpy_s(buffer, bufferSize, stringToCopy.c_str());
-
-	// Buffer must be one character larger than std::string since std::string does not include the null terminator.
-	if (bufferSize > stringToCopy.size()) {
-		return 0;
+	// Precheck non-zero buffer size to avoid wrap around or null termination problems
+	if (bufferSize > 0) {
+		// Copy as much of the buffer as possible
+		buffer[stringToCopy.copy(buffer, bufferSize - 1)] = 0;
+		// Return success if there was sufficient room
+		if (bufferSize > stringToCopy.size()) {
+			return 0;
+		}
 	}
-
 	return stringToCopy.size() + 1;
 }
 
