@@ -66,7 +66,7 @@ GTESTDIR := $(BUILDDIR)/gtest
 .PHONY:gtest
 gtest:
 	mkdir -p $(GTESTDIR)
-	cd $(GTESTDIR) && cmake -DCMAKE_CXX_FLAGS="-std=c++17" /usr/src/gtest/
+	cd $(GTESTDIR) && cmake -DCMAKE_CXX_FLAGS="-std=c++17" -DCMAKE_SYSTEM_NAME="Windows" -Dgtest_disable_pthreads=ON /usr/src/gtest
 	make -C $(GTESTDIR)
 
 
