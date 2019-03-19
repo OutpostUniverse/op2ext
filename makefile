@@ -87,7 +87,7 @@ TESTOBJS := $(patsubst $(TESTDIR)/%.cpp,$(TESTOBJDIR)/%.o,$(TESTSRCS))
 TESTFOLDERS := $(sort $(dir $(TESTSRCS)))
 TESTCPPFLAGS := -I$(SRCDIR) -I.build/include
 TESTLDFLAGS := -L./ -L$(GTESTDIR)
-TESTLIBS := -lgtest -lgtest_main -lpthread -lstdc++fs
+TESTLIBS := -lgtest -lgtest_main -lstdc++fs
 TESTOUTPUT := $(BUILDDIR)/testBin/runTests
 
 TESTDEPFLAGS = -MT $@ -MMD -MP -MF $(TESTOBJDIR)/$*.Td
