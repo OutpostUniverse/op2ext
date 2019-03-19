@@ -76,6 +76,10 @@ gtest:
 	cp -r $(GTESTINCDIR) $(GTESTLOCALINCDIR)
 
 
+# Objects with references to Outpost2DLL or _ReturnAddress are a problem for the linker
+OBJSWITHREFS := $(OBJDIR)/DllMain.o $(OBJDIR)/IpDropDown.o $(OBJDIR)/op2ext.o
+SRCOBJS := $(filter-out $(OBJSWITHREFS),$(OBJS)) # Remove objects with problem references
+
 TESTDIR := test
 TESTOBJDIR := $(BUILDDIR)/testObj
 TESTSRCS := $(shell find $(TESTDIR) -name '*.cpp')
@@ -94,7 +98,7 @@ TESTPOSTCOMPILE = @mv -f $(TESTOBJDIR)/$*.Td $(TESTOBJDIR)/$*.d && touch $@
 check: $(TESTOUTPUT)
 	cd test && ../$(TESTOUTPUT)
 
-$(TESTOUTPUT): $(TESTOBJS) $(OBJS)
+$(TESTOUTPUT): $(TESTOBJS) $(SRCOBJS)
 	@mkdir -p ${@D}
 	$(CXX) $^ $(TESTLDFLAGS) $(TESTLIBS) -o $@
 
