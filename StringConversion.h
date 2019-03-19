@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include <Windows.h>
+#include <windows.h>
 #include <string>
 
 // Converts a LPWSTR to std::string
