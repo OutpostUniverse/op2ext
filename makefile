@@ -78,7 +78,7 @@ gtest:
 
 TESTDIR := test
 TESTOBJDIR := $(BUILDDIR)/testObj
-TESTSRCS := #$(shell find $(TESTDIR) -name '*.cpp')
+TESTSRCS := $(shell find $(TESTDIR) -name '*.cpp')
 TESTOBJS := $(patsubst $(TESTDIR)/%.cpp,$(TESTOBJDIR)/%.o,$(TESTSRCS))
 TESTFOLDERS := $(sort $(dir $(TESTSRCS)))
 TESTLDFLAGS := -L./ -L$(GTESTDIR)
