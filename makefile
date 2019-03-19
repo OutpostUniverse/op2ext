@@ -81,12 +81,13 @@ TESTOBJDIR := $(BUILDDIR)/testObj
 TESTSRCS := $(shell find $(TESTDIR) -name '*.cpp')
 TESTOBJS := $(patsubst $(TESTDIR)/%.cpp,$(TESTOBJDIR)/%.o,$(TESTSRCS))
 TESTFOLDERS := $(sort $(dir $(TESTSRCS)))
+TESTCPPFLAGS := -I$(SRCDIR) -I.build/include
 TESTLDFLAGS := -L./ -L$(GTESTDIR)
 TESTLIBS := -lgtest -lgtest_main -lpthread -lstdc++fs
 TESTOUTPUT := $(BUILDDIR)/testBin/runTests
 
 TESTDEPFLAGS = -MT $@ -MMD -MP -MF $(TESTOBJDIR)/$*.Td
-TESTCOMPILE.cpp = $(CXX) $(TESTDEPFLAGS) $(CXXFLAGS) $(TARGET_ARCH) -c
+TESTCOMPILE.cpp = $(CXX) $(TESTCPPFLAGS) $(TESTDEPFLAGS) $(CXXFLAGS) $(TARGET_ARCH) -c
 TESTPOSTCOMPILE = @mv -f $(TESTOBJDIR)/$*.Td $(TESTOBJDIR)/$*.d && touch $@
 
 .PHONY:check
@@ -98,7 +99,7 @@ $(TESTOUTPUT): $(TESTOBJS) $(OBJS)
 	$(CXX) $^ $(TESTLDFLAGS) $(TESTLIBS) -o $@
 
 $(TESTOBJS): $(TESTOBJDIR)/%.o : $(TESTDIR)/%.cpp $(TESTOBJDIR)/%.d | test-build-folder
-	$(TESTCOMPILE.cpp) $(OUTPUT_OPTION) -I$(SRCDIR) $<
+	$(TESTCOMPILE.cpp) $(OUTPUT_OPTION) $<
 	$(TESTPOSTCOMPILE)
 
 .PHONY:test-build-folder
