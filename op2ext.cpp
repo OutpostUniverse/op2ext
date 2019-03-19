@@ -9,6 +9,10 @@
 #include <windows.h>
 #include <intrin.h> // _ReturnAddress
 
+#ifdef __MINGW32__
+#define _ReturnAddress() __builtin_return_address(0)
+#endif
+
 
 size_t CopyStdStringIntoCharBuffer(const std::string& stringToCopy, char* buffer, size_t bufferSize);
 
