@@ -96,7 +96,7 @@ TESTPOSTCOMPILE = @mv -f $(TESTOBJDIR)/$*.Td $(TESTOBJDIR)/$*.d && touch $@
 
 .PHONY:check
 check: $(TESTOUTPUT)
-	cd test && ../$(TESTOUTPUT)
+	wine $(TESTOUTPUT)
 
 $(TESTOUTPUT): $(TESTOBJS) $(SRCOBJS)
 	@mkdir -p ${@D}
