@@ -61,8 +61,8 @@
     </Link>
     <PostBuildEvent>
       <Command>if defined Outpost2Path (
-    echo f | xcopy /y /d "$(TargetPath)" "$(Outpost2Path)\TestModule\$(TargetFileName)"
-    echo f | xcopy /y /d "$(ProjectDir)TestVolume.vol" "$(Outpost2Path)\TestModule\TestVolume.vol"
+    xcopy /y /d "$(TargetPath)" "$(Outpost2Path)\TestModule\"
+    xcopy /y /d "$(ProjectDir)TestVolume.vol" "$(Outpost2Path)\TestModule\"
 ) else (
     echo Outpost2Path environment variable not defined. Skipping Post Build Copy.
 )</Command>
@@ -86,8 +86,8 @@
     </Link>
     <PostBuildEvent>
       <Command>if defined Outpost2Path (
-    echo f | xcopy /y /d "$(TargetPath)" "$(Outpost2Path)\TestModule\$(TargetFileName)"
-    echo f | xcopy /y /d "$(ProjectDir)TestVolume.vol" "$(Outpost2Path)\TestModule\TestVolume.vol"
+    xcopy /y /d "$(TargetPath)" "$(Outpost2Path)\TestModule\"
+    xcopy /y /d "$(ProjectDir)TestVolume.vol" "$(Outpost2Path)\TestModule\"
 ) else (
     echo Outpost2Path environment variable not defined. Skipping Post Build Copy.
 )</Command>
