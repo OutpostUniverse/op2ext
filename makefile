@@ -77,7 +77,7 @@ gtest:
 
 
 # Objects with references to Outpost2DLL or _ReturnAddress are a problem for the linker
-OBJSWITHREFS := $(OBJDIR)/DllMain.o $(OBJDIR)/IpDropDown.o $(OBJDIR)/op2ext.o
+OBJSWITHREFS := $(OBJDIR)/DllMain.o $(OBJDIR)/IpDropDown.o
 SRCOBJS := $(filter-out $(OBJSWITHREFS),$(OBJS)) # Remove objects with problem references
 
 TESTDIR := test
