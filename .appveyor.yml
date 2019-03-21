@@ -13,3 +13,7 @@ install:
 before_build: nuget restore
 build:
   project: op2ext.sln
+test_script:
+  - cd %APPVEYOR_BUILD_FOLDER%\test
+  - '%APPVEYOR_BUILD_FOLDER%\%CONFIGURATION%\test.exe'
+  - cd %APPVEYOR_BUILD_FOLDER%
