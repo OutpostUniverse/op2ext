@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27004.2008
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "op2ext", "op2ext.vcxproj", "{6DE3610C-C9EE-4FD3-BBD7-66382C16FDE9}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "op2ext", "src\op2ext.vcxproj", "{6DE3610C-C9EE-4FD3-BBD7-66382C16FDE9}"
 	ProjectSection(ProjectDependencies) = postProject
 		{B3F40368-F3CC-4EC5-A758-F5DAD08FEDDC} = {B3F40368-F3CC-4EC5-A758-F5DAD08FEDDC}
 	EndProjectSection

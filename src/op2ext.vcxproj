@@ -60,7 +60,7 @@
       <Optimization>MinSpace</Optimization>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;OP2EXT_INTERNAL_BUILD;NDEBUG;_WINDOWS;_USRDLL;OP2EXT_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AssemblerListingLocation>.\Release\</AssemblerListingLocation>
       <PrecompiledHeaderOutputFile>.\Release\op2ext.pch</PrecompiledHeaderOutputFile>
@@ -109,7 +109,7 @@
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <WarningLevel>Level3</WarningLevel>
       <TreatWarningAsError>false</TreatWarningAsError>
-      <AdditionalIncludeDirectories>include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;OP2EXT_INTERNAL_BUILD;DEBUG;_WINDOWS;_USRDLL;OP2EXT_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AssemblerListingLocation>.\Debug\</AssemblerListingLocation>
       <PrecompiledHeaderOutputFile>.\Debug\op2ext.pch</PrecompiledHeaderOutputFile>
@@ -186,7 +186,7 @@
     <ResourceCompile Include="op2ext.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="Outpost2DLL\Outpost2DLL.vcxproj">
+    <ProjectReference Include="..\Outpost2DLL\Outpost2DLL.vcxproj">
       <Project>{b3f40368-f3cc-4ec5-a758-f5dad08feddc}</Project>
     </ProjectReference>
   </ItemGroup>
