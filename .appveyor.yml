@@ -4,8 +4,16 @@ configuration:
   - Release
 platform:
   - x86
+cache:
+  # Cache Nuget packages in "packages" folder. Break cache if "packages.config" is updated.
+  - packages -> **\packages.config
 install:
   - cd %APPVEYOR_BUILD_FOLDER%
   - git submodule update --init --recursive
+before_build: nuget restore
 build:
   project: op2ext.sln
+test_script:
+  - cd %APPVEYOR_BUILD_FOLDER%\test
+  - '%APPVEYOR_BUILD_FOLDER%\%CONFIGURATION%\test.exe'
+  - cd %APPVEYOR_BUILD_FOLDER%
