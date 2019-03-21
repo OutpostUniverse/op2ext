@@ -17,7 +17,7 @@ OBJDIR := $(BUILDDIR)/obj
 DEPDIR := $(BUILDDIR)/obj
 OUTPUT := op2ext.dll
 
-CPPFLAGS := -DOP2EXT_INTERNAL_BUILD
+CPPFLAGS := -DOP2EXT_INTERNAL_BUILD -I include/
 CXXFLAGS := -std=c++17 -g -Wall -Wno-unknown-pragmas
 LDFLAGS := -shared -static-libgcc -static-libstdc++ -LOutpost2DLL/Lib/
 LDLIBS := -lOutpost2DLL -lstdc++fs -lws2_32
@@ -85,7 +85,7 @@ TESTOBJDIR := $(BUILDDIR)/testObj
 TESTSRCS := $(shell find $(TESTDIR) -name '*.cpp')
 TESTOBJS := $(patsubst $(TESTDIR)/%.cpp,$(TESTOBJDIR)/%.o,$(TESTSRCS))
 TESTFOLDERS := $(sort $(dir $(TESTSRCS)))
-TESTCPPFLAGS := -I$(SRCDIR) -I.build/include
+TESTCPPFLAGS := -I "$(SRCDIR)" -I include/ -I .build/include
 TESTLDFLAGS := -static-libgcc -static-libstdc++ -L./ -L$(GTESTDIR)
 TESTLIBS := -lgtest -lgtest_main -lstdc++fs
 TESTOUTPUT := $(BUILDDIR)/testBin/runTests
