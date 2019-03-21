@@ -114,6 +114,7 @@
       <ObjectFileName>.\Debug\</ObjectFileName>
       <ProgramDataBaseFileName>.\Debug\</ProgramDataBaseFileName>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>../include</AdditionalIncludeDirectories>
     </ClCompile>
     <Midl>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -184,7 +185,7 @@
     <ResourceCompile Include="op2ext.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="Outpost2DLL\Outpost2DLL.vcxproj">
+    <ProjectReference Include="..\Outpost2DLL\Outpost2DLL.vcxproj">
       <Project>{b3f40368-f3cc-4ec5-a758-f5dad08feddc}</Project>
     </ProjectReference>
   </ItemGroup>
