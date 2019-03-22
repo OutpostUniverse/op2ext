@@ -53,17 +53,20 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>mkdir "..\Outpost2\TestModule"
-
-copy "$(TargetPath)" "..\Outpost2\TestModule\$(TargetFileName)"
-copy "$(ProjectDir)TestVolume.vol" "..\Outpost2\TestModule\TestVolume.vol"</Command>
+      <Command>if defined Outpost2Path (
+    xcopy /y /d "$(TargetPath)" "$(Outpost2Path)\TestModule\"
+    xcopy /y /d "$(ProjectDir)TestVolume.vol" "$(Outpost2Path)\TestModule\"
+) else (
+    echo Outpost2Path environment variable not defined. Skipping Post Build Copy.
+)</Command>
+      <Message>Copy test module and volume into Outpost2Path</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -73,7 +76,7 @@ copy "$(ProjectDir)TestVolume.vol" "..\Outpost2\TestModule\TestVolume.vol"</Comm
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -82,10 +85,13 @@ copy "$(ProjectDir)TestVolume.vol" "..\Outpost2\TestModule\TestVolume.vol"</Comm
       <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>mkdir "..\Outpost2\TestModule"
-
-copy "$(TargetPath)" "..\Outpost2\TestModule\$(TargetFileName)"
-copy "$(ProjectDir)TestVolume.vol" "..\Outpost2\TestModule\TestVolume.vol"</Command>
+      <Command>if defined Outpost2Path (
+    xcopy /y /d "$(TargetPath)" "$(Outpost2Path)\TestModule\"
+    xcopy /y /d "$(ProjectDir)TestVolume.vol" "$(Outpost2Path)\TestModule\"
+) else (
+    echo Outpost2Path environment variable not defined. Skipping Post Build Copy.
+)</Command>
+      <Message>Copy test module and volume into Outpost2Path</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -99,7 +105,7 @@ copy "$(ProjectDir)TestVolume.vol" "..\Outpost2\TestModule\TestVolume.vol"</Comm
     <ClInclude Include="TestFunctions.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\op2ext.vcxproj">
+    <ProjectReference Include="..\src\op2ext.vcxproj">
       <Project>{6de3610c-c9ee-4fd3-bbd7-66382c16fde9}</Project>
     </ProjectReference>
   </ItemGroup>

@@ -2,11 +2,11 @@
 #include "StringConversion.h"
 #include <strsafe.h> //Header requires WindowsXP SP2 or greater
 
-std::string GetLastErrorStdString(LPTSTR lpszFunction)
+std::string GetLastErrorStdString(LPCTSTR lpszFunction)
 {
 	// Adapted from https://docs.microsoft.com/en-us/windows/desktop/Debug/retrieving-the-last-error-code
 
-	LPVOID lpMsgBuf;
+	LPTSTR lpMsgBuf;
 	DWORD dw = GetLastError();
 
 	FormatMessage(
@@ -16,18 +16,18 @@ std::string GetLastErrorStdString(LPTSTR lpszFunction)
 		NULL,
 		dw,
 		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-		(LPTSTR)&lpMsgBuf,
+		reinterpret_cast<LPTSTR>(&lpMsgBuf),
 		0, NULL);
 
-	LPVOID lpDisplayBuf = (LPVOID)LocalAlloc(LMEM_ZEROINIT,
-		(lstrlen((LPCTSTR)lpMsgBuf) + lstrlen((LPCTSTR)lpszFunction) + 40) * sizeof(TCHAR));
+	LPTSTR lpDisplayBuf = static_cast<LPTSTR>(LocalAlloc(LMEM_ZEROINIT,
+		(lstrlen(lpMsgBuf) + lstrlen(lpszFunction) + 40) * sizeof(TCHAR)));
 	
-	StringCchPrintf((LPTSTR)lpDisplayBuf,
+	StringCchPrintf(lpDisplayBuf,
 		LocalSize(lpDisplayBuf) / sizeof(TCHAR),
 		TEXT("%s failed with error %d: %s"),
 		lpszFunction, dw, lpMsgBuf);
 
-	std::string errorMessage = ConvertLpctstrToString(static_cast<LPCTSTR>(lpDisplayBuf));
+	std::string errorMessage = ConvertLpctstrToString(lpDisplayBuf);
 
 	LocalFree(lpMsgBuf);
 	LocalFree(lpDisplayBuf);

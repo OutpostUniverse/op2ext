@@ -8,17 +8,18 @@
 
 # Set compiler to mingw (can still override from command line)
 CXX := i686-w64-mingw32-g++
+CC := i686-w64-mingw32-gcc
 
-SRCDIR := .
+SRCDIR := src
 BUILDDIR := .build
 BINDIR := $(BUILDDIR)/bin
 OBJDIR := $(BUILDDIR)/obj
 DEPDIR := $(BUILDDIR)/obj
 OUTPUT := op2ext.dll
 
-CPPFLAGS := -DOP2EXT_INTERNAL_BUILD
+CPPFLAGS := -DOP2EXT_INTERNAL_BUILD -I include/
 CXXFLAGS := -std=c++17 -g -Wall -Wno-unknown-pragmas
-LDFLAGS := -shared -LSubmodules/Outpost2DLL/Lib/
+LDFLAGS := -shared -static-libgcc -static-libstdc++ -LOutpost2DLL/Lib/
 LDLIBS := -lOutpost2DLL -lstdc++fs -lws2_32
 
 DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.Td
@@ -26,7 +27,7 @@ DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.Td
 COMPILE.cpp = $(CXX) $(DEPFLAGS) $(CPPFLAGS) $(CXXFLAGS) $(TARGET_ARCH) -c
 POSTCOMPILE = @mv -f $(DEPDIR)/$*.Td $(DEPDIR)/$*.d && touch $@
 
-SRCS := $(shell find $(SRCDIR) -maxdepth 1 -name '*.cpp')
+SRCS := $(shell find $(SRCDIR) -name '*.cpp')
 OBJS := $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(SRCS))
 FOLDERS := $(sort $(dir $(SRCS)))
 
@@ -56,48 +57,53 @@ include $(wildcard $(patsubst $(SRCDIR)/%.cpp,$(DEPDIR)/%.d,$(SRCS)))
 
 .PHONY:clean, clean-deps, clean-all
 clean:
-	-rm -fr $(OBJDIR)
-	-rm -fr $(DEPDIR)
-	-rm -fr $(BINDIR)
-	-rm -f $(OUTPUT)
-clean-deps:
-	-rm -fr $(DEPDIR)
-clean-all:
 	-rm -rf $(BUILDDIR)
+clean-all: clean
+	-rm -f $(OUTPUT)
 
 
+GTESTSRCDIR := /usr/src/gtest/
+GTESTINCDIR := /usr/include/gtest/
 GTESTDIR := $(BUILDDIR)/gtest
+GTESTLOCALINCDIR := $(BUILDDIR)/include/
 
 .PHONY:gtest
 gtest:
 	mkdir -p $(GTESTDIR)
-	cd $(GTESTDIR) && cmake -DCMAKE_CXX_FLAGS="-std=c++17" /usr/src/gtest/
+	cd $(GTESTDIR) && cmake -DCMAKE_CXX_FLAGS="-std=c++17" -DCMAKE_SYSTEM_NAME="Windows" -Dgtest_disable_pthreads=ON $(GTESTSRCDIR)
 	make -C $(GTESTDIR)
+	mkdir -p $(GTESTLOCALINCDIR)
+	cp -r $(GTESTINCDIR) $(GTESTLOCALINCDIR)
 
+
+# Objects with references to Outpost2DLL or _ReturnAddress are a problem for the linker
+OBJSWITHREFS := $(OBJDIR)/DllMain.o $(OBJDIR)/IpDropDown.o
+SRCOBJS := $(filter-out $(OBJSWITHREFS),$(OBJS)) # Remove objects with problem references
 
 TESTDIR := test
 TESTOBJDIR := $(BUILDDIR)/testObj
-TESTSRCS := #$(shell find $(TESTDIR) -name '*.cpp')
+TESTSRCS := $(shell find $(TESTDIR) -name '*.cpp')
 TESTOBJS := $(patsubst $(TESTDIR)/%.cpp,$(TESTOBJDIR)/%.o,$(TESTSRCS))
 TESTFOLDERS := $(sort $(dir $(TESTSRCS)))
-TESTLDFLAGS := -L./ -L$(GTESTDIR)
-TESTLIBS := -lgtest -lgtest_main -lpthread -lstdc++fs
+TESTCPPFLAGS := -I "$(SRCDIR)" -I include/ -I .build/include
+TESTLDFLAGS := -static-libgcc -static-libstdc++ -L./ -L$(GTESTDIR)
+TESTLIBS := -lgtest -lgtest_main -lstdc++fs
 TESTOUTPUT := $(BUILDDIR)/testBin/runTests
 
 TESTDEPFLAGS = -MT $@ -MMD -MP -MF $(TESTOBJDIR)/$*.Td
-TESTCOMPILE.cpp = $(CXX) $(TESTDEPFLAGS) $(CXXFLAGS) $(TARGET_ARCH) -c
+TESTCOMPILE.cpp = $(CXX) $(TESTCPPFLAGS) $(TESTDEPFLAGS) $(CXXFLAGS) $(TARGET_ARCH) -c
 TESTPOSTCOMPILE = @mv -f $(TESTOBJDIR)/$*.Td $(TESTOBJDIR)/$*.d && touch $@
 
 .PHONY:check
 check: $(TESTOUTPUT)
-	cd test && ../$(TESTOUTPUT)
+	wine $(TESTOUTPUT)
 
-$(TESTOUTPUT): $(TESTOBJS) $(OUTPUT)
+$(TESTOUTPUT): $(TESTOBJS) $(SRCOBJS)
 	@mkdir -p ${@D}
-	$(CXX) $(TESTOBJS) $(TESTLDFLAGS) $(TESTLIBS) -o $@
+	$(CXX) $^ $(TESTLDFLAGS) $(TESTLIBS) -o $@
 
 $(TESTOBJS): $(TESTOBJDIR)/%.o : $(TESTDIR)/%.cpp $(TESTOBJDIR)/%.d | test-build-folder
-	$(TESTCOMPILE.cpp) $(OUTPUT_OPTION) -I$(SRCDIR) $<
+	$(TESTCOMPILE.cpp) $(OUTPUT_OPTION) $<
 	$(TESTPOSTCOMPILE)
 
 .PHONY:test-build-folder

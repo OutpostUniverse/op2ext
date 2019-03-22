@@ -62,9 +62,6 @@
     <ClInclude Include="IpDropDown.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="op2ext.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="VolList.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -99,6 +96,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="StringConversion.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\op2ext.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
