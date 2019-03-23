@@ -15,24 +15,36 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestModule", "TestModule\Te
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Outpost2DLL", "Outpost2DLL\Outpost2DLL.vcxproj", "{B3F40368-F3CC-4EC5-A758-F5DAD08FEDDC}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test", "test\test.vcxproj", "{C846A284-3166-4DFB-991D-E0F27EB2DD6D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
+		DebugStatic|x86 = DebugStatic|x86
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{6DE3610C-C9EE-4FD3-BBD7-66382C16FDE9}.Debug|x86.ActiveCfg = Debug|Win32
 		{6DE3610C-C9EE-4FD3-BBD7-66382C16FDE9}.Debug|x86.Build.0 = Debug|Win32
+		{6DE3610C-C9EE-4FD3-BBD7-66382C16FDE9}.DebugStatic|x86.ActiveCfg = DebugStatic|Win32
+		{6DE3610C-C9EE-4FD3-BBD7-66382C16FDE9}.DebugStatic|x86.Build.0 = DebugStatic|Win32
 		{6DE3610C-C9EE-4FD3-BBD7-66382C16FDE9}.Release|x86.ActiveCfg = Release|Win32
 		{6DE3610C-C9EE-4FD3-BBD7-66382C16FDE9}.Release|x86.Build.0 = Release|Win32
 		{19622CEB-6837-4B41-81E2-21969D813C6A}.Debug|x86.ActiveCfg = Debug|Win32
 		{19622CEB-6837-4B41-81E2-21969D813C6A}.Debug|x86.Build.0 = Debug|Win32
+		{19622CEB-6837-4B41-81E2-21969D813C6A}.DebugStatic|x86.ActiveCfg = Debug|Win32
 		{19622CEB-6837-4B41-81E2-21969D813C6A}.Release|x86.ActiveCfg = Release|Win32
 		{19622CEB-6837-4B41-81E2-21969D813C6A}.Release|x86.Build.0 = Release|Win32
 		{B3F40368-F3CC-4EC5-A758-F5DAD08FEDDC}.Debug|x86.ActiveCfg = Debug|Win32
 		{B3F40368-F3CC-4EC5-A758-F5DAD08FEDDC}.Debug|x86.Build.0 = Debug|Win32
+		{B3F40368-F3CC-4EC5-A758-F5DAD08FEDDC}.DebugStatic|x86.ActiveCfg = Debug|Win32
+		{B3F40368-F3CC-4EC5-A758-F5DAD08FEDDC}.DebugStatic|x86.Build.0 = Debug|Win32
 		{B3F40368-F3CC-4EC5-A758-F5DAD08FEDDC}.Release|x86.ActiveCfg = Release|Win32
 		{B3F40368-F3CC-4EC5-A758-F5DAD08FEDDC}.Release|x86.Build.0 = Release|Win32
+		{C846A284-3166-4DFB-991D-E0F27EB2DD6D}.Debug|x86.ActiveCfg = Debug|Win32
+		{C846A284-3166-4DFB-991D-E0F27EB2DD6D}.DebugStatic|x86.ActiveCfg = Debug|Win32
+		{C846A284-3166-4DFB-991D-E0F27EB2DD6D}.DebugStatic|x86.Build.0 = Debug|Win32
+		{C846A284-3166-4DFB-991D-E0F27EB2DD6D}.Release|x86.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
