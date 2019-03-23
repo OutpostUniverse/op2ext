@@ -167,9 +167,9 @@
     <ClCompile Include="WindowsModule.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\include\op2ext.h" />
     <ClInclude Include="FileSystemHelper.h" />
     <ClInclude Include="GlobalDefines.h" />
-    <ClInclude Include="include\op2ext.h" />
     <ClInclude Include="IniModuleLoader.h" />
     <ClInclude Include="IpDropDown.h" />
     <ClInclude Include="ConsoleModuleLoader.h" />
