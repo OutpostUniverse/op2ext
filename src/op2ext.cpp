@@ -1,5 +1,5 @@
 #include "op2ext.h"
-
+#include "StringConversion.h"
 #include "OP2Memory.h"
 #include "FileSystemHelper.h"
 #include "GlobalDefines.h"
@@ -13,24 +13,6 @@
 #ifdef __MINGW32__
 #define _ReturnAddress() __builtin_return_address(0)
 #endif
-
-
-// Returns 0 on success
-// Returns needed buffer size (including space for null terminator) if the destination buffer is too small
-size_t CopyStdStringIntoCharBuffer(const std::string& stringToCopy, char* buffer, size_t bufferSize)
-{
-	// Precheck valid pointer and non-zero buffer size to avoid wrap around or null termination problems
-	if (buffer != nullptr && bufferSize > 0) {
-		// Copy as much of the buffer as possible
-		buffer[stringToCopy.copy(buffer, bufferSize - 1)] = 0;
-		// Return success if there was sufficient room
-		if (bufferSize > stringToCopy.size()) {
-			return 0;
-		}
-	}
-	// Unable to copy the whole string, so return needed buffer size
-	return stringToCopy.size() + 1;
-}
 
 
 // Dummy export for linking requirements from Outpost2.exe and OP2Shell.dll. 
