@@ -4,7 +4,7 @@
 #include <vector>
 
 
-class VolList  
+class VolList
 {
 public:
 	void AddVolFile(std::string volPath);

@@ -2,7 +2,7 @@
 
 std::string ConvertLpctstrToString(LPCSTR str)
 {
-#if defined(UNICODE) || defined(_UNICODE) 
+#if defined(UNICODE) || defined(_UNICODE)
 	throw std::runtime_error("Unicode is not supported");
 #endif
 

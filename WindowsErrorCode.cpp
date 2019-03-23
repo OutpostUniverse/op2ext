@@ -21,7 +21,7 @@ std::string GetLastErrorStdString(LPCTSTR lpszFunction)
 
 	LPTSTR lpDisplayBuf = static_cast<LPTSTR>(LocalAlloc(LMEM_ZEROINIT,
 		(lstrlen(lpMsgBuf) + lstrlen(lpszFunction) + 40) * sizeof(TCHAR)));
-	
+
 	StringCchPrintf(lpDisplayBuf,
 		LocalSize(lpDisplayBuf) / sizeof(TCHAR),
 		TEXT("%s failed with error %d: %s"),

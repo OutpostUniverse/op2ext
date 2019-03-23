@@ -66,7 +66,7 @@ void TestLoadingVolumes()
 	loadedVolumes++; // Reserve space for VolumeLoadFail.vol
 
 	const std::string volPath("./TestModule/TestVolume.vol");
-	
+
 	// Test loading 100 volumes
 	for (auto i = loadedVolumes; i < 100; ++i)
 	{

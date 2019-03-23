@@ -9,7 +9,7 @@ void IniModuleLoader::LoadModules()
 {
 	std::vector<std::string> sectionNames = GetModuleNames();
 
-	for (std::string sectionName : sectionNames) 
+	for (std::string sectionName : sectionNames)
 	{
 		LoadModule(sectionName);
 	}
@@ -70,7 +70,7 @@ void IniModuleLoader::LoadModuleDll(IniModuleEntry& moduleEntry, std::string sec
 	moduleEntry.handle = LoadLibrary(dllName.c_str());
 
 	if (moduleEntry.handle == 0) {
-		throw std::runtime_error("Unable to load DLL " + dllName + " from ini module section " + 
+		throw std::runtime_error("Unable to load DLL " + dllName + " from ini module section " +
 			sectionName + "." + GetLastErrorStdString(TEXT("LoadLibrary")));
 	}
 }
