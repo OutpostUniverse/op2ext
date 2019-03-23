@@ -1,12 +1,13 @@
-Debug
-Release
-Outpost2
+Debug/
+DebugStatic/
+Release/
+packages/
+Outpost2/
 .build/
 *.suo
 *.db
 *.opendb
 *.user
-x64
 .vs
 /*.ini
 *.aps
