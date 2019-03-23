@@ -16,5 +16,5 @@ build:
   project: op2ext.sln
 test_script:
   - cd %APPVEYOR_BUILD_FOLDER%\test
-  - '%APPVEYOR_BUILD_FOLDER%\Debug\test.exe'
+  - IF %CONFIGURATION% == DebugStatic '%APPVEYOR_BUILD_FOLDER%\Debug\test.exe'
   - cd %APPVEYOR_BUILD_FOLDER%
