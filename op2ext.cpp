@@ -16,8 +16,8 @@
 #endif
 
 
-// Dummy export for linking requirements from Outpost2.exe and OP2Shell.dll. 
-// Outpost2.exe and OP2Shell.dll reference this dummy entry, causing op2ext.dll to load. 
+// Dummy export for linking requirements from Outpost2.exe and OP2Shell.dll.
+// Outpost2.exe and OP2Shell.dll reference this dummy entry, causing op2ext.dll to load.
 // It is not used in any way, but must exist to prevent Windows loader errors.
 extern "C" OP2EXT_API int StubExt;
 int StubExt = 0;
@@ -40,7 +40,7 @@ OP2EXT_API void GetGameDir(char* buffer)
 
 	// Unable to use the newer funciton strcpy_s since we do not know the size of buffer,
 	// causing a security concern.
-#pragma warning( suppress : 4996 ) // Disable warning "The compiler encountered a deprecated declaration." 
+#pragma warning( suppress : 4996 ) // Disable warning "The compiler encountered a deprecated declaration."
 	strcpy(buffer, gameDirectory.c_str());
 }
 

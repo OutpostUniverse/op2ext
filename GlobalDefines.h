@@ -6,7 +6,7 @@
 // Outputs a debug string. Output is not logged by the logger.
 void OutputDebug(std::string message);
 
-// Defines how leading and trailing characters of a string are trimmed. 
+// Defines how leading and trailing characters of a string are trimmed.
 enum class TrimOption
 {
 	Trailing,

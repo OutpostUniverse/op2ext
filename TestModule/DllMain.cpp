@@ -81,7 +81,7 @@ void TestPublicInterface()
 
 	TestLoadingVolumes();
 
-	// Test SetSerialNumber by attempting to start a multiplayer match. 
-	// One copy of Outpost 2 stock, and one with the serial number modified. 
+	// Test SetSerialNumber by attempting to start a multiplayer match.
+	// One copy of Outpost 2 stock, and one with the serial number modified.
 	SetSerialNumber(9, 8, 7);
 }

@@ -3,7 +3,7 @@
 #include <fstream>
 #include <string>
 
-class Logger 
+class Logger
 {
 public:
 	Logger();

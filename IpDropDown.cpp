@@ -51,7 +51,7 @@ unsigned long __stdcall inet_addrNew(const char* cp)
 		if (!he) {
 			return INADDR_NONE;
 		}
-		
+
 		result = (unsigned long)*he->h_addr_list[0];
 	}
 

@@ -18,7 +18,7 @@ void LocateVolFiles(std::string relativeDirectory = "");
 // Declaration for patch to LoadLibrary, where it loads OP2Shell.dll
 HINSTANCE __stdcall LoadLibraryNew(LPCTSTR lpLibFileName);
 
-// Brett208 12Dec17: Following code allows adding multiple language support to Outpost 2 menus. 
+// Brett208 12Dec17: Following code allows adding multiple language support to Outpost 2 menus.
 // Code is incomplete.
 // NLS for OP2
 //void LocalizeStrings();
@@ -74,7 +74,7 @@ int __fastcall ExtInit(TApp *thisPtr, int)
 
 	InstallIpDropDown();
 
-	// Order of precedence for loading vol files is: 
+	// Order of precedence for loading vol files is:
 	// ART_PATH (from console module), Console Module, Ini Modules, Addon directory, Game directory
 
 	// Load command line modules
