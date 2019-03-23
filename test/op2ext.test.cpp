@@ -1,8 +1,6 @@
+#include "StringConversion.h"
 #include <gtest/gtest.h>
 #include <array>
-
-
-size_t CopyStdStringIntoCharBuffer(const std::string& stringToCopy, char* buffer, size_t bufferSize);
 
 using bufferType = std::array<char, 8>;
 

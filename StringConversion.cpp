@@ -32,3 +32,18 @@ bool ConvertLPWToString(std::string& stringOut, const LPWSTR pw, UINT codepage)
 
 	return result;
 }
+
+std::size_t CopyStdStringIntoCharBuffer(const std::string& stringToCopy, char* buffer, std::size_t bufferSize)
+{
+	// Precheck valid pointer and non-zero buffer size to avoid wrap around or null termination problems
+	if (buffer != nullptr && bufferSize > 0) {
+		// Copy as much of the buffer as possible
+		buffer[stringToCopy.copy(buffer, bufferSize - 1)] = 0;
+		// Return success if there was sufficient room
+		if (bufferSize > stringToCopy.size()) {
+			return 0;
+		}
+	}
+	// Unable to copy the whole string, so return needed buffer size
+	return stringToCopy.size() + 1;
+}
