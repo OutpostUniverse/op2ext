@@ -7,6 +7,5 @@ Outpost2/
 *.db
 *.opendb
 *.user
-x64
 /*.ini
 *.aps
