@@ -8,3 +8,5 @@ Outpost2/
 *.opendb
 *.user
 *.aps
+op2ext.lib
+op2ext.dll
