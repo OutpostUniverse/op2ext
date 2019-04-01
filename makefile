@@ -1,9 +1,7 @@
 # =====
-# Note: This makefile fails at the link step due to name mangling differences
-# between MSVC and MinGW. This affects the import of TApp related functions.
-# Additionally there is a link error for _ReturnAddress.
-# Nevertheless, the makefile is useful for testing changes from Linux,
-# as it provides compiler feedback for syntax errors and warnings.
+# Note: Makefile is used for error checking the source with a Linux compiler.
+# The Linux compiler is not able to do a full build of the target DLL.
+# It is used to check for non-standards compliant code and warnings.
 # =====
 
 # Set compiler to mingw (can still override from command line)
@@ -15,11 +13,11 @@ BUILDDIR := .build
 BINDIR := $(BUILDDIR)/bin
 OBJDIR := $(BUILDDIR)/obj
 DEPDIR := $(BUILDDIR)/obj
-OUTPUT := op2ext.dll
+OUTPUT := op2ext.lib
 
 CPPFLAGS := -DOP2EXT_INTERNAL_BUILD
 CXXFLAGS := -std=c++17 -g -Wall -Wno-unknown-pragmas
-LDFLAGS := -shared -static-libgcc -static-libstdc++ -LOutpost2DLL/Lib/
+LDFLAGS := -static-libgcc -static-libstdc++ -LOutpost2DLL/Lib/
 LDLIBS := -lOutpost2DLL -lstdc++fs -lws2_32
 
 DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.Td
@@ -31,21 +29,41 @@ SRCS := $(shell find $(SRCDIR) -name '*.cpp')
 OBJS := $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(SRCS))
 FOLDERS := $(sort $(dir $(SRCS)))
 
-# Default is to only compile, not link. MinGW is unable to link this project.
-# This is unlikely to be fixed anytime soon, so a default compile only step
-# can be used to scan the code for errors and warnings, without failing.
-default: $(OBJS)
+# MinGW is not able to link the main DLL due to dependence on Outpost2DLL.
+# The main problem is name mangling differences for the imported symbols.
+# In particular, the TApp related functions are a problem.
+# The code can be compiled, which checks and reports errors, but the result
+# is not linkable into a usable module.
+
+# Compiling the static library should not be a problem.
+
+# To avoid spurious errors, default make rule should be:
+#   Compile and link static library
+#   Compile but not link DLL
+
+.PHONY: default all
+default: all
 all: $(OUTPUT)
 
 $(OUTPUT): $(OBJS)
+
+%:
 	@mkdir -p ${@D}
 	$(CXX) $^ $(LDFLAGS) -o $@ $(LDLIBS)
+
+%.dll:
+	@mkdir -p ${@D}
+	$(CXX) $^ -shared $(LDFLAGS) -o $@ $(LDLIBS)
+
+%.lib:
+	@mkdir -p ${@D}
+	ar rcs $@ $^
 
 $(OBJS): $(OBJDIR)/%.o : $(SRCDIR)/%.cpp $(DEPDIR)/%.d | build-folder
 	$(COMPILE.cpp) $(OUTPUT_OPTION) $<
 	$(POSTCOMPILE)
 
-.PHONY:build-folder
+.PHONY: build-folder
 build-folder:
 	@mkdir -p $(patsubst $(SRCDIR)/%,$(OBJDIR)/%, $(FOLDERS))
 	@mkdir -p $(patsubst $(SRCDIR)/%,$(DEPDIR)/%, $(FOLDERS))
@@ -55,7 +73,7 @@ $(DEPDIR)/%.d: ;
 
 include $(wildcard $(patsubst $(SRCDIR)/%.cpp,$(DEPDIR)/%.d,$(SRCS)))
 
-.PHONY:clean, clean-deps, clean-all
+.PHONY: clean clean-deps clean-all
 clean:
 	-rm -rf $(BUILDDIR)
 clean-all: clean
@@ -67,7 +85,7 @@ GTESTINCDIR := /usr/include/gtest/
 GTESTDIR := $(BUILDDIR)/gtest
 GTESTLOCALINCDIR := $(BUILDDIR)/include/
 
-.PHONY:gtest
+.PHONY: gtest
 gtest:
 	mkdir -p $(GTESTDIR)
 	cd $(GTESTDIR) && cmake -DCMAKE_CXX_FLAGS="-std=c++17" -DCMAKE_SYSTEM_NAME="Windows" -Dgtest_disable_pthreads=ON $(GTESTSRCDIR)
@@ -94,7 +112,7 @@ TESTDEPFLAGS = -MT $@ -MMD -MP -MF $(TESTOBJDIR)/$*.Td
 TESTCOMPILE.cpp = $(CXX) $(TESTCPPFLAGS) $(TESTDEPFLAGS) $(CXXFLAGS) $(TARGET_ARCH) -c
 TESTPOSTCOMPILE = @mv -f $(TESTOBJDIR)/$*.Td $(TESTOBJDIR)/$*.d && touch $@
 
-.PHONY:check
+.PHONY: check
 check: $(TESTOUTPUT)
 	wine $(TESTOUTPUT)
 
@@ -106,7 +124,7 @@ $(TESTOBJS): $(TESTOBJDIR)/%.o : $(TESTDIR)/%.cpp $(TESTOBJDIR)/%.d | test-build
 	$(TESTCOMPILE.cpp) $(OUTPUT_OPTION) $<
 	$(TESTPOSTCOMPILE)
 
-.PHONY:test-build-folder
+.PHONY: test-build-folder
 test-build-folder:
 	@mkdir -p $(patsubst $(TESTDIR)/%,$(TESTOBJDIR)/%, $(TESTFOLDERS))
 
