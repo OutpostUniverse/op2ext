@@ -46,8 +46,18 @@ default: $(OBJS)
 all: $(OUTPUT)
 
 $(OUTPUT): $(OBJS)
+
+%:
 	@mkdir -p ${@D}
 	$(CXX) $^ $(LDFLAGS) -o $@ $(LDLIBS)
+
+%.dll:
+	@mkdir -p ${@D}
+	$(CXX) $^ -shared $(LDFLAGS) -o $@ $(LDLIBS)
+
+%.lib:
+	@mkdir -p ${@D}
+	ar rcs $@ $^
 
 $(OBJS): $(OBJDIR)/%.o : $(SRCDIR)/%.cpp $(DEPDIR)/%.d | build-folder
 	$(COMPILE.cpp) $(OUTPUT_OPTION) $<
