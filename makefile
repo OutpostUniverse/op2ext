@@ -1,9 +1,7 @@
 # =====
-# Note: This makefile fails at the link step due to name mangling differences
-# between MSVC and MinGW. This affects the import of TApp related functions.
-# Additionally there is a link error for _ReturnAddress.
-# Nevertheless, the makefile is useful for testing changes from Linux,
-# as it provides compiler feedback for syntax errors and warnings.
+# Note: Makefile is used for error checking the source with a Linux compiler.
+# The Linux compiler is not able to do a full build of the target DLL.
+# It is used to check for non-standards compliant code and warnings.
 # =====
 
 # Set compiler to mingw (can still override from command line)
@@ -31,9 +29,18 @@ SRCS := $(shell find $(SRCDIR) -name '*.cpp')
 OBJS := $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(SRCS))
 FOLDERS := $(sort $(dir $(SRCS)))
 
-# Default is to only compile, not link. MinGW is unable to link this project.
-# This is unlikely to be fixed anytime soon, so a default compile only step
-# can be used to scan the code for errors and warnings, without failing.
+# MinGW is not able to link the main DLL due to dependence on Outpost2DLL.
+# The main problem is name mangling differences for the imported symbols.
+# In particular, the TApp related functions are a problem.
+# The code can be compiled, which checks and reports errors, but the result
+# is not linkable into a usable module.
+
+# Compiling the static library should not be a problem.
+
+# To avoid spurious errors, default make rule should be:
+#   Compile and link static library
+#   Compile but not link DLL
+
 .PHONY: default all
 default: $(OBJS)
 all: $(OUTPUT)
