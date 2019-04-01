@@ -34,6 +34,7 @@ FOLDERS := $(sort $(dir $(SRCS)))
 # Default is to only compile, not link. MinGW is unable to link this project.
 # This is unlikely to be fixed anytime soon, so a default compile only step
 # can be used to scan the code for errors and warnings, without failing.
+.PHONY: default all
 default: $(OBJS)
 all: $(OUTPUT)
 
@@ -45,7 +46,7 @@ $(OBJS): $(OBJDIR)/%.o : $(SRCDIR)/%.cpp $(DEPDIR)/%.d | build-folder
 	$(COMPILE.cpp) $(OUTPUT_OPTION) $<
 	$(POSTCOMPILE)
 
-.PHONY:build-folder
+.PHONY: build-folder
 build-folder:
 	@mkdir -p $(patsubst $(SRCDIR)/%,$(OBJDIR)/%, $(FOLDERS))
 	@mkdir -p $(patsubst $(SRCDIR)/%,$(DEPDIR)/%, $(FOLDERS))
@@ -55,7 +56,7 @@ $(DEPDIR)/%.d: ;
 
 include $(wildcard $(patsubst $(SRCDIR)/%.cpp,$(DEPDIR)/%.d,$(SRCS)))
 
-.PHONY:clean, clean-deps, clean-all
+.PHONY: clean clean-deps clean-all
 clean:
 	-rm -rf $(BUILDDIR)
 clean-all: clean
@@ -67,7 +68,7 @@ GTESTINCDIR := /usr/include/gtest/
 GTESTDIR := $(BUILDDIR)/gtest
 GTESTLOCALINCDIR := $(BUILDDIR)/include/
 
-.PHONY:gtest
+.PHONY: gtest
 gtest:
 	mkdir -p $(GTESTDIR)
 	cd $(GTESTDIR) && cmake -DCMAKE_CXX_FLAGS="-std=c++17" -DCMAKE_SYSTEM_NAME="Windows" -Dgtest_disable_pthreads=ON $(GTESTSRCDIR)
@@ -94,7 +95,7 @@ TESTDEPFLAGS = -MT $@ -MMD -MP -MF $(TESTOBJDIR)/$*.Td
 TESTCOMPILE.cpp = $(CXX) $(TESTCPPFLAGS) $(TESTDEPFLAGS) $(CXXFLAGS) $(TARGET_ARCH) -c
 TESTPOSTCOMPILE = @mv -f $(TESTOBJDIR)/$*.Td $(TESTOBJDIR)/$*.d && touch $@
 
-.PHONY:check
+.PHONY: check
 check: $(TESTOUTPUT)
 	wine $(TESTOUTPUT)
 
@@ -106,7 +107,7 @@ $(TESTOBJS): $(TESTOBJDIR)/%.o : $(TESTDIR)/%.cpp $(TESTOBJDIR)/%.d | test-build
 	$(TESTCOMPILE.cpp) $(OUTPUT_OPTION) $<
 	$(TESTPOSTCOMPILE)
 
-.PHONY:test-build-folder
+.PHONY: test-build-folder
 test-build-folder:
 	@mkdir -p $(patsubst $(TESTDIR)/%,$(TESTOBJDIR)/%, $(TESTFOLDERS))
 
