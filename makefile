@@ -13,7 +13,7 @@ BUILDDIR := .build
 BINDIR := $(BUILDDIR)/bin
 OBJDIR := $(BUILDDIR)/obj
 DEPDIR := $(BUILDDIR)/obj
-OUTPUT := op2ext.dll
+OUTPUT := op2ext.lib
 
 CPPFLAGS := -DOP2EXT_INTERNAL_BUILD
 CXXFLAGS := -std=c++17 -g -Wall -Wno-unknown-pragmas
@@ -42,7 +42,7 @@ FOLDERS := $(sort $(dir $(SRCS)))
 #   Compile but not link DLL
 
 .PHONY: default all
-default: $(OBJS)
+default: all
 all: $(OUTPUT)
 
 $(OUTPUT): $(OBJS)
