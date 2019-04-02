@@ -145,7 +145,6 @@
     <ClInclude Include="Logger.h" />
     <ClInclude Include="op2ext-Internal.h" />
     <ClInclude Include="OP2Memory.h" />
-    <ClInclude Include="resource.h" />
     <ClInclude Include="StringConversion.h" />
     <ClInclude Include="VolList.h" />
     <ClInclude Include="WindowsErrorCode.h" />

@@ -18,9 +18,6 @@
     <ClCompile Include="IpDropDown.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="op2ext.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="VolList.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -34,9 +31,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="OP2Memory.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DllMain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ConsoleModuleLoader.cpp">
@@ -62,13 +56,7 @@
     <ClInclude Include="IpDropDown.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="op2ext.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="VolList.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="IniModuleLoader.h">
@@ -101,10 +89,5 @@
     <ClInclude Include="StringConversion.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="op2ext.rc">
-      <Filter>Source Files</Filter>
-    </ResourceCompile>
   </ItemGroup>
 </Project>
