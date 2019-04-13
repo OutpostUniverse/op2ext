@@ -1,0 +1,10 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: outpostuniverse/circleci-gcc-googletest
+    steps:
+      - checkout
+      - run: git submodule update --init
+#      - run: make -k CXX=g++
+#      - run: make check CXX=g++
