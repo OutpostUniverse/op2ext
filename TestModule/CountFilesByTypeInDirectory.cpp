@@ -1,9 +1,9 @@
 #include "CountFilesByTypeInDirectory.h"
 #include <string>
 #include <algorithm>
-#include <experimental/filesystem>
+#include <filesystem>
 
-namespace fs = std::experimental::filesystem;
+namespace fs = std::filesystem;
 
 void ToLowerInPlace(std::string& x) {
 	std::transform(x.begin(), x.end(), x.begin(), ::tolower);
