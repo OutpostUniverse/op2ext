@@ -17,7 +17,7 @@ std::string ConvertLpctstrToString(LPCSTR str);
 std::size_t CopyStdStringIntoCharBuffer(const std::string& stringToCopy, char* buffer, std::size_t bufferSize);
 
 // Converts all characters in string lower case
-void ToLowerInPlace(std::string& x);
+std::string& ToLowerInPlace(std::string& x);
 
 // Returns a new string where all characters have been converted to lower case
 std::string ToLower(std::string x);

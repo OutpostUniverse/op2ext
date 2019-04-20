@@ -49,8 +49,10 @@ std::size_t CopyStdStringIntoCharBuffer(const std::string& stringToCopy, char* b
 	return stringToCopy.size() + 1;
 }
 
-void ToLowerInPlace(std::string& x) {
+std::string& ToLowerInPlace(std::string& x) {
 	std::transform(x.begin(), x.end(), x.begin(), ::tolower);
+
+	return x;
 }
 
 std::string ToLower(std::string x) {

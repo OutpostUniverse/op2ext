@@ -39,8 +39,7 @@ std::string ConsoleModuleLoader::GetModuleName()
 
 bool ConsoleModuleLoader::IsModuleLoaded(std::string moduleName)
 {
-	ToLowerInPlace(moduleName);
-	return moduleName == GetModuleName();
+	return ToLowerInPlace(moduleName) == GetModuleName();
 }
 
 int __fastcall GetArtPath(void*, int, char*, char*, char *destBuffer, int bufferSize, char *defaultValue)
