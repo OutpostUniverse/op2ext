@@ -99,3 +99,8 @@ OP2EXT_API void Log(const char* message)
 
 	logger.Log(message, FindModuleName(_ReturnAddress()));
 }
+
+OP2EXT_API bool IsConsoleModuleLoaded(const char* moduleName)
+{
+	return consoleModLoader.IsModuleLoaded(moduleName);
+}
