@@ -20,6 +20,13 @@ ConsoleModuleLoader::ConsoleModuleLoader()
 	moduleDirectory = FindModuleDirectory();
 }
 
+ConsoleModuleLoader::ConsoleModuleLoader(const std::string& testModuleDirectory)
+{
+	OutputDebugString("Console Module constructed in test mode.");
+
+	moduleDirectory = testModuleDirectory;
+}
+
 std::string ConsoleModuleLoader::GetModuleDirectory()
 {
 	return moduleDirectory;

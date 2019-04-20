@@ -6,6 +6,8 @@
 class ConsoleModuleLoader {
 public:
 	ConsoleModuleLoader();
+	// Test Constructor
+	ConsoleModuleLoader(const std::string& testModuleDirectory);
 	void LoadModule();
 	void UnloadModule();
 	void RunModule();
