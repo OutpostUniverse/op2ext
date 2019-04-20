@@ -30,6 +30,12 @@ std::string ConsoleModuleLoader::GetModuleName()
 	return ToLower(moduleDirectory);
 }
 
+bool ConsoleModuleLoader::IsModuleLoaded(std::string moduleName)
+{
+	ToLowerInPlace(moduleName);
+	return moduleName == GetModuleName();
+}
+
 int __fastcall GetArtPath(void*, int, char*, char*, char *destBuffer, int bufferSize, char *defaultValue)
 {
 	strcpy_s(destBuffer, bufferSize, moduleDirectory.c_str());

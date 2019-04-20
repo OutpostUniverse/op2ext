@@ -11,6 +11,7 @@ public:
 	void RunModule();
 	std::string GetModuleDirectory();
 	std::string GetModuleName();
+	bool IsModuleLoaded(std::string moduleName);
 
 private:
 	HINSTANCE modDllHandle = nullptr;
