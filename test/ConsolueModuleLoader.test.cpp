@@ -8,3 +8,11 @@ TEST(ConsoleModuleLoader, GetModuleDirectory)
 	// Returns empty string if no module available
 	EXPECT_EQ(consoleModLoader.GetModuleDirectory(), "");
 }
+
+TEST(ConsoleModuleLoader, GetModuleName)
+{
+	ConsoleModuleLoader consoleModLoader;
+
+	// Returns empty string if no module available
+	EXPECT_EQ(consoleModLoader.GetModuleName(), "");
+}

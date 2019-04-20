@@ -25,6 +25,11 @@ std::string ConsoleModuleLoader::GetModuleDirectory()
 	return moduleDirectory;
 }
 
+std::string ConsoleModuleLoader::GetModuleName()
+{
+	return ToLower(moduleDirectory);
+}
+
 int __fastcall GetArtPath(void*, int, char*, char*, char *destBuffer, int bufferSize, char *defaultValue)
 {
 	strcpy_s(destBuffer, bufferSize, moduleDirectory.c_str());

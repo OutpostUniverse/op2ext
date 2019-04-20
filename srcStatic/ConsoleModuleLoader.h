@@ -10,6 +10,7 @@ public:
 	void UnloadModule();
 	void RunModule();
 	std::string GetModuleDirectory();
+	std::string GetModuleName();
 
 private:
 	HINSTANCE modDllHandle = nullptr;
