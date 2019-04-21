@@ -26,13 +26,15 @@ private:
 	{
 		HINSTANCE handle;
 		DestroyModFunc destroyModFunc;
+		// The module's name is the same as the source ini file SectionName
+		std::string name;
 	};
 
 	std::vector<IniModuleEntry> modules;
 
 	std::vector<std::string> GetSectionNames();
 	void LoadModule(std::string sectionName);
-	void LoadModuleDll(IniModuleEntry& moduleEntry, std::string sectionName);
+	void LoadModuleDll(IniModuleEntry& moduleEntry);
 	void CallModuleInitialization(IniModuleEntry& currentModule, std::string sectionName);
 	bool CallModuleDestruction(IniModuleEntry& currentModule);
 };
