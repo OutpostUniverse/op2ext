@@ -1,15 +1,18 @@
 #include <windows.h>
-
 #include <string>
 #include <vector>
 
 class ConsoleModuleLoader {
 public:
 	ConsoleModuleLoader();
+	// Test Constructor
+	ConsoleModuleLoader(const std::string& testModuleDirectory);
 	void LoadModule();
 	void UnloadModule();
 	void RunModule();
 	std::string GetModuleDirectory();
+	std::string GetModuleName();
+	bool IsModuleLoaded(std::string moduleName);
 
 private:
 	HINSTANCE modDllHandle = nullptr;

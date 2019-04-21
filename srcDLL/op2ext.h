@@ -18,7 +18,7 @@ extern "C" {
 #endif
 
 #include <stddef.h> // size_t (C specific variant)
-
+#include <stdbool.h> // C specific typedefs for bool, true, false
 
 // Retrieves the current absolute directory of the Outpost 2 executable with a trailing slash.
 // If bufferSize is smaller than required to copy entire path, buffer is provided as much of path as possible.
@@ -58,6 +58,10 @@ OP2EXT_API void SetSerialNumber(char major, char minor, char patch);
 
 // Log a message in Outpost2Log.txt.
 OP2EXT_API void Log(const char* message);
+
+// Performs a case insensitive comparison of the loaded console module name.
+// A console module's name is the name of the directory the console module is stored in.
+OP2EXT_API bool IsConsoleModuleLoaded(const char* moduleName);
 
 #ifdef __cplusplus
 } // extern "C"

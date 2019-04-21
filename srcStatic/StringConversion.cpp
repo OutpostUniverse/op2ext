@@ -1,4 +1,5 @@
 #include "StringConversion.h"
+#include <algorithm>
 
 std::string ConvertLpctstrToString(LPCSTR str)
 {
@@ -46,4 +47,16 @@ std::size_t CopyStdStringIntoCharBuffer(const std::string& stringToCopy, char* b
 	}
 	// Unable to copy the whole string, so return needed buffer size
 	return stringToCopy.size() + 1;
+}
+
+std::string& ToLowerInPlace(std::string& x) {
+	std::transform(x.begin(), x.end(), x.begin(), ::tolower);
+
+	return x;
+}
+
+std::string ToLower(std::string x) {
+	std::transform(x.begin(), x.end(), x.begin(), ::tolower);
+
+	return x;
 }
