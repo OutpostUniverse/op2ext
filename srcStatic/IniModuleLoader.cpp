@@ -54,6 +54,15 @@ bool IniModuleLoader::UnloadModules()
 	return result;
 }
 
+std::string IniModuleLoader::GetModuleName(std::size_t index)
+{
+	if (index >= modules.size()) {
+		return "";
+	}
+
+	return modules[index].name;
+}
+
 std::vector<std::string> IniModuleLoader::GetSectionNames()
 {
 	std::string sectionNames = GetOP2PrivateProfileString("Game", "LoadAddons");

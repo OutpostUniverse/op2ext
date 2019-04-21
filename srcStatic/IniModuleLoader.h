@@ -5,6 +5,7 @@
 
 #include <string>
 #include <vector>
+#include <cstddef>
 
 /**
 Loads all modules defined in the Outpost2.ini file.
@@ -16,6 +17,7 @@ class IniModuleLoader
 public:
 	void LoadModules();
 	bool UnloadModules();
+	std::string GetModuleName(std::size_t index);
 
 private:
 	// Export (not absolutely required, but should be used if any additional parameters are read from the .ini file)
