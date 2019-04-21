@@ -7,11 +7,8 @@
 #include <sstream>
 #include <algorithm>
 #include <iterator>
-#include <experimental/filesystem>
 #include <stdexcept>
 #include <cstddef>
-
-namespace fs = std::experimental::filesystem;
 
 std::string moduleDirectory;
 
@@ -20,9 +17,26 @@ ConsoleModuleLoader::ConsoleModuleLoader()
 	moduleDirectory = FindModuleDirectory();
 }
 
+ConsoleModuleLoader::ConsoleModuleLoader(const std::string& testModuleDirectory)
+{
+	OutputDebugString("Console Module constructed in test mode.");
+
+	moduleDirectory = testModuleDirectory;
+}
+
 std::string ConsoleModuleLoader::GetModuleDirectory()
 {
 	return moduleDirectory;
+}
+
+std::string ConsoleModuleLoader::GetModuleName()
+{
+	return ToLower(moduleDirectory);
+}
+
+bool ConsoleModuleLoader::IsModuleLoaded(std::string moduleName)
+{
+	return ToLowerInPlace(moduleName) == GetModuleName();
 }
 
 int __fastcall GetArtPath(void*, int, char*, char*, char *destBuffer, int bufferSize, char *defaultValue)

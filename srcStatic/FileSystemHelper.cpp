@@ -1,11 +1,10 @@
+#include "FileSystemHelper.h"
 #include "GlobalDefines.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <cstddef>
-#include <experimental/filesystem>
 
-namespace fs = std::experimental::filesystem;
 
 std::string GetPrivateProfileStdString(std::string sectionName, std::string key, std::string filename);
 
