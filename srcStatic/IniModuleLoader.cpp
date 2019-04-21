@@ -22,7 +22,7 @@ void IniModuleLoader::LoadModule(std::string sectionName)
 	try {
 		LoadModuleDll(moduleEntry, sectionName);
 	}
-	catch (std::runtime_error error) {
+	catch (const std::exception& error) {
 		PostErrorMessage("IniModuleLoader.cpp", __LINE__, error.what());
 		return;
 	}
