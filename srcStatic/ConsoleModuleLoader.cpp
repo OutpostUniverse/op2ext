@@ -7,11 +7,8 @@
 #include <sstream>
 #include <algorithm>
 #include <iterator>
-#include <filesystem>
 #include <stdexcept>
 #include <cstddef>
-
-namespace fs = std::filesystem;
 
 std::string moduleDirectory;
 

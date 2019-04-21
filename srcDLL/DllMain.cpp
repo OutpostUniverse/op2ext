@@ -7,10 +7,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <string>
-#include <filesystem>
 #include <algorithm>
-
-namespace fs = std::filesystem;
 
 
 void LocateVolFiles(std::string relativeDirectory = "");
