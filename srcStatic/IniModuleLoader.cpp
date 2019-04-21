@@ -21,7 +21,7 @@ void IniModuleLoader::LoadModule(std::string sectionName)
 	moduleEntry.name = sectionName;
 
 	try {
-		LoadModuleDll(moduleEntry);
+		moduleEntry.handle = LoadModuleDll(sectionName);
 	}
 	catch (const std::exception& error) {
 		PostErrorMessage("IniModuleLoader.cpp", __LINE__, error.what());
@@ -71,18 +71,20 @@ std::vector<std::string> IniModuleLoader::GetSectionNames()
 	return sectionNamesSplit;
 }
 
-void IniModuleLoader::LoadModuleDll(IniModuleEntry& moduleEntry)
+HINSTANCE IniModuleLoader::LoadModuleDll(const std::string& sectionName)
 {
 	// Get the DLL name from the corresponding section
-	std::string dllName = GetOP2PrivateProfileString(moduleEntry.name, "Dll");
+	std::string dllName = GetOP2PrivateProfileString(sectionName, "Dll");
 
 	// Try to load a DLL with the given name (possibly "")
-	moduleEntry.handle = LoadLibrary(dllName.c_str());
+	HINSTANCE dllHandle = LoadLibrary(dllName.c_str());
 
-	if (moduleEntry.handle == 0) {
+	if (dllHandle == 0) {
 		throw std::runtime_error("Unable to load DLL " + dllName + " from ini module section " +
-			moduleEntry.name + "." + GetLastErrorStdString(TEXT("LoadLibrary")));
+			sectionName + "." + GetLastErrorStdString(TEXT("LoadLibrary")));
 	}
+
+	return dllHandle;
 }
 
 void IniModuleLoader::CallModuleInitialization(IniModuleEntry& moduleEntry, std::string sectionName)
