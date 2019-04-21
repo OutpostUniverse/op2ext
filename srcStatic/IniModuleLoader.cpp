@@ -7,7 +7,7 @@
 // Load all active modules specified in the .ini file
 void IniModuleLoader::LoadModules()
 {
-	std::vector<std::string> sectionNames = GetModuleNames();
+	std::vector<std::string> sectionNames = GetSectionNames();
 
 	for (const auto& sectionName : sectionNames)
 	{
@@ -53,12 +53,12 @@ bool IniModuleLoader::UnloadModules()
 	return result;
 }
 
-std::vector<std::string> IniModuleLoader::GetModuleNames()
+std::vector<std::string> IniModuleLoader::GetSectionNames()
 {
-	std::string ModuleNames = GetOP2PrivateProfileString("Game", "LoadAddons");
-	std::vector<std::string> moduleNamesSplit = SplitString(ModuleNames, ',', TrimOption::Both);
+	std::string sectionNames = GetOP2PrivateProfileString("Game", "LoadAddons");
+	std::vector<std::string> sectionNamesSplit = SplitString(sectionNames, ',', TrimOption::Both);
 
-	return moduleNamesSplit;
+	return sectionNamesSplit;
 }
 
 void IniModuleLoader::LoadModuleDll(IniModuleEntry& moduleEntry, std::string sectionName)

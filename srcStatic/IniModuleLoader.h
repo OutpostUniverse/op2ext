@@ -30,7 +30,7 @@ private:
 
 	std::vector<IniModuleEntry> modules;
 
-	std::vector<std::string> GetModuleNames();
+	std::vector<std::string> GetSectionNames();
 	void LoadModule(std::string sectionName);
 	void LoadModuleDll(IniModuleEntry& moduleEntry, std::string sectionName);
 	void CallModuleInitialization(IniModuleEntry& currentModule, std::string sectionName);
