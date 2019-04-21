@@ -1,7 +1,14 @@
 #include "CountFilesByTypeInDirectory.h"
-#include "../srcStatic/FileSystemHelper.h"
 #include <string>
 #include <algorithm>
+
+#ifdef __cpp_lib_filesystem
+#include <filesystem>
+namespace fs = std::filesystem;
+#else
+#include <experimental/filesystem>
+namespace fs = std::experimental::filesystem;
+#endif
 
 
 void ToLowerInPlace(std::string& x) {
