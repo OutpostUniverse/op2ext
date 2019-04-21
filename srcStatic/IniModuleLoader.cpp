@@ -9,7 +9,7 @@ void IniModuleLoader::LoadModules()
 {
 	std::vector<std::string> sectionNames = GetModuleNames();
 
-	for (std::string sectionName : sectionNames)
+	for (const auto& sectionName : sectionNames)
 	{
 		LoadModule(sectionName);
 	}
