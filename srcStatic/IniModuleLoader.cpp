@@ -1,6 +1,7 @@
 #include "IniModuleLoader.h"
 #include "WindowsErrorCode.h"
 #include "FileSystemHelper.h"
+#include "StringConversion.h"
 #include "GlobalDefines.h"
 #include <stdexcept>
 
@@ -61,6 +62,19 @@ std::string IniModuleLoader::GetModuleName(std::size_t index)
 	}
 
 	return modules[index].name;
+}
+
+bool IniModuleLoader::IsModuleLoaded(std::string moduleName)
+{
+	ToLowerInPlace(moduleName);
+
+	for (const auto& module : modules) {
+		if (moduleName == ToLower(module.name)) {
+			return true;
+		}
+	}
+	
+	return false;
 }
 
 std::vector<std::string> IniModuleLoader::GetSectionNames()

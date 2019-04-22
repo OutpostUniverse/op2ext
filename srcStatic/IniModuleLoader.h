@@ -17,6 +17,7 @@ public:
 	void LoadModules();
 	bool UnloadModules();
 	std::string GetModuleName(std::size_t index);
+	bool IsModuleLoaded(std::string moduleName);
 
 private:
 	// Export (not absolutely required, but should be used if any additional parameters are read from the .ini file)
