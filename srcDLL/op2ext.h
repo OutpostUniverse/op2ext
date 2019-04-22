@@ -68,6 +68,9 @@ OP2EXT_API bool IsConsoleModuleLoaded(const char* moduleName);
 // An ini module name is the module's [section name] within the ini file.
 OP2EXT_API bool IsIniModuleLoaded(const char* moduleName);
 
+// Returns the number of loaded modules (.ini and console combined)
+OP2EXT_API size_t GetLoadedModuleCount();
+
 #ifdef __cplusplus
 } // extern "C"
 #endif
