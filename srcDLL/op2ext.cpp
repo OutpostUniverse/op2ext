@@ -1,5 +1,4 @@
 #include "op2ext.h"
-
 #include "StringConversion.h"
 #include "OP2Memory.h"
 #include "FileSystemHelper.h"
