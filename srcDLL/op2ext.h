@@ -59,9 +59,14 @@ OP2EXT_API void SetSerialNumber(char major, char minor, char patch);
 // Log a message in Outpost2Log.txt.
 OP2EXT_API void Log(const char* message);
 
+
 // Performs a case insensitive comparison of the loaded console module name.
 // A console module's name is the name of the directory the console module is stored in.
 OP2EXT_API bool IsConsoleModuleLoaded(const char* moduleName);
+
+// Performs a case insensitive search of loaded ini module names, returning true if found.
+// An ini module name is the module's [section name] within the ini file.
+OP2EXT_API bool IsIniModuleLoaded(const char* moduleName);
 
 #ifdef __cplusplus
 } // extern "C"

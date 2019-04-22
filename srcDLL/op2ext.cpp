@@ -103,3 +103,8 @@ OP2EXT_API bool IsConsoleModuleLoaded(const char* moduleName)
 {
 	return consoleModLoader.IsModuleLoaded(moduleName);
 }
+
+OP2EXT_API bool IsIniModuleLoaded(const char* moduleName)
+{
+	return iniModuleLoader.IsModuleLoaded(moduleName);
+}
