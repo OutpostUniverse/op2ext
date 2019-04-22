@@ -16,6 +16,8 @@ class IniModuleLoader
 public:
 	void LoadModules();
 	bool UnloadModules();
+	// Returns the number of loaded ini modules
+	inline std::size_t Count() { return modules.size(); }
 	std::string GetModuleName(std::size_t index);
 	bool IsModuleLoaded(std::string moduleName);
 

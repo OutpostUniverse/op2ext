@@ -12,5 +12,7 @@ TEST(IniModuleLoader, InitializeNoModules)
 	EXPECT_FALSE(iniModuleLoader.IsModuleLoaded(""));
 	EXPECT_FALSE(iniModuleLoader.IsModuleLoaded("TEST"));
 
+	EXPECT_EQ(0, iniModuleLoader.Count());
+
 	EXPECT_TRUE(iniModuleLoader.UnloadModules());
 }
