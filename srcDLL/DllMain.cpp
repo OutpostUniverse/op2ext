@@ -42,8 +42,6 @@ DWORD tAppShutDownNewAddr = (DWORD)ExtShutDown;
 DWORD* loadLibraryDataAddr = (DWORD*)0x00486E0A;
 DWORD loadLibraryNewAddr = (DWORD)LoadLibraryNew;
 
-static IniModuleLoader iniModuleLoader;
-
 
 BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 {
