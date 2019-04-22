@@ -12,6 +12,7 @@ public:
 	void RunModule();
 	std::string GetModuleDirectory();
 	std::string GetModuleName();
+	bool IsModuleLoaded();
 	bool IsModuleLoaded(std::string moduleName);
 
 private:
