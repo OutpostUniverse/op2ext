@@ -19,7 +19,7 @@ void IniModuleLoader::LoadModules()
 void IniModuleLoader::LoadModule(std::string sectionName)
 {
 	IniModuleEntry moduleEntry;
-	moduleEntry.name = sectionName;
+	moduleEntry.iniSectionName = sectionName;
 
 	try {
 		moduleEntry.handle = LoadModuleDll(sectionName);
@@ -61,7 +61,7 @@ std::string IniModuleLoader::GetModuleName(std::size_t index)
 		return "";
 	}
 
-	return modules[index].name;
+	return modules[index].iniSectionName;
 }
 
 bool IniModuleLoader::IsModuleLoaded(std::string moduleName)
@@ -69,7 +69,7 @@ bool IniModuleLoader::IsModuleLoaded(std::string moduleName)
 	ToLowerInPlace(moduleName);
 
 	for (const auto& module : modules) {
-		if (moduleName == ToLower(module.name)) {
+		if (moduleName == ToLower(module.iniSectionName)) {
 			return true;
 		}
 	}

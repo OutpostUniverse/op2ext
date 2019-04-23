@@ -18,6 +18,7 @@ public:
 	bool UnloadModules();
 	// Returns the number of loaded ini modules
 	inline std::size_t Count() { return modules.size(); }
+	// The module's name is the same as the source ini file SectionName
 	std::string GetModuleName(std::size_t index);
 	bool IsModuleLoaded(std::string moduleName);
 
@@ -30,8 +31,7 @@ private:
 	{
 		HINSTANCE handle;
 		DestroyModFunc destroyModFunc;
-		// The module's name is the same as the source ini file SectionName
-		std::string name;
+		std::string iniSectionName;
 	};
 
 	std::vector<IniModuleEntry> modules;
