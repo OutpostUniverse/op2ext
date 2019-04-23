@@ -35,7 +35,7 @@ std::string ConsoleModuleLoader::GetModuleName()
 }
 
 std::size_t ConsoleModuleLoader::Count()
-{	
+{
 	return moduleDirectory != "" ? 1 : 0;
 }
 
