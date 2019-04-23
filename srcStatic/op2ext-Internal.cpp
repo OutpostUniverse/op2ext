@@ -5,3 +5,4 @@ bool modulesRunning = false;
 Logger logger;
 VolList volList;
 ConsoleModuleLoader consoleModLoader;
+IniModuleLoader iniModuleLoader;

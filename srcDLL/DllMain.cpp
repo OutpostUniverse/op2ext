@@ -1,5 +1,4 @@
 #include "IpDropDown.h"
-
 #include "IniModuleLoader.h"
 #include "OP2Memory.h"
 #include "FileSystemHelper.h"
@@ -42,8 +41,6 @@ DWORD tAppShutDownNewAddr = (DWORD)ExtShutDown;
 
 DWORD* loadLibraryDataAddr = (DWORD*)0x00486E0A;
 DWORD loadLibraryNewAddr = (DWORD)LoadLibraryNew;
-
-static IniModuleLoader iniModuleLoader;
 
 
 BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)

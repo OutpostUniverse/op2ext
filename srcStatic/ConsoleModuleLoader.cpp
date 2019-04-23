@@ -34,8 +34,17 @@ std::string ConsoleModuleLoader::GetModuleName()
 	return ToLower(moduleDirectory);
 }
 
+std::size_t ConsoleModuleLoader::Count()
+{
+	return moduleDirectory != "" ? 1 : 0;
+}
+
 bool ConsoleModuleLoader::IsModuleLoaded(std::string moduleName)
 {
+	if (Count() == 0) {
+		return false;
+	}
+
 	return ToLowerInPlace(moduleName) == GetModuleName();
 }
 

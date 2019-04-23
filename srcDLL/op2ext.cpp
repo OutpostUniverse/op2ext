@@ -1,5 +1,4 @@
 #include "op2ext.h"
-
 #include "StringConversion.h"
 #include "OP2Memory.h"
 #include "FileSystemHelper.h"
@@ -103,4 +102,14 @@ OP2EXT_API void Log(const char* message)
 OP2EXT_API bool IsConsoleModuleLoaded(const char* moduleName)
 {
 	return consoleModLoader.IsModuleLoaded(moduleName);
+}
+
+OP2EXT_API bool IsIniModuleLoaded(const char* moduleName)
+{
+	return iniModuleLoader.IsModuleLoaded(moduleName);
+}
+
+OP2EXT_API size_t GetLoadedModuleCount()
+{
+	return iniModuleLoader.Count() + consoleModLoader.Count();
 }
