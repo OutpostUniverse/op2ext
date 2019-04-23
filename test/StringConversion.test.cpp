@@ -12,8 +12,10 @@ TEST(StringConversion, ToLowerInPlace)
 {
 	std::string str("TEST");
 	EXPECT_EQ("test", ToLowerInPlace(str));
+	EXPECT_EQ("test", str);
 
 	// Test Empty string
 	str = "";
 	EXPECT_EQ("", ToLowerInPlace(str));
+	EXPECT_EQ("", str);
 }
