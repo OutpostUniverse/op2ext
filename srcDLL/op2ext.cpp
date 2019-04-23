@@ -111,7 +111,5 @@ OP2EXT_API bool IsIniModuleLoaded(const char* moduleName)
 
 OP2EXT_API size_t GetLoadedModuleCount()
 {
-	const std::size_t consoleModuleCount = consoleModLoader.IsModuleLoaded() ? 1 : 0;
-
-	return iniModuleLoader.Count() + consoleModuleCount;
+	return iniModuleLoader.Count() + consoleModLoader.Count();
 }
