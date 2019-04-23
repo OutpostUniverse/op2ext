@@ -41,6 +41,10 @@ bool ConsoleModuleLoader::IsModuleLoaded()
 
 bool ConsoleModuleLoader::IsModuleLoaded(std::string moduleName)
 {
+	if (moduleDirectory == "") {
+		return false;
+	}
+
 	return ToLowerInPlace(moduleName) == GetModuleName();
 }
 

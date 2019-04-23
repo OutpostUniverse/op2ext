@@ -62,6 +62,7 @@ OP2EXT_API void Log(const char* message);
 
 // Performs a case insensitive comparison of the loaded console module name.
 // A console module's name is the name of the directory the console module is stored in.
+// Returns false if passed an empty string (Module name cannot be empty).
 OP2EXT_API bool IsConsoleModuleLoaded(const char* moduleName);
 
 // Performs a case insensitive search of loaded ini module names, returning true if found.

@@ -11,7 +11,8 @@ TEST(ConsoleModuleLoader, NoModuleLoaded)
 	EXPECT_EQ("", consoleModLoader.GetModuleName());
 
 	EXPECT_FALSE(consoleModLoader.IsModuleLoaded());
-	EXPECT_TRUE(consoleModLoader.IsModuleLoaded(""));
+	// Module name cannot be an empty string
+	EXPECT_FALSE(consoleModLoader.IsModuleLoaded(""));
 	EXPECT_FALSE(consoleModLoader.IsModuleLoaded("TEST"));
 }
 
