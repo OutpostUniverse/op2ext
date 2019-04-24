@@ -77,6 +77,15 @@ OP2EXT_API bool IsIniModuleLoaded(const char* moduleName);
 // Returns the number of loaded modules (.ini and console combined)
 OP2EXT_API size_t GetLoadedModuleCount();
 
+// Retrieves the module name at the specified index. 
+// Ini modules are indexed first and console module is last.
+// Use function GetLoadedModuleCount to determine how many module names to check. 
+// A console module's name is the name of the directory the console module is stored in.
+// An ini module name is the module's [section name] within the ini file.
+// Returns 0 on success. Returns the required minimum size of the buffer on failure.
+// If an index beyond the loaded module count is passed, returns 0 and clears the buffer.
+OP2EXT_API size_t GetLoadedModuleName(size_t moduleIndex, char* buffer, size_t bufferSize);
+
 #ifdef __cplusplus
 } // extern "C"
 #endif

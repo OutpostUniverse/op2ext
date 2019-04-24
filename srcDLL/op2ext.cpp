@@ -119,3 +119,22 @@ OP2EXT_API size_t GetLoadedModuleCount()
 {
 	return iniModuleLoader.Count() + consoleModLoader.Count();
 }
+
+OP2EXT_API size_t GetLoadedModuleName(size_t moduleIndex, char* buffer, size_t bufferSize)
+{
+	// Ini modules are indexed first and console module is last
+
+	std::string moduleName;
+
+	if (moduleIndex < iniModuleLoader.Count()) {
+		moduleName = iniModuleLoader.GetModuleName(moduleIndex);
+	}
+	else if (moduleIndex < GetLoadedModuleCount()) {
+		moduleName = consoleModLoader.GetModuleName();
+	}
+	else {
+		moduleName = "";
+	}
+
+	return CopyStdStringIntoCharBuffer(moduleName, buffer, bufferSize);
+}
