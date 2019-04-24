@@ -60,6 +60,11 @@ OP2EXT_API void SetSerialNumber(char major, char minor, char patch);
 OP2EXT_API void Log(const char* message);
 
 
+// Performs a case insensitive search of loaded module names, returning true if found.
+// A console module's name is the name of the directory the console module is stored in.
+// An ini module name is the module's [section name] within the ini file.
+OP2EXT_API bool IsModuleLoaded(const char* moduleName);
+
 // Performs a case insensitive comparison of the loaded console module name.
 // A console module's name is the name of the directory the console module is stored in.
 // Returns false if passed an empty string (Module name cannot be empty).
