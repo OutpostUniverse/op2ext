@@ -50,3 +50,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     gzip \
     ca-certificates \
   && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /code
+VOLUME /code
+
+CMD ["make", "--keep-going", "check"]
