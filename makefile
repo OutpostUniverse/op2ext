@@ -73,7 +73,7 @@ $(DEPDIR)/%.d: ;
 
 include $(wildcard $(patsubst $(SRCDIR)/%.cpp,$(DEPDIR)/%.d,$(SRCS)))
 
-.PHONY: clean clean-deps clean-all
+.PHONY: clean clean-all
 clean:
 	-rm -rf $(BUILDDIR)
 clean-all: clean
