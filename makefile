@@ -75,9 +75,9 @@ include $(wildcard $(patsubst $(SRCDIR)/%.cpp,$(DEPDIR)/%.d,$(SRCS)))
 
 .PHONY: clean clean-all
 clean:
-	-rm -rf $(BUILDDIR)
+	-rm -rf "$(BUILDDIR)"
 clean-all: clean
-	-rm -f $(OUTPUT)
+	-rm -f "$(OUTPUT)"
 
 
 GTESTSRCDIR := /usr/src/gtest/
