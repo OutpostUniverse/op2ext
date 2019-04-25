@@ -24,6 +24,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     mingw-w64 \
   && rm -rf /var/lib/apt/lists/*
 
+# Install wine so resulting unit test binaries can be run
+RUN dpkg --add-architecture i386 && \
+  apt-get update && apt-get install -y --no-install-recommends \
+    wine-stable \
+    wine32 \
+  && rm -rf /var/lib/apt/lists/*
+
 # Install Google Test source package
 RUN apt-get update && apt-get install -y --no-install-recommends \
     googletest \
