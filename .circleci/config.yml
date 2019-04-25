@@ -4,6 +4,7 @@ jobs:
     docker:
       - image: outpostuniverse/gcc-mingw-wine-googletest-circleci:1.2
     steps:
+      - run: WINEARCH=win32 winecfg
       - checkout
       - run: git submodule update --init
       - run: make --keep-going
