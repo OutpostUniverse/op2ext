@@ -13,15 +13,14 @@
 
 FROM ubuntu:18.04
 
-# Install gcc and clang compilers
+# Install base development tools
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
-    clang \
+    cmake \
   && rm -rf /var/lib/apt/lists/*
 
-# Install Google Test (source package and build dependencies)
+# Install Google Test source package
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    cmake \
     libgtest-dev \
   && rm -rf /var/lib/apt/lists/*
 
