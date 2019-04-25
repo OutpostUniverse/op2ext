@@ -13,15 +13,6 @@
 
 FROM ubuntu:18.04
 
-# Install CircleCI tools needed for primary containers
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    git \
-    ssh \
-    tar \
-    gzip \
-    ca-certificates \
-  && rm -rf /var/lib/apt/lists/*
-
 # Install gcc and clang compilers
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
@@ -42,3 +33,12 @@ RUN mkdir -p ${gtestBuildDir} && \
   make -C ${gtestBuildDir} && \
   cp ${gtestBuildDir}lib*.a /usr/lib && \
   rm -rf ${gtestBuildDir}
+
+# Install CircleCI tools needed for primary containers
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git \
+    ssh \
+    tar \
+    gzip \
+    ca-certificates \
+  && rm -rf /var/lib/apt/lists/*
