@@ -26,14 +26,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Install Google Test source package
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    libgtest-dev \
+    googletest \
   && rm -rf /var/lib/apt/lists/*
 
 # Compile and install Google Test
 WORKDIR /tmp/gtest/
-RUN cmake -DCMAKE_CXX_FLAGS="-std=c++14" /usr/src/gtest/ && \
+RUN cmake -DCMAKE_CXX_FLAGS="-std=c++14" /usr/src/googletest/ && \
   make && \
-  cp lib*.a /usr/lib && \
+  cp googlemock/gtest/lib*.a /usr/lib && \
+  cp googlemock/lib*.a /usr/lib && \
   rm -rf /tmp/gtest/
 WORKDIR /
 
