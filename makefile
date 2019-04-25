@@ -80,8 +80,8 @@ clean-all: clean
 	-rm -f "$(OUTPUT)"
 
 
-GTESTSRCDIR := /usr/src/gtest/
-GTESTINCDIR := /usr/include/gtest/
+GTESTSRCDIR := /usr/src/googletest/googletest/
+GTESTINCDIR := /usr/src/googletest/googletest/include/gtest/
 GTESTDIR := $(BUILDDIR)/gtest
 GTESTLOCALINCDIR := $(BUILDDIR)/include/
 
