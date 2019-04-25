@@ -87,14 +87,14 @@ GTESTLIBDIR := /usr/i686-w64-mingw32/lib/
 
 .PHONY: gtest gtest-install gtest-clean
 gtest:
-	mkdir -p $(GTESTBUILDDIR)
-	cd $(GTESTBUILDDIR) && cmake -DCMAKE_CXX_FLAGS="-std=c++17" -DCMAKE_SYSTEM_NAME="Windows" -Dgtest_disable_pthreads=ON $(GTESTSRCDIR)
-	make -C $(GTESTBUILDDIR)
+	mkdir -p "$(GTESTBUILDDIR)"
+	cd "$(GTESTBUILDDIR)" && cmake -DCMAKE_CXX_FLAGS="-std=c++17" -DCMAKE_SYSTEM_NAME="Windows" -Dgtest_disable_pthreads=ON "$(GTESTSRCDIR)"
+	make -C "$(GTESTBUILDDIR)"
 gtest-install:
-	cp $(GTESTBUILDDIR)googlemock/gtest/lib*.a $(GTESTLIBDIR)
-	cp $(GTESTBUILDDIR)googlemock/lib*.a $(GTESTLIBDIR)
+	cp $(GTESTBUILDDIR)googlemock/gtest/lib*.a "$(GTESTLIBDIR)"
+	cp $(GTESTBUILDDIR)googlemock/lib*.a "$(GTESTLIBDIR)"
 gtest-clean:
-	rm -rf $(GTESTBUILDDIR)
+	rm -rf "$(GTESTBUILDDIR)"
 
 
 # Objects with references to Outpost2DLL or _ReturnAddress are a problem for the linker
