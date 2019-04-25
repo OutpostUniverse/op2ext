@@ -2,9 +2,10 @@ version: 2
 jobs:
   build:
     docker:
-      - image: outpostuniverse/circleci-gcc-googletest
+      - image: outpostuniverse/gcc-mingw-wine-googletest-circleci:1.2
     steps:
       - checkout
       - run: git submodule update --init
-#      - run: make -k CXX=g++
-#      - run: make check CXX=g++
+      - run: make --keep-going
+      - run: make --keep-going test
+      - run: make --keep-going check
