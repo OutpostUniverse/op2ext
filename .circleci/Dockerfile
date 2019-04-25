@@ -29,6 +29,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     googletest \
   && rm -rf /var/lib/apt/lists/*
 
+# Set mingw as default compiler
+ENV CXX=i686-w64-mingw32-g++
+ENV  CC=i686-w64-mingw32-gcc
+
 # Compile and install Google Test
 WORKDIR /tmp/gtest/
 RUN cmake -DCMAKE_CXX_FLAGS="-std=c++14" /usr/src/googletest/ && \
