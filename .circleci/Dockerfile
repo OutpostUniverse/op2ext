@@ -1,15 +1,5 @@
-# For building on CircleCI with Google Test
-
-# Build from the root project folder with:
-#   docker build .circleci/ --tag outpostuniverse/circleci-gcc-clang-googletest
-# Push image to DockerHub with:
-#   docker login
-#   docker push outpostuniverse/circleci-gcc-clang-googletest
-
-# Run locally using the CircleCI command line interface:
-#   circleci build
-# Validate .circleci/config.yml file with:
-#   circleci config validate
+# For building and running unit tests on CircleCI
+# See makefile from project root for local usage
 
 FROM ubuntu:18.04
 
