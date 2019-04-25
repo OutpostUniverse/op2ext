@@ -19,6 +19,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     cmake \
   && rm -rf /var/lib/apt/lists/*
 
+# Install mingw compiler
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    mingw-w64 \
+  && rm -rf /var/lib/apt/lists/*
+
 # Install Google Test source package
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libgtest-dev \
