@@ -73,25 +73,28 @@ $(DEPDIR)/%.d: ;
 
 include $(wildcard $(patsubst $(SRCDIR)/%.cpp,$(DEPDIR)/%.d,$(SRCS)))
 
-.PHONY: clean clean-deps clean-all
+.PHONY: clean clean-all
 clean:
-	-rm -rf $(BUILDDIR)
+	-rm -rf "$(BUILDDIR)"
 clean-all: clean
-	-rm -f $(OUTPUT)
+	-rm -f "$(OUTPUT)"
 
 
-GTESTSRCDIR := /usr/src/gtest/
-GTESTINCDIR := /usr/include/gtest/
-GTESTDIR := $(BUILDDIR)/gtest
-GTESTLOCALINCDIR := $(BUILDDIR)/include/
+GTESTSRCDIR := /usr/src/googletest/
+GTESTINCDIR := /usr/src/googletest/googletest/include/
+GTESTBUILDDIR := $(BUILDDIR)/gtest/
+GTESTLIBDIR := /usr/i686-w64-mingw32/lib/
 
-.PHONY: gtest
+.PHONY: gtest gtest-install gtest-clean
 gtest:
-	mkdir -p $(GTESTDIR)
-	cd $(GTESTDIR) && cmake -DCMAKE_CXX_FLAGS="-std=c++17" -DCMAKE_SYSTEM_NAME="Windows" -Dgtest_disable_pthreads=ON $(GTESTSRCDIR)
-	make -C $(GTESTDIR)
-	mkdir -p $(GTESTLOCALINCDIR)
-	cp -r $(GTESTINCDIR) $(GTESTLOCALINCDIR)
+	mkdir -p "$(GTESTBUILDDIR)"
+	cd "$(GTESTBUILDDIR)" && cmake -DCMAKE_CXX_FLAGS="-std=c++17" -DCMAKE_SYSTEM_NAME="Windows" -Dgtest_disable_pthreads=ON "$(GTESTSRCDIR)"
+	make -C "$(GTESTBUILDDIR)"
+gtest-install:
+	cp $(GTESTBUILDDIR)googlemock/gtest/lib*.a "$(GTESTLIBDIR)"
+	cp $(GTESTBUILDDIR)googlemock/lib*.a "$(GTESTLIBDIR)"
+gtest-clean:
+	rm -rf "$(GTESTBUILDDIR)"
 
 
 # Objects with references to Outpost2DLL or _ReturnAddress are a problem for the linker
@@ -103,8 +106,8 @@ TESTOBJDIR := $(BUILDDIR)/testObj
 TESTSRCS := $(shell find $(TESTDIR) -name '*.cpp')
 TESTOBJS := $(patsubst $(TESTDIR)/%.cpp,$(TESTOBJDIR)/%.o,$(TESTSRCS))
 TESTFOLDERS := $(sort $(dir $(TESTSRCS)))
-TESTCPPFLAGS := -I$(SRCDIR) -I.build/include
-TESTLDFLAGS := -static-libgcc -static-libstdc++ -L./ -L$(GTESTDIR)
+TESTCPPFLAGS := -I$(SRCDIR) -I$(GTESTINCDIR)
+TESTLDFLAGS := -static-libgcc -static-libstdc++ -L./ -L$(GTESTBUILDDIR)googlemock/ -L$(GTESTBUILDDIR)googlemock/gtest/
 TESTLIBS := -lgtest -lgtest_main -lstdc++fs
 TESTOUTPUT := $(BUILDDIR)/testBin/runTests
 
@@ -112,8 +115,9 @@ TESTDEPFLAGS = -MT $@ -MMD -MP -MF $(TESTOBJDIR)/$*.Td
 TESTCOMPILE.cpp = $(CXX) $(TESTCPPFLAGS) $(TESTDEPFLAGS) $(CXXFLAGS) $(TARGET_ARCH) -c
 TESTPOSTCOMPILE = @mv -f $(TESTOBJDIR)/$*.Td $(TESTOBJDIR)/$*.d && touch $@
 
-.PHONY: check
-check: $(TESTOUTPUT)
+.PHONY: test check
+test: $(TESTOUTPUT)
+check: | test
 	wine $(TESTOUTPUT)
 
 $(TESTOUTPUT): $(TESTOBJS) $(SRCOBJS)
