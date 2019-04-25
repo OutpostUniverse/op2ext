@@ -115,8 +115,9 @@ TESTDEPFLAGS = -MT $@ -MMD -MP -MF $(TESTOBJDIR)/$*.Td
 TESTCOMPILE.cpp = $(CXX) $(TESTCPPFLAGS) $(TESTDEPFLAGS) $(CXXFLAGS) $(TARGET_ARCH) -c
 TESTPOSTCOMPILE = @mv -f $(TESTOBJDIR)/$*.Td $(TESTOBJDIR)/$*.d && touch $@
 
-.PHONY: check
-check: $(TESTOUTPUT)
+.PHONY: test check
+test: $(TESTOUTPUT)
+check: | test
 	wine $(TESTOUTPUT)
 
 $(TESTOUTPUT): $(TESTOBJS) $(SRCOBJS)
