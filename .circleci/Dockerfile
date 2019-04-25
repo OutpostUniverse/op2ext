@@ -35,7 +35,7 @@ ENV  CC=i686-w64-mingw32-gcc
 
 # Compile and install Google Test
 WORKDIR /tmp/gtest/
-RUN cmake -DCMAKE_CXX_FLAGS="-std=c++14" -DCMAKE_SYSTEM_NAME="Windows" -Dgtest_disable_pthreads=ON /usr/src/googletest/ && \
+RUN cmake -DCMAKE_CXX_FLAGS="-std=c++17" -DCMAKE_SYSTEM_NAME="Windows" -Dgtest_disable_pthreads=ON /usr/src/googletest/ && \
   make && \
   cp googlemock/gtest/lib*.a /usr/i686-w64-mingw32/lib/ && \
   cp googlemock/lib*.a /usr/i686-w64-mingw32/lib/ && \
