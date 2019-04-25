@@ -99,6 +99,12 @@ OP2EXT_API void Log(const char* message)
 	logger.Log(message, FindModuleName(_ReturnAddress()));
 }
 
+
+OP2EXT_API bool IsModuleLoaded(const char* moduleName)
+{
+	return IsConsoleModuleLoaded(moduleName) || IsIniModuleLoaded(moduleName);
+}
+
 OP2EXT_API bool IsConsoleModuleLoaded(const char* moduleName)
 {
 	return consoleModLoader.IsModuleLoaded(moduleName);
@@ -112,4 +118,23 @@ OP2EXT_API bool IsIniModuleLoaded(const char* moduleName)
 OP2EXT_API size_t GetLoadedModuleCount()
 {
 	return iniModuleLoader.Count() + consoleModLoader.Count();
+}
+
+OP2EXT_API size_t GetLoadedModuleName(size_t moduleIndex, char* buffer, size_t bufferSize)
+{
+	// Ini modules are indexed first and console module is last
+
+	std::string moduleName;
+
+	if (moduleIndex < iniModuleLoader.Count()) {
+		moduleName = iniModuleLoader.GetModuleName(moduleIndex);
+	}
+	else if (moduleIndex < GetLoadedModuleCount()) {
+		moduleName = consoleModLoader.GetModuleName();
+	}
+	else {
+		moduleName = "";
+	}
+
+	return CopyStdStringIntoCharBuffer(moduleName, buffer, bufferSize);
 }
