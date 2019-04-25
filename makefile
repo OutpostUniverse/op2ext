@@ -82,13 +82,13 @@ clean-all: clean
 
 GTESTSRCDIR := /usr/src/googletest/googletest/
 GTESTINCDIR := /usr/src/googletest/googletest/include/
-GTESTDIR := $(BUILDDIR)/gtest
+GTESTBUILDDIR := $(BUILDDIR)/gtest/
 
 .PHONY: gtest
 gtest:
-	mkdir -p $(GTESTDIR)
-	cd $(GTESTDIR) && cmake -DCMAKE_CXX_FLAGS="-std=c++17" -DCMAKE_SYSTEM_NAME="Windows" -Dgtest_disable_pthreads=ON $(GTESTSRCDIR)
-	make -C $(GTESTDIR)
+	mkdir -p $(GTESTBUILDDIR)
+	cd $(GTESTBUILDDIR) && cmake -DCMAKE_CXX_FLAGS="-std=c++17" -DCMAKE_SYSTEM_NAME="Windows" -Dgtest_disable_pthreads=ON $(GTESTSRCDIR)
+	make -C $(GTESTBUILDDIR)
 
 
 # Objects with references to Outpost2DLL or _ReturnAddress are a problem for the linker
@@ -101,7 +101,7 @@ TESTSRCS := $(shell find $(TESTDIR) -name '*.cpp')
 TESTOBJS := $(patsubst $(TESTDIR)/%.cpp,$(TESTOBJDIR)/%.o,$(TESTSRCS))
 TESTFOLDERS := $(sort $(dir $(TESTSRCS)))
 TESTCPPFLAGS := -I$(SRCDIR) -I$(GTESTINCDIR)
-TESTLDFLAGS := -static-libgcc -static-libstdc++ -L./ -L$(GTESTDIR)
+TESTLDFLAGS := -static-libgcc -static-libstdc++ -L./ -L$(GTESTBUILDDIR)
 TESTLIBS := -lgtest -lgtest_main -lstdc++fs
 TESTOUTPUT := $(BUILDDIR)/testBin/runTests
 
