@@ -30,13 +30,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   && rm -rf /var/lib/apt/lists/*
 
 # Compile and install Google Test
-ARG gtestBuildDir=/tmp/gtest/
-RUN mkdir -p ${gtestBuildDir} && \
-  cd ${gtestBuildDir} && \
-  cmake -DCMAKE_CXX_FLAGS="-std=c++14" /usr/src/gtest/ && \
-  make -C ${gtestBuildDir} && \
-  cp ${gtestBuildDir}lib*.a /usr/lib && \
-  rm -rf ${gtestBuildDir}
+WORKDIR /tmp/gtest/
+RUN cmake -DCMAKE_CXX_FLAGS="-std=c++14" /usr/src/gtest/ && \
+  make && \
+  cp lib*.a /usr/lib && \
+  rm -rf /tmp/gtest/
+WORKDIR /
 
 # Install CircleCI tools needed for primary containers
 RUN apt-get update && apt-get install -y --no-install-recommends \
