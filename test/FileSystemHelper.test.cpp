@@ -16,3 +16,8 @@ TEST(FileSystemHelper, GetGameDirectory) {
 	EXPECT_TRUE(fs::exists(gameDirectory)) << gameDirectory;
 	EXPECT_TRUE(fs::is_directory(gameDirectory)) << gameDirectory;
 }
+
+TEST(FileSystemHelper, GetOutpost2IniPath) {
+	auto iniPath = fs::path(GetOutpost2IniPath());
+	EXPECT_EQ("outpost2.ini", iniPath.filename().string()) << iniPath;
+}
