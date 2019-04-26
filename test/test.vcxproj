@@ -26,6 +26,7 @@
   <PropertyGroup Label="UserMacros" />
   <ItemGroup>
     <ClCompile Include="ConsolueModuleLoader.test.cpp" />
+    <ClCompile Include="FileSystemHelper.test.cpp" />
     <ClCompile Include="IniModuleLoader.test.cpp" />
     <ClCompile Include="op2ext.test.cpp" />
     <ClCompile Include="StringConversion.test.cpp" />
