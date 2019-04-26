@@ -22,7 +22,7 @@ std::string GetOutpost2IniPath()
 	return fs::path(GetGameDirectory()).append("outpost2.ini").string();
 }
 
-// Calls Windows Macro GetPrivateProfileSring.
+// Calls Windows Macro GetPrivateProfileString.
 // Hides implementation detail of creating a buffer. Wraps call in std::string arguments and return.
 std::string GetPrivateProfileStdString(std::string sectionName, std::string key, std::string filename)
 {
