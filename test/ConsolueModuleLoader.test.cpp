@@ -10,7 +10,7 @@ TEST(ConsoleModuleLoader, NoModuleLoaded)
 	// Returns empty string if no module available
 	EXPECT_EQ("", consoleModLoader.GetModuleName());
 
-	EXPECT_EQ(0, consoleModLoader.Count());
+	EXPECT_EQ(0u, consoleModLoader.Count());
 	// Module name cannot be an empty string
 	EXPECT_FALSE(consoleModLoader.IsModuleLoaded(""));
 	EXPECT_FALSE(consoleModLoader.IsModuleLoaded("TEST"));
@@ -48,5 +48,5 @@ TEST(ConsoleModuleLoader, IsModuleLoaded)
 TEST(ConsoleModuleLoader, Count)
 {
 	ConsoleModuleLoader consoleModuleLoader("TestModule");
-	EXPECT_EQ(1, consoleModuleLoader.Count());
+	EXPECT_EQ(1u, consoleModuleLoader.Count());
 }

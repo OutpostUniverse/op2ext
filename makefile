@@ -136,3 +136,24 @@ $(TESTOBJDIR)/%.d: ;
 .PRECIOUS: $(TESTOBJDIR)/%.d
 
 include $(wildcard $(patsubst $(TESTDIR)/%.cpp,$(TESTOBJDIR)/%.d,$(TESTSRCS)))
+
+
+# Docker commands
+
+.PHONY: docker-build-image docker-push
+
+docker-build-image:
+	docker build .circleci/ --tag outpostuniverse/gcc-mingw-wine-googletest-circleci:latest --tag outpostuniverse/gcc-mingw-wine-googletest-circleci:1.2
+docker-push:
+	docker login
+	docker push outpostuniverse/gcc-mingw-wine-googletest-circleci
+
+
+# CircleCI commands
+
+.PHONY: circleci-build circleci-validate
+
+circleci-build:
+	circleci build
+circleci-validate:
+	circleci config validate
