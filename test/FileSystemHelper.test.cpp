@@ -21,3 +21,7 @@ TEST(FileSystemHelper, GetOutpost2IniPath) {
 	auto iniPath = fs::path(GetOutpost2IniPath());
 	EXPECT_EQ("outpost2.ini", iniPath.filename().string()) << iniPath;
 }
+
+TEST(FileSystemHelper, GetOP2PrivateProfileString) {
+	EXPECT_EQ("", GetOP2PrivateProfileString("NonExistentSection", "NonExistentKey"));
+}
