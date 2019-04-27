@@ -9,7 +9,7 @@
 #include <algorithm>
 
 
-void LocateVolFiles(std::string relativeDirectory = "");
+void LocateVolFiles(const std::string& relativeDirectory = "");
 
 // Declaration for patch to LoadLibrary, where it loads OP2Shell.dll
 HINSTANCE __stdcall LoadLibraryNew(LPCTSTR lpLibFileName);
@@ -110,7 +110,7 @@ for inclusion in Outpost 2. Does not recursively search subdirectories.
 
 @param relativeDirectory A directory relative to the Outpost 2 exectuable. Default value is an empty string.
 */
-void LocateVolFiles(std::string relativeDirectory)
+void LocateVolFiles(const std::string& relativeDirectory)
 {
 	const auto absoluteDirectory = fs::path(GetGameDirectory()) / fs::path(relativeDirectory);
 
