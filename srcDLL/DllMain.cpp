@@ -1,12 +1,12 @@
 #include "IpDropDown.h"
 #include "IniModuleLoader.h"
+#include "StringConversion.h"
 #include "OP2Memory.h"
 #include "FileSystemHelper.h"
 #include "op2ext-Internal.h"
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <string>
-#include <algorithm>
 
 
 void LocateVolFiles(const std::string& relativeDirectory = "");
@@ -123,9 +123,7 @@ void LocateVolFiles(const std::string& relativeDirectory)
 		for (const auto& dirEntry : fs::directory_iterator(absoluteDirectory))
 		{
 			const auto& filePath = dirEntry.path();
-
-			std::string extension = filePath.extension().string();
-			std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
+			const auto extension = ToLower(filePath.extension().string());
 
 			if (extension == ".vol") {
 				volList.AddVolFile((fs::path(relativeDirectory) / filePath.filename()).string());
