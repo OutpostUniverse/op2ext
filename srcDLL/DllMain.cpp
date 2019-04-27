@@ -108,11 +108,11 @@ void __fastcall ExtShutDown(TApp *thisPtr, int)
 Prepares all vol files found within the supplied relative directory from the Outpost 2 executable
 for inclusion in Outpost 2. Does not recursively search subdirectories.
 
-@param relativeSearchDirectory A directory relative to the Outpost 2 exectuable. Default value is an empty string.
+@param relativeDirectory A directory relative to the Outpost 2 exectuable. Default value is an empty string.
 */
-void LocateVolFiles(std::string relativeSearchDirectory)
+void LocateVolFiles(std::string relativeDirectory)
 {
-	const auto absoluteSearchDirectory = fs::path(GetGameDirectory()) / fs::path(relativeSearchDirectory);
+	const auto absoluteSearchDirectory = fs::path(GetGameDirectory()) / fs::path(relativeDirectory);
 
 	if (!fs::is_directory(absoluteSearchDirectory)) {
 		return;
@@ -128,7 +128,7 @@ void LocateVolFiles(std::string relativeSearchDirectory)
 			std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
 
 			if (extension == ".vol") {
-				volList.AddVolFile((fs::path(relativeSearchDirectory) / filePath.filename()).string());
+				volList.AddVolFile((fs::path(relativeDirectory) / filePath.filename()).string());
 			}
 		}
 	}
