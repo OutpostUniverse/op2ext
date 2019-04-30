@@ -1,15 +1,15 @@
 #include "IpDropDown.h"
 #include "IniModuleLoader.h"
+#include "StringConversion.h"
 #include "OP2Memory.h"
 #include "FileSystemHelper.h"
 #include "op2ext-Internal.h"
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <string>
-#include <algorithm>
 
 
-void LocateVolFiles(std::string relativeDirectory = "");
+void LocateVolFiles(const std::string& relativeDirectory = "");
 
 // Declaration for patch to LoadLibrary, where it loads OP2Shell.dll
 HINSTANCE __stdcall LoadLibraryNew(LPCTSTR lpLibFileName);
@@ -108,22 +108,30 @@ void __fastcall ExtShutDown(TApp *thisPtr, int)
 Prepares all vol files found within the supplied relative directory from the Outpost 2 executable
 for inclusion in Outpost 2. Does not recursively search subdirectories.
 
-@param relativeSearchDirectory A directory relative to the Outpost 2 exectuable. Default value is an empty string.
+@param relativeDirectory A directory relative to the Outpost 2 exectuable. Default value is an empty string.
 */
-void LocateVolFiles(std::string relativeSearchDirectory)
+void LocateVolFiles(const std::string& relativeDirectory)
 {
-	std::string gameDirectory = GetGameDirectory();
+	const auto absoluteDirectory = fs::path(GetGameDirectory()) / fs::path(relativeDirectory);
 
-	for (const auto& dirEntry : fs::directory_iterator(fs::path(gameDirectory).append(relativeSearchDirectory)))
+	if (!fs::is_directory(absoluteDirectory)) {
+		return;
+	}
+
+	try
 	{
-		const auto& filePath = dirEntry.path();
+		for (const auto& dirEntry : fs::directory_iterator(absoluteDirectory))
+		{
+			const auto& filePath = dirEntry.path();
+			const auto extension = ToLower(filePath.extension().string());
 
-		std::string extension = filePath.extension().string();
-		std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
-
-		if (extension == ".vol") {
-			volList.AddVolFile((fs::path(relativeSearchDirectory) / filePath.filename()).string());
+			if (extension == ".vol") {
+				volList.AddVolFile((fs::path(relativeDirectory) / filePath.filename()).string());
+			}
 		}
+	}
+	catch (const fs::filesystem_error& e) {
+		logger.Log(e.what());
 	}
 }
 
