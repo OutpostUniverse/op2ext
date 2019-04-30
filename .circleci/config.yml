@@ -6,7 +6,7 @@ jobs:
     steps:
       - run: WINEARCH=win32 winecfg
       - checkout
-      - run: git submodule update --init
+      - run: git submodule update --init || true
       - run: make --keep-going
       - run: make --keep-going test
       - run: make --keep-going check
