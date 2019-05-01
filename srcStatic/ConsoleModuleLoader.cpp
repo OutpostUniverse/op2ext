@@ -98,7 +98,7 @@ void ConsoleModuleLoader::LoadModule()
 
 void ConsoleModuleLoader::LoadModuleDll()
 {
-	const std::string dllName = fs::path(moduleDirectory).append("\\op2mod.dll").string();
+	const std::string dllName = fs::path(moduleDirectory).append("op2mod.dll").string();
 
 	if (!fs::exists(dllName)) {
 		return; // Some console modules do not contain dlls
