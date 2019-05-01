@@ -11,6 +11,7 @@
 #include <cstddef>
 
 std::string moduleDirectory;
+std::string moduleName;
 
 ConsoleModuleLoader::ConsoleModuleLoader()
 {
@@ -22,6 +23,7 @@ ConsoleModuleLoader::ConsoleModuleLoader(const std::string& testModuleDirectory)
 	OutputDebugString("Console Module constructed in test mode.");
 
 	moduleDirectory = testModuleDirectory;
+	moduleName = ToLower(testModuleDirectory);
 }
 
 std::string ConsoleModuleLoader::GetModuleDirectory()
@@ -31,12 +33,12 @@ std::string ConsoleModuleLoader::GetModuleDirectory()
 
 std::string ConsoleModuleLoader::GetModuleName()
 {
-	return ToLower(moduleDirectory);
+	return moduleName;
 }
 
 std::size_t ConsoleModuleLoader::Count()
 {
-	return moduleDirectory != "" ? 1 : 0;
+	return moduleName != "" ? 1 : 0;
 }
 
 bool ConsoleModuleLoader::IsModuleLoaded(std::string moduleName)
@@ -176,9 +178,11 @@ std::string ConsoleModuleLoader::ParseLoadModCommand(std::vector<std::string> ar
 
 	try
 	{
-		std::string modRelativeDirectory = FormModRelativeDirectory(arguments);
+		const std::string modRelativeDirectory = FormModRelativeDirectory(arguments);
 
-		std::string modDirectory = fs::path(GetGameDirectory()).append(modRelativeDirectory).string();
+		moduleName = ToLower(modRelativeDirectory);
+
+		const std::string modDirectory = fs::path(GetGameDirectory()).append(modRelativeDirectory).string();
 
 		if (GetFileAttributesA(modDirectory.c_str()) == INVALID_FILE_ATTRIBUTES) {
 			PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, "Module directory does not exist: " + modDirectory);
