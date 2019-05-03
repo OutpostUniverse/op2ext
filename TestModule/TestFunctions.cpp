@@ -52,6 +52,9 @@ void TestGetConsoleModDir()
 	std::string modDirectoryReport("GetCurrentModDir reports: " + std::string(moduleDirectory) + "\n");
 	OutputDebugString(modDirectoryReport.c_str());
 
+	// When compiled in debug mode, calling free on moduleDirectory causes a debug assertion
+	// in Visual Studio due to freeing memory across module boundaries. The assertion can be
+	// ignored for testing purposes and highlights why GetCurrentModDir is deprecated.
 	free(moduleDirectory);
 }
 
