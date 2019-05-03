@@ -1,12 +1,12 @@
 #include <string>
 
-//#ifdef __cpp_lib_filesystem
-//#include <filesystem>
-//namespace fs = std::filesystem;
-//#else
+#ifdef __cpp_lib_filesystem
+#include <filesystem>
+namespace fs = std::filesystem;
+#else
 #include <experimental/filesystem>
 namespace fs = std::experimental::filesystem;
-//#endif
+#endif
 
 std::string GetGameDirectory();
 std::string GetOutpost2IniPath();
