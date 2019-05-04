@@ -135,7 +135,7 @@ void ConsoleModuleLoader::ParseCommandLine(std::vector<std::string>& arguments)
 	else {
 		try {
 			// Ignore the first argument, which is the path of the executable.
-			for (int i = 1; i < argumentCount; i++) {
+			for (int i = 1; i < argumentCount; ++i) {
 				std::string argument;
 				if (!ConvertLPWToString(argument, commandLineArgs[i])) {
 					PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, "Unable to cast the " + std::to_string(i) +
@@ -202,7 +202,7 @@ std::string ConsoleModuleLoader::FormModRelativeDirectory(std::vector<std::strin
 {
 	std::string modRelativeDirectory;
 
-	for (std::size_t i = 0; i < arguments.size(); i++) {
+	for (std::size_t i = 0; i < arguments.size(); ++i) {
 		modRelativeDirectory += arguments[i];
 
 		if (i < arguments.size() - 1) {
