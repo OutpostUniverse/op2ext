@@ -9,6 +9,7 @@
 #include <iterator>
 #include <stdexcept>
 #include <cstddef>
+#include <system_error>
 
 std::string moduleDirectory;
 std::string moduleName;
@@ -87,14 +88,13 @@ void ConsoleModuleLoader::LoadModule()
 		return;
 	}
 
-	// Check if directory exists.
-	if (GetFileAttributesA(moduleDirectory.c_str()) == INVALID_FILE_ATTRIBUTES) {
-		PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, "Module directory does not exist");
+	std::error_code errorCode;
+	if (!fs::is_directory(moduleDirectory, errorCode)) {
+		PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, "Unable to access the provided module directory. " + errorCode.message());
 		return;
 	}
 
 	SetArtPath();
-
 	LoadModuleDll();
 }
 
