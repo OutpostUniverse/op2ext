@@ -77,7 +77,7 @@ To load a custom module with Outpost 2:
  3. Call 'Outpost2.exe /loadmod directoryName' when executing Outpost 2. For example, Outpost2.exe /loadmod multitek2.
  4. Consider creating a .bat (batch) file that allows for loading the module without opening the command prompt.
 
-To avoid undefined behaviour, console modules should only be stored as a child of Outpost 2's root directory (not further nested or outside of the game's root directory). When calling /loadmod, no trailing or prefixed directory separator should be used. IE do not call `/loadmod testmodule\` or `/loadmod .\testmodule`. 
+To avoid undefined behaviour, console modules should only be stored as a child of Outpost 2's root directory (not further nested or outside of the game's root directory). When calling /loadmod, no trailing or prefixed directory separator should be used. IE do not call `/loadmod testmodule\` or `/loadmod .\testmodule`. A proper call would be '/loadmod testmodule'.
 
 .ini Modules
 ------------------------------------------
