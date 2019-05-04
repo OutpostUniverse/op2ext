@@ -40,7 +40,7 @@ op2ext provides the following extensions for Outpost 2:
     - Allows saving previously used IP address in a drop-down menu for easy selection when joining repeat matches.
 
  * Unified message logging
-	
+
 Writing Custom Modules
 ------------------------------------------
 op2ext.dll is included in releases of Outpost 2 on Outpost Universe. This DLL allow integration of separately compiled modules into any copy of Outpost 2. Custom modules must be designed to hook into op2ext.dll through functions that export using the C Application Binary Interface (ABI). Modules may also consist of simply overwriting game assets without additional programming.
@@ -49,16 +49,10 @@ Each new module for Outpost 2 should be placed in a separate directory that resi
 
 The two types of modules, console and .ini modules, use different function hooks to pass data into op2ext. They both have access to the same set of op2ext exported functions. To gain access to op2ext's exported functions, include op2ext.h in your project. Detailed usage instructions for the functions are contained in op2ext.h.
 
- - size_t GetGameDir_s(char* buffer, size_t bufferSize)
- - size_t GetConsoleModDir_s(char* buffer, size_t bufferSize)
- - void AddVolToList(const char* volName)
- - void SetSerialNumber(char major, char minor, char revision)
- - void Log(const char* message)
- - [DEPRECATED] void GetGameDir(char* buffer)
- - [DEPRECATED] char* GetCurrentModDir(); - Returns the directory of the console loaded module only (if one exists)
-
 Custom modules are encouraged to use the Log function to log useful information for troubleshooting various failures or degraded states. op2ext itself uses the logger as well. The log file will be named Outpost2Log.txt and will be created in the same directory as Outpost2.exe.
- 
+
+Module names are case insensitive. You can check if a module is loaded using functions declared in op2ext.h.
+
 Console Modules
 ------------------------------------------
 If the module needs to redirect where Outpost 2 looks for standard game resources without using a custom DLL and/or should not always be included with Outpost 2, consider making it a console module. 
@@ -72,7 +66,7 @@ Game resources that may be redirected using a console module (Due to setting the
 
 Available functions for a console module to export to op2ext.dll are below. See the console module sample for detailed use instructions.
 
- - mod_init() 
+ - mod_init()
  - mod_run()
  - mod_destroy()
 
@@ -83,6 +77,7 @@ To load a custom module with Outpost 2:
  3. Call 'Outpost2.exe /loadmod directoryName' when executing Outpost 2. For example, Outpost2.exe /loadmod multitek2.
  4. Consider creating a .bat (batch) file that allows for loading the module without opening the command prompt.
 
+To avoid undefined behaviour, console modules should only be stored as a child of Outpost 2's root directory (not further nested or outside of the game's root directory). When calling /loadmod, no trailing or prefixed directory separator should be used. IE do not call `/loadmod testmodule\` or `/loadmod .\testmodule`. A proper call would be '/loadmod testmodule'.
 
 .ini Modules
 ------------------------------------------

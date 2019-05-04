@@ -61,17 +61,16 @@ OP2EXT_API void Log(const char* message);
 
 
 // Performs a case insensitive search of loaded module names, returning true if found.
-// A console module's name is the name of the directory the console module is stored in.
-// An ini module name is the module's [section name] within the ini file.
+// See GetLoadedModuleName's description for details on how module names are formatted.
 OP2EXT_API bool IsModuleLoaded(const char* moduleName);
 
 // Performs a case insensitive comparison of the loaded console module name.
-// A console module's name is the name of the directory the console module is stored in.
 // Returns false if passed an empty string (Module name cannot be empty).
+// See GetLoadedModuleName's description for details on how console module names are formatted.
 OP2EXT_API bool IsConsoleModuleLoaded(const char* moduleName);
 
 // Performs a case insensitive search of loaded ini module names, returning true if found.
-// An ini module name is the module's [section name] within the ini file.
+// See GetLoadedModuleName's description for details on how ini module names are formatted.
 OP2EXT_API bool IsIniModuleLoaded(const char* moduleName);
 
 // Returns the number of loaded modules (.ini and console combined)
@@ -80,7 +79,8 @@ OP2EXT_API size_t GetLoadedModuleCount();
 // Retrieves the module name at the specified index. 
 // Ini modules are indexed first and console module is last.
 // Use function GetLoadedModuleCount to determine how many module names to check. 
-// A console module's name is the name of the directory the console module is stored in.
+// A console module's name is the directory name parameter passed in via the /loadmod command. 
+// The directory name is relative to the executable's folder, with no trailing slash
 // An ini module name is the module's [section name] within the ini file.
 // Returns 0 on success. Returns the required minimum size of the buffer on failure.
 // If an index beyond the loaded module count is passed, returns 0 and clears the buffer.

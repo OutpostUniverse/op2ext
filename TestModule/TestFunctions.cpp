@@ -4,6 +4,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <cstddef>
+#include <vector>
 
 std::string GetOP2IniPath();
 std::string GetGameDirStdString();
@@ -104,4 +105,77 @@ std::string GetGameDirStdString()
 	GetGameDir_s(gameDirectory, MAX_PATH);
 
 	return std::string(gameDirectory);
+}
+
+void TestIsModuleLoaded()
+{
+	const std::string moduleName("TestModule");
+	std::string outputString("Module " + moduleName);
+
+	if (IsModuleLoaded(moduleName.c_str())) {
+		outputString += " is loaded\n";
+	}
+	else {
+		outputString += " is not loaded\n";
+	}
+
+	OutputDebugString(outputString.c_str());
+}
+
+void TestIsConsoleModuleLoaded()
+{
+	const std::string moduleName("TestModule");
+	std::string outputString("Console Module " + moduleName);
+
+	if (IsConsoleModuleLoaded(moduleName.c_str())) {
+		outputString += " is loaded\n";
+	}
+	else {
+		outputString += " is not loaded\n";
+	}
+
+	OutputDebugString(outputString.c_str());
+}
+
+void TestIsIniModuleLoaded()
+{
+	const std::string moduleName("NetFix");
+	std::string outputString("Ini Module " + moduleName);
+
+	if (IsIniModuleLoaded(moduleName.c_str())) {
+		outputString += " is loaded\n" ;
+	}
+	else {
+		outputString += " is not loaded\n";
+	}
+
+	OutputDebugString(outputString.c_str());
+}
+
+void TestGetLoadedModuleNames()
+{
+	const std::size_t moduleCount = GetLoadedModuleCount();
+	std::string outputString = "The following " + std::to_string(moduleCount) + " modules are loaded (ini and console combined):\n";
+	OutputDebugString(outputString.c_str());
+
+	std::vector<std::string> moduleNames;
+	char emptyBuffer[1];
+	for (std::size_t i = 0; i < moduleCount; ++i) {
+		const std::size_t stringLength = GetLoadedModuleName(i, emptyBuffer, 0);
+
+		std::string moduleName;
+		moduleName.resize(stringLength);
+		GetLoadedModuleName(i, &moduleName[0], stringLength);
+		
+		// String concatinations (string1 + string2) will not provide expected results
+		// if the std::string explicity has a null terminator
+		moduleName.erase(std::find(moduleName.begin(), moduleName.end(), '\0'), moduleName.end());
+
+		moduleNames.push_back(moduleName);
+	}
+
+	for (const auto& moduleName : moduleNames) {
+		const std::string moduleNameOutput = "   " + moduleName + "\n";
+		OutputDebugString(moduleNameOutput.c_str());
+	}
 }
