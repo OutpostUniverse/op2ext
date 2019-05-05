@@ -44,18 +44,6 @@ void TestGetGameDir()
 	OutputDebugString(gameDirectoryReport.c_str());
 }
 
-// GetCurrentModDir only returns the directory of a module loaded through the console switch /loadmod
-void TestGetConsoleModDir()
-{
-#pragma warning(suppress : 4996)
-	char* moduleDirectory = GetCurrentModDir();
-
-	std::string modDirectoryReport("GetCurrentModDir reports: " + std::string(moduleDirectory) + "\n");
-	OutputDebugString(modDirectoryReport.c_str());
-
-	free(moduleDirectory);
-}
-
 void TestLoadingVolumes()
 {
 	// Test Invalid volume filename (volume doesn't exist in directory)
