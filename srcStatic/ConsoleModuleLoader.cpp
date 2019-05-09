@@ -60,8 +60,7 @@ int __fastcall GetArtPath(void*, int, char*, char*, char *destBuffer, int buffer
 // Returns an empty string if no module is found or if the module request is ill-formed.
 std::string ConsoleModuleLoader::FindModuleDirectory()
 {
-	std::vector<std::string> arguments;
-	ParseCommandLine(arguments);
+	auto arguments = GetCommandLineArguments();
 
 	if (arguments.size() == 0) {
 		return std::string();
@@ -123,12 +122,12 @@ void ConsoleModuleLoader::LoadModuleDll()
 	}
 }
 
-void ConsoleModuleLoader::ParseCommandLine(std::vector<std::string>& arguments)
+std::vector<std::string> ConsoleModuleLoader::GetCommandLineArguments()
 {
-	arguments.clear();
+	std::vector<std::string> arguments;
 	int argumentCount;
-
-	LPWSTR *commandLineArgs = CommandLineToArgvW(GetCommandLineW(), &argumentCount);
+	LPWSTR* commandLineArgs = CommandLineToArgvW(GetCommandLineW(), &argumentCount);
+	
 	if (commandLineArgs == nullptr) {
 		PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, "Unable to retrieve command line arguments attached to Outpost2.exe.");
 	}
@@ -152,6 +151,7 @@ void ConsoleModuleLoader::ParseCommandLine(std::vector<std::string>& arguments)
 	}
 
 	LocalFree(commandLineArgs);
+	return arguments;
 }
 
 bool ConsoleModuleLoader::ParseArgumentName(std::string& argument)
