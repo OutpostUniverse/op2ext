@@ -15,6 +15,8 @@ enum class TrimOption
 	None
 };
 
+// DisableModalDialogs will stop PostErrorMessage from posting modal dialogs. For use in test environment.
+void DisableModalDialogs();
 // Logs an error message with the logger and then posts it to user in a modal dialog box.
 void PostErrorMessage(std::string sourceFilename, long lineInSourceCode, std::string errorMessage);
 std::vector<std::string> SplitString(std::string stringToSplit, char delimiter, TrimOption trimOption);

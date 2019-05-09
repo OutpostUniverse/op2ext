@@ -6,6 +6,8 @@
 #include <sstream>
 #include <cstddef>
 
+bool modalDialogsDisabled = false;
+
 void OutputDebug(std::string message)
 {
 #ifdef DEBUG
@@ -13,11 +15,18 @@ void OutputDebug(std::string message)
 #endif
 }
 
+void DisableModalDialogs()
+{
+	modalDialogsDisabled = true;
+}
+
 void PostErrorMessage(std::string sourceFilename, long lineInSourceCode, std::string errorMessage)
 {
 	const std::string formattedMessage = sourceFilename + ", Line: " + std::to_string(lineInSourceCode) + ": " + errorMessage;
 	logger.Log(formattedMessage);
-	MessageBoxA(nullptr, formattedMessage.c_str(), "Outpost 2 Error", MB_ICONERROR);
+	if (!modalDialogsDisabled) {
+		MessageBoxA(nullptr, formattedMessage.c_str(), "Outpost 2 Error", MB_ICONERROR);
+	}
 }
 
 std::vector<std::string> SplitString(std::string stringToSplit, char delimiter, TrimOption trimOption)
