@@ -27,6 +27,6 @@ void SetupConsoleModTestEnvironment()
 	fs::path emptyModuleTestDirectory = gameDirectory / "InvalidDllTest";
 
 	fs::create_directory(emptyModuleTestDirectory);
-	std::ofstream stream(emptyModuleTestDirectory / "op2mod.dll");
+	std::ofstream stream((emptyModuleTestDirectory / "op2mod.dll").string());
 	stream.close();
 }
