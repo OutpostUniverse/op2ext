@@ -16,7 +16,7 @@ std::string moduleName;
 
 ConsoleModuleLoader::ConsoleModuleLoader()
 {
-	moduleDirectory = FindModuleDirectory();
+	moduleDirectory = ParseCommandLine();
 }
 
 ConsoleModuleLoader::ConsoleModuleLoader(const std::string& testModuleDirectory)
@@ -58,27 +58,34 @@ int __fastcall GetArtPath(void*, int, char*, char*, char *destBuffer, int buffer
 }
 
 // Returns an empty string if no module is found or if the module request is ill-formed.
-std::string ConsoleModuleLoader::FindModuleDirectory()
+std::string ConsoleModuleLoader::ParseCommandLine()
 {
 	auto arguments = GetCommandLineArguments();
 
+	const std::string switchName = GetSwitch(arguments);
+
+	if (switchName.empty()) {
+		return std::string();
+	}
+
+	if (switchName == "loadmod") {
+		return ParseLoadModCommand(arguments);
+	}
+
+	PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, "Provided switch is not supported: " + switchName);
+	return std::string();
+}
+
+std::string ConsoleModuleLoader::GetSwitch(std::vector<std::string>& arguments)
+{
 	if (arguments.size() == 0) {
-		return std::string();
+		return std::string(); // Switch is not present
 	}
 
-	std::string switchName = arguments[0];
-	arguments.erase(arguments.begin()); //Remove switchName from arguments
+	const std::string rawSwitch = arguments[0];
+	arguments.erase(arguments.begin()); // Remove rawSwitch from arguments
 
-	if (!ParseArgumentName(switchName)) {
-		return std::string();
-	}
-
-	if (switchName != "loadmod") {
-		PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, "Provided switch is not supported: " + switchName);
-		return std::string();
-	}
-
-	return ParseLoadModCommand(arguments);
+	return ParseSwitchName(rawSwitch);
 }
 
 void ConsoleModuleLoader::LoadModule()
@@ -154,19 +161,19 @@ std::vector<std::string> ConsoleModuleLoader::GetCommandLineArguments()
 	return arguments;
 }
 
-bool ConsoleModuleLoader::ParseArgumentName(std::string& argument)
+// Returns empty string on failure
+std::string ConsoleModuleLoader::ParseSwitchName(std::string switchName)
 {
-	if (argument[0] != '/' && argument[0] != '-') {
-		std::string message("A switch was expected but not found. Prefix switch name with '/' or '-'. The following statement was found instead: " + argument);
+	if (switchName[0] != '/' && switchName[0] != '-') {
+		const std::string message("A switch was expected but not found. Prefix switch name with '/' or '-'. The following statement was found instead: " + switchName);
 		PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, message);
-		argument.clear();
-		return false;
+		return std::string();
 	}
 
-	argument.erase(argument.begin(), argument.begin() + 1); //Removes leading - or /
-	std::transform(argument.begin(), argument.end(), argument.begin(), ::tolower);
+	switchName.erase(switchName.begin(), switchName.begin() + 1); //Removes leading - or /
+	ToLowerInPlace(switchName);
 
-	return true;
+	return switchName;
 }
 
 std::string ConsoleModuleLoader::ParseLoadModCommand(std::vector<std::string> arguments)
