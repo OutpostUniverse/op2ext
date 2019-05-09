@@ -14,17 +14,21 @@
 std::string moduleDirectory;
 std::string moduleName;
 
-ConsoleModuleLoader::ConsoleModuleLoader()
+ConsoleModuleLoader::ConsoleModuleLoader(const std::string& moduleRelativeDirectory)
 {
-	moduleDirectory = ParseCommandLine();
-}
+	if (moduleRelativeDirectory.empty()) {
+		return; // No Console Module Loaded
+	}
 
-ConsoleModuleLoader::ConsoleModuleLoader(const std::string& testModuleDirectory)
-{
-	OutputDebugString("Console Module constructed in test mode.");
+	moduleDirectory = fs::path(GetGameDirectory()).append(moduleRelativeDirectory).string();
+	moduleName = ToLower(moduleRelativeDirectory);
 
-	moduleDirectory = testModuleDirectory;
-	moduleName = ToLower(testModuleDirectory);
+	std::error_code errorCode;
+	if (!fs::is_directory(moduleDirectory, errorCode)) {
+		PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, "Unable to access the provided module directory. " + errorCode.message());
+		moduleDirectory = "";
+		moduleName = "";
+	}
 }
 
 std::string ConsoleModuleLoader::GetModuleDirectory()
@@ -55,37 +59,6 @@ int __fastcall GetArtPath(void*, int, char*, char*, char *destBuffer, int buffer
 {
 	strcpy_s(destBuffer, bufferSize, moduleDirectory.c_str());
 	return moduleDirectory.size();
-}
-
-// Returns an empty string if no module is found or if the module request is ill-formed.
-std::string ConsoleModuleLoader::ParseCommandLine()
-{
-	auto arguments = GetCommandLineArguments();
-
-	const std::string switchName = GetSwitch(arguments);
-
-	if (switchName.empty()) {
-		return std::string();
-	}
-
-	if (switchName == "loadmod") {
-		return ParseLoadModCommand(arguments);
-	}
-
-	PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, "Provided switch is not supported: " + switchName);
-	return std::string();
-}
-
-std::string ConsoleModuleLoader::GetSwitch(std::vector<std::string>& arguments)
-{
-	if (arguments.size() == 0) {
-		return std::string(); // Switch is not present
-	}
-
-	const std::string rawSwitch = arguments[0];
-	arguments.erase(arguments.begin()); // Remove rawSwitch from arguments
-
-	return ParseSwitchName(rawSwitch);
 }
 
 void ConsoleModuleLoader::LoadModule()
@@ -127,97 +100,6 @@ void ConsoleModuleLoader::LoadModuleDll()
 
 		PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, errorMessage);
 	}
-}
-
-std::vector<std::string> ConsoleModuleLoader::GetCommandLineArguments()
-{
-	std::vector<std::string> arguments;
-	int argumentCount;
-	LPWSTR* commandLineArgs = CommandLineToArgvW(GetCommandLineW(), &argumentCount);
-	
-	if (commandLineArgs == nullptr) {
-		PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, "Unable to retrieve command line arguments attached to Outpost2.exe.");
-	}
-	else {
-		try {
-			// Ignore the first argument, which is the path of the executable.
-			for (int i = 1; i < argumentCount; ++i) {
-				std::string argument;
-				if (!ConvertLPWToString(argument, commandLineArgs[i])) {
-					PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, "Unable to cast the " + std::to_string(i) +
-						" command line argument from LPWSTR to char*. Further parsing of command line arguments aborted.");
-					break;
-				}
-				arguments.push_back(argument);
-			}
-		}
-		// Catch STL produced exceptions
-		catch (const std::exception& e) {
-			PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, "Error occurred attempting to parse command line arguments. Further parshing of command line arguments aborted. Internal Error: " + std::string(e.what()));
-		}
-	}
-
-	LocalFree(commandLineArgs);
-	return arguments;
-}
-
-// Returns empty string on failure
-std::string ConsoleModuleLoader::ParseSwitchName(std::string switchName)
-{
-	if (switchName[0] != '/' && switchName[0] != '-') {
-		const std::string message("A switch was expected but not found. Prefix switch name with '/' or '-'. The following statement was found instead: " + switchName);
-		PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, message);
-		return std::string();
-	}
-
-	switchName.erase(switchName.begin(), switchName.begin() + 1); //Removes leading - or /
-	ToLowerInPlace(switchName);
-
-	return switchName;
-}
-
-std::string ConsoleModuleLoader::ParseLoadModCommand(std::vector<std::string> arguments)
-{
-	if (arguments.empty()) {
-		PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, "No relative directory argument provided for the switch loadmod");
-		return std::string();
-	}
-
-	try
-	{
-		const std::string modRelativeDirectory = FormModRelativeDirectory(arguments);
-
-		moduleName = ToLower(modRelativeDirectory);
-
-		const std::string modDirectory = fs::path(GetGameDirectory()).append(modRelativeDirectory).string();
-
-		if (GetFileAttributesA(modDirectory.c_str()) == INVALID_FILE_ATTRIBUTES) {
-			PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, "Module directory does not exist: " + modDirectory);
-			return std::string();
-		}
-
-		return modDirectory;
-	}
-	catch (const std::exception& e)
-	{
-		PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, "Unable to parse module directory." + std::string(e.what()));
-		return std::string();
-	}
-}
-
-std::string ConsoleModuleLoader::FormModRelativeDirectory(std::vector<std::string> arguments)
-{
-	std::string modRelativeDirectory;
-
-	for (std::size_t i = 0; i < arguments.size(); ++i) {
-		modRelativeDirectory += arguments[i];
-
-		if (i < arguments.size() - 1) {
-			modRelativeDirectory += " ";
-		}
-	}
-
-	return modRelativeDirectory;
 }
 
 // Sets a directory called ART_PATH that is searched before looking in the root executable's directory.

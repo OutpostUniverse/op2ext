@@ -5,9 +5,7 @@
 
 class ConsoleModuleLoader {
 public:
-	ConsoleModuleLoader();
-	// Test Constructor
-	ConsoleModuleLoader(const std::string& testModuleDirectory);
+	ConsoleModuleLoader(const std::string& moduleRelativeDirectory);
 	void LoadModule();
 	void UnloadModule();
 	void RunModule();
@@ -20,12 +18,6 @@ public:
 private:
 	HINSTANCE modDllHandle = nullptr;
 
-	std::string ParseCommandLine();
 	void LoadModuleDll();
-	std::vector<std::string> GetCommandLineArguments();
-	std::string GetSwitch(std::vector<std::string>& arguments);
-	std::string ParseSwitchName(std::string switchName);
-	std::string ParseLoadModCommand(std::vector<std::string> arguments);
-	std::string FormModRelativeDirectory(std::vector<std::string> arguments);
 	void SetArtPath();
 };

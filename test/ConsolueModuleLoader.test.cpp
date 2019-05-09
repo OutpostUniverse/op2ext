@@ -5,7 +5,7 @@
 
 TEST(ConsoleModuleLoader, NoModuleLoaded)
 {
-	ConsoleModuleLoader consoleModLoader;
+	ConsoleModuleLoader consoleModLoader("");
 
 	// Returns empty string if no module available
 	EXPECT_EQ("", consoleModLoader.GetModuleName());

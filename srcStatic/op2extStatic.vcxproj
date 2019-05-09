@@ -123,6 +123,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ConsoleArgumentParser.cpp" />
     <ClCompile Include="FileSystemHelper.cpp" />
     <ClCompile Include="GlobalDefines.cpp" />
     <ClCompile Include="IniModuleLoader.cpp" />
@@ -137,6 +138,7 @@
     <ClCompile Include="WindowsModule.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ConsoleArgumentParser.h" />
     <ClInclude Include="FileSystemHelper.h" />
     <ClInclude Include="GlobalDefines.h" />
     <ClInclude Include="IniModuleLoader.h" />
