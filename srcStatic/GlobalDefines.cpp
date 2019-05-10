@@ -1,5 +1,5 @@
 #include "GlobalDefines.h"
-
+#include "FileSystemHelper.h"
 #include "op2ext-Internal.h"
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -20,8 +20,11 @@ void DisableModalDialogs()
 	modalDialogsDisabled = true;
 }
 
-void PostErrorMessage(std::string sourceFilename, long lineInSourceCode, std::string errorMessage)
+void PostErrorMessage(std::string sourceFilename, long lineInSourceCode, const std::string& errorMessage)
 {
+	// __FILE__ returns absolute filename. Strip the absolute path to reduce clutter in logger.
+	sourceFilename = fs::path(sourceFilename).filename().string();
+
 	const std::string formattedMessage = sourceFilename + ", Line: " + std::to_string(lineInSourceCode) + ": " + errorMessage;
 	logger.Log(formattedMessage);
 	if (!modalDialogsDisabled) {
