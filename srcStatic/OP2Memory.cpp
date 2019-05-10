@@ -3,12 +3,22 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
+bool memoryCommandsDisabled;
 int loadOffset = 0;
 const int ExpectedOutpost2Addr = 0x00400000;
+
+void DisableMemoryCommands()
+{
+	memoryCommandsDisabled = true;
+}
 
 // Adjust offsets in case Outpost2.exe module is relocated
 void SetLoadOffset()
 {
+	if (memoryCommandsDisabled) {
+		return;
+	}
+
 	void* op2ModuleBase = GetModuleHandle("Outpost2.exe");
 
 	if (op2ModuleBase == 0) {
@@ -24,6 +34,10 @@ int GetLoadOffset() {
 
 bool Op2MemCopy(void* destBaseAddr, void* sourceAddr, int size)
 {
+	if (memoryCommandsDisabled) {
+		return false;
+	}
+
 	void* destAddr = (void*)(loadOffset + (int)destBaseAddr);
 
 	// Try to unprotect memory
@@ -56,6 +70,10 @@ bool Op2MemSetDword(void* destBaseAddr, void* dword)
 
 bool Op2MemSet(void* destBaseAddr, unsigned char value, int size)
 {
+	if (memoryCommandsDisabled) {
+		return false;
+	}
+
 	void* destAddr = (void*)(loadOffset + (int)destBaseAddr);
 
 	// Try to unprotect memory

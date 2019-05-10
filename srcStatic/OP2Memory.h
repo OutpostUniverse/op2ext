@@ -2,6 +2,9 @@
 
 #pragma once
 
+// Disable memory commands when operating in test environment and Outpost2.exe is not available
+void DisableMemoryCommands();
+
 void SetLoadOffset();
 int GetLoadOffset();
 
