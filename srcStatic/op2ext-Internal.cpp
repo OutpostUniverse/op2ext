@@ -15,5 +15,5 @@ void EnableTestEnvironment()
 
 Logger logger;
 VolList volList;
-ConsoleModuleLoader consoleModLoader(ParseCommandLine());
+ConsoleModuleLoader consoleModLoader(FindModuleDirectory());
 IniModuleLoader iniModuleLoader;

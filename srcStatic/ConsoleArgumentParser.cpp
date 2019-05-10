@@ -14,7 +14,7 @@ std::string ParseLoadModCommand(std::vector<std::string> arguments);
 std::string FormModRelativeDirectory(std::vector<std::string> arguments);
 
 
-std::string ParseCommandLine()
+std::string FindModuleDirectory()
 {
 	auto arguments = GetCommandLineArguments();
 
