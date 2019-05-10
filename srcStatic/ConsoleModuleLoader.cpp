@@ -25,7 +25,7 @@ ConsoleModuleLoader::ConsoleModuleLoader(const std::string& moduleRelativeDirect
 
 	std::error_code errorCode;
 	if (!fs::is_directory(moduleDirectory, errorCode)) {
-		PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, "Unable to access the provided module directory. " + errorCode.message());
+		PostErrorMessage(__FILE__, __LINE__, "Unable to access the provided module directory. " + errorCode.message());
 		moduleDirectory = "";
 		moduleName = "";
 	}
@@ -69,7 +69,7 @@ void ConsoleModuleLoader::LoadModule()
 
 	std::error_code errorCode;
 	if (!fs::is_directory(moduleDirectory, errorCode)) {
-		PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, "Unable to access the provided module directory. " + errorCode.message());
+		PostErrorMessage(__FILE__, __LINE__, "Unable to access the provided module directory. " + errorCode.message());
 		return;
 	}
 
@@ -98,7 +98,7 @@ void ConsoleModuleLoader::LoadModuleDll()
 		const std::string errorMessage("Unable to load console module's dll from " + dllName +
 			". " + GetLastErrorStdString(TEXT("LoadLibrary")));
 
-		PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, errorMessage);
+		PostErrorMessage(__FILE__, __LINE__, errorMessage);
 	}
 }
 

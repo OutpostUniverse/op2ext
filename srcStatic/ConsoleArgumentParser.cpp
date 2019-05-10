@@ -28,7 +28,7 @@ std::string ParseCommandLine()
 		return ParseLoadModCommand(arguments);
 	}
 
-	PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, "Provided switch is not supported: " + switchName);
+	PostErrorMessage(__FILE__, __LINE__, "Provided switch is not supported: " + switchName);
 	return std::string();
 }
 
@@ -39,7 +39,7 @@ std::vector<std::string> GetCommandLineArguments()
 	LPWSTR* commandLineArgs = CommandLineToArgvW(GetCommandLineW(), &argumentCount);
 
 	if (commandLineArgs == nullptr) {
-		PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, "Unable to retrieve command line arguments attached to Outpost2.exe.");
+		PostErrorMessage(__FILE__, __LINE__, "Unable to retrieve command line arguments attached to Outpost2.exe.");
 	}
 	else {
 		try {
@@ -47,7 +47,7 @@ std::vector<std::string> GetCommandLineArguments()
 			for (int i = 1; i < argumentCount; ++i) {
 				std::string argument;
 				if (!ConvertLPWToString(argument, commandLineArgs[i])) {
-					PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, "Unable to cast the " + std::to_string(i) +
+					PostErrorMessage(__FILE__, __LINE__, "Unable to cast the " + std::to_string(i) +
 						" command line argument from LPWSTR to char*. Further parsing of command line arguments aborted.");
 					break;
 				}
@@ -56,7 +56,7 @@ std::vector<std::string> GetCommandLineArguments()
 		}
 		// Catch STL produced exceptions
 		catch (const std::exception& e) {
-			PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, "Error occurred attempting to parse command line arguments. Further parshing of command line arguments aborted. Internal Error: " + std::string(e.what()));
+			PostErrorMessage(__FILE__, __LINE__, "Error occurred attempting to parse command line arguments. Further parshing of command line arguments aborted. Internal Error: " + std::string(e.what()));
 		}
 	}
 
@@ -81,7 +81,7 @@ std::string ParseSwitchName(std::string switchName)
 {
 	if (switchName[0] != '/' && switchName[0] != '-') {
 		const std::string message("A switch was expected but not found. Prefix switch name with '/' or '-'. The following statement was found instead: " + switchName);
-		PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, message);
+		PostErrorMessage(__FILE__, __LINE__, message);
 		return std::string();
 	}
 
@@ -94,7 +94,7 @@ std::string ParseSwitchName(std::string switchName)
 std::string ParseLoadModCommand(std::vector<std::string> arguments)
 {
 	if (arguments.empty()) {
-		PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, "No relative directory argument provided for the switch loadmod");
+		PostErrorMessage(__FILE__, __LINE__, "No relative directory argument provided for the switch loadmod");
 		return std::string();
 	}
 
@@ -102,7 +102,7 @@ std::string ParseLoadModCommand(std::vector<std::string> arguments)
 		return FormModRelativeDirectory(arguments);
 	}
 	catch (const std::exception& e) {
-		PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, "Unable to parse module directory. " + std::string(e.what()));
+		PostErrorMessage(__FILE__, __LINE__, "Unable to parse module directory. " + std::string(e.what()));
 		return std::string();
 	}
 }

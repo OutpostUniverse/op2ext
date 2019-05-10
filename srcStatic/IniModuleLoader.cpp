@@ -25,7 +25,7 @@ void IniModuleLoader::LoadModule(std::string sectionName)
 		moduleEntry.handle = LoadModuleDll(sectionName);
 	}
 	catch (const std::exception& error) {
-		PostErrorMessage("IniModuleLoader.cpp", __LINE__, error.what());
+		PostErrorMessage(__FILE__, __LINE__, error.what());
 		return;
 	}
 

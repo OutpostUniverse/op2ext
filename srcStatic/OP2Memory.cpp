@@ -13,7 +13,7 @@ void SetLoadOffset()
 	void* op2ModuleBase = GetModuleHandle("Outpost2.exe");
 
 	if (op2ModuleBase == 0) {
-		PostErrorMessage("OP2Memory.cpp", __LINE__, "Could not find Outpost2.exe module base address.");
+		PostErrorMessage(__FILE__, __LINE__, "Could not find Outpost2.exe module base address.");
 	}
 
 	loadOffset = (int)op2ModuleBase - ExpectedOutpost2Addr;
@@ -31,7 +31,7 @@ bool Op2MemCopy(void* destBaseAddr, void* sourceAddr, int size)
 	if (!bSuccess) {
 		char buffer[64];
 		_snprintf_s(buffer, sizeof(buffer), "Op2MemCopy: Error unprotecting memory at: %x", reinterpret_cast<unsigned int>(destAddr));
-		PostErrorMessage("op2ext.cpp", __LINE__, buffer);
+		PostErrorMessage(__FILE__, __LINE__, buffer);
 		return false;	// Abort if failed
 	}
 
@@ -67,7 +67,7 @@ bool Op2MemSet(void* destBaseAddr, unsigned char value, int size)
 	if (!bSuccess) {
 		char buffer[64];
 		_snprintf_s(buffer, sizeof(buffer), "Op2MemSet: Error unprotecting memory at: %x", reinterpret_cast<unsigned int>(destAddr));
-		PostErrorMessage("op2ext.cpp", __LINE__, buffer);
+		PostErrorMessage(__FILE__, __LINE__, buffer);
 		return false;	// Abort if failed
 	}
 
