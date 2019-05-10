@@ -50,7 +50,7 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 		SetLoadOffset();
 
 		// Replace call to gTApp.Init with custom routine
-		Op2MemSetDword(tAppInitCallAddr, tAppInitNewAddr - (loadOffset + (DWORD)tAppInitCallAddr + sizeof(void*)));
+		Op2MemSetDword(tAppInitCallAddr, tAppInitNewAddr - (GetLoadOffset() + (DWORD)tAppInitCallAddr + sizeof(void*)));
 
 		// Disable any more thread attach calls
 		DisableThreadLibraryCalls(hInstance);
@@ -64,7 +64,7 @@ int __fastcall ExtInit(TApp *thisPtr, int)
 	DWORD ignoredAttr;
 
 	// Set the execute flag on the DSEG section so DEP doesn't terminate the game
-	VirtualProtect((void*)(loadOffset + 0x00585000), 0x00587000 - 0x00585000, PAGE_EXECUTE_READWRITE, &ignoredAttr);
+	VirtualProtect((void*)(GetLoadOffset() + 0x00585000), 0x00587000 - 0x00585000, PAGE_EXECUTE_READWRITE, &ignoredAttr);
 
 	InstallIpDropDown();
 
@@ -86,7 +86,7 @@ int __fastcall ExtInit(TApp *thisPtr, int)
 	Op2MemSetDword(loadLibraryDataAddr, (int)&loadLibraryNewAddr);
 
 	// Replace call to gTApp.ShutDown with custom routine
-	Op2MemSetDword(tAppShutDownCallAddr, tAppShutDownNewAddr - (loadOffset + (DWORD)tAppShutDownCallAddr + sizeof(void*)));
+	Op2MemSetDword(tAppShutDownCallAddr, tAppShutDownNewAddr - (GetLoadOffset() + (DWORD)tAppShutDownCallAddr + sizeof(void*)));
 
 	// Call original function
 	return thisPtr->Init();

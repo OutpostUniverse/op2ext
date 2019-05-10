@@ -2,9 +2,8 @@
 
 #pragma once
 
-extern int loadOffset;
-
 void SetLoadOffset();
+int GetLoadOffset();
 
 bool Op2MemCopy(void* destBaseAddr, void* sourceAddr, int size);
 bool Op2MemSet(void* destBaseAddr, unsigned char value, int size);

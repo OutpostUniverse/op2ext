@@ -18,6 +18,10 @@ void SetLoadOffset()
 	loadOffset = (int)op2ModuleBase - ExpectedOutpost2Addr;
 }
 
+int GetLoadOffset() {
+	return loadOffset;
+}
+
 bool Op2MemCopy(void* destBaseAddr, void* sourceAddr, int size)
 {
 	void* destAddr = (void*)(loadOffset + (int)destBaseAddr);
