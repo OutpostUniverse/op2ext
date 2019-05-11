@@ -67,5 +67,5 @@ bool Op2MemSetDword(void* destBaseAddr, int dword)
 
 bool Op2MemSetDword(void* destBaseAddr, void* dword)
 {
-	return Op2MemSetDword(destBaseAddr, (int)dword);
+	return Op2MemCopy(destBaseAddr, &dword, sizeof(dword));
 }
