@@ -15,6 +15,9 @@ std::string moduleDirectory;
 
 ConsoleModuleLoader::ConsoleModuleLoader(const std::string& moduleRelativeDirectory)
 {
+	// Hack that clears variable not included in class
+	moduleDirectory = "";
+
 	if (moduleRelativeDirectory.empty()) {
 		return; // No Console Module Loaded
 	}
