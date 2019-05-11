@@ -18,7 +18,9 @@ void SetLoadOffset()
 	loadOffset = (int)op2ModuleBase - ExpectedOutpost2Addr;
 }
 
-bool Op2MemCopy(void* destBaseAddr, void* sourceAddr, int size)
+
+template <typename Function>
+bool Op2MemEdit(void* destBaseAddr, std::size_t size, Function memoryEditFunction)
 {
 	void* destAddr = (void*)(loadOffset + (int)destBaseAddr);
 
@@ -30,13 +32,32 @@ bool Op2MemCopy(void* destBaseAddr, void* sourceAddr, int size)
 		return false;
 	}
 
-	memcpy(destAddr, sourceAddr, size);
+	memoryEditFunction(destAddr, size);
 
 	// Reprotect memory with the original attributes
 	DWORD ignoredAttr;
 	bSuccess = VirtualProtect(destAddr, size, oldAttr, &ignoredAttr);
 
 	return (bSuccess != 0);
+}
+
+
+bool Op2MemSet(void* destBaseAddr, unsigned char value, int size)
+{
+	return Op2MemEdit(
+		destBaseAddr,
+		size,
+		[value](void* destAddr, std::size_t size) { memset(destAddr, value, size); }
+	);
+}
+
+bool Op2MemCopy(void* destBaseAddr, void* sourceAddr, int size)
+{
+	return Op2MemEdit(
+		destBaseAddr,
+		size,
+		[sourceAddr](void* destAddr, std::size_t size) { memcpy(destAddr, sourceAddr, size); }
+	);
 }
 
 bool Op2MemSetDword(void* destBaseAddr, int dword)
@@ -48,25 +69,4 @@ bool Op2MemSetDword(void* destBaseAddr, int dword)
 bool Op2MemSetDword(void* destBaseAddr, void* dword)
 {
 	return Op2MemSetDword(destBaseAddr, (int)dword);
-}
-
-bool Op2MemSet(void* destBaseAddr, unsigned char value, int size)
-{
-	void* destAddr = (void*)(loadOffset + (int)destBaseAddr);
-
-	// Try to unprotect memory
-	DWORD oldAttr;
-	BOOL bSuccess = VirtualProtect(destAddr, size, PAGE_EXECUTE_READWRITE, &oldAttr);
-	if (!bSuccess) {
-		PostErrorMessage(__FILE__, __LINE__, "Error unprotecting memory at: " + std::to_string(reinterpret_cast<unsigned int>(destAddr)));
-		return false;
-	}
-
-	memset(destAddr, value, size);
-
-	// Reprotect memory with the original attributes
-	DWORD ignoredAttr;
-	bSuccess = VirtualProtect(destAddr, size, oldAttr, &ignoredAttr);
-
-	return (bSuccess != 0);
 }
