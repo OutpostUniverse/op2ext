@@ -15,7 +15,7 @@ void SetLoadOffset()
 		PostErrorMessage(__FILE__, __LINE__, "Could not find Outpost2.exe module base address.");
 	}
 
-	loadOffset = (int)op2ModuleBase - ExpectedOutpost2Addr;
+	loadOffset = reinterpret_cast<std::size_t>(op2ModuleBase) - ExpectedOutpost2Addr;
 }
 
 
