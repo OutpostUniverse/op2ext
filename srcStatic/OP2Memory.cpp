@@ -69,3 +69,15 @@ bool Op2MemSetDword(void* destBaseAddr, void* dword)
 {
 	return Op2MemCopy(destBaseAddr, &dword, sizeof(dword));
 }
+
+// This is used to patch up CALL instructions to intra-module non-virtual functions
+// The CALL instruction uses an encoding relative to the start of the next instruction.
+// Example:  E8 = CALL, 00040000 = relative offset = <DWORD(&someMethod - &postCallInstruction)>
+//   CALL someMethod  ; Encoded as E8 00040000
+//   postCallInstruction:
+// The `callOffset` parameter is the address of the encoded DWORD
+bool Op2RelinkCall(std::size_t callOffset, void* newFunctionAddress)
+{
+	const auto postCallInstructionAddress = loadOffset + callOffset + sizeof(void*);
+	return Op2MemSetDword(reinterpret_cast<void*>(callOffset), reinterpret_cast<std::size_t>(newFunctionAddress) - postCallInstructionAddress);
+}
