@@ -3,8 +3,8 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
-int loadOffset = 0;
-const int ExpectedOutpost2Addr = 0x00400000;
+std::size_t loadOffset = 0;
+const std::size_t ExpectedOutpost2Addr = 0x00400000;
 
 // Adjust offsets in case Outpost2.exe module is relocated
 void SetLoadOffset()
@@ -28,7 +28,7 @@ bool Op2MemEdit(void* destBaseAddr, std::size_t size, Function memoryEditFunctio
 	DWORD oldAttr;
 	BOOL bSuccess = VirtualProtect(destAddr, size, PAGE_EXECUTE_READWRITE, &oldAttr);
 	if (!bSuccess) {
-		PostErrorMessage(__FILE__, __LINE__, "Error unprotecting memory at: " + std::to_string(reinterpret_cast<unsigned int>(destAddr)));
+		PostErrorMessage(__FILE__, __LINE__, "Error unprotecting memory at: " + std::to_string(reinterpret_cast<std::size_t>(destAddr)));
 		return false;
 	}
 
