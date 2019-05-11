@@ -62,7 +62,6 @@ bool Op2MemCopy(void* destBaseAddr, void* sourceAddr, int size)
 
 bool Op2MemSetDword(void* destBaseAddr, int dword)
 {
-	// Chain to the memory copy function
 	return Op2MemCopy(destBaseAddr, &dword, sizeof(dword));
 }
 
