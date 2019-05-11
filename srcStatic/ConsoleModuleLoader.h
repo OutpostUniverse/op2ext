@@ -17,6 +17,7 @@ public:
 
 private:
 	HINSTANCE modDllHandle = nullptr;
+	std::string moduleName;
 
 	void LoadModuleDll();
 	void SetArtPath();
