@@ -54,12 +54,6 @@ bool ConsoleModuleLoader::IsModuleLoaded(std::string moduleName)
 	return ToLowerInPlace(moduleName) == GetModuleName();
 }
 
-int __fastcall GetArtPath(void*, int, char*, char*, char *destBuffer, int bufferSize, char *defaultValue)
-{
-	strcpy_s(destBuffer, bufferSize, moduleDirectory.c_str());
-	return moduleDirectory.size();
-}
-
 void ConsoleModuleLoader::LoadModule()
 {
 	if (moduleDirectory.empty()) {
@@ -72,7 +66,7 @@ void ConsoleModuleLoader::LoadModule()
 		return;
 	}
 
-	SetArtPath();
+	HookFileSearchPath();
 	LoadModuleDll();
 }
 
@@ -99,22 +93,6 @@ void ConsoleModuleLoader::LoadModuleDll()
 
 		PostErrorMessage(__FILE__, __LINE__, errorMessage);
 	}
-}
-
-// Sets a directory called ART_PATH that is searched before looking in the root executable's directory.
-// If an asset (vol, clm, video file, music1.wav, .map, tech file, etc) is found in ART_PATH's directory,
-// it is loaded instead
-void ConsoleModuleLoader::SetArtPath()
-{
-	// This value may also be set using the DEBUG section of the .ini file, using the property ART_PATH.
-	// If set in .ini file, ART_PATH must be deleted at end of session or will persist between plays.
-
-	// Insert hooks to make OP2 look for files in the module's directory
-	// In ResManager::GetFilePath
-	Op2RelinkCall(0x004715C5, reinterpret_cast<void*>(GetArtPath));
-
-	// In ResManager::CreateStream
-	Op2RelinkCall(0x00471B87, reinterpret_cast<void*>(GetArtPath));
 }
 
 void ConsoleModuleLoader::HookFileSearchPath()
