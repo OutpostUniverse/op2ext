@@ -22,7 +22,7 @@ void SetLoadOffset()
 template <typename Function>
 bool Op2MemEdit(void* destBaseAddr, std::size_t size, Function memoryEditFunction)
 {
-	void* destAddr = (void*)(loadOffset + (int)destBaseAddr);
+	void* destAddr = reinterpret_cast<void*>(reinterpret_cast<std::size_t>(destBaseAddr) + loadOffset);
 
 	// Try to unprotect memory
 	DWORD oldAttr;
