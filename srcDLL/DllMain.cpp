@@ -31,14 +31,6 @@ public:
 int __fastcall ExtInit(TApp *thisPtr, int);
 void __fastcall ExtShutDown(TApp *thisPtr, int);
 
-// Shell HINSTANCE to load it before OP2 loads it
-//HINSTANCE hShellDll = NULL;
-DWORD* tAppInitCallAddr = (DWORD*)0x004A8878;
-DWORD tAppInitNewAddr = (DWORD)ExtInit;
-
-DWORD* tAppShutDownCallAddr = (DWORD*)0x004A88A6;
-DWORD tAppShutDownNewAddr = (DWORD)ExtShutDown;
-
 DWORD* loadLibraryDataAddr = (DWORD*)0x00486E0A;
 DWORD loadLibraryNewAddr = (DWORD)LoadLibraryNew;
 
@@ -50,7 +42,7 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 		SetLoadOffset();
 
 		// Replace call to gTApp.Init with custom routine
-		Op2MemSetDword(tAppInitCallAddr, tAppInitNewAddr - (loadOffset + (DWORD)tAppInitCallAddr + sizeof(void*)));
+		Op2RelinkCall(0x004A8878, reinterpret_cast<void*>(ExtInit));
 
 		// Disable any more thread attach calls
 		DisableThreadLibraryCalls(hInstance);
@@ -86,7 +78,7 @@ int __fastcall ExtInit(TApp *thisPtr, int)
 	Op2MemSetDword(loadLibraryDataAddr, (int)&loadLibraryNewAddr);
 
 	// Replace call to gTApp.ShutDown with custom routine
-	Op2MemSetDword(tAppShutDownCallAddr, tAppShutDownNewAddr - (loadOffset + (DWORD)tAppShutDownCallAddr + sizeof(void*)));
+	Op2RelinkCall(0x004A88A6, reinterpret_cast<void*>(ExtShutDown));
 
 	// Call original function
 	return thisPtr->Init();

@@ -111,9 +111,10 @@ void ConsoleModuleLoader::SetArtPath()
 
 	// Insert hooks to make OP2 look for files in the module's directory
 	// In ResManager::GetFilePath
-	Op2MemSetDword((void*)0x004715C5, (DWORD)&GetArtPath - (loadOffset + (DWORD)0x004715C5 + sizeof(void*)));
+	Op2RelinkCall(0x004715C5, reinterpret_cast<void*>(GetArtPath));
+
 	// In ResManager::CreateStream
-	Op2MemSetDword((void*)0x00471B87, (DWORD)&GetArtPath - (loadOffset + (DWORD)0x00471B87 + sizeof(void*)));
+	Op2RelinkCall(0x00471B87, reinterpret_cast<void*>(GetArtPath));
 }
 
 void ConsoleModuleLoader::UnloadModule()
