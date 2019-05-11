@@ -4,8 +4,6 @@
 
 #include <cstddef>
 
-extern int loadOffset;
-
 void SetLoadOffset();
 
 bool Op2MemCopy(void* destBaseAddr, void* sourceAddr, int size);
