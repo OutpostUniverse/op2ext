@@ -2,6 +2,7 @@
 #include "GlobalDefines.h"
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include <sstream>
 
 bool memoryCommandsDisabled;
 int loadOffset = 0;
@@ -44,7 +45,9 @@ bool Op2MemCopy(void* destBaseAddr, void* sourceAddr, int size)
 	DWORD oldAttr;
 	BOOL bSuccess = VirtualProtect(destAddr, size, PAGE_EXECUTE_READWRITE, &oldAttr);
 	if (!bSuccess) {
-		PostErrorMessage(__FILE__, __LINE__, "Error unprotecting memory at: " + std::to_string(reinterpret_cast<unsigned int>(destAddr)));
+		std::ostringstream stringStream;
+		stringStream << "Error unprotecting memory at: 0x" << std::hex << reinterpret_cast<unsigned int>(destAddr) << ".";
+		PostErrorMessage(__FILE__, __LINE__, stringStream.str());
 		return false;
 	}
 
@@ -80,7 +83,9 @@ bool Op2MemSet(void* destBaseAddr, unsigned char value, int size)
 	DWORD oldAttr;
 	BOOL bSuccess = VirtualProtect(destAddr, size, PAGE_EXECUTE_READWRITE, &oldAttr);
 	if (!bSuccess) {
-		PostErrorMessage(__FILE__, __LINE__, "Error unprotecting memory at: " + std::to_string(reinterpret_cast<unsigned int>(destAddr)));
+		std::ostringstream stringStream;
+		stringStream << "Error unprotecting memory at: 0x" << std::hex << reinterpret_cast<unsigned int>(destAddr) << ".";
+		PostErrorMessage(__FILE__, __LINE__, stringStream.str());
 		return false;
 	}
 
