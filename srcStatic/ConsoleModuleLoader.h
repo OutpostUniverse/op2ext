@@ -20,7 +20,6 @@ private:
 	std::string moduleName;
 
 	void LoadModuleDll();
-	void SetArtPath();
 	void HookFileSearchPath();
 	static bool CallOriginalGetFilePath(const char* resourceName, /* [out] */ char* filePath);
 
