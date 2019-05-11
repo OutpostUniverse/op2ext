@@ -12,7 +12,6 @@
 #include <system_error>
 
 std::string moduleDirectory;
-std::string moduleName;
 
 ConsoleModuleLoader::ConsoleModuleLoader(const std::string& moduleRelativeDirectory)
 {
