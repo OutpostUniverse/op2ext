@@ -81,3 +81,11 @@ bool Op2RelinkCall(std::size_t callOffset, void* newFunctionAddress)
 	const auto postCallInstructionAddress = loadOffset + callOffset + sizeof(void*);
 	return Op2MemSetDword(reinterpret_cast<void*>(callOffset), reinterpret_cast<std::size_t>(newFunctionAddress) - postCallInstructionAddress);
 }
+
+bool Op2UnprotectMemory(std::size_t destBaseAddr, std::size_t size)
+{
+	void* destAddr = reinterpret_cast<void*>(destBaseAddr + loadOffset);
+	// Try to unprotect memory
+	DWORD oldAttr;
+	return VirtualProtect(destAddr, size, PAGE_EXECUTE_READWRITE, &oldAttr);
+}

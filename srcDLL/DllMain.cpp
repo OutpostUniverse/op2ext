@@ -53,10 +53,8 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 
 int __fastcall ExtInit(TApp *thisPtr, int)
 {
-	DWORD ignoredAttr;
-
 	// Set the execute flag on the DSEG section so DEP doesn't terminate the game
-	VirtualProtect((void*)(loadOffset + 0x00585000), 0x00587000 - 0x00585000, PAGE_EXECUTE_READWRITE, &ignoredAttr);
+	Op2UnprotectMemory(0x00585000, 0x00587000 - 0x00585000);
 
 	InstallIpDropDown();
 
