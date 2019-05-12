@@ -40,7 +40,6 @@ TEST(ConsoleModuleLoader, ModuleWithoutDLL)
 
 	EXPECT_EQ(1u, consoleModLoader.Count());
 
-	// No DLL to load, but will attempt to set memory addresses
 	EXPECT_NO_THROW(consoleModLoader.LoadModule());
 	EXPECT_NO_THROW(consoleModLoader.RunModule());
 	EXPECT_NO_THROW(consoleModLoader.UnloadModule());

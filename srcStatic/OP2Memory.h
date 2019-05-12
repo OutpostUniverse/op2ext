@@ -4,6 +4,9 @@
 
 #include <cstddef>
 
+// Disable memory commands when operating in test environment and Outpost2.exe is not available
+void DisableMemoryCommands();
+
 void SetLoadOffset();
 
 bool Op2MemCopy(void* destBaseAddr, void* sourceAddr, int size);

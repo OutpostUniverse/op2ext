@@ -15,6 +15,9 @@ std::string moduleDirectory;
 
 ConsoleModuleLoader::ConsoleModuleLoader(const std::string& moduleRelativeDirectory)
 {
+	// Hack that clears variable not included in class
+	moduleDirectory = "";
+
 	if (moduleRelativeDirectory.empty()) {
 		return; // No Console Module Loaded
 	}
@@ -54,7 +57,7 @@ bool ConsoleModuleLoader::IsModuleLoaded(std::string moduleName)
 	return ToLowerInPlace(moduleName) == GetModuleName();
 }
 
-int __fastcall GetArtPath(void*, int, char*, char*, char *destBuffer, int bufferSize, char *defaultValue)
+int __fastcall GetArtPath(void*, int, char*, char*, char* destBuffer, int bufferSize, char* defaultValue)
 {
 	strcpy_s(destBuffer, bufferSize, moduleDirectory.c_str());
 	return moduleDirectory.size();
@@ -111,10 +114,13 @@ void ConsoleModuleLoader::SetArtPath()
 
 	// Insert hooks to make OP2 look for files in the module's directory
 	// In ResManager::GetFilePath
-	Op2RelinkCall(0x004715C5, reinterpret_cast<void*>(GetArtPath));
+	bool success = Op2RelinkCall(0x004715C5, reinterpret_cast<void*>(GetArtPath));
 
+	// Only modify memory at second location if first modification succeeds.
+	if (success) {
 	// In ResManager::CreateStream
 	Op2RelinkCall(0x00471B87, reinterpret_cast<void*>(GetArtPath));
+	}
 }
 
 void ConsoleModuleLoader::UnloadModule()

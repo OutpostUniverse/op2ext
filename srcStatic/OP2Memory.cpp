@@ -2,13 +2,26 @@
 #include "GlobalDefines.h"
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include <sstream>
 
+
+bool memoryCommandsDisabled;
 std::size_t loadOffset = 0;
 const std::size_t ExpectedOutpost2Addr = 0x00400000;
+
+
+void DisableMemoryCommands()
+{
+	memoryCommandsDisabled = true;
+}
 
 // Adjust offsets in case Outpost2.exe module is relocated
 void SetLoadOffset()
 {
+	if (memoryCommandsDisabled) {
+		return;
+	}
+
 	void* op2ModuleBase = GetModuleHandle("Outpost2.exe");
 
 	if (op2ModuleBase == 0) {
@@ -22,13 +35,19 @@ void SetLoadOffset()
 template <typename Function>
 bool Op2MemEdit(void* destBaseAddr, std::size_t size, Function memoryEditFunction)
 {
+	if (memoryCommandsDisabled) {
+		return false;
+	}
+
 	void* destAddr = reinterpret_cast<void*>(reinterpret_cast<std::size_t>(destBaseAddr) + loadOffset);
 
 	// Try to unprotect memory
 	DWORD oldAttr;
 	BOOL bSuccess = VirtualProtect(destAddr, size, PAGE_EXECUTE_READWRITE, &oldAttr);
 	if (!bSuccess) {
-		PostErrorMessage(__FILE__, __LINE__, "Error unprotecting memory at: " + std::to_string(reinterpret_cast<std::size_t>(destAddr)));
+		std::ostringstream stringStream;
+		stringStream << "Error unprotecting memory at: 0x" << std::hex << reinterpret_cast<std::size_t>(destAddr) << ".";
+		PostErrorMessage(__FILE__, __LINE__, stringStream.str());
 		return false;
 	}
 
@@ -82,8 +101,13 @@ bool Op2RelinkCall(std::size_t callOffset, void* newFunctionAddress)
 	return Op2MemSetDword(reinterpret_cast<void*>(callOffset), reinterpret_cast<std::size_t>(newFunctionAddress) - postCallInstructionAddress);
 }
 
+
 bool Op2UnprotectMemory(std::size_t destBaseAddr, std::size_t size)
 {
+	if (memoryCommandsDisabled) {
+		return false;
+	}
+	
 	void* destAddr = reinterpret_cast<void*>(destBaseAddr + loadOffset);
 	// Try to unprotect memory
 	DWORD oldAttr;
