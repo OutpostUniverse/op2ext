@@ -1,5 +1,5 @@
 #include "FileSystemHelper.h"
-#include "GlobalDefines.h"
+#include "op2ext-Internal.h"
 #include <gtest/gtest.h>
 #include <fstream>
 
@@ -11,7 +11,7 @@ int main(int argc, char** argv)
 {
 	::testing::InitGoogleTest(&argc, argv);
 
-	DisableModalDialogs();
+	EnableTestEnvironment();
 	SetupConsoleModTestEnvironment();
 
 	return RUN_ALL_TESTS();
