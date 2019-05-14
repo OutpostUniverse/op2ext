@@ -3,11 +3,12 @@
 #include "StringConversion.h"
 #include "OP2Memory.h"
 #include "FileSystemHelper.h"
+#include "GlobalDefines.h"
 #include "op2ext-Internal.h"
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <string>
-
+#include <sstream>
 
 void LocateVolFiles(const std::string& relativeDirectory = "");
 
@@ -54,7 +55,14 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 int __fastcall ExtInit(TApp *thisPtr, int)
 {
 	// Set the execute flag on the DSEG section so DEP doesn't terminate the game
-	Op2UnprotectMemory(0x00585000, 0x00587000 - 0x00585000);
+	const std::size_t destinationBaseAddress = 0x00585000;
+	bool success = Op2UnprotectMemory(destinationBaseAddress, 0x00587000 - 0x00585000);
+
+	if (!success) {
+		std::ostringstream stringStream;
+		stringStream << "Error unprotecting memory at: 0x" << std::hex << destinationBaseAddress << ".";
+		PostErrorMessage(__FILE__, __LINE__, stringStream.str());
+	}
 
 	InstallIpDropDown();
 
