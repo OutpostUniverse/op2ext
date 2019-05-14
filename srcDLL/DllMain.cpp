@@ -3,11 +3,12 @@
 #include "StringConversion.h"
 #include "OP2Memory.h"
 #include "FileSystemHelper.h"
+#include "GlobalDefines.h"
 #include "op2ext-Internal.h"
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <string>
-
+#include <sstream>
 
 void LocateVolFiles(const std::string& relativeDirectory = "");
 
@@ -31,14 +32,6 @@ public:
 int __fastcall ExtInit(TApp *thisPtr, int);
 void __fastcall ExtShutDown(TApp *thisPtr, int);
 
-// Shell HINSTANCE to load it before OP2 loads it
-//HINSTANCE hShellDll = NULL;
-DWORD* tAppInitCallAddr = (DWORD*)0x004A8878;
-DWORD tAppInitNewAddr = (DWORD)ExtInit;
-
-DWORD* tAppShutDownCallAddr = (DWORD*)0x004A88A6;
-DWORD tAppShutDownNewAddr = (DWORD)ExtShutDown;
-
 DWORD* loadLibraryDataAddr = (DWORD*)0x00486E0A;
 DWORD loadLibraryNewAddr = (DWORD)LoadLibraryNew;
 
@@ -50,7 +43,7 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 		SetLoadOffset();
 
 		// Replace call to gTApp.Init with custom routine
-		Op2MemSetDword(tAppInitCallAddr, tAppInitNewAddr - (GetLoadOffset() + (DWORD)tAppInitCallAddr + sizeof(void*)));
+		Op2RelinkCall(0x004A8878, reinterpret_cast<void*>(ExtInit));
 
 		// Disable any more thread attach calls
 		DisableThreadLibraryCalls(hInstance);
@@ -61,10 +54,15 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 
 int __fastcall ExtInit(TApp *thisPtr, int)
 {
-	DWORD ignoredAttr;
-
 	// Set the execute flag on the DSEG section so DEP doesn't terminate the game
-	VirtualProtect((void*)(GetLoadOffset() + 0x00585000), 0x00587000 - 0x00585000, PAGE_EXECUTE_READWRITE, &ignoredAttr);
+	const std::size_t destinationBaseAddress = 0x00585000;
+	bool success = Op2UnprotectMemory(destinationBaseAddress, 0x00587000 - 0x00585000);
+
+	if (!success) {
+		std::ostringstream stringStream;
+		stringStream << "Error unprotecting memory at: 0x" << std::hex << destinationBaseAddress << ".";
+		PostErrorMessage(__FILE__, __LINE__, stringStream.str());
+	}
 
 	InstallIpDropDown();
 
@@ -86,7 +84,7 @@ int __fastcall ExtInit(TApp *thisPtr, int)
 	Op2MemSetDword(loadLibraryDataAddr, (int)&loadLibraryNewAddr);
 
 	// Replace call to gTApp.ShutDown with custom routine
-	Op2MemSetDword(tAppShutDownCallAddr, tAppShutDownNewAddr - (GetLoadOffset() + (DWORD)tAppShutDownCallAddr + sizeof(void*)));
+	Op2RelinkCall(0x004A88A6, reinterpret_cast<void*>(ExtShutDown));
 
 	// Call original function
 	return thisPtr->Init();
