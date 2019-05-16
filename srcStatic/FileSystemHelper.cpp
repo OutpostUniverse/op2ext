@@ -6,7 +6,7 @@
 #include <cstddef>
 
 
-std::string GetPrivateProfileStdString(std::string sectionName, std::string key, std::string filename);
+std::string GetPrivateProfileStdString(const std::string& sectionName, const std::string& key, const std::string& filename);
 
 
 std::string GetGameDirectory()
@@ -24,7 +24,7 @@ std::string GetOutpost2IniPath()
 
 // Calls Windows Macro GetPrivateProfileSring.
 // Hides implementation detail of creating a buffer. Wraps call in std::string arguments and return.
-std::string GetPrivateProfileStdString(std::string sectionName, std::string key, std::string filename)
+std::string GetPrivateProfileStdString(const std::string& sectionName, const std::string& key, const std::string& filename)
 {
 	const std::size_t bufferInterval = 1024;
 	auto currentBufferSize = bufferInterval;
@@ -52,7 +52,7 @@ std::string GetPrivateProfileStdString(std::string sectionName, std::string key,
 	return profileString;
 }
 
-std::string GetOP2PrivateProfileString(std::string sectionName, std::string key)
+std::string GetOP2PrivateProfileString(const std::string& sectionName, const std::string& key)
 {
 	return GetPrivateProfileStdString(sectionName, key, GetOutpost2IniPath());
 }
