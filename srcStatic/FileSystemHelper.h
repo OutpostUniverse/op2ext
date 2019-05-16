@@ -10,4 +10,4 @@ namespace fs = std::experimental::filesystem;
 
 std::string GetGameDirectory();
 std::string GetOutpost2IniPath();
-std::string GetOP2PrivateProfileString(const std::string& sectionName, const std::string& key);
+std::string GetOutpost2IniSetting(const std::string& sectionName, const std::string& key);
