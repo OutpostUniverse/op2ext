@@ -33,6 +33,7 @@ std::string GetPrivateProfileStdString(const std::string& sectionName, const std
 	const std::size_t bufferInterval = 1024;
 	auto currentBufferSize = bufferInterval;
 	std::string profileString;
+	DWORD returnSize;
 
 	while (true)
 	{
@@ -41,7 +42,7 @@ std::string GetPrivateProfileStdString(const std::string& sectionName, const std
 		//GetPrivateProfileString's return value is the number of characters copied to the buffer,
 		// not including the terminating null character.
 		// A full buffer could be nSize - 2 if either lpAppName or lpKeyName are NULL AND the supplied buffer is too small
-		DWORD returnSize = GetPrivateProfileString(sectionName.c_str(), key.c_str(), "", &profileString[0], currentBufferSize, filename.c_str());
+		returnSize = GetPrivateProfileString(sectionName.c_str(), key.c_str(), "", &profileString[0], currentBufferSize, filename.c_str());
 
 		if (returnSize + 2 < currentBufferSize) {
 			break;
@@ -49,6 +50,8 @@ std::string GetPrivateProfileStdString(const std::string& sectionName, const std
 
 		currentBufferSize += bufferInterval;
 	}
+
+	profileString.resize(returnSize);
 
 	return profileString;
 }
