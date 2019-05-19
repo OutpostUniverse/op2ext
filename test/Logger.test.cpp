@@ -4,7 +4,6 @@
 #include <system_error>
 
 const fs::path logPath = fs::path(GetGameDirectory()).append("Outpost2Log.txt");
-Logger logger;
 
 TEST(Logger, LogFileExists)
 {
@@ -14,6 +13,8 @@ TEST(Logger, LogFileExists)
 
 TEST(Logger, MessageLogged)
 {
+	Logger logger;
+
 	const uintmax_t preFileSize = fs::file_size(logPath);
 	EXPECT_NO_THROW(logger.Log("Test Log Message"));
 
