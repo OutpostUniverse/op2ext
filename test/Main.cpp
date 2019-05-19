@@ -5,7 +5,7 @@
 
 
 void SetupConsoleModTestEnvironment();
-
+void SetupIniFile();
 
 int main(int argc, char** argv) 
 {
@@ -13,6 +13,7 @@ int main(int argc, char** argv)
 
 	EnableTestEnvironment();
 	SetupConsoleModTestEnvironment();
+	SetupIniFile();
 
 	return RUN_ALL_TESTS();
 }
@@ -28,5 +29,13 @@ void SetupConsoleModTestEnvironment()
 
 	fs::create_directory(emptyModuleTestDirectory);
 	std::ofstream stream((emptyModuleTestDirectory / "op2mod.dll").string());
+	stream.close();
+}
+
+void SetupIniFile()
+{
+	std::ofstream stream(fs::path(GetGameDirectory()).append("Outpost2.ini").string());
+	stream << "[Game]" << std::endl;
+	stream << "Music=1" << std::endl;
 	stream.close();
 }

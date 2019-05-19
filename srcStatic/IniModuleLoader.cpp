@@ -79,7 +79,7 @@ bool IniModuleLoader::IsModuleLoaded(std::string moduleName)
 
 std::vector<std::string> IniModuleLoader::GetSectionNames()
 {
-	std::string sectionNames = GetOP2PrivateProfileString("Game", "LoadAddons");
+	std::string sectionNames = GetOutpost2IniSetting("Game", "LoadAddons");
 	std::vector<std::string> sectionNamesSplit = SplitString(sectionNames, ',', TrimOption::Both);
 
 	return sectionNamesSplit;
@@ -88,7 +88,7 @@ std::vector<std::string> IniModuleLoader::GetSectionNames()
 HINSTANCE IniModuleLoader::LoadModuleDll(const std::string& sectionName)
 {
 	// Get the DLL name from the corresponding section
-	std::string dllName = GetOP2PrivateProfileString(sectionName, "Dll");
+	std::string dllName = GetOutpost2IniSetting(sectionName, "Dll");
 
 	// Try to load a DLL with the given name (possibly "")
 	HINSTANCE dllHandle = LoadLibrary(dllName.c_str());
