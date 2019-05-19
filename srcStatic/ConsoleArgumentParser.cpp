@@ -3,7 +3,6 @@
 #include "FileSystemHelper.h"
 #include "GlobalDefines.h"
 #include <windows.h> // Cannot use WIN32_LEAN_AND_MEAN (it does not contain CommandLineToArgvW)
-#include <vector>
 
 
 std::vector<std::string> GetCommandLineArguments();
@@ -14,8 +13,12 @@ std::string ParseLoadModCommand(std::vector<std::string> arguments);
 
 std::string FindModuleDirectory()
 {
-	auto arguments = GetCommandLineArguments();
+	const auto arguments = GetCommandLineArguments();
+	return FindModuleDirectory(arguments);
+}
 
+std::string FindModuleDirectory(std::vector<std::string> arguments)
+{
 	const std::string switchName = GetSwitch(arguments);
 
 	if (switchName.empty()) {
