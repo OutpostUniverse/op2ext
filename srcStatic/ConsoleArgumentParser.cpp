@@ -3,7 +3,6 @@
 #include "FileSystemHelper.h"
 #include "GlobalDefines.h"
 #include <windows.h> // Cannot use WIN32_LEAN_AND_MEAN (it does not contain CommandLineToArgvW)
-#include <system_error>
 #include <vector>
 
 
@@ -11,7 +10,6 @@ std::vector<std::string> GetCommandLineArguments();
 std::string GetSwitch(std::vector<std::string>& arguments);
 std::string ParseSwitchName(std::string switchName);
 std::string ParseLoadModCommand(std::vector<std::string> arguments);
-std::string FormModRelativeDirectory(std::vector<std::string> arguments);
 
 
 std::string FindModuleDirectory()
@@ -98,26 +96,10 @@ std::string ParseLoadModCommand(std::vector<std::string> arguments)
 		return std::string();
 	}
 
-	try {
-		return FormModRelativeDirectory(arguments);
-	}
-	catch (const std::exception& e) {
-		PostErrorMessage(__FILE__, __LINE__, "Unable to parse module directory. " + std::string(e.what()));
+	if (arguments.size() > 1) {
+		PostErrorMessage(__FILE__, __LINE__, "Too many arguments passed into switch LoadMod. If module relative directory contains spaces, surround the directory in quotes");
 		return std::string();
 	}
-}
 
-std::string FormModRelativeDirectory(std::vector<std::string> arguments)
-{
-	std::string modRelativeDirectory;
-
-	for (std::size_t i = 0; i < arguments.size(); ++i) {
-		modRelativeDirectory += arguments[i];
-
-		if (i < arguments.size() - 1) {
-			modRelativeDirectory += " ";
-		}
-	}
-
-	return modRelativeDirectory;
+	return arguments[0];
 }
