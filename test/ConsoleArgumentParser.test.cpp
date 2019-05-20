@@ -1,36 +1,57 @@
-#include <ConsoleArgumentParser.h>
+#include "op2ext-Internal.h"
+#include "ConsoleArgumentParser.h"
+#include "FileSystemHelper.h"
 #include <gtest/gtest.h>
 #include <vector>
 #include <string>
+#include <cstdint>
+#include <functional>
+
+::testing::AssertionResult FindModuleDirectoryIsLogged(const std::vector<std::string>& arguments, const std::string& expectResult);
+
 
 TEST(ConsoleArgumentParser, NoArgument) {
-	const std::vector<std::string> arguments;
-	EXPECT_EQ("", FindModuleDirectory(arguments));
+	EXPECT_FALSE(FindModuleDirectoryIsLogged(std::vector<std::string> { }, ""));
 }
 
+TEST(ConsoleArgumentParser, WellFormedNoSpaces)
+{
+	const std::string path("path");
+	EXPECT_FALSE(FindModuleDirectoryIsLogged(std::vector<std::string> { "/loadmod", path}, path));
+}
+
+TEST(ConsoleArgmunetParser, WellFormedSpaces)
+{
+	const std::string pathWithSpaces("path with spaces");
+	EXPECT_FALSE(FindModuleDirectoryIsLogged(std::vector<std::string> { "/loadmod", pathWithSpaces }, pathWithSpaces));
+}
+
+
 TEST(ConsoleArgumentParser, WrongSwitchName) {
-	const std::vector<std::string> arguments{ "/WrongSwitch" };
-	EXPECT_EQ("", FindModuleDirectory(arguments));
+	EXPECT_TRUE(FindModuleDirectoryIsLogged(std::vector<std::string> { "/WrongSwitch" }, ""));
 }
 
 TEST(ConsoleArgumentParser, NoSwitchArgument) {
-	const std::vector<std::string> arguments{ "/loadmod" };
-	EXPECT_EQ("", FindModuleDirectory(arguments));
+	EXPECT_TRUE(FindModuleDirectoryIsLogged(std::vector<std::string> { "/loadmod" }, ""));
 }
 
 TEST(ConsoleArgumentParser, TooManyArguments) {
-	const std::vector<std::string> arguments{ "/loadmod", "path1", "path2" };
-	EXPECT_EQ("", FindModuleDirectory(arguments));
+	EXPECT_TRUE(FindModuleDirectoryIsLogged(std::vector<std::string> { "/loadmod", "path1", "path2" }, ""));
 }
 
-TEST(ConsoleArgumentParser, WellFormedNoSpaces) {
-	const std::string path("path");
-	const std::vector<std::string> arguments{ "/loadmod", path };
-	EXPECT_EQ(path, FindModuleDirectory(arguments));
-}
 
-TEST(ConsoleArgmunetParser, WellFormedSpaces) {
-	const std::string path("paths with spaces");
-	const std::vector<std::string> arguments{ "/loadmod", path };
-	EXPECT_EQ(path, FindModuleDirectory(arguments));
+// Returns true if calling FindModuleDirectory provides input to the logger by checking log size
+::testing::AssertionResult FindModuleDirectoryIsLogged(
+	const std::vector<std::string>& arguments, const std::string& expectResult)
+{
+	const auto logPath = fs::path(GetGameDirectory()).append("Outpost2Log.txt");
+	const uintmax_t preFileSize = fs::file_size(logPath);
+
+	EXPECT_EQ(expectResult, FindModuleDirectory(arguments));
+
+	if (fs::file_size(logPath) > preFileSize) {
+		return ::testing::AssertionSuccess() << "Message logged";
+	}
+
+	return ::testing::AssertionFailure() << "Message not logged";
 }
