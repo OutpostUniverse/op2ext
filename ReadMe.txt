@@ -120,6 +120,21 @@ Order of vol file precedence is below:
 Change Log
 ------------------------------------------
 
+Version 2.2.0
+
+This version forces quotation marks ("") when passing a directory into the /loadmod switch. Earlier implementations would auto-combine directories with spaces if no quotation marks used, but only allowed passing paths with a single space in a row. So "one space" would work, but "two  spaces" would fail.
+
+ * Allow passing module directories with the /loadmod switch when the directory contains multiple spaces in a row ("  ")
+ * Allow modules to detect which ini and console modules have been loaded via op2ext. (See op2ext.h for new function declarations). May be called from external modules written in C or C++.
+ * Ensure the log file is always created in the game directory. Earlier, the log file was created in the working environment, which could differ from the game directory, such as when attaching a debugger.
+ * If a module fails to load, provide more details to the user
+ * Fix bug in GetGameDir_s that may throw an exception if a buffer length of 0 is passed in as an argument
+ * Split project into a DLL and static sub-projects to facilitate unit tests
+ * Add partial unit test coverage using gtest framework
+ * Update the post build event to use an environment variable when locating Outpost 2's directory for auto-injecting new builds for testing
+ * Allow selecting non-experimental filesystem include when C++17 is available
+ * Add limited mingw project support for Linux compilations
+
 Version 2.1.0
 
  * Add message logger usable by op2ext and external modules.
