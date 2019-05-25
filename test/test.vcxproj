@@ -25,6 +25,7 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <ItemGroup>
+    <ClCompile Include="ConsoleArgumentParser.test.cpp" />
     <ClCompile Include="ConsolueModuleLoader.test.cpp" />
     <ClCompile Include="FileSystemHelper.test.cpp" />
     <ClCompile Include="IniModuleLoader.test.cpp" />
