@@ -122,7 +122,7 @@ Change Log
 
 Version 2.2.0
 
-This version forces quotation marks ("") when passing a directory into the /loadmod switch. Earlier implementations would auto-combine directories with spaces if no quotation marks used, but only allowed passing paths with a single space in a row. So "one space" would work, but "two  spaces" would fail.
+This version forces quotation marks ("") when passing a path containing spaces with the /loadmod switch. Earlier implementations would auto-combine paths with spaces if no quotation marks used, but this implementation only allowed passing paths with a single space in a row. "One space" would work, but "two  spaces" would fail.
 
  * Allow passing module directories with the /loadmod switch when the directory contains multiple spaces in a row ("  ")
  * Allow modules to detect which ini and console modules have been loaded via op2ext. (See op2ext.h for new function declarations). May be called from external modules written in C or C++.
