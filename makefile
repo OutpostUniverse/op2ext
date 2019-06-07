@@ -107,8 +107,8 @@ TESTSRCS := $(shell find $(TESTDIR) -name '*.cpp')
 TESTOBJS := $(patsubst $(TESTDIR)/%.cpp,$(TESTOBJDIR)/%.o,$(TESTSRCS))
 TESTFOLDERS := $(sort $(dir $(TESTSRCS)))
 TESTCPPFLAGS := -I$(SRCDIR) -I$(GTESTINCDIR)
-TESTLDFLAGS := -static-libgcc -static-libstdc++ -L./ -L$(GTESTBUILDDIR)googlemock/ -L$(GTESTBUILDDIR)googlemock/gtest/
-TESTLIBS := -lgtest -lgtest_main -lstdc++fs
+TESTLDFLAGS := $(LDFLAGS) -L./ -L$(GTESTBUILDDIR)googlemock/ -L$(GTESTBUILDDIR)googlemock/gtest/
+TESTLIBS := $(LDLIBS) -lgtest -lgtest_main
 TESTOUTPUT := $(BUILDDIR)/testBin/runTests
 
 TESTDEPFLAGS = -MT $@ -MMD -MP -MF $(TESTOBJDIR)/$*.Td
