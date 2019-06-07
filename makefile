@@ -97,8 +97,8 @@ gtest-clean:
 	rm -rf "$(GTESTBUILDDIR)"
 
 
-# Objects with references to Outpost2DLL or _ReturnAddress are a problem for the linker
-OBJSWITHREFS := $(OBJDIR)/DllMain.o $(OBJDIR)/IpDropDown.o
+# Objects with references to Outpost2DLL are a problem for the linker
+OBJSWITHREFS := $(OBJDIR)/DllMain.o
 SRCOBJS := $(filter-out $(OBJSWITHREFS),$(OBJS)) # Remove objects with problem references
 
 TESTDIR := test
