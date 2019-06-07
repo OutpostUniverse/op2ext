@@ -9,4 +9,4 @@ jobs:
       - run: git submodule update --init || true
       - run: make --keep-going
       - run: make --keep-going test
-#      - run: make --keep-going check
+      - run: make --keep-going check
