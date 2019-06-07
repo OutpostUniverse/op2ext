@@ -6,14 +6,15 @@
 
 
 bool modulesRunning = false;
+Logger logger;
+VolList volList;
+std::string moduleDirectory; // Must be defined + initialized before consoleModLoader
+ConsoleModuleLoader consoleModLoader(FindModuleDirectory());
+IniModuleLoader iniModuleLoader;
+
 
 void EnableTestEnvironment()
 {
 	DisableModalDialogs();
 	DisableMemoryCommands();
 }
-
-Logger logger;
-VolList volList;
-ConsoleModuleLoader consoleModLoader(FindModuleDirectory());
-IniModuleLoader iniModuleLoader;

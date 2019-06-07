@@ -11,7 +11,9 @@
 #include <cstddef>
 #include <system_error>
 
-std::string moduleDirectory;
+
+extern std::string moduleDirectory;
+
 
 ConsoleModuleLoader::ConsoleModuleLoader(const std::string& moduleRelativeDirectory)
 {
