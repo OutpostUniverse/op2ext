@@ -20,7 +20,7 @@ CXXFLAGS := -std=c++17 -g -Wall -Wno-unknown-pragmas
 LDFLAGS := -static-libgcc -static-libstdc++ -LOutpost2DLL/Lib/
 LDLIBS := -lOutpost2DLL -lstdc++fs -lws2_32
 
-DEPNAME = $(DEPDIR)/$*.d
+DEPNAME = $(patsubst %.o,%.d,$@)
 DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPNAME).temp
 COMPILE.cpp = $(CXX) $(DEPFLAGS) $(CPPFLAGS) $(CXXFLAGS) $(TARGET_ARCH) -c
 POSTCOMPILE = @mv -f $(DEPNAME).temp $(DEPNAME) && touch $@
@@ -111,7 +111,7 @@ TESTLDFLAGS := $(LDFLAGS) -L./ -L$(GTESTBUILDDIR)googlemock/ -L$(GTESTBUILDDIR)g
 TESTLIBS := $(LDLIBS) -lgtest -lgtest_main
 TESTOUTPUT := $(BUILDDIR)/testBin/runTests
 
-TESTDEPNAME = $(TESTOBJDIR)/$*.d
+TESTDEPNAME = $(patsubst %.o,%.d,$@)
 TESTDEPFLAGS = -MT $@ -MMD -MP -MF $(TESTDEPNAME).temp
 TESTCOMPILE.cpp = $(CXX) $(TESTCPPFLAGS) $(TESTDEPFLAGS) $(CXXFLAGS) $(TARGET_ARCH) -c
 TESTPOSTCOMPILE = @mv -f $(TESTDEPNAME).temp $(TESTDEPNAME) && touch $@
