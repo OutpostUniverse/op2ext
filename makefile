@@ -49,11 +49,11 @@ $(OUTPUT): $(OBJS)
 
 %:
 	@mkdir -p ${@D}
-	$(CXX) $^ $(LDFLAGS) -o $@ $(LDLIBS)
+	$(CXX) -o $@ $^ $(LDFLAGS) $(LDLIBS)
 
 %.dll:
 	@mkdir -p ${@D}
-	$(CXX) $^ -shared $(LDFLAGS) -o $@ $(LDLIBS)
+	$(CXX) -o $@ $^ -shared $(LDFLAGS) $(LDLIBS)
 
 %.lib:
 	@mkdir -p ${@D}
