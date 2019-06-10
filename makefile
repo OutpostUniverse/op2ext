@@ -111,10 +111,7 @@ TESTLDFLAGS := $(LDFLAGS) -L./ -L$(GTESTBUILDDIR)googlemock/ -L$(GTESTBUILDDIR)g
 TESTLIBS := $(LDLIBS) -lgtest -lgtest_main
 TESTOUTPUT := $(BUILDDIR)/testBin/runTests
 
-TESTDEPNAME = $(patsubst %.o,%.d,$@)
-TESTDEPFLAGS = -MT $@ -MMD -MP -MF $(TESTDEPNAME).temp
-TESTCOMPILE.cpp = $(CXX) $(TESTCPPFLAGS) $(TESTDEPFLAGS) $(CXXFLAGS) $(TARGET_ARCH) -c
-TESTPOSTCOMPILE = @mv -f $(TESTDEPNAME).temp $(TESTDEPNAME) && touch $@
+TESTCOMPILE.cpp = $(CXX) $(TESTCPPFLAGS) $(DEPFLAGS) $(CXXFLAGS) $(TARGET_ARCH) -c
 
 .PHONY: test check
 test: $(TESTOUTPUT)
@@ -127,7 +124,7 @@ $(TESTOUTPUT): $(TESTOBJS) $(SRCOBJS)
 
 $(TESTOBJS): $(TESTOBJDIR)/%.o : $(TESTDIR)/%.cpp $(TESTOBJDIR)/%.d | test-build-folder
 	$(TESTCOMPILE.cpp) $(OUTPUT_OPTION) $<
-	$(TESTPOSTCOMPILE)
+	$(POSTCOMPILE)
 
 .PHONY: test-build-folder
 test-build-folder:
