@@ -10,7 +10,6 @@ CC := i686-w64-mingw32-gcc
 
 SRCDIR := srcStatic
 BUILDDIR := .build
-BINDIR := $(BUILDDIR)/bin
 OBJDIR := $(BUILDDIR)/obj
 DEPDIR := $(BUILDDIR)/obj
 OUTPUT := op2ext.lib
