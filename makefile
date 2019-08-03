@@ -20,7 +20,7 @@ LDLIBS := -lOutpost2DLL -lstdc++fs -lws2_32
 
 DEPNAME = $(patsubst %.o,%.d,$@)
 DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPNAME).temp
-COMPILE.cpp = $(CXX) $(DEPFLAGS) $(CPPFLAGS) $(CXXFLAGS) $(TARGET_ARCH) -c
+COMPILE.cpp = $(CXX) $(OUTPUT_OPTION) $(DEPFLAGS) $(CPPFLAGS) $(CXXFLAGS) $(TARGET_ARCH) -c $<
 POSTCOMPILE = @mv -f $(DEPNAME).temp $(DEPNAME) && touch $@
 
 SRCS := $(shell find $(SRCDIR) -name '*.cpp')
@@ -58,7 +58,7 @@ $(OUTPUT): $(OBJS)
 	ar rcs $@ $^
 
 $(OBJS): $(INTDIR)/%.o : $(SRCDIR)/%.cpp $(INTDIR)/%.d | build-folder
-	$(COMPILE.cpp) $(OUTPUT_OPTION) $<
+	$(COMPILE.cpp)
 	$(POSTCOMPILE)
 
 .PHONY: build-folder
@@ -109,7 +109,7 @@ TESTLDFLAGS := $(LDFLAGS) -L./ -L$(GTESTBUILDDIR)googlemock/ -L$(GTESTBUILDDIR)g
 TESTLIBS := $(LDLIBS) -lgtest -lgtest_main
 TESTOUTPUT := $(BUILDDIR)/testBin/runTests
 
-TESTCOMPILE.cpp = $(CXX) $(TESTCPPFLAGS) $(DEPFLAGS) $(CXXFLAGS) $(TARGET_ARCH) -c
+TESTCOMPILE.cpp = $(CXX) $(OUTPUT_OPTION) $(TESTCPPFLAGS) $(DEPFLAGS) $(CXXFLAGS) $(TARGET_ARCH) -c $<
 
 .PHONY: test check
 test: $(TESTOUTPUT)
@@ -121,7 +121,7 @@ $(TESTOUTPUT): $(TESTOBJS) $(SRCOBJS)
 	$(CXX) $^ $(TESTLDFLAGS) $(TESTLIBS) -o $@
 
 $(TESTOBJS): $(TESTINTDIR)/%.o : $(TESTDIR)/%.cpp $(TESTINTDIR)/%.d | test-build-folder
-	$(TESTCOMPILE.cpp) $(OUTPUT_OPTION) $<
+	$(TESTCOMPILE.cpp)
 	$(POSTCOMPILE)
 
 .PHONY: test-build-folder
