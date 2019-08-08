@@ -10,9 +10,7 @@ CC := i686-w64-mingw32-gcc
 
 SRCDIR := srcStatic
 BUILDDIR := .build
-BINDIR := $(BUILDDIR)/bin
-OBJDIR := $(BUILDDIR)/obj
-DEPDIR := $(BUILDDIR)/obj
+INTDIR := $(BUILDDIR)/intermediate
 OUTPUT := op2ext.lib
 
 CPPFLAGS := -DOP2EXT_INTERNAL_BUILD
@@ -20,13 +18,13 @@ CXXFLAGS := -std=c++17 -g -Wall -Wno-unknown-pragmas
 LDFLAGS := -static-libgcc -static-libstdc++ -LOutpost2DLL/Lib/
 LDLIBS := -lOutpost2DLL -lstdc++fs -lws2_32
 
-DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.Td
-
-COMPILE.cpp = $(CXX) $(DEPFLAGS) $(CPPFLAGS) $(CXXFLAGS) $(TARGET_ARCH) -c
-POSTCOMPILE = @mv -f $(DEPDIR)/$*.Td $(DEPDIR)/$*.d && touch $@
+DEPNAME = $(patsubst %.o,%.d,$@)
+DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPNAME).temp
+COMPILE.cpp = $(CXX) $(OUTPUT_OPTION) $(DEPFLAGS) $(CPPFLAGS) $(CXXFLAGS) $(TARGET_ARCH) -c $<
+POSTCOMPILE = @mv -f $(DEPNAME).temp $(DEPNAME) && touch $@
 
 SRCS := $(shell find $(SRCDIR) -name '*.cpp')
-OBJS := $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(SRCS))
+OBJS := $(patsubst $(SRCDIR)/%.cpp,$(INTDIR)/%.o,$(SRCS))
 FOLDERS := $(sort $(dir $(SRCS)))
 
 # MinGW is not able to link the main DLL due to dependence on Outpost2DLL.
@@ -49,34 +47,34 @@ $(OUTPUT): $(OBJS)
 
 %:
 	@mkdir -p ${@D}
-	$(CXX) $^ $(LDFLAGS) -o $@ $(LDLIBS)
+	$(CXX) -o $@ $^ $(LDFLAGS) $(LDLIBS)
 
 %.dll:
 	@mkdir -p ${@D}
-	$(CXX) $^ -shared $(LDFLAGS) -o $@ $(LDLIBS)
+	$(CXX) -o $@ $^ -shared $(LDFLAGS) $(LDLIBS)
 
 %.lib:
 	@mkdir -p ${@D}
 	ar rcs $@ $^
 
-$(OBJS): $(OBJDIR)/%.o : $(SRCDIR)/%.cpp $(DEPDIR)/%.d | build-folder
-	$(COMPILE.cpp) $(OUTPUT_OPTION) $<
+$(OBJS): $(INTDIR)/%.o : $(SRCDIR)/%.cpp $(INTDIR)/%.d | build-folder
+	$(COMPILE.cpp)
 	$(POSTCOMPILE)
 
 .PHONY: build-folder
 build-folder:
-	@mkdir -p $(patsubst $(SRCDIR)/%,$(OBJDIR)/%, $(FOLDERS))
-	@mkdir -p $(patsubst $(SRCDIR)/%,$(DEPDIR)/%, $(FOLDERS))
+	@mkdir -p $(patsubst $(SRCDIR)/%,$(INTDIR)/%, $(FOLDERS))
 
-$(DEPDIR)/%.d: ;
-.PRECIOUS: $(DEPDIR)/%.d
+$(INTDIR)/%.d: ;
+.PRECIOUS: $(INTDIR)/%.d
 
-include $(wildcard $(patsubst $(SRCDIR)/%.cpp,$(DEPDIR)/%.d,$(SRCS)))
+include $(wildcard $(patsubst $(SRCDIR)/%.cpp,$(INTDIR)/%.d,$(SRCS)))
 
 .PHONY: clean clean-all
 clean:
-	-rm -rf "$(BUILDDIR)"
+	-rm -rf "$(INTDIR)"
 clean-all: clean
+	-rm -rf "$(BUILDDIR)"
 	-rm -f "$(OUTPUT)"
 
 
@@ -98,22 +96,20 @@ gtest-clean:
 
 
 # Objects with references to Outpost2DLL are a problem for the linker
-OBJSWITHREFS := $(OBJDIR)/DllMain.o
+OBJSWITHREFS := $(INTDIR)/DllMain.o
 SRCOBJS := $(filter-out $(OBJSWITHREFS),$(OBJS)) # Remove objects with problem references
 
 TESTDIR := test
-TESTOBJDIR := $(BUILDDIR)/testObj
+TESTINTDIR := $(BUILDDIR)/testObj
 TESTSRCS := $(shell find $(TESTDIR) -name '*.cpp')
-TESTOBJS := $(patsubst $(TESTDIR)/%.cpp,$(TESTOBJDIR)/%.o,$(TESTSRCS))
+TESTOBJS := $(patsubst $(TESTDIR)/%.cpp,$(TESTINTDIR)/%.o,$(TESTSRCS))
 TESTFOLDERS := $(sort $(dir $(TESTSRCS)))
 TESTCPPFLAGS := -I$(SRCDIR) -I$(GTESTINCDIR)
 TESTLDFLAGS := $(LDFLAGS) -L./ -L$(GTESTBUILDDIR)googlemock/ -L$(GTESTBUILDDIR)googlemock/gtest/
 TESTLIBS := $(LDLIBS) -lgtest -lgtest_main
 TESTOUTPUT := $(BUILDDIR)/testBin/runTests
 
-TESTDEPFLAGS = -MT $@ -MMD -MP -MF $(TESTOBJDIR)/$*.Td
-TESTCOMPILE.cpp = $(CXX) $(TESTCPPFLAGS) $(TESTDEPFLAGS) $(CXXFLAGS) $(TARGET_ARCH) -c
-TESTPOSTCOMPILE = @mv -f $(TESTOBJDIR)/$*.Td $(TESTOBJDIR)/$*.d && touch $@
+TESTCOMPILE.cpp = $(CXX) $(OUTPUT_OPTION) $(TESTCPPFLAGS) $(DEPFLAGS) $(CXXFLAGS) $(TARGET_ARCH) -c $<
 
 .PHONY: test check
 test: $(TESTOUTPUT)
@@ -124,18 +120,18 @@ $(TESTOUTPUT): $(TESTOBJS) $(SRCOBJS)
 	@mkdir -p ${@D}
 	$(CXX) $^ $(TESTLDFLAGS) $(TESTLIBS) -o $@
 
-$(TESTOBJS): $(TESTOBJDIR)/%.o : $(TESTDIR)/%.cpp $(TESTOBJDIR)/%.d | test-build-folder
-	$(TESTCOMPILE.cpp) $(OUTPUT_OPTION) $<
-	$(TESTPOSTCOMPILE)
+$(TESTOBJS): $(TESTINTDIR)/%.o : $(TESTDIR)/%.cpp $(TESTINTDIR)/%.d | test-build-folder
+	$(TESTCOMPILE.cpp)
+	$(POSTCOMPILE)
 
 .PHONY: test-build-folder
 test-build-folder:
-	@mkdir -p $(patsubst $(TESTDIR)/%,$(TESTOBJDIR)/%, $(TESTFOLDERS))
+	@mkdir -p $(patsubst $(TESTDIR)/%,$(TESTINTDIR)/%, $(TESTFOLDERS))
 
-$(TESTOBJDIR)/%.d: ;
-.PRECIOUS: $(TESTOBJDIR)/%.d
+$(TESTINTDIR)/%.d: ;
+.PRECIOUS: $(TESTINTDIR)/%.d
 
-include $(wildcard $(patsubst $(TESTDIR)/%.cpp,$(TESTOBJDIR)/%.d,$(TESTSRCS)))
+include $(wildcard $(patsubst $(TESTDIR)/%.cpp,$(TESTINTDIR)/%.d,$(TESTSRCS)))
 
 
 # Docker commands
