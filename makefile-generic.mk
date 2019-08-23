@@ -93,9 +93,6 @@ $(1)_DEPS := $$(patsubst %.o,%.d,$$($(1)_OBJS))
 
 ## Project specific build rules and dependencies ##
 
-# Build this project by default
-all: $(1)
-
 # Define high level targets (project name, not actual output files)
 .PHONY: $(1) clean-$(1) clean-all-$(1) show-$(1)
 
