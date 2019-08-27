@@ -24,7 +24,7 @@ default: all
 # Variables to track dependencies
 DEPNAME = $(patsubst %.o,%.d,$@)
 DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPNAME).temp
-POSTCOMPILE = @mv -f $(DEPNAME).temp $(DEPNAME) && touch $@
+POSTCOMPILE = mv -f $(DEPNAME).temp $(DEPNAME) && touch $@
 
 # Variable with main C++ compile rule (with dependency generation)
 COMPILE.cpp = $(CXX) $(OUTPUT_OPTION) $(DEPFLAGS) $(CPPFLAGS) $(CXXFLAGS) $(TARGET_ARCH) -c $<
@@ -51,7 +51,7 @@ White := \e[0m
 %.o:
 	@mkdir -p "$(@D)"
 	$(COMPILE.cpp)
-	$(POSTCOMPILE)
+	@$(POSTCOMPILE)
 
 # Ensure missing dependency files don't generate a warning
 # (Missing dependency files will cause a rebuild of the associated source file)
