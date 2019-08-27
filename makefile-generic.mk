@@ -26,6 +26,9 @@ DEPNAME = $(patsubst %.o,%.d,$@)
 DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPNAME).temp
 POSTCOMPILE = mv -f $(DEPNAME).temp $(DEPNAME) && touch $@
 
+# Variable to create missing output folders
+MKDIR = mkdir -p "$(@D)"
+
 # Variable with main C++ compile rule (with dependency generation)
 COMPILE.cpp = $(CXX) $(OUTPUT_OPTION) $(DEPFLAGS) $(CPPFLAGS) $(CXXFLAGS) $(TARGET_ARCH) -c $<
 
@@ -36,20 +39,20 @@ White := \e[0m
 ## Rules to build various final target ouputs ##
 
 %.exe:
-	@mkdir -p "$(@D)"
+	@$(MKDIR)
 	$(CXX) -o "$@" $^ $(LDFLAGS) $(LDLIBS)
 
 %.dll:
-	@mkdir -p "$(@D)"
+	@$(MKDIR)
 	$(CXX) -o "$@" $^ -shared $(LDFLAGS) $(LDLIBS)
 
 %.lib:
-	@mkdir -p "$(@D)"
+	@$(MKDIR)
 	ar rcs "$@" $^
 
 # Rule to build intermediate project files
 %.o:
-	@mkdir -p "$(@D)"
+	@$(MKDIR)
 	$(COMPILE.cpp)
 	@$(POSTCOMPILE)
 
