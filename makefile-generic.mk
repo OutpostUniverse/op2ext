@@ -11,7 +11,7 @@
 
 
 # Default build and clean targets
-.PHONY: default all clean clean-all
+.PHONY: default all clean clean-all source
 .DEFAULT_GOAL := all
 default: all
 
@@ -28,6 +28,10 @@ POSTCOMPILE = @mv -f $(DEPNAME).temp $(DEPNAME) && touch $@
 
 # Variable with main C++ compile rule (with dependency generation)
 COMPILE.cpp = $(CXX) $(OUTPUT_OPTION) $(DEPFLAGS) $(CPPFLAGS) $(CXXFLAGS) $(TARGET_ARCH) -c $<
+
+# Output coloring variables
+Green := \e[1;32m
+White := \e[0m
 
 ## Rules to build various final target ouputs ##
 
@@ -124,5 +128,14 @@ clean-all-$(1): clean-$(1)
 # Master clean rules clean this project
 clean: clean-$(1)
 clean-all: clean-all-$(1)
+
+
+# Simple rule to show source files found in scan of project folder
+source-$(1):
+	@echo -n "\nProject $$(Green)$(1)$$(White) source files: \n  "
+	@echo "$$($(1)_SRCS)" | sed -e 's/ /\n  /g'
+
+# Show source files for every configured project
+source: source-$(1)
 
 endef
