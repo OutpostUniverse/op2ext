@@ -39,7 +39,7 @@ test: op2extLib
 # $(info $(call DefineCppProject,op2extLib,op2ext.lib,srcStatic))
 
 $(eval $(call DefineCppProject,op2extLib,op2ext.lib,srcStatic))
-$(eval $(call DefineCppProject,test,$(BUILDDIR)/test/unitTest.exe,test))
+$(eval $(call DefineCppProject,test,$(BUILDDIR)/$(config)/test/unitTest.exe,test))
 # $(eval $(call DefineCppProject,op2extDLL,op2ext.dll,srcDLL))
 
 

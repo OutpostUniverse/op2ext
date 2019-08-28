@@ -118,7 +118,7 @@ $(1)_LDFLAGS ?= $(LDFLAGS)
 $(1)_LDLIBS ?= $(LDLIBS)
 
 # Project specific source folder, intermediate folder, and output file
-$(1)_INTDIR := $(BUILDDIR)/$(1)
+$(1)_INTDIR := $(BUILDDIR)/$(config)/$(1)
 $(1)_OUTPUT := $(2)
 $(1)_SRCDIR := $(3)
 
