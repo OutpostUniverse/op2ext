@@ -8,8 +8,7 @@
 # =====
 
 # Set compiler to mingw (can still override from command line)
-CXX := i686-w64-mingw32-g++
-CC := i686-w64-mingw32-gcc
+config := mingw
 
 
 include makefile-generic.mk

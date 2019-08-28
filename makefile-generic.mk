@@ -16,6 +16,35 @@
 default: all
 
 
+#### Compiler configurations ####
+# Allow for easily setting a compiler toolchain (gcc, clang, mingw)
+# Example (from main Makefile):
+#   config := mingw
+# Example (from command line, overrides main file):
+#   make config=mingw
+
+# Inherit from environment
+default_CXX := $(CXX)
+default_CC := $(CC)
+
+gcc_CXX := g++
+gcc_CC := gcc
+
+clang_CXX := clang++
+clang_CC := clang
+
+mingw_CXX := i686-w64-mingw32-g++
+mingw_CC := i686-w64-mingw32-gcc
+
+
+# Set default config name
+config ?= default
+
+# Set global variables based on selected config name
+CXX := $($(config)_CXX)
+CC := $($(config)_CC)
+
+
 #### General compile rules ####
 # These rules are for auto depedency tracked rebuilds (with out of source build support).
 # These rules assume dependencies and flags are set elsewhere.
