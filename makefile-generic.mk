@@ -41,8 +41,8 @@ mingw_CC := i686-w64-mingw32-gcc
 config ?= default
 
 # Set global variables based on selected config name
-CXX := $($(config)_CXX)
-CC := $($(config)_CC)
+CXX = $($(config)_CXX)
+CC = $($(config)_CC)
 
 
 #### General compile rules ####

@@ -7,11 +7,12 @@
 # (yet) possible.
 # =====
 
-# Set compiler to mingw (can still override from command line)
-config := mingw
-
 
 include makefile-generic.mk
+
+
+# Set compiler to mingw (can still override from command line)
+config := mingw
 
 
 CXXFLAGS := -std=c++17 -g -Wall -Wno-unknown-pragmas
