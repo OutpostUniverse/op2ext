@@ -171,3 +171,46 @@ source-$(1):
 source: source-$(1)
 
 endef
+
+
+#### Google Test support ####
+# This allows for doing a local build of the Google Test library.
+# Provides rules for doing a system install of the resulting binary.
+# Assumes standard install location of source files, as found on Ubuntu.
+# Google test source files can be installed with Apt.
+
+gtest_CXXFLAGS := -std=c++17
+gtest_SRCDIR := /usr/src/googletest/
+gtest_INCDIR := /usr/src/googletest/googletest/include/
+gtest_BUILDDIR = $(BUILDDIR)/$(config)/gtest/
+
+# Toolchain specifc library install folders
+gtest_gcc_LIBDIR := /usr/lib/
+gtest_clang_LIBDIR := /usr/lib/
+gtest_mingw_LIBDIR := /usr/i686-w64-mingw32/lib/
+# Select based on configured toolchain
+gtest_LIBDIR = $(gtest_$(config)_LIBDIR)
+
+# Toolchain specific compile options
+gtest_gcc_DEFINES :=
+gtest_clang_DEFINES :=
+gtest_mingw_DEFINES := -DCMAKE_SYSTEM_NAME="Windows" -Dgtest_disable_pthreads=ON
+# Select based on configured toolchain
+gtest_DEFINES = $(gtest_$(config)_DEFINES)
+
+.PHONY: install-source-gtest gtest install-gtest clean-gtest
+
+install-source-gtest:
+	apt install googletest
+
+gtest:
+	mkdir -p "$(gtest_BUILDDIR)"
+	cd "$(gtest_BUILDDIR)" && cmake -DCMAKE_CXX_COMPILER="$(CXX)" -DCMAKE_C_COMPILER="$(CC)" -DCMAKE_CXX_FLAGS="$(gtest_CXXFLAGS)" $(gtest_DEFINES) "$(gtest_SRCDIR)"
+	make -C "$(gtest_BUILDDIR)"
+
+install-gtest:
+	cp $(gtest_BUILDDIR)googlemock/gtest/lib*.a "$(gtest_LIBDIR)"
+	cp $(gtest_BUILDDIR)googlemock/lib*.a "$(gtest_LIBDIR)"
+
+clean-gtest:
+	rm -rf "$(gtest_BUILDDIR)"
