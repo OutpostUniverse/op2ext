@@ -24,8 +24,8 @@ op2extDLL_LDFLAGS := $(LDFLAGS) -L./
 op2extDLL_LDLIBS := $(LDLIBS) -lop2ext
 
 test_CPPFLAGS = -I$(op2extLib_SRCDIR) -I$(gtest_INCDIR)
-test_LDFLAGS := $(LDFLAGS) -L./ -L$(gtest_BUILDDIR)googlemock/ -L$(gtest_BUILDDIR)googlemock/gtest/
-test_LDLIBS := $(LDLIBS) -lop2ext -lgtest -lgtest_main
+test_LDFLAGS := $(LDFLAGS) -L./ $(gtest_LOCALBUILD_LDFLAGS)
+test_LDLIBS := $(LDLIBS) -lop2ext $(gtest_LINK_LDLIBS)
 
 all: op2extLib
 test: op2extLib

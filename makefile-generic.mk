@@ -198,6 +198,10 @@ gtest_mingw_DEFINES := -DCMAKE_SYSTEM_NAME="Windows" -Dgtest_disable_pthreads=ON
 # Select based on configured toolchain
 gtest_DEFINES = $(gtest_$(config)_DEFINES)
 
+# To ease configuring test projects to use a local build
+gtest_LOCALBUILD_LDFLAGS = -L$(gtest_BUILDDIR)googlemock/ -L$(gtest_BUILDDIR)googlemock/gtest/
+gtest_LINK_LDLIBS := -lgtest -lgtest_main
+
 .PHONY: install-source-gtest gtest install-gtest clean-gtest
 
 install-source-gtest:
