@@ -19,9 +19,9 @@ CXXFLAGS := -std=c++17 -g -Wall -Wno-unknown-pragmas
 LDFLAGS := -static-libgcc -static-libstdc++ -LOutpost2DLL/Lib/
 LDLIBS := -lOutpost2DLL -lstdc++fs -lws2_32
 
-op2extDLL_CPPFLAGS := -DOP2EXT_INTERNAL_BUILD -IsrcStatic
-op2extDLL_LDFLAGS := $(LDFLAGS) -L./
-op2extDLL_LDLIBS := $(LDLIBS) -lop2ext
+op2extDll_CPPFLAGS := -DOP2EXT_INTERNAL_BUILD -IsrcStatic
+op2extDll_LDFLAGS = $(LDFLAGS) -L$(dir $(op2extLib_OUTPUT))
+op2extDll_LDLIBS = $(LDLIBS) -l$(basename $(notdir $(op2extLib_OUTPUT)))
 
 all: op2extLib
 
@@ -30,7 +30,7 @@ all: op2extLib
 # $(info $(call DefineUnitTestProject,test,test,op2extLib))
 
 $(eval $(call DefineCppProject,op2extLib,op2ext.lib,srcStatic))
-# $(eval $(call DefineCppProject,op2extDLL,op2ext.dll,srcDLL))
+$(eval $(call DefineCppProject,op2extDll,op2ext.dll,srcDLL))
 $(eval $(call DefineUnitTestProject,test,test,op2extLib))
 
 
