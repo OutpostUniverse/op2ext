@@ -23,24 +23,16 @@ op2extDLL_CPPFLAGS := -DOP2EXT_INTERNAL_BUILD -IsrcStatic
 op2extDLL_LDFLAGS := $(LDFLAGS) -L./
 op2extDLL_LDLIBS := $(LDLIBS) -lop2ext
 
-test_CPPFLAGS = -I$(op2extLib_SRCDIR) -I$(gtest_INCDIR)
-test_LDFLAGS = $(op2extLib_LDFLAGS) -L$(dir $(op2extLib_OUTPUT)) $(gtest_LOCALBUILD_LDFLAGS)
-test_LDLIBS := $(LDLIBS) -lop2ext $(gtest_LINK_LDLIBS)
-
 all: op2extLib
-test: op2extLib
 
 # Debug
 # $(info $(call DefineCppProject,op2extLib,op2ext.lib,srcStatic))
+# $(info $(call DefineUnitTestProject,test,test,op2extLib))
 
 $(eval $(call DefineCppProject,op2extLib,op2ext.lib,srcStatic))
-$(eval $(call DefineCppProject,test,$(BUILDDIR)/$(config)/test/unitTest.exe,test))
 # $(eval $(call DefineCppProject,op2extDLL,op2ext.dll,srcDLL))
+$(eval $(call DefineUnitTestProject,test,test,op2extLib))
 
-
-.PHONY: check
-check: test
-	wine "$(test_OUTPUT)"
 
 # Docker commands
 
