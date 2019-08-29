@@ -202,6 +202,9 @@ gtest_DEFINES = $(gtest_$(config)_DEFINES)
 gtest_LOCALBUILD_LDFLAGS = -L$(gtest_BUILDDIR)googlemock/ -L$(gtest_BUILDDIR)googlemock/gtest/
 gtest_LINK_LDLIBS := -lgtest -lgtest_main
 
+# To help running of unit tests
+gtest_mingw_RUNPREFIX := wine
+
 .PHONY: install-source-gtest gtest install-gtest clean-gtest
 
 install-source-gtest:
@@ -218,3 +221,31 @@ install-gtest:
 
 clean-gtest:
 	rm -rf "$(gtest_BUILDDIR)"
+
+
+#### Unit Test project support ####
+
+# DefineUnitTestProject(UnitTestProjectName, UnitTestSourceFolder, BaseProjectName)
+define DefineUnitTestProject
+
+# Unit Test Project specific flags
+$(1)_CPPFLAGS ?= $$($(3)_CPPFLAGS) -I$$($(3)_SRCDIR) -I$(gtest_INCDIR)
+$(1)_CXXFLAGS ?= $$($(3)_CXXFLAGS)
+$(1)_LDFLAGS ?= $$($(3)_LDFLAGS) -L$$(dir $$($(3)_OUTPUT)) $(gtest_LOCALBUILD_LDFLAGS)
+$(1)_LDLIBS ?= $$($(3)_LDLIBS) -l$$(basename $$(notdir $$($(3)_OUTPUT))) $(gtest_LINK_LDLIBS)
+
+# Set a dependency on the base project
+$(1): $(3)
+
+# Define the Unit Test project
+$(call DefineCppProject,$(1),$(BUILDDIR)/$(config)/$(1)/unitTest.exe,$(2))
+
+# Define unit test running rules
+.PHONY: check check-$(1)
+# Rule to run this specific unit test
+check-$(1): $(1)
+	$(gtest_$(config)_RUNPREFIX) "$$($(1)_OUTPUT)"
+# Master rule to run all unit tests
+check: check-$(1)
+
+endef
