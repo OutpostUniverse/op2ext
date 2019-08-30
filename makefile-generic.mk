@@ -237,11 +237,8 @@ $(1)_CXXFLAGS ?= $$($(3)_CXXFLAGS)
 $(1)_LDFLAGS ?= $$($(3)_LDFLAGS) -L$$(dir $$($(3)_OUTPUT)) $(gtest_LOCALBUILD_LDFLAGS)
 $(1)_LDLIBS ?= $$($(3)_LDLIBS) -l$$(basename $$(notdir $$($(3)_OUTPUT))) $(gtest_LINK_LDLIBS)
 
-# Set a dependency on the base project
-$(1): $(3)
-
 # Define the Unit Test project
-$(call DefineCppProject,$(1),$(BUILDDIR)/$(config)/$(1)/unitTest.exe,$(2))
+$(call DefineCppProject,$(1),$(BUILDDIR)/$(config)/$(1)/unitTest.exe,$(2),$(3))
 
 # Define unit test running rules
 .PHONY: check check-$(1)
