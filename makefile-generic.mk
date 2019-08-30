@@ -101,7 +101,7 @@ White := \e[0m
 # Set default build directory
 BUILDDIR ?= .build
 
-# DefineProject(ProjectName, Output, SourceFolder)
+# DefineProject(ProjectName, Output, SourceFolder, [Dependencies])
 # Uses project specific flags (or global defaults without "ProjectName_" prefix):
 #   ProjectName_CPPFLAGS
 #   ProjectName_CXXFLAGS
@@ -131,6 +131,9 @@ $(1)_DEPS := $$(patsubst %.o,%.d,$$($(1)_OBJS))
 
 # Define high level targets (project name, not actual output files)
 .PHONY: $(1) clean-$(1) clean-all-$(1) show-$(1)
+
+# Set any dependencies on other projects
+$(1): $(4)
 
 # Project specific build rule (for actual output file)
 $(1): $$($(1)_OUTPUT)

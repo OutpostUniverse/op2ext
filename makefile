@@ -27,10 +27,11 @@ all: op2extLib
 
 # Debug
 # $(info $(call DefineCppProject,op2extLib,op2ext.lib,srcStatic))
+# $(info $(call DefineCppProject,op2extDll,op2ext.dll,srcDLL,op2extLib))
 # $(info $(call DefineUnitTestProject,test,test,op2extLib))
 
 $(eval $(call DefineCppProject,op2extLib,op2ext.lib,srcStatic))
-$(eval $(call DefineCppProject,op2extDll,op2ext.dll,srcDLL))
+$(eval $(call DefineCppProject,op2extDll,op2ext.dll,srcDLL,op2extLib))
 $(eval $(call DefineUnitTestProject,test,test,op2extLib))
 
 
