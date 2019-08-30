@@ -128,7 +128,7 @@ $(1)_inputLibFileIncludeOptions := $$(foreach lib,$$(basename $$($(1)_inputLibFi
 ## Define project specific variables ##
 
 # Project specific flags
-$(1)_CPPFLAGS ?= $(CPPFLAGS) $$($(1)_inputSourceFolderIncludeOptions)
+$(1)_CPPFLAGS ?= $(CPPFLAGS) $$($(1)_DEFINES) $$($(1)_inputSourceFolderIncludeOptions)
 $(1)_CXXFLAGS ?= $(CXXFLAGS)
 $(1)_LDFLAGS ?= $(LDFLAGS) $$($(1)_inputLibFolderIncludeOptions)
 $(1)_LDLIBS ?= $(LDLIBS) $$($(1)_inputLibFileIncludeOptions)

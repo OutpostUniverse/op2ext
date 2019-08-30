@@ -19,7 +19,7 @@ CXXFLAGS := -std=c++17 -g -Wall -Wno-unknown-pragmas
 LDFLAGS := -static-libgcc -static-libstdc++ -LOutpost2DLL/Lib/
 LDLIBS := -lOutpost2DLL -lstdc++fs -lws2_32
 
-op2extDll_CPPFLAGS := -DOP2EXT_INTERNAL_BUILD -IsrcStatic
+op2extDll_DEFINES := -DOP2EXT_INTERNAL_BUILD
 
 all: op2extLib
 
