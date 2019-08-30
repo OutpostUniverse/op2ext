@@ -109,13 +109,29 @@ BUILDDIR ?= .build
 #   ProjectName_LDLIBS
 define DefineCppProject =
 
+## Determine include and linking requirements for dependencies
+
+# Determine source folders of dependencies for header includes
+$(1)_inputSourceFolders := $(foreach dep,$(4),$$($(dep)_SRCDIR))
+$(1)_inputSourceFolderIncludeOptions := $(foreach dep,$(4),-I$$($(dep)_SRCDIR))
+
+# Determine ouputs of dependencies, and filter for .lib files
+$(1)_inputs := $(foreach dep,$(4),$$($(dep)_OUTPUT))
+$(1)_inputLibs := $$(filter %.lib,$$($(1)_inputs))
+# Convert to folder list and library list
+$(1)_inputLibFolders := $$(dir $$($(1)_inputLibs))
+$(1)_inputLibFiles := $$(notdir $$($(1)_inputLibs))
+# Convert to list of libraries to list of includes
+$(1)_inputLibFolderIncludeOptions := $$(foreach folder,$$($(1)_inputLibFolders),-L$$(folder))
+$(1)_inputLibFileIncludeOptions := $$(foreach lib,$$(basename $$($(1)_inputLibFiles)),-l$$(lib))
+
 ## Define project specific variables ##
 
 # Project specific flags
-$(1)_CPPFLAGS ?= $(CPPFLAGS)
+$(1)_CPPFLAGS ?= $(CPPFLAGS) $$($(1)_inputSourceFolderIncludeOptions)
 $(1)_CXXFLAGS ?= $(CXXFLAGS)
-$(1)_LDFLAGS ?= $(LDFLAGS)
-$(1)_LDLIBS ?= $(LDLIBS)
+$(1)_LDFLAGS ?= $(LDFLAGS) $$($(1)_inputLibFolderIncludeOptions)
+$(1)_LDLIBS ?= $(LDLIBS) $$($(1)_inputLibFileIncludeOptions)
 
 # Project specific source folder, intermediate folder, and output file
 $(1)_INTDIR := $(BUILDDIR)/$(config)/$(1)

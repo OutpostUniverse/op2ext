@@ -20,8 +20,6 @@ LDFLAGS := -static-libgcc -static-libstdc++ -LOutpost2DLL/Lib/
 LDLIBS := -lOutpost2DLL -lstdc++fs -lws2_32
 
 op2extDll_CPPFLAGS := -DOP2EXT_INTERNAL_BUILD -IsrcStatic
-op2extDll_LDFLAGS = $(LDFLAGS) -L$(dir $(op2extLib_OUTPUT))
-op2extDll_LDLIBS = $(LDLIBS) -l$(basename $(notdir $(op2extLib_OUTPUT)))
 
 all: op2extLib
 
