@@ -130,21 +130,29 @@ $(1)_DEPS := $$(patsubst %.o,%.d,$$($(1)_OBJS))
 ## Project specific build rules and dependencies ##
 
 # Define high level targets (project name, not actual output files)
-.PHONY: $(1) clean-$(1) clean-all-$(1) show-$(1)
+.PHONY: $(1) intermediate-$(1) clean-$(1) clean-all-$(1) show-$(1)
+
+# Project build outputs inherit project specific variables
+# Compiled outputs (.o)
+$$($(1)_OBJS): CPPFLAGS := $$($(1)_CPPFLAGS)
+$$($(1)_OBJS): CXXFLAGS := $$($(1)_CXXFLAGS)
+# Linked outputs (.exe, .dll)  (not used by .lib)
+$$($(1)_OUTPUT): LDFLAGS := $$($(1)_LDFLAGS)
+$$($(1)_OUTPUT): LDLIBS := $$($(1)_LDLIBS)
 
 # Set any dependencies on other projects
 $(1): $(4)
 
 # Project specific build rule (for actual output file)
 $(1): $$($(1)_OUTPUT)
-# Project build rules inherit project specific variables
-$(1): CPPFLAGS := $$($(1)_CPPFLAGS)
-$(1): CXXFLAGS := $$($(1)_CXXFLAGS)
-$(1): LDFLAGS := $$($(1)_LDFLAGS)
-$(1): LDLIBS := $$($(1)_LDLIBS)
 
 # Output file depends on all object files (true for .exe, .dll, and .lib)
+# Note: This must be a direct dependency for build rules to pick up input files
+# This rule should not depend on the phony intermediate rule, as it hides inputs
 $$($(1)_OUTPUT): $$($(1)_OBJS)
+
+# Intermediate target depends on all object files
+intermediate-$(1): $$($(1)_OBJS)
 
 # Object files depend on source and dependency files
 $$($(1)_OBJS): $$($(1)_INTDIR)/%.o: $$($(1)_SRCDIR)/%.cpp $$($(1)_INTDIR)/%.d
