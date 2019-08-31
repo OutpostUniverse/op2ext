@@ -257,10 +257,10 @@ clean-gtest:
 define DefineUnitTestProject
 
 # Unit Test Project specific flags
-$(1)_CPPFLAGS ?= $$($(3)_CPPFLAGS) -I$$($(3)_SRCDIR) -I$(gtest_INCDIR)
+$(1)_CPPFLAGS ?= $$($(3)_CPPFLAGS) $$($(1)_inputSourceFolderIncludeOptions) -I$(gtest_INCDIR)
 $(1)_CXXFLAGS ?= $$($(3)_CXXFLAGS)
-$(1)_LDFLAGS ?= $$($(3)_LDFLAGS) -L$$(dir $$($(3)_OUTPUT)) $(gtest_LOCALBUILD_LDFLAGS)
-$(1)_LDLIBS ?= $$($(3)_LDLIBS) -l$$(basename $$(notdir $$($(3)_OUTPUT))) $(gtest_LINK_LDLIBS)
+$(1)_LDFLAGS ?= $$($(3)_LDFLAGS) $$($(1)_inputLibFolderIncludeOptions) $(gtest_LOCALBUILD_LDFLAGS)
+$(1)_LDLIBS ?= $$($(3)_LDLIBS) $$($(1)_inputLibFileIncludeOptions) $(gtest_LINK_LDLIBS)
 
 # Define the Unit Test project
 $(call DefineCppProject,$(1),$(BUILDDIR)/$(config)/$(1)/unitTest.exe,$(2),$(3))
