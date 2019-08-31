@@ -165,7 +165,8 @@ $(1): $$($(1)_OUTPUT)
 # Output file depends on all object files (true for .exe, .dll, and .lib)
 # Note: This must be a direct dependency for build rules to pick up input files
 # This rule should not depend on the phony intermediate rule, as it hides inputs
-$$($(1)_OUTPUT): $$($(1)_OBJS)
+# Output file also depends on all static library dependencies
+$$($(1)_OUTPUT): $$($(1)_OBJS) $$($(1)_inputLibs)
 
 # Intermediate target depends on all object files
 intermediate-$(1): $$($(1)_OBJS)
