@@ -34,22 +34,6 @@ $(eval $(call DefineCppProject,op2extDll,op2ext.dll,srcDLL,op2extLib))
 $(eval $(call DefineUnitTestProject,test,test,op2extLib))
 
 
-# Docker commands
-
-.PHONY: docker-build-image docker-push
-
-docker-build-image:
-	docker build .circleci/ --tag outpostuniverse/gcc-mingw-wine-googletest-circleci:latest --tag outpostuniverse/gcc-mingw-wine-googletest-circleci:1.2
-docker-push:
-	docker login
-	docker push outpostuniverse/gcc-mingw-wine-googletest-circleci
-
-
-# CircleCI commands
-
-.PHONY: circleci-build circleci-validate
-
-circleci-build:
-	circleci build
-circleci-validate:
-	circleci config validate
+# Docker and CircleCI commands
+$(eval $(call DefineDockerImage,.circleci/,outpostuniverse/gcc-mingw-wine-googletest-circleci,1.2))
+$(eval $(call DefineCircleCi))

@@ -274,3 +274,34 @@ check-$(1): $(1)
 check: check-$(1)
 
 endef
+
+
+#### Docker commands ####
+# Used to build and publish Docker images, which set a standard build/test environment
+
+# DefineDockerImage(imageBuildFolder, imageTagName, imageTagVersion)
+define DefineDockerImage
+
+.PHONY: docker-build-image docker-push
+
+docker-build-image:
+	docker build "$(1)" --tag $(2):latest --tag $(2):$(3)
+docker-push:
+	docker login
+	docker push $(2)
+
+endef
+
+
+#### CircleCI commands ####
+
+define DefineCircleCi
+
+.PHONY: circleci-build circleci-validate
+
+circleci-build:
+	circleci build
+circleci-validate:
+	circleci config validate
+
+endef
