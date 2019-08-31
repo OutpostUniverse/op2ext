@@ -21,7 +21,8 @@ LDLIBS := -lOutpost2DLL -lstdc++fs -lws2_32
 
 op2extDll_DEFINES := -DOP2EXT_INTERNAL_BUILD
 
-all: op2extLib
+# By default, compile and link static library, and compile (but not link) DLL
+all: op2extLib intermediate-op2extDll
 
 # Debug
 # $(info $(call DefineCppProject,op2extLib,op2ext.lib,srcStatic))
