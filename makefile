@@ -1,3 +1,6 @@
+# To see a list of available make targets from bash, type:
+# make <space> <tab> <tab>
+
 # =====
 # Note: MinGW is not able to link the DLL project due to name mangling
 # differences in the Outpost2DLL imported symbols. It is however able to
