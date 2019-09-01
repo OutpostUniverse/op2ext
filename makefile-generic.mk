@@ -101,7 +101,7 @@ White := \e[0m
 # Set default build directory
 BUILDDIR ?= .build
 
-# DefineProject(ProjectName, Output, SourceFolder, [Dependencies])
+# DefineProject(ProjectName, Output, SourceFindPattern, [Dependencies])
 # Uses project specific flags (or global defaults without "ProjectName_" prefix):
 #   ProjectName_CPPFLAGS
 #   ProjectName_CXXFLAGS
@@ -136,10 +136,11 @@ $(1)_LDLIBS ?= $(LDLIBS) $$($(1)_inputLibFileIncludeOptions)
 # Project specific source folder, intermediate folder, and output file
 $(1)_INTDIR := $(BUILDDIR)/$(config)/$(1)/
 $(1)_OUTPUT := $(2)
-$(1)_SRCDIR := $(3)
+$(1)_SRCFINDPATTERN := $(3)
+$(1)_SRCDIR := $$(dir $(3))
 
 # Project specific source files (directory scan), and associated object and dependency files
-$(1)_SRCS := $$(shell find $$($(1)_SRCDIR) -name '*.cpp')
+$(1)_SRCS := $$(shell find $$($(1)_SRCFINDPATTERN) -name '*.cpp')
 $(1)_OBJS := $$(patsubst $$($(1)_SRCDIR)%.cpp,$$($(1)_INTDIR)%.o,$$($(1)_SRCS))
 $(1)_DEPS := $$(patsubst %.o,%.d,$$($(1)_OBJS))
 
