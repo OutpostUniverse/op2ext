@@ -1,5 +1,6 @@
 #include "FileSystemHelper.h"
 #include <gtest/gtest.h>
+// #include <string>
 
 
 TEST(FileSystemHelper, GetGameDirectory) {
@@ -14,6 +15,14 @@ TEST(FileSystemHelper, GetOutpost2IniPath) {
 	EXPECT_EQ("outpost2.ini", iniPath.filename().string()) << iniPath;
 }
 
-TEST(FileSystemHelper, GetOP2PrivateProfileString) {
-	EXPECT_EQ("", GetOP2PrivateProfileString("NonExistentSection", "NonExistentKey"));
+TEST(FileSystemHelper, GetOutpost2IniSetting)
+{
+	EXPECT_EQ("1", GetOutpost2IniSetting("Game", "Music"));
+	
+	// Check Case Insensitive
+	EXPECT_EQ("1", GetOutpost2IniSetting("game", "MUSIC"));
+
+	EXPECT_EQ("", GetOutpost2IniSetting("BadSectionName", "Music"));
+	EXPECT_EQ("", GetOutpost2IniSetting("Game", "BadKey"));
+	EXPECT_EQ("", GetOutpost2IniSetting("BadSectionName", "BadKey"));
 }

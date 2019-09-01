@@ -40,12 +40,16 @@ EXPORT void mod_init()
 	TestPublicInterface();
 
 	TestGetConsoleModDir_s();
-	TestGetConsoleModDir();
 }
 
 EXPORT void mod_run()
 {
 	OutputDebugString("Test Module mod_run called.\n");
+
+	TestIsModuleLoaded();
+	TestIsConsoleModuleLoaded();
+	TestIsIniModuleLoaded();
+	TestGetLoadedModuleNames();
 }
 
 EXPORT void mod_destroy()

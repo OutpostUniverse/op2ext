@@ -9,19 +9,30 @@
 #include <iterator>
 #include <stdexcept>
 #include <cstddef>
+#include <system_error>
 
-std::string moduleDirectory;
 
-ConsoleModuleLoader::ConsoleModuleLoader()
+extern std::string moduleDirectory;
+
+
+ConsoleModuleLoader::ConsoleModuleLoader(const std::string& moduleRelativeDirectory)
 {
-	moduleDirectory = FindModuleDirectory();
-}
+	// Hack that clears variable not included in class
+	moduleDirectory = "";
 
-ConsoleModuleLoader::ConsoleModuleLoader(const std::string& testModuleDirectory)
-{
-	OutputDebugString("Console Module constructed in test mode.");
+	if (moduleRelativeDirectory.empty()) {
+		return; // No Console Module Loaded
+	}
 
-	moduleDirectory = testModuleDirectory;
+	moduleDirectory = fs::path(GetGameDirectory()).append(moduleRelativeDirectory).string();
+	moduleName = ToLower(moduleRelativeDirectory);
+
+	std::error_code errorCode;
+	if (!fs::is_directory(moduleDirectory, errorCode)) {
+		PostErrorMessage(__FILE__, __LINE__, "Unable to access the provided module directory. " + errorCode.message());
+		moduleDirectory = "";
+		moduleName = "";
+	}
 }
 
 std::string ConsoleModuleLoader::GetModuleDirectory()
@@ -31,12 +42,12 @@ std::string ConsoleModuleLoader::GetModuleDirectory()
 
 std::string ConsoleModuleLoader::GetModuleName()
 {
-	return ToLower(moduleDirectory);
+	return moduleName;
 }
 
 std::size_t ConsoleModuleLoader::Count()
 {
-	return moduleDirectory != "" ? 1 : 0;
+	return moduleName != "" ? 1 : 0;
 }
 
 bool ConsoleModuleLoader::IsModuleLoaded(std::string moduleName)
@@ -48,35 +59,10 @@ bool ConsoleModuleLoader::IsModuleLoaded(std::string moduleName)
 	return ToLowerInPlace(moduleName) == GetModuleName();
 }
 
-int __fastcall GetArtPath(void*, int, char*, char*, char *destBuffer, int bufferSize, char *defaultValue)
+int __fastcall GetArtPath(void*, int, char*, char*, char* destBuffer, int bufferSize, char* defaultValue)
 {
 	strcpy_s(destBuffer, bufferSize, moduleDirectory.c_str());
 	return moduleDirectory.size();
-}
-
-// Returns an empty string if no module is found or if the module request is ill-formed.
-std::string ConsoleModuleLoader::FindModuleDirectory()
-{
-	std::vector<std::string> arguments;
-	ParseCommandLine(arguments);
-
-	if (arguments.size() == 0) {
-		return std::string();
-	}
-
-	std::string switchName = arguments[0];
-	arguments.erase(arguments.begin()); //Remove switchName from arguments
-
-	if (!ParseArgumentName(switchName)) {
-		return std::string();
-	}
-
-	if (switchName != "loadmod") {
-		PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, "Provided switch is not supported: " + switchName);
-		return std::string();
-	}
-
-	return ParseLoadModCommand(arguments);
 }
 
 void ConsoleModuleLoader::LoadModule()
@@ -85,20 +71,19 @@ void ConsoleModuleLoader::LoadModule()
 		return;
 	}
 
-	// Check if directory exists.
-	if (GetFileAttributesA(moduleDirectory.c_str()) == INVALID_FILE_ATTRIBUTES) {
-		PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, "Module directory does not exist");
+	std::error_code errorCode;
+	if (!fs::is_directory(moduleDirectory, errorCode)) {
+		PostErrorMessage(__FILE__, __LINE__, "Unable to access the provided module directory. " + errorCode.message());
 		return;
 	}
 
 	SetArtPath();
-
 	LoadModuleDll();
 }
 
 void ConsoleModuleLoader::LoadModuleDll()
 {
-	const std::string dllName = fs::path(moduleDirectory).append("\\op2mod.dll").string();
+	const std::string dllName = fs::path(moduleDirectory).append("op2mod.dll").string();
 
 	if (!fs::exists(dllName)) {
 		return; // Some console modules do not contain dlls
@@ -117,96 +102,8 @@ void ConsoleModuleLoader::LoadModuleDll()
 		const std::string errorMessage("Unable to load console module's dll from " + dllName +
 			". " + GetLastErrorStdString(TEXT("LoadLibrary")));
 
-		PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, errorMessage);
+		PostErrorMessage(__FILE__, __LINE__, errorMessage);
 	}
-}
-
-void ConsoleModuleLoader::ParseCommandLine(std::vector<std::string>& arguments)
-{
-	arguments.clear();
-	int argumentCount;
-
-	LPWSTR *commandLineArgs = CommandLineToArgvW(GetCommandLineW(), &argumentCount);
-	if (commandLineArgs == nullptr) {
-		PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, "Unable to retrieve command line arguments attached to Outpost2.exe.");
-	}
-	else {
-		try {
-			// Ignore the first argument, which is the path of the executable.
-			for (int i = 1; i < argumentCount; i++) {
-				std::string argument;
-				if (!ConvertLPWToString(argument, commandLineArgs[i])) {
-					PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, "Unable to cast the " + std::to_string(i) +
-						" command line argument from LPWSTR to char*. Further parsing of command line arguments aborted.");
-					break;
-				}
-				arguments.push_back(argument);
-			}
-		}
-		// Catch STL produced exceptions
-		catch (std::exception& e) {
-			PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, "Error occurred attempting to parse command line arguments. Further parshing of command line arguments aborted. Internal Error: " + std::string(e.what()));
-		}
-	}
-
-	LocalFree(commandLineArgs);
-}
-
-bool ConsoleModuleLoader::ParseArgumentName(std::string& argument)
-{
-	if (argument[0] != '/' && argument[0] != '-') {
-		std::string message("A switch was expected but not found. Prefix switch name with '/' or '-'. The following statement was found instead: " + argument);
-		PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, message);
-		argument.clear();
-		return false;
-	}
-
-	argument.erase(argument.begin(), argument.begin() + 1); //Removes leading - or /
-	std::transform(argument.begin(), argument.end(), argument.begin(), ::tolower);
-
-	return true;
-}
-
-std::string ConsoleModuleLoader::ParseLoadModCommand(std::vector<std::string> arguments)
-{
-	if (arguments.empty()) {
-		PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, "No relative directory argument provided for the switch loadmod");
-		return std::string();
-	}
-
-	try
-	{
-		std::string modRelativeDirectory = FormModRelativeDirectory(arguments);
-
-		std::string modDirectory = fs::path(GetGameDirectory()).append(modRelativeDirectory).string();
-
-		if (GetFileAttributesA(modDirectory.c_str()) == INVALID_FILE_ATTRIBUTES) {
-			PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, "Module directory does not exist: " + modDirectory);
-			return std::string();
-		}
-
-		return modDirectory;
-	}
-	catch (std::exception e)
-	{
-		PostErrorMessage("ConsoleModuleLoader.cpp", __LINE__, "Unable to parse module directory");
-		return std::string();
-	}
-}
-
-std::string ConsoleModuleLoader::FormModRelativeDirectory(std::vector<std::string> arguments)
-{
-	std::string modRelativeDirectory;
-
-	for (std::size_t i = 0; i < arguments.size(); i++) {
-		modRelativeDirectory += arguments[i];
-
-		if (i < arguments.size() - 1) {
-			modRelativeDirectory += " ";
-		}
-	}
-
-	return modRelativeDirectory;
 }
 
 // Sets a directory called ART_PATH that is searched before looking in the root executable's directory.
@@ -219,9 +116,13 @@ void ConsoleModuleLoader::SetArtPath()
 
 	// Insert hooks to make OP2 look for files in the module's directory
 	// In ResManager::GetFilePath
-	Op2MemSetDword((void*)0x004715C5, (DWORD)&GetArtPath - (loadOffset + (DWORD)0x004715C5 + sizeof(void*)));
+	bool success = Op2RelinkCall(0x004715C5, reinterpret_cast<void*>(GetArtPath));
+
+	// Only modify memory at second location if first modification succeeds.
+	if (success) {
 	// In ResManager::CreateStream
-	Op2MemSetDword((void*)0x00471B87, (DWORD)&GetArtPath - (loadOffset + (DWORD)0x00471B87 + sizeof(void*)));
+	Op2RelinkCall(0x00471B87, reinterpret_cast<void*>(GetArtPath));
+	}
 }
 
 void ConsoleModuleLoader::UnloadModule()
