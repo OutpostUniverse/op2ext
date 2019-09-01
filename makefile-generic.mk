@@ -65,6 +65,11 @@ COMPILE.cpp = $(CXX) $(OUTPUT_OPTION) $(DEPFLAGS) $(CPPFLAGS) $(CXXFLAGS) $(TARG
 Green := \e[1;32m
 White := \e[0m
 
+# Clear suffix rules
+# This prevents confusing error messages when a target name is mistyped
+# Without this Make would attempted to build targetName.o with no prerequisites
+.SUFFIXES:
+
 ## Rules to build various final target ouputs ##
 
 %.exe:
