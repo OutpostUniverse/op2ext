@@ -134,13 +134,13 @@ $(1)_LDFLAGS ?= $(LDFLAGS) $$($(1)_inputLibFolderIncludeOptions)
 $(1)_LDLIBS ?= $(LDLIBS) $$($(1)_inputLibFileIncludeOptions)
 
 # Project specific source folder, intermediate folder, and output file
-$(1)_INTDIR := $(BUILDDIR)/$(config)/$(1)
+$(1)_INTDIR := $(BUILDDIR)/$(config)/$(1)/
 $(1)_OUTPUT := $(2)
 $(1)_SRCDIR := $(3)
 
 # Project specific source files (directory scan), and associated object and dependency files
 $(1)_SRCS := $$(shell find $$($(1)_SRCDIR) -name '*.cpp')
-$(1)_OBJS := $$(patsubst $$($(1)_SRCDIR)/%.cpp,$$($(1)_INTDIR)/%.o,$$($(1)_SRCS))
+$(1)_OBJS := $$(patsubst $$($(1)_SRCDIR)%.cpp,$$($(1)_INTDIR)%.o,$$($(1)_SRCS))
 $(1)_DEPS := $$(patsubst %.o,%.d,$$($(1)_OBJS))
 
 ## Project specific build rules and dependencies ##
@@ -172,7 +172,7 @@ $$($(1)_OUTPUT): $$($(1)_OBJS) $$($(1)_inputLibs)
 intermediate-$(1): $$($(1)_OBJS)
 
 # Object files depend on source and dependency files
-$$($(1)_OBJS): $$($(1)_INTDIR)/%.o: $$($(1)_SRCDIR)/%.cpp $$($(1)_INTDIR)/%.d
+$$($(1)_OBJS): $$($(1)_INTDIR)%.o: $$($(1)_SRCDIR)%.cpp $$($(1)_INTDIR)%.d
 
 # Include all generated dependency info
 # (The `wildcard` will filter out files that don't exist to avoid warnings)
