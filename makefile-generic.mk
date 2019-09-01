@@ -145,7 +145,7 @@ $(1)_LDLIBS ?= $(LDLIBS) $$($(1)_inputLibFileIncludeOptions)
 $(1)_INTDIR := $(BUILDDIR)/$(config)/$(1)/
 $(1)_OUTPUT := $(2)
 $(1)_SRCFINDPATTERN := $(3)
-$(1)_SRCDIR := $$(dir $(3))
+$(1)_SRCDIR := $(dir $(3))
 
 # Project specific source files (directory scan), and associated object and dependency files
 $(1)_SRCS := $$(shell find $$($(1)_SRCFINDPATTERN) -name '*.cpp')
