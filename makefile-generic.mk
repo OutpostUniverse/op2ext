@@ -109,6 +109,14 @@ BUILDDIR ?= .build
 #   ProjectName_LDLIBS
 define DefineCppProject =
 
+$(call DefineCppProjectVariables,$(1),$(2),$(3),$(4))
+$(call DefineCppProjectTargets,$(1),$(2),$(3),$(4))
+
+endef
+
+
+define DefineCppProjectVariables
+
 ## Determine include and linking requirements for dependencies
 
 # Determine source folders of dependencies for header includes
@@ -143,6 +151,11 @@ $(1)_SRCDIR := $$(dir $(3))
 $(1)_SRCS := $$(shell find $$($(1)_SRCFINDPATTERN) -name '*.cpp')
 $(1)_OBJS := $$(patsubst $$($(1)_SRCDIR)%.cpp,$$($(1)_INTDIR)%.o,$$($(1)_SRCS))
 $(1)_DEPS := $$(patsubst %.o,%.d,$$($(1)_OBJS))
+
+endef
+
+
+define DefineCppProjectTargets
 
 ## Project specific build rules and dependencies ##
 
