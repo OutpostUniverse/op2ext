@@ -1,99 +1,33 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{e1e9d4be-ad81-444f-9363-c0ff5cbd0a45}</UniqueIdentifier>
-      <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{7d5fe7b3-fe1a-4aac-bf30-149a7fc653da}</UniqueIdentifier>
-      <Extensions>h;hpp;hxx;hm;inl</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{dee9bab8-3306-4795-9a0a-1d0a43037c65}</UniqueIdentifier>
-      <Extensions>ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe</Extensions>
-    </Filter>
+    <ClCompile Include="IpDropDown.cpp"/>
+    <ClCompile Include="VolList.cpp"/>
+    <ClCompile Include="IniModuleLoader.cpp"/>
+    <ClCompile Include="FileSystemHelper.cpp"/>
+    <ClCompile Include="GlobalDefines.cpp"/>
+    <ClCompile Include="OP2Memory.cpp"/>
+    <ClCompile Include="ConsoleModuleLoader.cpp"/>
+    <ClCompile Include="op2ext-Internal.cpp"/>
+    <ClCompile Include="Logger.cpp"/>
+    <ClCompile Include="WindowsModule.cpp"/>
+    <ClCompile Include="WindowsErrorCode.cpp"/>
+    <ClCompile Include="StringConversion.cpp"/>
+    <ClCompile Include="ConsoleArgumentParser.cpp"/>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="IpDropDown.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="VolList.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="IniModuleLoader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="FileSystemHelper.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GlobalDefines.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="OP2Memory.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ConsoleModuleLoader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="op2ext-Internal.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Logger.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="WindowsModule.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="WindowsErrorCode.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="StringConversion.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ConsoleArgumentParser.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="IpDropDown.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="VolList.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IniModuleLoader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="FileSystemHelper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GlobalDefines.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="OP2Memory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ConsoleModuleLoader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="op2ext-Internal.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Logger.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WindowsModule.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WindowsErrorCode.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="StringConversion.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ConsoleArgumentParser.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    <ClInclude Include="IpDropDown.h"/>
+    <ClInclude Include="VolList.h"/>
+    <ClInclude Include="IniModuleLoader.h"/>
+    <ClInclude Include="FileSystemHelper.h"/>
+    <ClInclude Include="GlobalDefines.h"/>
+    <ClInclude Include="OP2Memory.h"/>
+    <ClInclude Include="ConsoleModuleLoader.h"/>
+    <ClInclude Include="op2ext-Internal.h"/>
+    <ClInclude Include="Logger.h"/>
+    <ClInclude Include="WindowsModule.h"/>
+    <ClInclude Include="WindowsErrorCode.h"/>
+    <ClInclude Include="StringConversion.h"/>
+    <ClInclude Include="ConsoleArgumentParser.h"/>
   </ItemGroup>
 </Project>
