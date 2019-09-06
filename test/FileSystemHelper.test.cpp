@@ -4,6 +4,8 @@
 
 TEST(FileSystemHelper, GetGameDirectory) {
 	auto gameDirectory = fs::path(GetGameDirectory());
+	// Work around MinGW failures for paths that end with a directory separator
+	gameDirectory += ".";
 	EXPECT_TRUE(gameDirectory.is_absolute()) << gameDirectory.string() + " is not an absolute path.";
 	EXPECT_TRUE(fs::exists(gameDirectory)) << gameDirectory.string() + " does not exist on filesystem.";
 	EXPECT_TRUE(fs::is_directory(gameDirectory)) << gameDirectory.string() + " is not a directory.";
