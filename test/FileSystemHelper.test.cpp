@@ -1,6 +1,5 @@
 #include "FileSystemHelper.h"
 #include <gtest/gtest.h>
-#include <string>
 
 
 TEST(FileSystemHelper, GetGameDirectory) {
