@@ -43,7 +43,9 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 		SetLoadOffset();
 
 		// Replace call to gTApp.Init with custom routine
-		Op2RelinkCall(0x004A8878, reinterpret_cast<void*>(ExtInit));
+		if (!Op2RelinkCall(0x004A8878, reinterpret_cast<void*>(ExtInit))) {
+			return FALSE;
+		}
 
 		// Disable any more thread attach calls
 		DisableThreadLibraryCalls(hInstance);

@@ -110,8 +110,10 @@ bool Op2RelinkCall(std::size_t callOffset, void* newFunctionAddress)
 
 	// Verify this is being run on a CALL instruction
 	if (*reinterpret_cast<char*>(callOffset) != 0xE8) {
-		throw std::runtime_error("Op2RelinkCall error: No CALL instruction found at given address: " + AddrToHexString(callOffset));
+		PostErrorMessage("OP2Memory", __LINE__, "Op2RelinkCall error: No CALL instruction found at given address: " + AddrToHexString(callOffset));
+		return false;
 	}
+
 	const auto postCallInstructionAddress = loadOffset + callOffset + (1 + sizeof(void*));
 	return Op2MemSetDword(reinterpret_cast<void*>(callOffset + 1), reinterpret_cast<std::size_t>(newFunctionAddress) - postCallInstructionAddress);
 }
