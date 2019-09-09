@@ -43,7 +43,7 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 		SetLoadOffset();
 
 		// Replace call to gTApp.Init with custom routine
-		if (!Op2RelinkCall(0x004A8878, reinterpret_cast<void*>(ExtInit))) {
+		if (!Op2RelinkCall(0x004A8877, reinterpret_cast<void*>(ExtInit))) {
 			return FALSE;
 		}
 
@@ -86,7 +86,7 @@ int __fastcall ExtInit(TApp *thisPtr, int)
 	Op2MemSetDword(loadLibraryDataAddr, (int)&loadLibraryNewAddr);
 
 	// Replace call to gTApp.ShutDown with custom routine
-	Op2RelinkCall(0x004A88A6, reinterpret_cast<void*>(ExtShutDown));
+	Op2RelinkCall(0x004A88A5, reinterpret_cast<void*>(ExtShutDown));
 
 	// Call original function
 	return thisPtr->Init();
