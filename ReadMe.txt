@@ -1,7 +1,7 @@
-Outpost 2 Extension Module
+Outpost 2 Extension Module Loader
 ------------------------------------------
 
-Outpost 2 extension modules (op2ext) allows modifying and extending Outpost 2 through loading of alternate game resources or injecting indecently compiled C/C++ DLLs. The current version of Outpost 2 is maintained by the Outpost 2 community and may be found at https://www.outpost2.net/.
+Outpost 2 extension module loader (op2ext) allows modifying and extending Outpost 2 through loading of alternate game resources or injecting independently compiled C/C++ DLLs. The current version of Outpost 2 is maintained by the Outpost 2 community and may be found at https://www.outpost2.net/.
 
 Authors: BlackBox (op2hacker)
          Hooman
@@ -11,11 +11,11 @@ Authors: BlackBox (op2hacker)
 Summary
 ------------------------------------------
 
-Outpost 2 Extension is a dynamic link (DLL) library written in C++. Source code may be found at https://github.com/OutpostUniverse/op2ext. OP2Ext compiles against x86 Windows. The current solution/project files use Visual Studio.
+Outpost 2 Extension is a dynamic link library (DLL) written in C++. Source code may be found at https://github.com/OutpostUniverse/op2ext. The op2ext library compiles for x86 Windows. The current solution/project files use Visual Studio.
 
 Outpost 2 requires loading libraries to fixed base addresses. Modern compilers default to randomized base addresses. To prevent possible interference with other libraries associated with Outpost 2, op2ext is designed to load into address 0x10000000.
 
-Both the op2ext and TestModule projects use post build event scripts to copy files into the Outpost 2 directoy. The default expected location is ./Outpost2/. If you plan on testing op2ext against a copy of Outpost 2 in a different directory, review and adjust the post build scripts before compiling.
+Both the op2ext and TestModule projects use post build event scripts to copy files into the Outpost 2 directory. The default expected location is ./Outpost2/. If you plan on testing op2ext against a copy of Outpost 2 in a different directory, review and adjust the post build scripts before compiling.
 
 op2ext provides the following extensions for Outpost 2:
 
