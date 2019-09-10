@@ -8,11 +8,11 @@
 // Load all active modules specified in the .ini file
 void IniModuleLoader::LoadModules()
 {
-	std::vector<std::string> sectionNames = GetSectionNames();
+	const auto moduleNames = GetModuleNames("ExternalModules");
 
-	for (const auto& sectionName : sectionNames)
+	for (const auto& moduleName : moduleNames)
 	{
-		LoadModule(sectionName);
+		LoadModule(moduleName);
 	}
 }
 
@@ -77,9 +77,9 @@ bool IniModuleLoader::IsModuleLoaded(std::string moduleName)
 	return false;
 }
 
-std::vector<std::string> IniModuleLoader::GetSectionNames()
+std::vector<std::string> IniModuleLoader::GetModuleNames(const std::string& moduleType)
 {
-	std::string sectionNames = GetOutpost2IniSetting("Game", "LoadAddons");
+	std::string sectionNames = GetOutpost2IniSetting("Game", moduleType);
 	std::vector<std::string> sectionNamesSplit = SplitString(sectionNames, ',', TrimOption::Both);
 
 	return sectionNamesSplit;

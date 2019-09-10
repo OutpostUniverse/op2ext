@@ -36,7 +36,7 @@ private:
 
 	std::vector<IniModuleEntry> modules;
 
-	std::vector<std::string> GetSectionNames();
+	std::vector<std::string> GetModuleNames(const std::string& moduleType);
 	void LoadModule(std::string sectionName);
 	HINSTANCE LoadModuleDll(const std::string& sectionName);
 	void CallModuleInitialization(IniModuleEntry& currentModule, std::string sectionName);
