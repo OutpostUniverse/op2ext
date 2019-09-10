@@ -87,6 +87,11 @@ void ModuleLoader::RegisterModule(std::unique_ptr<GameModule>& newGameModule)
 	modules.push_back(std::move(newGameModule));
 };
 
+void ModuleLoader::RegisterModule(std::unique_ptr<GameModule>&& newGameModule)
+{
+	RegisterModule(newGameModule);
+}
+
 void ModuleLoader::InitializeModules()
 {
 	for (auto& gameModule : modules)

@@ -20,6 +20,7 @@ public:
 
 	// Module Manager takes ownership of GameModule object
 	void RegisterModule(std::unique_ptr<GameModule>& newGameModule);
+	void RegisterModule(std::unique_ptr<GameModule> && newGameModule);
 
 	void InitializeModules();
 
