@@ -83,6 +83,9 @@
       <BaseAddress>0x10000000</BaseAddress>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
+    <Lib>
+      <AdditionalDependencies>wsock32.lib</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -121,6 +124,9 @@
       <BaseAddress>0x10000000</BaseAddress>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
+    <Lib>
+      <AdditionalDependencies>wsock32.lib</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ConsoleArgumentParser.cpp" />
