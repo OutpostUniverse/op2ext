@@ -10,6 +10,7 @@
 #include <string>
 #include <sstream>
 
+IPDropDown ipDropDown;
 void LocateVolFiles(const std::string& relativeDirectory = "");
 
 // Declaration for patch to LoadLibrary, where it loads OP2Shell.dll
@@ -34,7 +35,6 @@ void __fastcall ExtShutDown(TApp *thisPtr, int);
 
 DWORD* loadLibraryDataAddr = (DWORD*)0x00486E0A;
 DWORD loadLibraryNewAddr = (DWORD)LoadLibraryNew;
-
 
 BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 {
@@ -64,7 +64,7 @@ int __fastcall ExtInit(TApp *thisPtr, int)
 		PostErrorMessage(__FILE__, __LINE__, stringStream.str());
 	}
 
-	InstallIpDropDown();
+	ipDropDown.Initialize();
 
 	// Order of precedence for loading vol files is:
 	// ART_PATH (from console module), Console Module, Ini Modules, Addon directory, Game directory
@@ -100,6 +100,8 @@ void __fastcall ExtShutDown(TApp *thisPtr, int)
 
 	// Remove any active modules from the .ini file
 	iniModuleLoader.UnloadModules();
+
+	ipDropDown.Destroy();
 }
 
 /**

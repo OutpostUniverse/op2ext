@@ -1,5 +1,4 @@
 #include "IpDropDown.h"
-
 #include "../FileSystemHelper.h"
 #include "../OP2Memory.h"
 #include <winsock.h> // From winsock.h, using functions inet_addr & gethostbyname.
@@ -15,6 +14,20 @@ void WriteAddressesToIniFile();
 char ipStrings[10][47];
 int numIpStrings = 0;
 
+// Data constants for InstallIpDropDown
+DWORD newEnableWindowAddr = (DWORD)EnableWindowNew;
+DWORD newInetAddr = (DWORD)inet_addrNew;
+DWORD* populateComboBoxAddr = (DWORD*)0x004197C1;
+DWORD* saveIpTextAddr = (DWORD*)0x004C0E36;
+void* nopDataAddr = (void*)0x0041988F;
+
+void IPDropDown::Initialize()
+{
+	// patch the call to EnableWindow so we can add strings.
+	Op2MemSetDword(populateComboBoxAddr, (int)&newEnableWindowAddr);
+	Op2MemSetDword(saveIpTextAddr, (int)&newInetAddr);
+	Op2MemSet(nopDataAddr, 0x90, 14);
+}
 
 BOOL __stdcall EnableWindowNew(HWND hWnd, BOOL bEnable)
 {
@@ -99,19 +112,4 @@ void WriteAddressesToIniFile()
 	for (int i = 0; i < numIpStrings; i++) {
 		WritePrivateProfileString("IPHistory", std::to_string(i).c_str(), ipStrings[i], iniPath.c_str());
 	}
-}
-
-// Data constants for InstallIpDropDown
-DWORD newEnableWindowAddr = (DWORD)EnableWindowNew;
-DWORD newInetAddr = (DWORD)inet_addrNew;
-DWORD* populateComboBoxAddr = (DWORD*)0x004197C1;
-DWORD* saveIpTextAddr = (DWORD*)0x004C0E36;
-void* nopDataAddr = (void*)0x0041988F;
-
-void InstallIpDropDown()
-{
-	// patch the call to EnableWindow so we can add strings.
-	Op2MemSetDword(populateComboBoxAddr, (int)&newEnableWindowAddr);
-	Op2MemSetDword(saveIpTextAddr, (int)&newInetAddr);
-	Op2MemSet(nopDataAddr, 0x90, 14);
 }
