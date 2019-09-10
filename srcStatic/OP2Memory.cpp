@@ -109,7 +109,7 @@ bool Op2RelinkCall(std::size_t callOffset, void* newFunctionAddress)
 	}
 
 	// Verify this is being run on a CALL instruction
-	if (*reinterpret_cast<unsigned char*>(callOffset) != 0xE8) {
+	if (*reinterpret_cast<unsigned char*>(callOffset + loadOffset) != 0xE8) {
 		PostErrorMessage(__FILE__, __LINE__, "Op2RelinkCall error: No CALL instruction found at given address: " + AddrToHexString(callOffset));
 		return false;
 	}
