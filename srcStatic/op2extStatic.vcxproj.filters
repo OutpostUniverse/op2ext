@@ -1,34 +1,34 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="IpDropDown.cpp"/>
-    <ClCompile Include="VolList.cpp"/>
-    <ClCompile Include="IniModuleLoader.cpp"/>
-    <ClCompile Include="FileSystemHelper.cpp"/>
-    <ClCompile Include="GlobalDefines.cpp"/>
-    <ClCompile Include="OP2Memory.cpp"/>
-    <ClCompile Include="ConsoleModuleLoader.cpp"/>
-    <ClCompile Include="op2ext-Internal.cpp"/>
-    <ClCompile Include="Logger.cpp"/>
-    <ClCompile Include="WindowsModule.cpp"/>
-    <ClCompile Include="WindowsErrorCode.cpp"/>
-    <ClCompile Include="StringConversion.cpp"/>
+    <ClCompile Include="VolList.cpp" />
+    <ClCompile Include="IniModuleLoader.cpp" />
+    <ClCompile Include="FileSystemHelper.cpp" />
+    <ClCompile Include="GlobalDefines.cpp" />
+    <ClCompile Include="OP2Memory.cpp" />
+    <ClCompile Include="ConsoleModuleLoader.cpp" />
+    <ClCompile Include="op2ext-Internal.cpp" />
+    <ClCompile Include="Logger.cpp" />
+    <ClCompile Include="WindowsModule.cpp" />
+    <ClCompile Include="WindowsErrorCode.cpp" />
+    <ClCompile Include="StringConversion.cpp" />
+    <ClCompile Include="ConsoleArgumentParser.cpp" />
     <ClCompile Include="GameModules\IpDropDown.cpp">
       <Filter>GameModules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="IpDropDown.h"/>
-    <ClInclude Include="VolList.h"/>
-    <ClInclude Include="IniModuleLoader.h"/>
-    <ClInclude Include="FileSystemHelper.h"/>
-    <ClInclude Include="GlobalDefines.h"/>
-    <ClInclude Include="OP2Memory.h"/>
-    <ClInclude Include="ConsoleModuleLoader.h"/>
-    <ClInclude Include="op2ext-Internal.h"/>
-    <ClInclude Include="Logger.h"/>
-    <ClInclude Include="WindowsModule.h"/>
-    <ClInclude Include="WindowsErrorCode.h"/>
+    <ClInclude Include="VolList.h" />
+    <ClInclude Include="IniModuleLoader.h" />
+    <ClInclude Include="FileSystemHelper.h" />
+    <ClInclude Include="GlobalDefines.h" />
+    <ClInclude Include="OP2Memory.h" />
+    <ClInclude Include="ConsoleModuleLoader.h" />
+    <ClInclude Include="op2ext-Internal.h" />
+    <ClInclude Include="Logger.h" />
+    <ClInclude Include="WindowsModule.h" />
+    <ClInclude Include="WindowsErrorCode.h" />
+    <ClInclude Include="ConsoleArgumentParser.h" />
     <ClInclude Include="StringConversion.h" />
     <ClInclude Include="GameModules\IpDropDown.h">
       <Filter>GameModules</Filter>
