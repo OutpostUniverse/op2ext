@@ -27,7 +27,12 @@
     <ClInclude Include="Logger.h"/>
     <ClInclude Include="WindowsModule.h"/>
     <ClInclude Include="WindowsErrorCode.h"/>
-    <ClInclude Include="StringConversion.h"/>
-    <ClInclude Include="ConsoleArgumentParser.h"/>
+    <ClInclude Include="StringConversion.h" />
+    <ClInclude Include="GameModules\IpDropDown.h">
+      <Filter>GameModules</Filter>
+    </ClInclude>
+    <ClInclude Include="GameModules\GameModule.h">
+      <Filter>GameModules</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
