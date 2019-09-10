@@ -13,7 +13,9 @@
     <ClCompile Include="WindowsModule.cpp"/>
     <ClCompile Include="WindowsErrorCode.cpp"/>
     <ClCompile Include="StringConversion.cpp"/>
-    <ClCompile Include="ConsoleArgumentParser.cpp"/>
+    <ClCompile Include="GameModules\IpDropDown.cpp">
+      <Filter>GameModules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IpDropDown.h"/>
@@ -34,5 +36,10 @@
     <ClInclude Include="GameModules\GameModule.h">
       <Filter>GameModules</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="GameModules">
+      <UniqueIdentifier>{65727fee-7f83-49ac-a2ca-c0f4a41e5cc9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

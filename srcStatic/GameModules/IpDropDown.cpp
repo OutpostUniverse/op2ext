@@ -1,7 +1,7 @@
 #include "IpDropDown.h"
 
-#include "FileSystemHelper.h"
-#include "OP2Memory.h"
+#include "../FileSystemHelper.h"
+#include "../OP2Memory.h"
 #include <winsock.h> // From winsock.h, using functions inet_addr & gethostbyname.
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
