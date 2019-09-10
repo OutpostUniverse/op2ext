@@ -1,4 +1,3 @@
-#include "GameModules/IpDropDown.h"
 #include "ModuleLoader.h"
 #include "StringConversion.h"
 #include "OP2Memory.h"
@@ -10,7 +9,7 @@
 #include <string>
 #include <sstream>
 
-IPDropDown ipDropDown;
+
 void LocateVolFiles(const std::string& relativeDirectory = "");
 
 // Declaration for patch to LoadLibrary, where it loads OP2Shell.dll
@@ -64,8 +63,6 @@ int __fastcall ExtInit(TApp *thisPtr, int)
 		PostErrorMessage(__FILE__, __LINE__, stringStream.str());
 	}
 
-	ipDropDown.Initialize();
-
 	// Order of precedence for loading vol files is:
 	// ART_PATH (from console module), Console Module, Ini Modules, Addon directory, Game directory
 
@@ -99,8 +96,6 @@ void __fastcall ExtShutDown(TApp *thisPtr, int)
 	consoleModLoader.UnloadModule();
 
 	moduleLoader.DestroyModules();
-
-	ipDropDown.Destroy();
 }
 
 /**

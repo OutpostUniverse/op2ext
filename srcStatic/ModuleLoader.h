@@ -28,6 +28,7 @@ public:
 private:
 	std::vector<std::unique_ptr<GameModule>> modules;
 
+	void RegisterInternalModules();
 	void RegisterExternalModules();
 	std::vector<std::string> GetModuleNames(const std::string& moduleType);
 };

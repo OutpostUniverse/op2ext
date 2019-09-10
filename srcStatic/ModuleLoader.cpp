@@ -1,4 +1,5 @@
 #include "ModuleLoader.h"
+#include "GameModules/IpDropDown.h"
 #include "GameModules/IniModule.h"
 #include "StringConversion.h"
 #include "FileSystemHelper.h"
@@ -6,7 +7,22 @@
 
 ModuleLoader::ModuleLoader() 
 {
+	RegisterInternalModules();
 	RegisterExternalModules();
+}
+
+void ModuleLoader::RegisterInternalModules()
+{
+	const auto internalModuleNames = GetModuleNames("InternalModules");
+
+	for (const auto& moduleName : internalModuleNames) {
+		if ("ipdropdown" == ToLower(moduleName)) {
+			RegisterModule(static_cast<std::unique_ptr<GameModule>>(std::make_unique<IPDropDown>()));
+		}
+		else {
+			PostErrorMessage(__FILE__, __LINE__, "A module named " + moduleName + " was requested to load from the Outpost2.ini file. This module cannot be found.");
+		}
+	}
 }
 
 void ModuleLoader::RegisterExternalModules()
