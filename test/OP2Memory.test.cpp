@@ -43,7 +43,7 @@ TEST_F(Op2RelinkCallTest, GoodOpcodeSelfCall) {
   // Opcode should stay the same
   EXPECT_EQ(CallOpcode, callInstruction.opcode);
   // Relative address should point back to itself
-  EXPECT_EQ(-sizeof(CallInstruction), callInstruction.relativeAddress);
+  EXPECT_EQ(static_cast<uint32_t>(-sizeof(CallInstruction)), callInstruction.relativeAddress);
 }
 
 TEST_F(Op2RelinkCallTest, BadOpcode) {
