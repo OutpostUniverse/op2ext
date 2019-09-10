@@ -24,6 +24,14 @@ void ModuleLoader::RegisterExternalModules()
 	}
 }
 
+std::vector<std::string> ModuleLoader::GetModuleNames(const std::string& moduleType)
+{
+	std::string sectionNames = GetOutpost2IniSetting("Game", moduleType);
+	std::vector<std::string> sectionNamesSplit = SplitString(sectionNames, ',', TrimOption::Both);
+
+	return sectionNamesSplit;
+}
+
 std::string ModuleLoader::GetModuleName(std::size_t index)
 {
 	if (index >= modules.size()) {
@@ -44,14 +52,6 @@ bool ModuleLoader::IsModuleLoaded(std::string moduleName)
 	}
 
 	return false;
-}
-
-std::vector<std::string> ModuleLoader::GetModuleNames(const std::string& moduleType)
-{
-	std::string sectionNames = GetOutpost2IniSetting("Game", moduleType);
-	std::vector<std::string> sectionNamesSplit = SplitString(sectionNames, ',', TrimOption::Both);
-
-	return sectionNamesSplit;
 }
 
 // Module Manager takes ownership of GameModule object
