@@ -112,12 +112,12 @@ OP2EXT_API bool IsConsoleModuleLoaded(const char* moduleName)
 
 OP2EXT_API bool IsIniModuleLoaded(const char* moduleName)
 {
-	return iniModuleLoader.IsModuleLoaded(moduleName);
+	return moduleLoader.IsModuleLoaded(moduleName);
 }
 
 OP2EXT_API size_t GetLoadedModuleCount()
 {
-	return iniModuleLoader.Count() + consoleModLoader.Count();
+	return moduleLoader.Count() + consoleModLoader.Count();
 }
 
 OP2EXT_API size_t GetLoadedModuleName(size_t moduleIndex, char* buffer, size_t bufferSize)
@@ -126,8 +126,8 @@ OP2EXT_API size_t GetLoadedModuleName(size_t moduleIndex, char* buffer, size_t b
 
 	std::string moduleName;
 
-	if (moduleIndex < iniModuleLoader.Count()) {
-		moduleName = iniModuleLoader.GetModuleName(moduleIndex);
+	if (moduleIndex < moduleLoader.Count()) {
+		moduleName = moduleLoader.GetModuleName(moduleIndex);
 	}
 	else if (moduleIndex < GetLoadedModuleCount()) {
 		moduleName = consoleModLoader.GetModuleName();

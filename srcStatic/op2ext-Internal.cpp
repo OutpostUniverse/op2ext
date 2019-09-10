@@ -10,7 +10,7 @@ Logger logger;
 VolList volList;
 std::string moduleDirectory; // Must be defined + initialized before consoleModLoader
 ConsoleModuleLoader consoleModLoader(FindModuleDirectory());
-IniModuleLoader iniModuleLoader;
+ModuleLoader moduleLoader;
 
 
 void EnableTestEnvironment()

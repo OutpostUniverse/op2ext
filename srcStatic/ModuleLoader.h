@@ -11,7 +11,7 @@ Loads all modules defined in the Outpost2.ini file.
 Modules defined in the Outpost2.ini file are meant to be in use all the time with the game.
 To load a single module for a single game session, use the ModMgr.
 */
-class IniModuleLoader
+class ModuleLoader
 {
 public:
 	void LoadModules();

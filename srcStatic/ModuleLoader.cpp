@@ -6,7 +6,7 @@
 #include <stdexcept>
 
 // Load all active modules specified in the .ini file
-void IniModuleLoader::LoadModules()
+void ModuleLoader::LoadModules()
 {
 	const auto moduleNames = GetModuleNames("ExternalModules");
 
@@ -16,7 +16,7 @@ void IniModuleLoader::LoadModules()
 	}
 }
 
-void IniModuleLoader::LoadModule(std::string sectionName)
+void ModuleLoader::LoadModule(std::string sectionName)
 {
 	IniModuleEntry moduleEntry;
 	moduleEntry.iniSectionName = sectionName;
@@ -37,7 +37,7 @@ void IniModuleLoader::LoadModule(std::string sectionName)
 }
 
 // Unload all active modules specified in the .ini file
-bool IniModuleLoader::UnloadModules()
+bool ModuleLoader::UnloadModules()
 {
 	bool result = true;
 
@@ -55,7 +55,7 @@ bool IniModuleLoader::UnloadModules()
 	return result;
 }
 
-std::string IniModuleLoader::GetModuleName(std::size_t index)
+std::string ModuleLoader::GetModuleName(std::size_t index)
 {
 	if (index >= modules.size()) {
 		return "";
@@ -64,7 +64,7 @@ std::string IniModuleLoader::GetModuleName(std::size_t index)
 	return modules[index].iniSectionName;
 }
 
-bool IniModuleLoader::IsModuleLoaded(std::string moduleName)
+bool ModuleLoader::IsModuleLoaded(std::string moduleName)
 {
 	ToLowerInPlace(moduleName);
 
@@ -77,7 +77,7 @@ bool IniModuleLoader::IsModuleLoaded(std::string moduleName)
 	return false;
 }
 
-std::vector<std::string> IniModuleLoader::GetModuleNames(const std::string& moduleType)
+std::vector<std::string> ModuleLoader::GetModuleNames(const std::string& moduleType)
 {
 	std::string sectionNames = GetOutpost2IniSetting("Game", moduleType);
 	std::vector<std::string> sectionNamesSplit = SplitString(sectionNames, ',', TrimOption::Both);
@@ -85,7 +85,7 @@ std::vector<std::string> IniModuleLoader::GetModuleNames(const std::string& modu
 	return sectionNamesSplit;
 }
 
-HINSTANCE IniModuleLoader::LoadModuleDll(const std::string& sectionName)
+HINSTANCE ModuleLoader::LoadModuleDll(const std::string& sectionName)
 {
 	// Get the DLL name from the corresponding section
 	std::string dllName = GetOutpost2IniSetting(sectionName, "Dll");
@@ -101,7 +101,7 @@ HINSTANCE IniModuleLoader::LoadModuleDll(const std::string& sectionName)
 	return dllHandle;
 }
 
-void IniModuleLoader::CallModuleInitialization(IniModuleEntry& moduleEntry, std::string sectionName)
+void ModuleLoader::CallModuleInitialization(IniModuleEntry& moduleEntry, std::string sectionName)
 {
 	// Try to find an initialization function
 	InitModFunc initModFunc = (InitModFunc)GetProcAddress(moduleEntry.handle, "InitMod");
@@ -112,7 +112,7 @@ void IniModuleLoader::CallModuleInitialization(IniModuleEntry& moduleEntry, std:
 	}
 }
 
-bool IniModuleLoader::CallModuleDestruction(IniModuleEntry& moduleEntry)
+bool ModuleLoader::CallModuleDestruction(IniModuleEntry& moduleEntry)
 {
 	if (moduleEntry.destroyModFunc != 0) {
 		return moduleEntry.destroyModFunc();

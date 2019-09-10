@@ -73,7 +73,7 @@ int __fastcall ExtInit(TApp *thisPtr, int)
 	consoleModLoader.LoadModule();
 
 	// Load all active modules from the .ini file
-	iniModuleLoader.LoadModules();
+	moduleLoader.LoadModules();
 
 	LocateVolFiles("Addon");
 	LocateVolFiles(); //Searches root directory
@@ -99,7 +99,7 @@ void __fastcall ExtShutDown(TApp *thisPtr, int)
 	consoleModLoader.UnloadModule();
 
 	// Remove any active modules from the .ini file
-	iniModuleLoader.UnloadModules();
+	moduleLoader.UnloadModules();
 
 	ipDropDown.Destroy();
 }

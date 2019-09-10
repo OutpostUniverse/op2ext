@@ -18,4 +18,4 @@ void EnableTestEnvironment();
 extern Logger logger;
 extern VolList volList;
 extern ConsoleModuleLoader consoleModLoader;
-extern IniModuleLoader iniModuleLoader;
+extern ModuleLoader moduleLoader;
