@@ -16,6 +16,9 @@
       <Filter>GameModules</Filter>
     </ClCompile>
     <ClCompile Include="ModuleLoader.cpp" />
+    <ClCompile Include="GameModules\IniModule.cpp">
+      <Filter>GameModules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="VolList.h" />
@@ -36,6 +39,9 @@
       <Filter>GameModules</Filter>
     </ClInclude>
     <ClInclude Include="ModuleLoader.h" />
+    <ClInclude Include="GameModules\IniModule.h">
+      <Filter>GameModules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="GameModules">
