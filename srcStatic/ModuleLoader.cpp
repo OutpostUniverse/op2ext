@@ -1,58 +1,27 @@
 #include "ModuleLoader.h"
-#include "WindowsErrorCode.h"
-#include "FileSystemHelper.h"
+#include "GameModules/IniModule.h"
 #include "StringConversion.h"
-#include "GlobalDefines.h"
-#include <stdexcept>
+#include "FileSystemHelper.h"
 
-// Load all active modules specified in the .ini file
-void ModuleLoader::LoadModules()
+
+ModuleLoader::ModuleLoader() 
 {
-	const auto moduleNames = GetModuleNames("ExternalModules");
-
-	for (const auto& moduleName : moduleNames)
-	{
-		LoadModule(moduleName);
-	}
+	RegisterExternalModules();
 }
 
-void ModuleLoader::LoadModule(std::string sectionName)
+void ModuleLoader::RegisterExternalModules()
 {
-	IniModuleEntry moduleEntry;
-	moduleEntry.iniSectionName = sectionName;
+	const auto sectionNames = GetModuleNames("ExternalModules");
 
-	try {
-		moduleEntry.handle = LoadModuleDll(sectionName);
-	}
-	catch (const std::exception& error) {
-		PostErrorMessage(__FILE__, __LINE__, error.what());
-		return;
-	}
-
-	CallModuleInitialization(moduleEntry, sectionName);
-
-	moduleEntry.destroyModFunc = (DestroyModFunc)GetProcAddress(moduleEntry.handle, "DestroyMod");
-
-	modules.push_back(moduleEntry);
-}
-
-// Unload all active modules specified in the .ini file
-bool ModuleLoader::UnloadModules()
-{
-	bool result = true;
-
-	for (IniModuleEntry moduleEntry : modules)
+	for (const auto& sectionName : sectionNames)
 	{
-		if (!CallModuleDestruction(moduleEntry)) {
-			result = false;
+		try {
+			RegisterModule(static_cast<std::unique_ptr<GameModule>>(std::make_unique<IniModule>(sectionName)));
 		}
-
-		FreeLibrary(moduleEntry.handle);
+		catch (const std::exception& e) {
+			PostErrorMessage(__FILE__, __LINE__, e.what());
+		}
 	}
-
-	modules.clear();
-
-	return result;
 }
 
 std::string ModuleLoader::GetModuleName(std::size_t index)
@@ -61,7 +30,7 @@ std::string ModuleLoader::GetModuleName(std::size_t index)
 		return "";
 	}
 
-	return modules[index].iniSectionName;
+	return modules[index]->Name();
 }
 
 bool ModuleLoader::IsModuleLoaded(std::string moduleName)
@@ -69,11 +38,11 @@ bool ModuleLoader::IsModuleLoaded(std::string moduleName)
 	ToLowerInPlace(moduleName);
 
 	for (const auto& module : modules) {
-		if (moduleName == ToLower(module.iniSectionName)) {
+		if (moduleName == ToLower(module->Name())) {
 			return true;
 		}
 	}
-	
+
 	return false;
 }
 
@@ -85,38 +54,56 @@ std::vector<std::string> ModuleLoader::GetModuleNames(const std::string& moduleT
 	return sectionNamesSplit;
 }
 
-HINSTANCE ModuleLoader::LoadModuleDll(const std::string& sectionName)
+// Module Manager takes ownership of GameModule object
+void ModuleLoader::RegisterModule(std::unique_ptr<GameModule>& newGameModule)
 {
-	// Get the DLL name from the corresponding section
-	std::string dllName = GetOutpost2IniSetting(sectionName, "Dll");
-
-	// Try to load a DLL with the given name (possibly "")
-	HINSTANCE dllHandle = LoadLibrary(dllName.c_str());
-
-	if (dllHandle == 0) {
-		throw std::runtime_error("Unable to load DLL " + dllName + " from ini module section " +
-			sectionName + "." + GetLastErrorStdString(TEXT("LoadLibrary")));
+	if (newGameModule == nullptr) {
+		return;
 	}
 
-	return dllHandle;
+	for (const auto& currentGameModule : modules) {
+		if (newGameModule->Name() == currentGameModule->Name()) {
+			PostErrorMessage(__FILE__, __LINE__, "You may not add a module with an existing name. Duplicate copies of module name " + newGameModule->Name() + " found.");
+			return;
+		}
+	}
+
+	modules.push_back(std::move(newGameModule));
+};
+
+void ModuleLoader::InitializeModules()
+{
+	for (auto& gameModule : modules)
+	{
+		try {
+			gameModule->Initialize();
+		}
+		catch (const std::exception& e) {
+			PostErrorMessage(__FILE__, __LINE__, "Error loading module " + gameModule->Name() + ". " + std::string(e.what()));
+		}
+	}
 }
 
-void ModuleLoader::CallModuleInitialization(IniModuleEntry& moduleEntry, std::string sectionName)
+bool ModuleLoader::DestroyModules()
 {
-	// Try to find an initialization function
-	InitModFunc initModFunc = (InitModFunc)GetProcAddress(moduleEntry.handle, "InitMod");
+	bool areAllModulesProperlyDestroyed = true;
 
-	// Call the InitMod function if it exists
-	if (initModFunc != 0) {
-		initModFunc(sectionName.c_str());
+	for (auto& gameModule : modules)
+	{
+		try {
+			bool isModuleProperlyDestroyed = gameModule->Destroy();
+
+			if (!isModuleProperlyDestroyed) {
+				areAllModulesProperlyDestroyed = false;
+			}
+		}
+		catch (const std::exception& e) {
+			PostErrorMessage(__FILE__, __LINE__, "Error unloading module " + gameModule->Name() + ". " + std::string(e.what()));
+			areAllModulesProperlyDestroyed = false;
+		}
 	}
-}
 
-bool ModuleLoader::CallModuleDestruction(IniModuleEntry& moduleEntry)
-{
-	if (moduleEntry.destroyModFunc != 0) {
-		return moduleEntry.destroyModFunc();
-	}
+	modules.clear();
 
-	return true;
+	return areAllModulesProperlyDestroyed;
 }
