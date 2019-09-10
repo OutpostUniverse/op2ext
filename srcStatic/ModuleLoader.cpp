@@ -1,4 +1,4 @@
-#include "IniModuleLoader.h"
+#include "ModuleLoader.h"
 #include "WindowsErrorCode.h"
 #include "FileSystemHelper.h"
 #include "StringConversion.h"

@@ -5,7 +5,7 @@
 
 #include "Logger.h"
 #include "ConsoleModuleLoader.h"
-#include "IniModuleLoader.h"
+#include "ModuleLoader.h"
 #include "VolList.h"
 
 // Indicates if modules and Outpost 2 are running.

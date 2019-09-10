@@ -2,7 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="VolList.cpp" />
-    <ClCompile Include="IniModuleLoader.cpp" />
     <ClCompile Include="FileSystemHelper.cpp" />
     <ClCompile Include="GlobalDefines.cpp" />
     <ClCompile Include="OP2Memory.cpp" />
@@ -16,10 +15,10 @@
     <ClCompile Include="GameModules\IpDropDown.cpp">
       <Filter>GameModules</Filter>
     </ClCompile>
+    <ClCompile Include="ModuleLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="VolList.h" />
-    <ClInclude Include="IniModuleLoader.h" />
     <ClInclude Include="FileSystemHelper.h" />
     <ClInclude Include="GlobalDefines.h" />
     <ClInclude Include="OP2Memory.h" />
@@ -36,6 +35,7 @@
     <ClInclude Include="GameModules\GameModule.h">
       <Filter>GameModules</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="GameModules">

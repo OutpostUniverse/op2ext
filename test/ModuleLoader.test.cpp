@@ -1,4 +1,4 @@
-#include "IniModuleLoader.h"
+#include "ModuleLoader.h"
 #include <gtest/gtest.h>
 
 TEST(IniModuleLoader, InitializeNoModules)
