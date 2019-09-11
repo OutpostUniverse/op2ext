@@ -7,7 +7,7 @@
 TEST(ModuleLoader, NoModulesLoaded)
 {
 	ModuleLoader moduleManager;
-	EXPECT_EQ(0, moduleManager.Count());
+	EXPECT_EQ(0u, moduleManager.Count());
 	EXPECT_EQ("", moduleManager.GetModuleName(0));
 	EXPECT_FALSE(moduleManager.IsModuleLoaded("Test"));
 	EXPECT_NO_THROW(moduleManager.InitializeModules());
@@ -21,7 +21,7 @@ TEST(ModuleLoader, NullModulePassed)
 	EXPECT_NO_THROW(moduleManager.RegisterModule(gameModule));
 	
 	// A null unique pointer does not count as a loaded module
-	EXPECT_EQ(0, moduleManager.Count());
+	EXPECT_EQ(0u, moduleManager.Count());
 }
 
 TEST(ModuleLoader, InternalModulePassed)
@@ -34,7 +34,7 @@ TEST(ModuleLoader, InternalModulePassed)
 	// Ensure ipDropDown is transfered into moduleManager
 	EXPECT_TRUE(ipDropDown == nullptr);
 	
-	EXPECT_EQ(1, moduleManager.Count());
+	EXPECT_EQ(1u, moduleManager.Count());
 
 	// Check module name search is case insensitive
 	EXPECT_TRUE(moduleManager.IsModuleLoaded("IPDROPDOWN"));
