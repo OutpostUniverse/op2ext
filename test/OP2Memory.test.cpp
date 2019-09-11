@@ -42,8 +42,9 @@ TEST_F(Op2RelinkCallTest, GoodOpcodeSelfCall) {
   EXPECT_TRUE(Op2RelinkCall(callInstructionAddr, &callInstruction));
   // Opcode should stay the same
   EXPECT_EQ(CallOpcode, callInstruction.opcode);
-  // Relative address should point back to itself
-  EXPECT_EQ(static_cast<uint32_t>(-sizeof(CallInstruction)), callInstruction.relativeAddress);
+  // Relative address should point back to itself, at -sizeof(CallInstruction)
+  // To avoid unary minus with unsigned types: -x = ~x + 1
+  EXPECT_EQ(~sizeof(CallInstruction) + 1, callInstruction.relativeAddress);
 }
 
 TEST_F(Op2RelinkCallTest, BadOpcode) {
