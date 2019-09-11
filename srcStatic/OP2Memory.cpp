@@ -3,11 +3,20 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <sstream>
+#include <iomanip>
 
 
 bool memoryCommandsDisabled;
 std::size_t loadOffset = 0;
 const std::size_t ExpectedOutpost2Addr = 0x00400000;
+
+
+std::string AddrToHexString(std::size_t addr)
+{
+	std::ostringstream stringStream;
+	stringStream << std::setfill('0') << std::setw(8) << std::hex << addr;
+	return stringStream.str();
+}
 
 
 void DisableMemoryCommands()
@@ -45,9 +54,7 @@ bool Op2MemEdit(void* destBaseAddr, std::size_t size, Function memoryEditFunctio
 	DWORD oldAttr;
 	BOOL bSuccess = VirtualProtect(destAddr, size, PAGE_EXECUTE_READWRITE, &oldAttr);
 	if (!bSuccess) {
-		std::ostringstream stringStream;
-		stringStream << "Error unprotecting memory at: 0x" << std::hex << reinterpret_cast<std::size_t>(destAddr) << ".";
-		PostErrorMessage(__FILE__, __LINE__, stringStream.str());
+		PostErrorMessage(__FILE__, __LINE__, "Error unprotecting memory at: 0x" + AddrToHexString(reinterpret_cast<std::size_t>(destAddr)) + ".");
 		return false;
 	}
 
@@ -97,8 +104,18 @@ bool Op2MemSetDword(void* destBaseAddr, void* dword)
 // The `callOffset` parameter is the address of the encoded DWORD
 bool Op2RelinkCall(std::size_t callOffset, void* newFunctionAddress)
 {
-	const auto postCallInstructionAddress = loadOffset + callOffset + sizeof(void*);
-	return Op2MemSetDword(reinterpret_cast<void*>(callOffset), reinterpret_cast<std::size_t>(newFunctionAddress) - postCallInstructionAddress);
+	if (memoryCommandsDisabled) {
+		return false;
+	}
+
+	// Verify this is being run on a CALL instruction
+	if (*reinterpret_cast<unsigned char*>(callOffset + loadOffset) != 0xE8) {
+		PostErrorMessage(__FILE__, __LINE__, "Op2RelinkCall error: No CALL instruction found at given address: " + AddrToHexString(callOffset));
+		return false;
+	}
+
+	const auto postCallInstructionAddress = callOffset + loadOffset + (1 + sizeof(void*));
+	return Op2MemSetDword(reinterpret_cast<void*>(callOffset + 1), reinterpret_cast<std::size_t>(newFunctionAddress) - postCallInstructionAddress);
 }
 
 

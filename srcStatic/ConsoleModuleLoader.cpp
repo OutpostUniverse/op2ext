@@ -59,12 +59,6 @@ bool ConsoleModuleLoader::IsModuleLoaded(std::string moduleName)
 	return ToLowerInPlace(moduleName) == GetModuleName();
 }
 
-int __fastcall GetArtPath(void*, int, char*, char*, char* destBuffer, int bufferSize, char* defaultValue)
-{
-	strcpy_s(destBuffer, bufferSize, moduleDirectory.c_str());
-	return moduleDirectory.size();
-}
-
 void ConsoleModuleLoader::LoadModule()
 {
 	if (moduleDirectory.empty()) {
@@ -77,7 +71,7 @@ void ConsoleModuleLoader::LoadModule()
 		return;
 	}
 
-	SetArtPath();
+	HookFileSearchPath();
 	LoadModuleDll();
 }
 
@@ -106,23 +100,54 @@ void ConsoleModuleLoader::LoadModuleDll()
 	}
 }
 
-// Sets a directory called ART_PATH that is searched before looking in the root executable's directory.
-// If an asset (vol, clm, video file, music1.wav, .map, tech file, etc) is found in ART_PATH's directory,
-// it is loaded instead
-void ConsoleModuleLoader::SetArtPath()
+void ConsoleModuleLoader::HookFileSearchPath()
 {
-	// This value may also be set using the DEBUG section of the .ini file, using the property ART_PATH.
-	// If set in .ini file, ART_PATH must be deleted at end of session or will persist between plays.
+	const std::vector<std::size_t> callsToGetFilePath{
+		0x00402E4B,
+		0x004038A9,
+		0x0045003C,
+		0x0045035D,
+		0x0046078C,
+		0x00460B13,
+		0x00471089,
+		0x0047118B,
+		0x0047121E,
+		0x004712B7,
+		0x00485C69,
+		0x004882CB,
+		0x00488967,
+		0x00489433,
+		0x004977E4,
+	};
+	// Convert a pointer to member function to a regular `void*` value
+	auto getFilePath = &ConsoleModuleLoader::ResManager::GetFilePath;
+	const auto getFilePathAddr = reinterpret_cast<void*&>(getFilePath);  // MSVC specific cast
 
-	// Insert hooks to make OP2 look for files in the module's directory
-	// In ResManager::GetFilePath
-	bool success = Op2RelinkCall(0x004715C5, reinterpret_cast<void*>(GetArtPath));
-
-	// Only modify memory at second location if first modification succeeds.
-	if (success) {
-	// In ResManager::CreateStream
-	Op2RelinkCall(0x00471B87, reinterpret_cast<void*>(GetArtPath));
+	for (const auto callAddr : callsToGetFilePath) {
+		Op2RelinkCall(callAddr, getFilePathAddr);
 	}
+}
+
+bool ConsoleModuleLoader::CallOriginalGetFilePath(const char* resourceName, /* [out] */ char* filePath)
+{
+	// Use Outpost2.exe's built in ResManager object, and its associated member function
+	ConsoleModuleLoader::ResManager& resManager = *reinterpret_cast<ResManager*>(0x56C028);
+	using GetFilePathType = decltype(&ConsoleModuleLoader::ResManager::GetFilePath);
+	void* originalGetFilePathAddr = reinterpret_cast<void*>(0x00471590);
+	auto originalGetFilePath = reinterpret_cast<GetFilePathType&>(originalGetFilePathAddr); // MSVC specific cast
+	return (resManager.*originalGetFilePath)(resourceName, filePath);
+}
+
+bool ConsoleModuleLoader::ResManager::GetFilePath(const char* resourceName, /* [out] */ char* filePath) const
+{
+	// Search for resource in module folder
+	const auto path = moduleDirectory + resourceName;
+	if (INVALID_FILE_ATTRIBUTES != GetFileAttributesA(path.c_str())) {
+		return 0 == CopyStdStringIntoCharBuffer(path, filePath, MAX_PATH);
+	}
+
+	// Fallback to searching with the original built in method
+	return CallOriginalGetFilePath(resourceName, filePath);
 }
 
 void ConsoleModuleLoader::UnloadModule()

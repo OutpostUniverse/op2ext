@@ -32,6 +32,7 @@
     <ClCompile Include="Logger.test.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="op2ext.test.cpp" />
+    <ClCompile Include="OP2Memory.test.cpp" />
     <ClCompile Include="StringConversion.test.cpp" />
   </ItemGroup>
   <ItemGroup>
