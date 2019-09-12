@@ -57,7 +57,7 @@ TEST(ModuleLoader, InternalModulePassed)
 
 	// Ensure ModuleManager does not allow multiple modules with same name but different casing
 	EXPECT_NO_THROW(moduleManager.RegisterModule(static_cast<std::unique_ptr<GameModule>>(std::make_unique<DifferentCasedNameModule>())));
-	EXPECT_EQ(1, moduleManager.Count());
+	EXPECT_EQ(1u, moduleManager.Count());
 
 	EXPECT_NO_THROW(moduleManager.LoadModules());
 	EXPECT_NO_THROW(moduleManager.RunModules());
