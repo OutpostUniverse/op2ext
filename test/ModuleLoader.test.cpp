@@ -1,8 +1,20 @@
 #include "GameModules/IpDropDown.h"
+#include "GameModules/IniModule.h"
 #include "ModuleLoader.h"
 #include <gtest/gtest.h>
 #include <memory>
+#include <stdexcept>
 
+// Use to test that two modules with the same name but different casing is rejected from registering with the ModuleLoader
+// Windows file system and .ini key value pairs are case insensitive
+class DifferentCasedNameModule : public GameModule
+{
+public:
+	DifferentCasedNameModule() : GameModule("ipdropdown") {}
+
+	void Load() override {}
+	bool Unload() override { return true; }
+};
 
 TEST(ModuleLoader, NoModulesLoaded)
 {
@@ -42,6 +54,10 @@ TEST(ModuleLoader, InternalModulePassed)
 	EXPECT_FALSE(moduleManager.IsModuleLoaded(""));
 
 	EXPECT_EQ("IPDropDown", moduleManager.GetModuleName(0));
+
+	// Ensure ModuleManager does not allow multiple modules with same name but different casing
+	EXPECT_NO_THROW(moduleManager.RegisterModule(static_cast<std::unique_ptr<GameModule>>(std::make_unique<DifferentCasedNameModule>())));
+	EXPECT_EQ(1, moduleManager.Count());
 
 	EXPECT_NO_THROW(moduleManager.LoadModules());
 	EXPECT_NO_THROW(moduleManager.RunModules());

@@ -10,8 +10,6 @@
 class ModuleLoader
 {
 public:
-	ModuleLoader();
-
 	inline std::size_t Count() const { return modules.size(); }
 	bool IsModuleLoaded(std::string moduleName);
 
@@ -31,5 +29,6 @@ private:
 
 	void RegisterInternalModules();
 	void RegisterExternalModules();
+	bool IsInternalModuleRequested(const std::string& moduleName);
 	std::vector<std::string> GetModuleNames(const std::string& moduleType);
 };

@@ -5,23 +5,10 @@
 #include "FileSystemHelper.h"
 
 
-ModuleLoader::ModuleLoader() 
-{
-	RegisterInternalModules();
-	RegisterExternalModules();
-}
-
 void ModuleLoader::RegisterInternalModules()
 {
-	const auto internalModuleNames = GetModuleNames("InternalModules");
-
-	for (const auto& moduleName : internalModuleNames) {
-		if ("ipdropdown" == ToLower(moduleName)) {
-			RegisterModule(static_cast<std::unique_ptr<GameModule>>(std::make_unique<IPDropDown>()));
-		}
-		else {
-			PostErrorMessage(__FILE__, __LINE__, "A module named " + moduleName + " was requested to load from the Outpost2.ini file. This module cannot be found.");
-		}
+	if (IsInternalModuleRequested("IPDropDown")) {
+		RegisterModule(static_cast<std::unique_ptr<GameModule>>(std::make_unique<IPDropDown>()));
 	}
 }
 
@@ -38,6 +25,21 @@ void ModuleLoader::RegisterExternalModules()
 			PostErrorMessage(__FILE__, __LINE__, e.what());
 		}
 	}
+}
+
+bool ModuleLoader::IsInternalModuleRequested(const std::string& moduleName)
+{
+	const auto isModuleRequested = ToLower(GetOutpost2IniSetting("InternalModules", moduleName));
+
+	if (isModuleRequested == "yes") {
+		return true;
+	}
+	else if (isModuleRequested == "no") {
+		return false;
+	}
+
+	PostErrorMessage(__FILE__, __LINE__, "Internal Module named " + moduleName + " is either missing from the .ini file or contains an innapropriate setting. It must be set to Yes or No");
+	return false;
 }
 
 std::vector<std::string> ModuleLoader::GetModuleNames(const std::string& moduleType)
@@ -92,6 +94,9 @@ void ModuleLoader::RegisterModule(std::unique_ptr<GameModule>&& newGameModule)
 
 void ModuleLoader::LoadModules()
 {
+	RegisterInternalModules();
+	RegisterExternalModules();
+
 	for (auto& gameModule : modules)
 	{
 		try {
