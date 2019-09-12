@@ -92,12 +92,12 @@ void ModuleLoader::RegisterModule(std::unique_ptr<GameModule>&& newGameModule)
 	RegisterModule(newGameModule);
 }
 
-void ModuleLoader::InitializeModules()
+void ModuleLoader::LoadModules()
 {
 	for (auto& gameModule : modules)
 	{
 		try {
-			gameModule->Initialize();
+			gameModule->Load();
 		}
 		catch (const std::exception& e) {
 			PostErrorMessage(__FILE__, __LINE__, "Error loading module " + gameModule->Name() + ". " + std::string(e.what()));
@@ -105,14 +105,14 @@ void ModuleLoader::InitializeModules()
 	}
 }
 
-bool ModuleLoader::DestroyModules()
+bool ModuleLoader::UnloadModules()
 {
 	bool areAllModulesProperlyDestroyed = true;
 
 	for (auto& gameModule : modules)
 	{
 		try {
-			bool isModuleProperlyDestroyed = gameModule->Destroy();
+			bool isModuleProperlyDestroyed = gameModule->Unload();
 
 			if (!isModuleProperlyDestroyed) {
 				areAllModulesProperlyDestroyed = false;

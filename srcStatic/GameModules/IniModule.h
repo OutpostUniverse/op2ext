@@ -8,8 +8,8 @@ class IniModule : public GameModule
 public:
 	IniModule(const std::string& iniSectionName);
 
-	void Initialize() override;
-	bool Destroy() override;
+	void Load() override;
+	bool Unload() override;
 
 private:
 	// Export (not absolutely required, but should be used if any additional parameters are read from the .ini file)

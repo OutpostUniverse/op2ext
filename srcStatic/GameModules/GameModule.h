@@ -10,10 +10,10 @@ public:
 	virtual ~GameModule() = default;
 	inline std::string Name() const { return name; };
 
-	virtual void Initialize() = 0; //mod_init(), InitMod
+	virtual void Load() = 0; //mod_init(), InitMod
 	// Only available for Console modules (other modules would just call an empty function)
 	//virtual void Run() = 0; //mod_run()
-	virtual bool Destroy() = 0; //mod_destroy(), DestroyMod
+	virtual bool Unload() = 0; //mod_destroy(), DestroyMod
 
 private:
 	const std::string name;

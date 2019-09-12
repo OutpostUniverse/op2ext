@@ -10,8 +10,8 @@ TEST(ModuleLoader, NoModulesLoaded)
 	EXPECT_EQ(0, moduleManager.Count());
 	EXPECT_EQ("", moduleManager.GetModuleName(0));
 	EXPECT_FALSE(moduleManager.IsModuleLoaded("Test"));
-	EXPECT_NO_THROW(moduleManager.InitializeModules());
-	EXPECT_NO_THROW(moduleManager.DestroyModules());
+	EXPECT_NO_THROW(moduleManager.LoadModules());
+	EXPECT_NO_THROW(moduleManager.UnloadModules());
 }
 
 TEST(ModuleLoader, NullModulePassed)
@@ -42,6 +42,6 @@ TEST(ModuleLoader, InternalModulePassed)
 
 	EXPECT_EQ("IPDropDown", moduleManager.GetModuleName(0));
 
-	EXPECT_NO_THROW(moduleManager.InitializeModules());
-	EXPECT_NO_THROW(moduleManager.DestroyModules());
+	EXPECT_NO_THROW(moduleManager.LoadModules());
+	EXPECT_NO_THROW(moduleManager.UnloadModules());
 }

@@ -7,6 +7,6 @@ class IPDropDown : public GameModule
 public:
 	IPDropDown() : GameModule("IPDropDown") { }
 
-	void Initialize() override;
-	bool Destroy() override { return true; }
+	void Load() override;
+	bool Unload() override { return true; }
 };

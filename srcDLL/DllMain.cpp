@@ -70,7 +70,7 @@ int __fastcall ExtInit(TApp *thisPtr, int)
 	consoleModLoader.LoadModule();
 
 	// Load all active modules from the .ini file
-	moduleLoader.InitializeModules();
+	moduleLoader.LoadModules();
 
 	LocateVolFiles("Addon");
 	LocateVolFiles(); //Searches root directory
@@ -92,10 +92,8 @@ void __fastcall ExtShutDown(TApp *thisPtr, int)
 	// Call original function
 	thisPtr->ShutDown();
 
-	// Remove any loaded command line mod
 	consoleModLoader.UnloadModule();
-
-	moduleLoader.DestroyModules();
+	moduleLoader.UnloadModules();
 }
 
 /**

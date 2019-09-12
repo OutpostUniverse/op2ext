@@ -36,7 +36,7 @@ HINSTANCE IniModule::LoadModuleDll()
 	return dllHandle;
 }
 
-void IniModule::Initialize()
+void IniModule::Load()
 {
 	// Call the InitMod function if it exists
 	if (initializeModuleFunction != 0) {
@@ -44,7 +44,7 @@ void IniModule::Initialize()
 	}
 }
 
-bool IniModule::Destroy()
+bool IniModule::Unload()
 {
 	bool success = true;
 

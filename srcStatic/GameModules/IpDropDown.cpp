@@ -21,7 +21,7 @@ DWORD* populateComboBoxAddr = (DWORD*)0x004197C1;
 DWORD* saveIpTextAddr = (DWORD*)0x004C0E36;
 void* nopDataAddr = (void*)0x0041988F;
 
-void IPDropDown::Initialize()
+void IPDropDown::Load()
 {
 	// patch the call to EnableWindow so we can add strings.
 	Op2MemSetDword(populateComboBoxAddr, (int)&newEnableWindowAddr);
