@@ -56,3 +56,50 @@ TEST_F(Op2RelinkCallTest, BadOpcode) {
   EXPECT_EQ(0x00, callInstruction.opcode);
   EXPECT_EQ(0x00000000u, callInstruction.relativeAddress);
 }
+
+
+class MethodPointerTest : public ::testing::Test {
+protected:
+  class ExampleClass {
+  public:
+    int ExampleMethod(int i) {
+      return i + 1;
+    }
+  };
+  using MemberPointerType = decltype(ExampleClass::ExampleMethod);
+
+  ExampleClass exampleObject;
+};
+
+
+TEST_F(MethodPointerTest, GetMethodAddress) {
+  EXPECT_EQ(0x00000000u, GetMethodAddress<MemberPointerType>(nullptr));
+  EXPECT_NE(0x00000000u, GetMethodAddress(&ExampleClass::ExampleMethod));
+}
+
+TEST_F(MethodPointerTest, GetMethodPointer) {
+  EXPECT_EQ(nullptr, GetMethodPointer<MemberPointerType>(0x00000000u));
+  EXPECT_NE(nullptr, GetMethodPointer<MemberPointerType>(0x0043210Fu));
+}
+
+TEST_F(MethodPointerTest, AddressPointerAddressRoundTrip) {
+  EXPECT_EQ(0x00000000u, GetMethodAddress(GetMethodPointer<MemberPointerType>(0x00000000u)));
+  EXPECT_EQ(0x0043210Fu, GetMethodAddress(GetMethodPointer<MemberPointerType>(0x0043210Fu)));
+}
+
+TEST_F(MethodPointerTest, PointerAddressPointerRoundTrip) {
+  EXPECT_EQ(nullptr, GetMethodPointer<MemberPointerType>(GetMethodAddress<MemberPointerType>(nullptr)));
+  // Mingw does not produce as optimized of a member function pointer representation as MSVC
+  // As such, the extra hidden fields of the larger pointer representation can cause this check to fail
+  // EXPECT_EQ(&ExampleClass::ExampleMethod, GetMethodPointer<MemberPointerType>(GetMethodAddress(&ExampleClass::ExampleMethod)));
+}
+
+TEST_F(MethodPointerTest, GetMethodPointerUse) {
+  // Get fixed size_t address of member method (perhaps deduced by disassembler)
+  auto methodAddress = GetMethodAddress(&ExampleClass::ExampleMethod);
+
+  // Cast the raw address back to a usable pointer
+  auto methodPointer = GetMethodPointer<MemberPointerType>(methodAddress);
+  // Make sure method pointer is usable on target object
+  EXPECT_EQ(2, (exampleObject.*methodPointer)(1));
+}
