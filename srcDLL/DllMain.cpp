@@ -89,13 +89,13 @@ int __fastcall ExtInit(TApp *thisPtr, int)
 	Op2RelinkCall(0x004A88A5, reinterpret_cast<void*>(ExtShutDown));
 
 	// Call original function
-	return thisPtr->Init();
+	return (thisPtr->*GetMethodPointer<decltype(TApp::Init)>(0x00485B20))();
 }
 
 void __fastcall ExtShutDown(TApp *thisPtr, int)
 {
 	// Call original function
-	thisPtr->ShutDown();
+	(thisPtr->*GetMethodPointer<decltype(TApp::ShutDown)>(0x004866E0))();
 
 	// Remove any loaded command line mod
 	consoleModLoader.UnloadModule();
