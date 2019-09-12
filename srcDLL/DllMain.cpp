@@ -21,8 +21,9 @@ HINSTANCE __stdcall LoadLibraryNew(LPCTSTR lpLibFileName);
 //void LocalizeStrings();
 void ConvLangStr(char *instr, char *outstr);
 
-// TApp is an exported class from Outpost2.exe. Referenced through Outpost2Dll.lib
-class __declspec(dllimport) TApp
+// TApp is an exported class from Outpost2.exe.
+// We need to replace some of its methods with a compatible signature
+class TApp
 {
 public:
 	int Init();
