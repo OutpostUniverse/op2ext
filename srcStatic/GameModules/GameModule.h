@@ -6,6 +6,7 @@
 class GameModule
 {
 public:
+	// Do not apply memory modifications to Outpost 2 during class construction. This could prevent the module from being conditionally loaded
 	GameModule(const std::string& name) : name(name) { };
 	virtual ~GameModule() = default;
 	inline std::string Name() const { return name; };
