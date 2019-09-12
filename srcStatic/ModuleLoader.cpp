@@ -77,11 +77,9 @@ void ModuleLoader::RegisterModule(std::unique_ptr<GameModule>& newGameModule)
 		return;
 	}
 
-	for (const auto& currentGameModule : modules) {
-		if (newGameModule->Name() == currentGameModule->Name()) {
-			PostErrorMessage(__FILE__, __LINE__, "You may not add a module with an existing name. Duplicate copies of module name " + newGameModule->Name() + " found.");
-			return;
-		}
+	if (IsModuleLoaded(newGameModule->Name())) {
+		PostErrorMessage(__FILE__, __LINE__, "You may not add a module with an existing name. Duplicate copies of module name " + newGameModule->Name() + " found.");
+		return;
 	}
 
 	modules.push_back(std::move(newGameModule));
