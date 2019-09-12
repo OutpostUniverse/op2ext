@@ -132,9 +132,7 @@ bool ConsoleModuleLoader::CallOriginalGetFilePath(const char* resourceName, /* [
 {
 	// Use Outpost2.exe's built in ResManager object, and its associated member function
 	ConsoleModuleLoader::ResManager& resManager = *reinterpret_cast<ResManager*>(0x56C028);
-	using GetFilePathType = decltype(&ConsoleModuleLoader::ResManager::GetFilePath);
-	void* originalGetFilePathAddr = reinterpret_cast<void*>(0x00471590);
-	auto originalGetFilePath = reinterpret_cast<GetFilePathType&>(originalGetFilePathAddr); // MSVC specific cast
+	auto originalGetFilePath = GetMethodPointer<decltype(ConsoleModuleLoader::ResManager::GetFilePath)>(0x00471590);
 	return (resManager.*originalGetFilePath)(resourceName, filePath);
 }
 
