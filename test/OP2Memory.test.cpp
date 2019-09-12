@@ -66,7 +66,7 @@ protected:
       return i + 1;
     }
   };
-  using MemberPointerType = decltype(ExampleClass::ExampleMethod);
+  using MemberPointerType = decltype(&ExampleClass::ExampleMethod);
 
   ExampleClass exampleObject;
 };
