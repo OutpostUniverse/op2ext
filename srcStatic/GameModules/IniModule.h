@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GameModule.h"
+#include "../GameModule.h"
 #include <windows.h>
 
 class IniModule : public GameModule

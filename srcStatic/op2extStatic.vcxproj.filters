@@ -35,9 +35,7 @@
     <ClInclude Include="GameModules\IpDropDown.h">
       <Filter>GameModules</Filter>
     </ClInclude>
-    <ClInclude Include="GameModules\GameModule.h">
-      <Filter>GameModules</Filter>
-    </ClInclude>
+    <ClInclude Include="GameModule.h" ./>
     <ClInclude Include="ModuleLoader.h" />
     <ClInclude Include="GameModules\IniModule.h">
       <Filter>GameModules</Filter>

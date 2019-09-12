@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GameModule.h"
+#include "../GameModule.h"
 
 class IPDropDown : public GameModule
 {

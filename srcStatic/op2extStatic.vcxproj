@@ -147,7 +147,7 @@
   <ItemGroup>
     <ClInclude Include="ConsoleArgumentParser.h" />
     <ClInclude Include="FileSystemHelper.h" />
-    <ClInclude Include="GameModules\GameModule.h" />
+    <ClInclude Include="GameModule.h" />
     <ClInclude Include="GameModules\IniModule.h" />
     <ClInclude Include="GlobalDefines.h" />
     <ClInclude Include="ModuleLoader.h" />
