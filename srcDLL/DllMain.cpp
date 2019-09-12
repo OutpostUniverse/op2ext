@@ -137,6 +137,7 @@ HINSTANCE __stdcall LoadLibraryNew(LPCTSTR lpLibFileName)
 		//LocalizeStrings();
 		modulesRunning = true;
 		consoleModLoader.RunModule();
+		moduleLoader.RunModules();
 	}
 
 	return result;

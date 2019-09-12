@@ -128,3 +128,16 @@ bool ModuleLoader::UnloadModules()
 
 	return areAllModulesProperlyDestroyed;
 }
+
+void ModuleLoader::RunModules()
+{
+	for (auto& gameModule : modules)
+	{
+		try {
+			gameModule->Run();
+		}
+		catch (const std::exception& e) {
+			PostErrorMessage(__FILE__, __LINE__, "Error running module " + gameModule->Name() + ". " + std::string(e.what()));
+		}
+	}
+}

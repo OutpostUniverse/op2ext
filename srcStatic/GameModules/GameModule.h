@@ -11,9 +11,10 @@ public:
 	inline std::string Name() const { return name; };
 
 	virtual void Load() = 0; //mod_init(), InitMod
-	// Only available for Console modules (other modules would just call an empty function)
-	//virtual void Run() = 0; //mod_run()
 	virtual bool Unload() = 0; //mod_destroy(), DestroyMod
+
+	// Only available for Console modules (other modules just call an empty function)
+	virtual void Run() { }; //mod_run()
 
 private:
 	const std::string name;

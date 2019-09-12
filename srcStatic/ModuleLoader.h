@@ -23,8 +23,8 @@ public:
 	void RegisterModule(std::unique_ptr<GameModule> && newGameModule);
 
 	void LoadModules();
-
 	bool UnloadModules();
+	void RunModules();
 
 private:
 	std::vector<std::unique_ptr<GameModule>> modules;
