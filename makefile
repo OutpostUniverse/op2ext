@@ -18,7 +18,7 @@ include makefile-generic.mk
 config := mingw
 
 
-CXXFLAGS := -std=c++17 -g -Wall -Wno-unknown-pragmas
+CXXFLAGS := -std=c++17 -O2 -g -Wall -Wno-unknown-pragmas
 LDFLAGS := -static-libgcc -static-libstdc++ -LOutpost2DLL/Lib/
 LDLIBS := -lOutpost2DLL -lstdc++fs -lws2_32
 
