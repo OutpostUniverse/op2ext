@@ -35,3 +35,15 @@ $(eval $(call DefineUnitTestProject,test,test/,op2extLib))
 # Docker and CircleCI commands
 $(eval $(call DefineDockerImage,.circleci/,outpostuniverse/gcc-mingw-wine-googletest-circleci,1.2))
 $(eval $(call DefineCircleCi))
+
+
+ifdef Outpost2Path
+
+$(Outpost2Path)op2ext.dll: op2ext.dll
+	cp op2ext.dll "$(Outpost2Path)"
+
+.PHONY: run
+run: $(Outpost2Path)op2ext.dll
+	wine "$(Outpost2Path)Outpost2.exe"
+
+endif
