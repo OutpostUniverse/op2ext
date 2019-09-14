@@ -10,7 +10,7 @@
 class DifferentCasedNameModule : public GameModule
 {
 public:
-	DifferentCasedNameModule() : GameModule("ipdropdown") {}
+	DifferentCasedNameModule(const std::string& name) : GameModule(name) {}
 
 	void Load() override {}
 	bool Unload() override { return true; }
@@ -55,11 +55,19 @@ TEST(ModuleLoader, InternalModulePassed)
 
 	EXPECT_EQ("IPDropDown", moduleManager.GetModuleName(0));
 
-	// Ensure ModuleManager does not allow multiple modules with same name but different casing
-	EXPECT_NO_THROW(moduleManager.RegisterModule(static_cast<std::unique_ptr<GameModule>>(std::make_unique<DifferentCasedNameModule>())));
-	EXPECT_EQ(1u, moduleManager.Count());
-
 	EXPECT_NO_THROW(moduleManager.LoadModules());
 	EXPECT_NO_THROW(moduleManager.RunModules());
 	EXPECT_NO_THROW(moduleManager.UnloadModules());
+}
+
+TEST(ModuleLoader, RejectCaseSensitiveNames)
+{
+	ModuleLoader moduleLoader;
+
+	EXPECT_NO_THROW(moduleLoader.RegisterModule(static_cast<std::unique_ptr<GameModule>>(std::make_unique<DifferentCasedNameModule>("TestModule"))));
+	EXPECT_EQ(1u, moduleLoader.Count());
+
+	// Ensure ModuleManager does not allow multiple modules with same name but different casing
+	EXPECT_NO_THROW(moduleLoader.RegisterModule(static_cast<std::unique_ptr<GameModule>>(std::make_unique<DifferentCasedNameModule>("testmodule"))));
+	EXPECT_EQ(1u, moduleLoader.Count());
 }
