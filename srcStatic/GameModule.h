@@ -31,7 +31,6 @@ public:
 	// It is too late to add VOLs or set the serial number (the game has already initialized this stuff)
 	// Use it to setup things that aren't already setup in mod_init. (The ResManager will be inited as well
 	// as the language strings)
-	// Only available for Console modules (other modules just call an empty function)
 	// Console module calls: mod_run
 	virtual void Run() { };
 
