@@ -18,46 +18,46 @@ public:
 
 TEST(ModuleLoader, NoModulesLoaded)
 {
-	ModuleLoader moduleManager;
-	EXPECT_EQ(0u, moduleManager.Count());
-	EXPECT_EQ("", moduleManager.GetModuleName(0));
-	EXPECT_FALSE(moduleManager.IsModuleLoaded("Test"));
-	EXPECT_NO_THROW(moduleManager.LoadModules());
-	EXPECT_NO_THROW(moduleManager.RunModules());
-	EXPECT_NO_THROW(moduleManager.UnloadModules());
+	ModuleLoader moduleLoader;
+	EXPECT_EQ(0u, moduleLoader.Count());
+	EXPECT_EQ("", moduleLoader.GetModuleName(0));
+	EXPECT_FALSE(moduleLoader.IsModuleLoaded("Test"));
+	EXPECT_NO_THROW(moduleLoader.LoadModules());
+	EXPECT_NO_THROW(moduleLoader.RunModules());
+	EXPECT_NO_THROW(moduleLoader.UnloadModules());
 }
 
 TEST(ModuleLoader, NullModulePassed)
 {
-	ModuleLoader moduleManager;
+	ModuleLoader moduleLoader;
 	std::unique_ptr<GameModule> gameModule;
-	EXPECT_NO_THROW(moduleManager.RegisterModule(gameModule));
+	EXPECT_NO_THROW(moduleLoader.RegisterModule(gameModule));
 	
 	// A null unique pointer does not count as a loaded module
-	EXPECT_EQ(0u, moduleManager.Count());
+	EXPECT_EQ(0u, moduleLoader.Count());
 }
 
 TEST(ModuleLoader, InternalModulePassed)
 {
-	ModuleLoader moduleManager;
+	ModuleLoader moduleLoader;
 	std::unique_ptr<GameModule> ipDropDown = std::make_unique<IPDropDown>();
 
-	moduleManager.RegisterModule(ipDropDown);
+	moduleLoader.RegisterModule(ipDropDown);
 	
-	// Ensure ipDropDown is transfered into moduleManager
+	// Ensure ipDropDown is transfered into moduleLoader
 	EXPECT_TRUE(ipDropDown == nullptr);
 	
-	EXPECT_EQ(1u, moduleManager.Count());
+	EXPECT_EQ(1u, moduleLoader.Count());
 
 	// Check module name search is case insensitive
-	EXPECT_TRUE(moduleManager.IsModuleLoaded("IPDROPDOWN"));
-	EXPECT_FALSE(moduleManager.IsModuleLoaded(""));
+	EXPECT_TRUE(moduleLoader.IsModuleLoaded("IPDROPDOWN"));
+	EXPECT_FALSE(moduleLoader.IsModuleLoaded(""));
 
-	EXPECT_EQ("IPDropDown", moduleManager.GetModuleName(0));
+	EXPECT_EQ("IPDropDown", moduleLoader.GetModuleName(0));
 
-	EXPECT_NO_THROW(moduleManager.LoadModules());
-	EXPECT_NO_THROW(moduleManager.RunModules());
-	EXPECT_NO_THROW(moduleManager.UnloadModules());
+	EXPECT_NO_THROW(moduleLoader.LoadModules());
+	EXPECT_NO_THROW(moduleLoader.RunModules());
+	EXPECT_NO_THROW(moduleLoader.UnloadModules());
 }
 
 TEST(ModuleLoader, RejectCaseSensitiveNames)
