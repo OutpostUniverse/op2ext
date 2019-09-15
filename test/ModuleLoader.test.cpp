@@ -60,7 +60,7 @@ TEST(ModuleLoader, InternalModulePassed)
 	EXPECT_NO_THROW(moduleLoader.UnloadModules());
 }
 
-TEST(ModuleLoader, RejectCaseSensitiveNames)
+TEST(ModuleLoader, RejectCaseInsensitiveDuplicateNames)
 {
 	ModuleLoader moduleLoader;
 
