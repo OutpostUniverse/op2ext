@@ -34,11 +34,11 @@ bool ModuleLoader::IsInternalModuleRequested(const std::string& moduleName)
 	if (isModuleRequested == "yes") {
 		return true;
 	}
-	else if (isModuleRequested == "no") {
+	else if (isModuleRequested == "no" || isModuleRequested == "") {
 		return false;
 	}
 
-	PostErrorMessage(__FILE__, __LINE__, "Internal Module named " + moduleName + " is either missing from the .ini file or contains an innapropriate setting. It must be set to Yes or No");
+	PostErrorMessage(__FILE__, __LINE__, "Internal Module named " + moduleName + " contains an innapropriate setting. It must be set to Yes or No");
 	return false;
 }
 
