@@ -115,7 +115,8 @@ void LocateVolFiles(const std::string& relativeDirectory)
 {
 	const auto absoluteDirectory = fs::path(GetGameDirectory()) / fs::path(relativeDirectory);
 
-	if (!fs::is_directory(absoluteDirectory)) {
+	// Append directory "." to work around Mingw bug with `is_directory`
+	if (!fs::is_directory(absoluteDirectory / ".")) {
 		return;
 	}
 
