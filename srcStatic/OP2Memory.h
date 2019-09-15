@@ -21,8 +21,13 @@ bool Op2UnprotectMemory(std::size_t destBaseAddr, std::size_t size);
 template <typename MethodPointerType>
 constexpr std::size_t GetMethodAddress(MethodPointerType methodPointer) {
 	static_assert(std::is_member_function_pointer_v<MethodPointerType>, "Type must be member function pointer");
-	auto methodVoidPointer = reinterpret_cast<void*&>(methodPointer);  // MSVC specific cast
-	return reinterpret_cast<std::size_t>(methodVoidPointer);
+	return reinterpret_cast<std::size_t>(GetMethodVoidPointer(methodPointer));
+}
+
+template <typename MethodPointerType>
+constexpr void* GetMethodVoidPointer(MethodPointerType methodPointer) {
+	static_assert(std::is_member_function_pointer_v<MethodPointerType>, "Type must be member function pointer");
+	return reinterpret_cast<void*&>(methodPointer);  // MSVC specific cast
 }
 
 template <typename MethodPointerType>

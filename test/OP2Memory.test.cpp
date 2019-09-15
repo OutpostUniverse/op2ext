@@ -77,6 +77,11 @@ TEST_F(MethodPointerTest, GetMethodAddress) {
   EXPECT_NE(0x00000000u, GetMethodAddress(&ExampleClass::ExampleMethod));
 }
 
+TEST_F(MethodPointerTest, GetMethodVoidPointer) {
+  EXPECT_EQ(nullptr, GetMethodVoidPointer<MemberPointerType>(nullptr));
+  EXPECT_NE(nullptr, GetMethodVoidPointer(&ExampleClass::ExampleMethod));
+}
+
 TEST_F(MethodPointerTest, GetMethodPointer) {
   EXPECT_EQ(nullptr, GetMethodPointer<MemberPointerType>(0x00000000u));
   EXPECT_NE(nullptr, GetMethodPointer<MemberPointerType>(0x0043210Fu));
