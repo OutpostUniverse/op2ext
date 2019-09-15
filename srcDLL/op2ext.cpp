@@ -126,13 +126,19 @@ OP2EXT_API size_t GetLoadedModuleName(size_t moduleIndex, char* buffer, size_t b
 
 	std::string moduleName;
 
-	if (moduleIndex < moduleLoader.Count()) {
-		moduleName = moduleLoader.GetModuleName(moduleIndex);
+	try {
+		if (moduleIndex < moduleLoader.Count()) {
+			moduleName = moduleLoader.GetModuleName(moduleIndex);
+		}
+		else if (moduleIndex < GetLoadedModuleCount()) {
+			moduleName = consoleModLoader.GetModuleName();
+		}
+		else {
+			moduleName = "";
+		}
 	}
-	else if (moduleIndex < GetLoadedModuleCount()) {
-		moduleName = consoleModLoader.GetModuleName();
-	}
-	else {
+	catch (...) // Prevent throwing an error across DLL boundaries
+	{
 		moduleName = "";
 	}
 

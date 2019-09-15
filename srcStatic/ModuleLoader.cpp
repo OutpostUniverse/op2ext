@@ -3,6 +3,7 @@
 #include "GameModules/IniModule.h"
 #include "StringConversion.h"
 #include "FileSystemHelper.h"
+#include <stdexcept>
 
 
 void ModuleLoader::RegisterInternalModules()
@@ -53,7 +54,7 @@ std::vector<std::string> ModuleLoader::GetModuleNames(const std::string& moduleT
 std::string ModuleLoader::GetModuleName(std::size_t index)
 {
 	if (index >= modules.size()) {
-		return "";
+		throw std::out_of_range("Module Loader was provided an index to lookup a module name that was outside the range of loaded modules.");
 	}
 
 	return modules[index]->Name();

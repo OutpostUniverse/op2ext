@@ -20,7 +20,7 @@ TEST(ModuleLoader, NoModulesLoaded)
 {
 	ModuleLoader moduleLoader;
 	EXPECT_EQ(0u, moduleLoader.Count());
-	EXPECT_EQ("", moduleLoader.GetModuleName(0));
+	EXPECT_THROW(moduleLoader.GetModuleName(0), std::out_of_range);
 	EXPECT_FALSE(moduleLoader.IsModuleLoaded("Test"));
 	EXPECT_NO_THROW(moduleLoader.LoadModules());
 	EXPECT_NO_THROW(moduleLoader.RunModules());
