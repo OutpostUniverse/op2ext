@@ -1,15 +1,6 @@
 # To see a list of available make targets from bash, type:
 # make <space> <tab> <tab>
 
-# =====
-# Note: MinGW is not able to link the DLL project due to name mangling
-# differences in the Outpost2DLL imported symbols. It is however able to
-# compile and check the source code for errors, including compiling and linking
-# of the static library project, and the unit test project. This means much of
-# the code can be checked for errors on Linux, even if a full compile is not
-# (yet) possible.
-# =====
-
 
 include makefile-generic.mk
 
@@ -24,7 +15,7 @@ LDLIBS := -lstdc++fs -lws2_32
 
 op2extDll_DEFINES := -DOP2EXT_INTERNAL_BUILD
 
-# By default, compile and link static library, and compile (but not link) DLL
+# By default, compile and link both static library and dynamic link library
 all: op2extLib op2extDll
 
 $(eval $(call DefineCppProject,op2extLib,op2ext.lib,srcStatic/))
