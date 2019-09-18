@@ -21,16 +21,14 @@ HINSTANCE __stdcall LoadLibraryNew(LPCTSTR lpLibFileName);
 //void LocalizeStrings();
 void ConvLangStr(char *instr, char *outstr);
 
-// TApp is an exported class from Outpost2.exe. Referenced through Outpost2Dll.lib
-class __declspec(dllimport) TApp
+// TApp is an exported class from Outpost2.exe.
+// We need to replace some of its methods with a compatible signature
+class TApp
 {
 public:
 	int Init();
 	void ShutDown();
 };
-
-int __fastcall ExtInit(TApp *thisPtr, int);
-void __fastcall ExtShutDown(TApp *thisPtr, int);
 
 DWORD* loadLibraryDataAddr = (DWORD*)0x00486E0A;
 DWORD loadLibraryNewAddr = (DWORD)LoadLibraryNew;
@@ -42,7 +40,9 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 		SetLoadOffset();
 
 		// Replace call to gTApp.Init with custom routine
-		Op2RelinkCall(0x004A8878, reinterpret_cast<void*>(ExtInit));
+		if (!Op2RelinkCall(0x004A8877, GetMethodVoidPointer(&TApp::Init))) {
+			return FALSE;
+		}
 
 		// Disable any more thread attach calls
 		DisableThreadLibraryCalls(hInstance);
@@ -51,7 +51,7 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 	return TRUE;
 }
 
-int __fastcall ExtInit(TApp *thisPtr, int)
+int TApp::Init()
 {
 	// Set the execute flag on the DSEG section so DEP doesn't terminate the game
 	const std::size_t destinationBaseAddress = 0x00585000;
@@ -81,16 +81,16 @@ int __fastcall ExtInit(TApp *thisPtr, int)
 	Op2MemSetDword(loadLibraryDataAddr, (int)&loadLibraryNewAddr);
 
 	// Replace call to gTApp.ShutDown with custom routine
-	Op2RelinkCall(0x004A88A6, reinterpret_cast<void*>(ExtShutDown));
+	Op2RelinkCall(0x004A88A5, GetMethodVoidPointer(&TApp::ShutDown));
 
 	// Call original function
-	return thisPtr->Init();
+	return (this->*GetMethodPointer<decltype(&TApp::Init)>(0x00485B20))();
 }
 
-void __fastcall ExtShutDown(TApp *thisPtr, int)
+void TApp::ShutDown()
 {
 	// Call original function
-	thisPtr->ShutDown();
+	(this->*GetMethodPointer<decltype(&TApp::ShutDown)>(0x004866E0))();
 
 	consoleModLoader.UnloadModule();
 	moduleLoader.UnloadModules();
@@ -106,7 +106,8 @@ void LocateVolFiles(const std::string& relativeDirectory)
 {
 	const auto absoluteDirectory = fs::path(GetGameDirectory()) / fs::path(relativeDirectory);
 
-	if (!fs::is_directory(absoluteDirectory)) {
+	// Append directory "." to work around Mingw bug with `is_directory`
+	if (!fs::is_directory(absoluteDirectory / ".")) {
 		return;
 	}
 

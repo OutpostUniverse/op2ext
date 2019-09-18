@@ -18,14 +18,14 @@ include makefile-generic.mk
 config := mingw
 
 
-CXXFLAGS := -std=c++17 -g -Wall -Wno-unknown-pragmas
+CXXFLAGS := -std=c++17 -O2 -g -Wall -Wno-unknown-pragmas
 LDFLAGS := -static-libgcc -static-libstdc++ -LOutpost2DLL/Lib/
 LDLIBS := -lOutpost2DLL -lstdc++fs -lws2_32
 
 op2extDll_DEFINES := -DOP2EXT_INTERNAL_BUILD
 
 # By default, compile and link static library, and compile (but not link) DLL
-all: op2extLib intermediate-op2extDll
+all: op2extLib op2extDll
 
 $(eval $(call DefineCppProject,op2extLib,op2ext.lib,srcStatic/))
 $(eval $(call DefineCppProject,op2extDll,op2ext.dll,srcDLL/,op2extLib))
@@ -35,3 +35,18 @@ $(eval $(call DefineUnitTestProject,test,test/,op2extLib))
 # Docker and CircleCI commands
 $(eval $(call DefineDockerImage,.circleci/,outpostuniverse/gcc-mingw-wine-googletest-circleci,1.2))
 $(eval $(call DefineCircleCi))
+
+
+ifdef Outpost2Path
+
+.PHONY: install run
+
+install: $(Outpost2Path)op2ext.dll
+
+$(Outpost2Path)op2ext.dll: op2ext.dll
+	cp op2ext.dll "$(Outpost2Path)"
+
+run: install
+	wine "$(Outpost2Path)Outpost2.exe"
+
+endif
