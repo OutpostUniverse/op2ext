@@ -57,7 +57,7 @@ std::vector<std::string> GetCommandLineArguments()
 		}
 		// Catch STL produced exceptions
 		catch (const std::exception& e) {
-			PostErrorMessage(__FILE__, __LINE__, "Error occurred attempting to parse command line arguments. Further parshing of command line arguments aborted. Internal Error: " + std::string(e.what()));
+			PostErrorMessage(__FILE__, __LINE__, "Error occurred attempting to parse command line arguments. Further parsing of command line arguments aborted. Internal Error: " + std::string(e.what()));
 		}
 	}
 
