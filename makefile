@@ -19,8 +19,8 @@ config := mingw
 
 
 CXXFLAGS := -std=c++17 -O2 -g -Wall -Wno-unknown-pragmas
-LDFLAGS := -static-libgcc -static-libstdc++ -LOutpost2DLL/Lib/
-LDLIBS := -lOutpost2DLL -lstdc++fs -lws2_32
+LDFLAGS := -static-libgcc -static-libstdc++
+LDLIBS := -lstdc++fs -lws2_32
 
 op2extDll_DEFINES := -DOP2EXT_INTERNAL_BUILD
 
