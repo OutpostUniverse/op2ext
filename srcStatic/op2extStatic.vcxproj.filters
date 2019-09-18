@@ -14,6 +14,7 @@
     <ClCompile Include="WindowsErrorCode.cpp"/>
     <ClCompile Include="StringConversion.cpp"/>
     <ClCompile Include="ConsoleArgumentParser.cpp"/>
+    <ClCompile Include="GetCommandLineArguments.cpp"/>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IpDropDown.h"/>
@@ -29,5 +30,6 @@
     <ClInclude Include="WindowsErrorCode.h"/>
     <ClInclude Include="StringConversion.h"/>
     <ClInclude Include="ConsoleArgumentParser.h"/>
+    <ClInclude Include="GetCommandLineArguments.h"/>
   </ItemGroup>
 </Project>
