@@ -1,8 +1,8 @@
 #include "GetCommandLineArguments.h"
 #include "StringConversion.h"
 #include "LocalResource.h"
-#include "GlobalDefines.h"
 #include <windows.h> // Cannot use WIN32_LEAN_AND_MEAN (it does not contain CommandLineToArgvW)
+#include <stdexcept>
 
 
 std::vector<std::string> GetCommandLineArguments()
@@ -12,7 +12,7 @@ std::vector<std::string> GetCommandLineArguments()
 	LocalResource<LPWSTR> commandLineArgs = CommandLineToArgvW(GetCommandLineW(), &argumentCount);
 
 	if (commandLineArgs == nullptr) {
-		PostErrorMessage(__FILE__, __LINE__, "Unable to retrieve command line arguments attached to Outpost2.exe.");
+		throw std::runtime_error("Unable to retrieve command line arguments attached to Outpost2.exe.");
 	}
 	else {
 		try {
@@ -20,8 +20,7 @@ std::vector<std::string> GetCommandLineArguments()
 			for (int i = 1; i < argumentCount; ++i) {
 				std::string argument;
 				if (!ConvertLPWToString(argument, commandLineArgs[i])) {
-					PostErrorMessage(__FILE__, __LINE__, "Unable to cast the " + std::to_string(i) +
-						" command line argument from LPWSTR to char*. Further parsing of command line arguments aborted.");
+					throw std::runtime_error("Unable to convert command line argument from LPWSTR to std::string. Argument index: " + std::to_string(i));
 					break;
 				}
 				arguments.push_back(argument);
@@ -29,7 +28,7 @@ std::vector<std::string> GetCommandLineArguments()
 		}
 		// Catch STL produced exceptions
 		catch (const std::exception& e) {
-			PostErrorMessage(__FILE__, __LINE__, "Error occurred attempting to parse command line arguments. Further parsing of command line arguments aborted. Internal Error: " + std::string(e.what()));
+			throw std::runtime_error("Error parsing command line arguments. Internal Error: " + std::string(e.what()));
 		}
 	}
 
