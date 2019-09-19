@@ -144,9 +144,6 @@
     <ResourceCompile Include="op2ext.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Outpost2DLL\Outpost2DLL.vcxproj">
-      <Project>{b3f40368-f3cc-4ec5-a758-f5dad08feddc}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\srcStatic\op2extStatic.vcxproj">
       <Project>{4f82df84-de4a-4ae0-9e05-fc5408ae23ba}</Project>
     </ProjectReference>

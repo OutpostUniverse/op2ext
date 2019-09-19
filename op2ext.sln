@@ -5,7 +5,6 @@ VisualStudioVersion = 15.0.27004.2008
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "op2extDLL", "srcDLL\op2extDLL.vcxproj", "{6DE3610C-C9EE-4FD3-BBD7-66382C16FDE9}"
 	ProjectSection(ProjectDependencies) = postProject
-		{B3F40368-F3CC-4EC5-A758-F5DAD08FEDDC} = {B3F40368-F3CC-4EC5-A758-F5DAD08FEDDC}
 		{4F82DF84-DE4A-4AE0-9E05-FC5408AE23BA} = {4F82DF84-DE4A-4AE0-9E05-FC5408AE23BA}
 	EndProjectSection
 EndProject
@@ -15,8 +14,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestModule", "TestModule\Te
 	ProjectSection(ProjectDependencies) = postProject
 		{6DE3610C-C9EE-4FD3-BBD7-66382C16FDE9} = {6DE3610C-C9EE-4FD3-BBD7-66382C16FDE9}
 	EndProjectSection
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Outpost2DLL", "Outpost2DLL\Outpost2DLL.vcxproj", "{B3F40368-F3CC-4EC5-A758-F5DAD08FEDDC}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test", "test\test.vcxproj", "{4BC1FF81-4BF8-402A-B4EB-838455BA9D45}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -41,10 +38,6 @@ Global
 		{19622CEB-6837-4B41-81E2-21969D813C6A}.Debug|x86.Build.0 = Debug|Win32
 		{19622CEB-6837-4B41-81E2-21969D813C6A}.Release|x86.ActiveCfg = Release|Win32
 		{19622CEB-6837-4B41-81E2-21969D813C6A}.Release|x86.Build.0 = Release|Win32
-		{B3F40368-F3CC-4EC5-A758-F5DAD08FEDDC}.Debug|x86.ActiveCfg = Debug|Win32
-		{B3F40368-F3CC-4EC5-A758-F5DAD08FEDDC}.Debug|x86.Build.0 = Debug|Win32
-		{B3F40368-F3CC-4EC5-A758-F5DAD08FEDDC}.Release|x86.ActiveCfg = Release|Win32
-		{B3F40368-F3CC-4EC5-A758-F5DAD08FEDDC}.Release|x86.Build.0 = Release|Win32
 		{4BC1FF81-4BF8-402A-B4EB-838455BA9D45}.Debug|x86.ActiveCfg = Debug|Win32
 		{4BC1FF81-4BF8-402A-B4EB-838455BA9D45}.Debug|x86.Build.0 = Debug|Win32
 		{4BC1FF81-4BF8-402A-B4EB-838455BA9D45}.Release|x86.ActiveCfg = Release|Win32
