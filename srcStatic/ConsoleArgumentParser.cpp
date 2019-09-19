@@ -60,7 +60,7 @@ std::string ParseSwitchName(std::string switchName)
 {
 	if (switchName[0] != '/' && switchName[0] != '-') {
 		const std::string message("A switch was expected but not found. Prefix switch name with '/' or '-'. The following statement was found instead: " + switchName);
-		PostErrorMessage(__FILE__, __LINE__, message);
+		throw std::runtime_error(message);
 		return std::string();
 	}
 
@@ -73,12 +73,12 @@ std::string ParseSwitchName(std::string switchName)
 std::string ParseLoadModCommand(std::vector<std::string> arguments)
 {
 	if (arguments.empty()) {
-		PostErrorMessage(__FILE__, __LINE__, "No relative directory argument provided for the switch loadmod");
+		throw std::runtime_error("No relative directory argument provided for the switch loadmod");
 		return std::string();
 	}
 
 	if (arguments.size() > 1) {
-		PostErrorMessage(__FILE__, __LINE__, "Too many arguments passed into switch LoadMod. If module relative directory contains spaces, surround the directory in quotes");
+		throw std::runtime_error("Too many arguments passed into switch LoadMod. If module relative directory contains spaces, surround the directory in quotes");
 		return std::string();
 	}
 
