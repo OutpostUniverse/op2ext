@@ -5,7 +5,7 @@
 template <typename T>
 class LocalResource {
 public:
-	LocalResource(T* pointer) : pointer(pointer) {
+	LocalResource(T pointer) : pointer(pointer) {
 	}
 	~LocalResource() {
 		// Freeing of NULL is safe
@@ -13,9 +13,9 @@ public:
 	}
 
 	// Auto convert to underlying pointer type
-	operator T*() const {
+	operator T() const {
 		return pointer;
 	}
 private:
-	T* pointer;
+	T pointer;
 };
