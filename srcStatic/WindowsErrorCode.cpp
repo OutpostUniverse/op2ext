@@ -22,7 +22,6 @@ std::string GetLastErrorString(std::string functionName)
 	);
 
 	auto errorCodeMessage = ConvertLpctstrToString(lpMsgBuf);
-
 	auto errorMessage = functionName + " failed with error " + std::to_string(lastErrorCode) + ": " + errorCodeMessage;
 
 	LocalFree(lpMsgBuf);
