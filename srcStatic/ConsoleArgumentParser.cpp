@@ -29,7 +29,7 @@ std::string FindModuleDirectory(std::vector<std::string> arguments)
 		const std::string switchName = GetSwitch(arguments);
 
 		if (switchName.empty()) {
-			return std::string();
+			return "";
 		}
 
 		if (switchName == "loadmod") {
@@ -46,7 +46,7 @@ std::string FindModuleDirectory(std::vector<std::string> arguments)
 std::string GetSwitch(std::vector<std::string>& arguments)
 {
 	if (arguments.size() == 0) {
-		return std::string(); // Switch is not present
+		return ""; // Switch is not present
 	}
 
 	const std::string rawSwitch = arguments[0];
