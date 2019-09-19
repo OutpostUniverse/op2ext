@@ -1,5 +1,6 @@
 #include "GetCommandLineArguments.h"
 #include "StringConversion.h"
+#include "LocalResource.h"
 #include "GlobalDefines.h"
 #include <windows.h> // Cannot use WIN32_LEAN_AND_MEAN (it does not contain CommandLineToArgvW)
 
@@ -8,7 +9,7 @@ std::vector<std::string> GetCommandLineArguments()
 {
 	std::vector<std::string> arguments;
 	int argumentCount;
-	LPWSTR* commandLineArgs = CommandLineToArgvW(GetCommandLineW(), &argumentCount);
+	LocalResource<LPWSTR> commandLineArgs = CommandLineToArgvW(GetCommandLineW(), &argumentCount);
 
 	if (commandLineArgs == nullptr) {
 		PostErrorMessage(__FILE__, __LINE__, "Unable to retrieve command line arguments attached to Outpost2.exe.");
@@ -32,6 +33,5 @@ std::vector<std::string> GetCommandLineArguments()
 		}
 	}
 
-	LocalFree(commandLineArgs);
 	return arguments;
 }
