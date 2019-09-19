@@ -11,19 +11,19 @@
 
 
 TEST(ConsoleArgumentParser, NoArgument) {
-	EXPECT_FALSE(FindModuleDirectoryIsLogged(std::vector<std::string> { }, ""));
+	EXPECT_EQ("", FindModuleDirectory(std::vector<std::string> { }));
 }
 
 TEST(ConsoleArgumentParser, WellFormedNoSpaces)
 {
 	const std::string path("path");
-	EXPECT_FALSE(FindModuleDirectoryIsLogged(std::vector<std::string> { "/loadmod", path}, path));
+	EXPECT_EQ(path, FindModuleDirectory(std::vector<std::string> { "/loadmod", path }));
 }
 
 TEST(ConsoleArgmunetParser, WellFormedSpaces)
 {
 	const std::string pathWithSpaces("path with spaces");
-	EXPECT_FALSE(FindModuleDirectoryIsLogged(std::vector<std::string> { "/loadmod", pathWithSpaces }, pathWithSpaces));
+	EXPECT_EQ(pathWithSpaces, FindModuleDirectory(std::vector<std::string> { "/loadmod", pathWithSpaces }));
 }
 
 
