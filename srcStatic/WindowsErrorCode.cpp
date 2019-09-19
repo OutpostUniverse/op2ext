@@ -1,6 +1,5 @@
 #include "WindowsErrorCode.h"
 #include "StringConversion.h"
-#include <strsafe.h> //Header requires WindowsXP SP2 or greater
 
 std::string GetLastErrorStdString(LPCTSTR lpszFunction)
 {
@@ -21,24 +20,12 @@ std::string GetLastErrorStdString(LPCTSTR lpszFunction)
 		NULL
 	);
 
-	LPTSTR lpDisplayBuf = static_cast<LPTSTR>(
-		LocalAlloc(
-			LMEM_ZEROINIT,
-			(lstrlen(lpMsgBuf) + lstrlen(lpszFunction) + 40) * sizeof(TCHAR)
-		)
-	);
+	auto errorCodeMessage = ConvertLpctstrToString(lpMsgBuf);
+	auto functionName = ConvertLpctstrToString(lpszFunction);
 
-	StringCchPrintf(
-		lpDisplayBuf,
-		LocalSize(lpDisplayBuf) / sizeof(TCHAR),
-		TEXT("%s failed with error %d: %s"),
-		lpszFunction, lastErrorCode, lpMsgBuf
-	);
-
-	std::string errorMessage = ConvertLpctstrToString(lpDisplayBuf);
+	auto errorMessage = functionName + " failed with error " + std::to_string(lastErrorCode) + ": " + errorCodeMessage;
 
 	LocalFree(lpMsgBuf);
-	LocalFree(lpDisplayBuf);
 
 	return errorMessage;
 }
