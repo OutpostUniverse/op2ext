@@ -4,8 +4,6 @@
 
 std::string GetLastErrorString(std::string functionName)
 {
-	// Adapted from https://docs.microsoft.com/en-us/windows/desktop/Debug/retrieving-the-last-error-code
-
 	LPTSTR lpMsgBuf;
 	DWORD lastErrorCode = GetLastError();
 
