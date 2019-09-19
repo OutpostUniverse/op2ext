@@ -7,8 +7,6 @@
 #include <cstdint>
 #include <functional>
 
-::testing::AssertionResult FindModuleDirectoryIsLogged(const std::vector<std::string>& arguments, const std::string& expectResult);
-
 
 TEST(ConsoleArgumentParser, NoArgument) {
 	EXPECT_EQ("", FindModuleDirectory(std::vector<std::string> { }));
@@ -37,21 +35,4 @@ TEST(ConsoleArgumentParser, NoSwitchArgument) {
 
 TEST(ConsoleArgumentParser, TooManyArguments) {
 	EXPECT_THROW(FindModuleDirectory(std::vector<std::string> { "/loadmod", "path1", "path2" }), std::runtime_error);
-}
-
-
-// Returns true if calling FindModuleDirectory provides input to the logger by checking log size
-::testing::AssertionResult FindModuleDirectoryIsLogged(
-	const std::vector<std::string>& arguments, const std::string& expectResult)
-{
-	const auto logPath = fs::path(GetGameDirectory()).append("Outpost2Log.txt");
-	const uintmax_t preFileSize = fs::file_size(logPath);
-
-	EXPECT_EQ(expectResult, FindModuleDirectory(arguments));
-
-	if (fs::file_size(logPath) > preFileSize) {
-		return ::testing::AssertionSuccess() << "Message logged";
-	}
-
-	return ::testing::AssertionFailure() << "Message not logged";
 }
