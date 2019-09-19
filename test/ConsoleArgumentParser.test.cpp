@@ -16,8 +16,8 @@ TEST(ConsoleArgumentParser, WellFormedNoSpaces)
 
 TEST(ConsoleArgmunetParser, WellFormedSpaces)
 {
-	const std::string pathWithSpaces("path with spaces");
-	EXPECT_EQ(pathWithSpaces, FindModuleDirectory(std::vector<std::string> { "/loadmod", pathWithSpaces }));
+	const std::string path("path with spaces");
+	EXPECT_EQ(path, FindModuleDirectory(std::vector<std::string> { "/loadmod", path }));
 }
 
 
