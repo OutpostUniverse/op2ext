@@ -17,15 +17,23 @@ std::string GetLastErrorStdString(LPCTSTR lpszFunction)
 		dw,
 		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
 		reinterpret_cast<LPTSTR>(&lpMsgBuf),
-		0, NULL);
+		0,
+		NULL
+	);
 
-	LPTSTR lpDisplayBuf = static_cast<LPTSTR>(LocalAlloc(LMEM_ZEROINIT,
-		(lstrlen(lpMsgBuf) + lstrlen(lpszFunction) + 40) * sizeof(TCHAR)));
+	LPTSTR lpDisplayBuf = static_cast<LPTSTR>(
+		LocalAlloc(
+			LMEM_ZEROINIT,
+			(lstrlen(lpMsgBuf) + lstrlen(lpszFunction) + 40) * sizeof(TCHAR)
+		)
+	);
 
-	StringCchPrintf(lpDisplayBuf,
+	StringCchPrintf(
+		lpDisplayBuf,
 		LocalSize(lpDisplayBuf) / sizeof(TCHAR),
 		TEXT("%s failed with error %d: %s"),
-		lpszFunction, dw, lpMsgBuf);
+		lpszFunction, dw, lpMsgBuf
+	);
 
 	std::string errorMessage = ConvertLpctstrToString(lpDisplayBuf);
 
