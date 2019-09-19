@@ -133,9 +133,6 @@ OP2EXT_API size_t GetLoadedModuleName(size_t moduleIndex, char* buffer, size_t b
 		else if (moduleIndex < GetLoadedModuleCount()) {
 			moduleName = consoleModLoader.GetModuleName();
 		}
-		else {
-			moduleName = "";
-		}
 	}
 	catch (...) // Prevent throwing an error across DLL boundaries
 	{
