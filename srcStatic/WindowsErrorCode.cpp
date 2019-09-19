@@ -1,5 +1,6 @@
 #include "WindowsErrorCode.h"
 #include "StringConversion.h"
+#include <windows.h>
 
 std::string GetLastErrorStdString(std::string functionName)
 {
