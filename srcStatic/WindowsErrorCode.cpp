@@ -1,7 +1,7 @@
 #include "WindowsErrorCode.h"
 #include "StringConversion.h"
 
-std::string GetLastErrorStdString(LPCTSTR lpszFunction)
+std::string GetLastErrorStdString(std::string functionName)
 {
 	// Adapted from https://docs.microsoft.com/en-us/windows/desktop/Debug/retrieving-the-last-error-code
 
@@ -21,7 +21,6 @@ std::string GetLastErrorStdString(LPCTSTR lpszFunction)
 	);
 
 	auto errorCodeMessage = ConvertLpctstrToString(lpMsgBuf);
-	auto functionName = ConvertLpctstrToString(lpszFunction);
 
 	auto errorMessage = functionName + " failed with error " + std::to_string(lastErrorCode) + ": " + errorCodeMessage;
 
