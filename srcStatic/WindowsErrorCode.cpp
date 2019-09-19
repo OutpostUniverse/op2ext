@@ -7,14 +7,14 @@ std::string GetLastErrorStdString(LPCTSTR lpszFunction)
 	// Adapted from https://docs.microsoft.com/en-us/windows/desktop/Debug/retrieving-the-last-error-code
 
 	LPTSTR lpMsgBuf;
-	DWORD dw = GetLastError();
+	DWORD lastErrorCode = GetLastError();
 
 	FormatMessage(
 		FORMAT_MESSAGE_ALLOCATE_BUFFER |
 		FORMAT_MESSAGE_FROM_SYSTEM |
 		FORMAT_MESSAGE_IGNORE_INSERTS,
 		NULL,
-		dw,
+		lastErrorCode,
 		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
 		reinterpret_cast<LPTSTR>(&lpMsgBuf),
 		0,
@@ -32,7 +32,7 @@ std::string GetLastErrorStdString(LPCTSTR lpszFunction)
 		lpDisplayBuf,
 		LocalSize(lpDisplayBuf) / sizeof(TCHAR),
 		TEXT("%s failed with error %d: %s"),
-		lpszFunction, dw, lpMsgBuf
+		lpszFunction, lastErrorCode, lpMsgBuf
 	);
 
 	std::string errorMessage = ConvertLpctstrToString(lpDisplayBuf);
