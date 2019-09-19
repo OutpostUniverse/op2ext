@@ -94,7 +94,7 @@ void ConsoleModuleLoader::LoadModuleDll()
 	}
 	else {
 		const std::string errorMessage("Unable to load console module's dll from " + dllName +
-			". " + GetLastErrorStdString("LoadLibrary"));
+			". " + GetLastErrorString("LoadLibrary"));
 
 		PostErrorMessage(__FILE__, __LINE__, errorMessage);
 	}

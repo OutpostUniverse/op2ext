@@ -2,7 +2,7 @@
 #include "StringConversion.h"
 #include <windows.h>
 
-std::string GetLastErrorStdString(std::string functionName)
+std::string GetLastErrorString(std::string functionName)
 {
 	// Adapted from https://docs.microsoft.com/en-us/windows/desktop/Debug/retrieving-the-last-error-code
 
