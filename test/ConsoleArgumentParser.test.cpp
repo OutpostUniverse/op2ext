@@ -28,15 +28,15 @@ TEST(ConsoleArgmunetParser, WellFormedSpaces)
 
 
 TEST(ConsoleArgumentParser, WrongSwitchName) {
-	EXPECT_TRUE(FindModuleDirectoryIsLogged(std::vector<std::string> { "/WrongSwitch" }, ""));
+	EXPECT_THROW(FindModuleDirectory(std::vector<std::string> { "/WrongSwitch" }), std::runtime_error);
 }
 
 TEST(ConsoleArgumentParser, NoSwitchArgument) {
-	EXPECT_TRUE(FindModuleDirectoryIsLogged(std::vector<std::string> { "/loadmod" }, ""));
+	EXPECT_THROW(FindModuleDirectory(std::vector<std::string> { "/loadmod" }), std::runtime_error);
 }
 
 TEST(ConsoleArgumentParser, TooManyArguments) {
-	EXPECT_TRUE(FindModuleDirectoryIsLogged(std::vector<std::string> { "/loadmod", "path1", "path2" }, ""));
+	EXPECT_THROW(FindModuleDirectory(std::vector<std::string> { "/loadmod", "path1", "path2" }), std::runtime_error);
 }
 
 

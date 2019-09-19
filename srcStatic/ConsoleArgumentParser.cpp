@@ -25,22 +25,17 @@ std::string FindModuleDirectory()
 
 std::string FindModuleDirectory(std::vector<std::string> arguments)
 {
-	try {
-		const std::string switchName = GetSwitch(arguments);
+	const std::string switchName = GetSwitch(arguments);
 
-		if (switchName.empty()) {
-			return "";
-		}
-
-		if (switchName == "loadmod") {
-			return ParseLoadModCommand(arguments);
-		}
-
-		throw std::runtime_error("Provided switch is not supported: " + switchName);
-	} catch(const std::exception& e) {
-		PostErrorMessage(__FILE__, __LINE__, "Error parsing command line arguments: " + std::string(e.what()));
+	if (switchName.empty()) {
 		return "";
 	}
+
+	if (switchName == "loadmod") {
+		return ParseLoadModCommand(arguments);
+	}
+
+	throw std::runtime_error("Provided switch is not supported: " + switchName);
 }
 
 std::string GetSwitch(std::vector<std::string>& arguments)
