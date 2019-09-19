@@ -13,8 +13,13 @@ std::string ParseLoadModCommand(std::vector<std::string> arguments);
 
 std::string FindModuleDirectory()
 {
-	const auto arguments = GetCommandLineArguments();
-	return FindModuleDirectory(arguments);
+	try {
+		const auto arguments = GetCommandLineArguments();
+		return FindModuleDirectory(arguments);
+	} catch(const std::exception& e) {
+		PostErrorMessage(__FILE__, __LINE__, "Error parsing command line arguments: " + std::string(e.what()));
+		return "";
+	}
 }
 
 std::string FindModuleDirectory(std::vector<std::string> arguments)
