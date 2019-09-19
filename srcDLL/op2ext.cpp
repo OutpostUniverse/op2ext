@@ -8,6 +8,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <intrin.h> // _ReturnAddress
+#include <exception>
 
 #pragma intrinsic(_ReturnAddress)
 #ifdef __MINGW32__
@@ -134,8 +135,10 @@ OP2EXT_API size_t GetLoadedModuleName(size_t moduleIndex, char* buffer, size_t b
 			moduleName = consoleModLoader.GetModuleName();
 		}
 	}
-	catch (...) // Prevent throwing an error across DLL boundaries
+	catch (const std::exception& e) // Prevent throwing an error across DLL boundaries
 	{
+		logger.Log("op2ext threw an exception attempting to locate and pass the module name for module loaded at index " + 
+			std::to_string(moduleIndex) + ". Details: " + std::string(e.what()));
 		moduleName = "";
 	}
 
