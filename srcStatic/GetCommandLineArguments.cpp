@@ -20,7 +20,6 @@ std::vector<std::string> GetCommandLineArguments()
 			std::string argument;
 			if (!ConvertLPWToString(argument, commandLineArgs[i])) {
 				throw std::runtime_error("Unable to convert command line argument from LPWSTR to std::string. Argument index: " + std::to_string(i));
-				break;
 			}
 			arguments.push_back(argument);
 		}
