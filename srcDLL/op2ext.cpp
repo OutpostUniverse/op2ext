@@ -9,6 +9,7 @@
 #include <windows.h>
 #include <intrin.h> // _ReturnAddress
 #include <exception>
+#include <string>
 
 #pragma intrinsic(_ReturnAddress)
 #ifdef __MINGW32__
