@@ -31,7 +31,7 @@ $(eval $(call DefineCircleCi))
 
 ifdef Outpost2Path
 
-.PHONY: install run
+.PHONY: install run install-testModule
 
 install: $(Outpost2Path)op2ext.dll
 
@@ -40,5 +40,14 @@ $(Outpost2Path)op2ext.dll: op2ext.dll
 
 run: install
 	wine "$(Outpost2Path)Outpost2.exe"
+
+
+testModulePath := $(Outpost2Path)testModule/
+
+install-testModule: $(testModulePath)testModule.dll
+
+$(testModulePath)testModule.dll: testModule.dll
+	mkdir -p "$(testModulePath)"
+	cp testModule.dll "$(testModulePath)"
 
 endif
