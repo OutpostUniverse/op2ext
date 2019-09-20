@@ -5,6 +5,8 @@
 #include <windows.h>
 #include <cstddef>
 #include <vector>
+#include <algorithm>
+
 
 std::string GetOP2IniPath();
 std::string GetGameDirStdString();
