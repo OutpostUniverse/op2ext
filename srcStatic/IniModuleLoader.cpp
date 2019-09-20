@@ -58,7 +58,7 @@ bool IniModuleLoader::UnloadModules()
 std::string IniModuleLoader::GetModuleName(std::size_t index)
 {
 	if (index >= modules.size()) {
-		return "";
+		return std::string();
 	}
 
 	return modules[index].iniSectionName;
