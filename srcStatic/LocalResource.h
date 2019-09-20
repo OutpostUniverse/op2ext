@@ -8,17 +8,17 @@ template <typename T>
 class LocalResource {
 	static_assert(std::is_pointer<T>::value, "Type must be a pointer");
 public:
-	LocalResource(T pointer) : pointer(pointer) {
+	LocalResource(T resource) : resource(resource) {
 	}
 	~LocalResource() {
 		// Freeing of NULL is safe
-		LocalFree(pointer);
+		LocalFree(resource);
 	}
 
-	// Auto convert to underlying pointer type
+	// Auto convert to underlying type
 	operator T() const {
-		return pointer;
+		return resource;
 	}
 private:
-	T pointer;
+	T resource;
 };
