@@ -95,7 +95,7 @@ HINSTANCE IniModuleLoader::LoadModuleDll(const std::string& sectionName)
 
 	if (dllHandle == 0) {
 		throw std::runtime_error("Unable to load DLL " + dllName + " from ini module section " +
-			sectionName + "." + GetLastErrorStdString(TEXT("LoadLibrary")));
+			sectionName + "." + GetLastErrorString("LoadLibrary"));
 	}
 
 	return dllHandle;
