@@ -20,6 +20,7 @@ all: op2extLib op2extDll
 
 $(eval $(call DefineCppProject,op2extLib,op2ext.lib,srcStatic/))
 $(eval $(call DefineCppProject,op2extDll,op2ext.dll,srcDLL/,op2extLib))
+$(eval $(call DefineCppProject,testModule,testModule.dll,TestModule/,op2extDll))
 $(eval $(call DefineUnitTestProject,test,test/,op2extLib))
 
 
