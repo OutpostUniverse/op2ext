@@ -19,7 +19,7 @@ std::string FindModuleDirectory()
 		return FindModuleDirectory(arguments);
 	} catch(const std::exception& e) {
 		PostErrorMessage(__FILE__, __LINE__, "Error parsing command line arguments: " + std::string(e.what()));
-		return "";
+		return std::string();
 	}
 }
 
@@ -28,7 +28,7 @@ std::string FindModuleDirectory(std::vector<std::string> arguments)
 	const std::string switchName = GetSwitch(arguments);
 
 	if (switchName.empty()) {
-		return "";
+		return std::string();
 	}
 
 	if (switchName == "loadmod") {
@@ -41,7 +41,7 @@ std::string FindModuleDirectory(std::vector<std::string> arguments)
 std::string GetSwitch(std::vector<std::string>& arguments)
 {
 	if (arguments.size() == 0) {
-		return ""; // Switch is not present
+		return std::string(); // Switch is not present
 	}
 
 	const std::string rawSwitch = arguments[0];
