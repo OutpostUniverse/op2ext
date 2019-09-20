@@ -140,7 +140,6 @@ OP2EXT_API size_t GetLoadedModuleName(size_t moduleIndex, char* buffer, size_t b
 	{
 		logger.Log("op2ext threw an exception attempting to locate and pass the module name for module loaded at index " + 
 			std::to_string(moduleIndex) + ". Details: " + std::string(e.what()));
-		moduleName = "";
 	}
 
 	return CopyStdStringIntoCharBuffer(moduleName, buffer, bufferSize);
