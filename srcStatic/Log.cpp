@@ -10,6 +10,9 @@ void SetLogger(Logger* newLogger) {
 }
 
 void Log(const std::string& message, const std::string& moduleName) {
-	// Delegate to internal logger
-	logger->Log(message, moduleName);
+	// Make sure a logger has been set first
+	if (logger) {
+		// Delegate to internal logger
+		logger->Log(message, moduleName);
+	}
 }
