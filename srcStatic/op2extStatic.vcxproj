@@ -83,6 +83,9 @@
       <BaseAddress>0x10000000</BaseAddress>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
+    <Lib>
+      <AdditionalDependencies>wsock32.lib</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -121,14 +124,18 @@
       <BaseAddress>0x10000000</BaseAddress>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
+    <Lib>
+      <AdditionalDependencies>wsock32.lib</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="GetCommandLineArguments.cpp" />
     <ClCompile Include="ConsoleArgumentParser.cpp" />
     <ClCompile Include="FileSystemHelper.cpp" />
+    <ClCompile Include="GameModules\IniModule.cpp" />
     <ClCompile Include="GlobalDefines.cpp" />
-    <ClCompile Include="IniModuleLoader.cpp" />
-    <ClCompile Include="IpDropDown.cpp" />
+    <ClCompile Include="ModuleLoader.cpp" />
+    <ClCompile Include="GameModules\IpDropDown.cpp" />
     <ClCompile Include="ConsoleModuleLoader.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="op2ext-Internal.cpp" />
@@ -142,9 +149,11 @@
     <ClInclude Include="GetCommandLineArguments.h" />
     <ClInclude Include="ConsoleArgumentParser.h" />
     <ClInclude Include="FileSystemHelper.h" />
+    <ClInclude Include="GameModule.h" />
+    <ClInclude Include="GameModules\IniModule.h" />
     <ClInclude Include="GlobalDefines.h" />
-    <ClInclude Include="IniModuleLoader.h" />
-    <ClInclude Include="IpDropDown.h" />
+    <ClInclude Include="ModuleLoader.h" />
+    <ClInclude Include="GameModules\IpDropDown.h" />
     <ClInclude Include="ConsoleModuleLoader.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="op2ext-Internal.h" />

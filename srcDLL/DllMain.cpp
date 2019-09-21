@@ -1,5 +1,4 @@
-#include "IpDropDown.h"
-#include "IniModuleLoader.h"
+#include "ModuleLoader.h"
 #include "StringConversion.h"
 #include "OP2Memory.h"
 #include "FileSystemHelper.h"
@@ -9,6 +8,7 @@
 #include <windows.h>
 #include <string>
 #include <sstream>
+
 
 void LocateVolFiles(const std::string& relativeDirectory = "");
 
@@ -32,7 +32,6 @@ public:
 
 DWORD* loadLibraryDataAddr = (DWORD*)0x00486E0A;
 DWORD loadLibraryNewAddr = (DWORD)LoadLibraryNew;
-
 
 BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 {
@@ -64,8 +63,6 @@ int TApp::Init()
 		PostErrorMessage(__FILE__, __LINE__, stringStream.str());
 	}
 
-	InstallIpDropDown();
-
 	// Order of precedence for loading vol files is:
 	// ART_PATH (from console module), Console Module, Ini Modules, Addon directory, Game directory
 
@@ -73,7 +70,7 @@ int TApp::Init()
 	consoleModLoader.LoadModule();
 
 	// Load all active modules from the .ini file
-	iniModuleLoader.LoadModules();
+	moduleLoader.LoadModules();
 
 	LocateVolFiles("Addon");
 	LocateVolFiles(); //Searches root directory
@@ -95,11 +92,8 @@ void TApp::ShutDown()
 	// Call original function
 	(this->*GetMethodPointer<decltype(&TApp::ShutDown)>(0x004866E0))();
 
-	// Remove any loaded command line mod
 	consoleModLoader.UnloadModule();
-
-	// Remove any active modules from the .ini file
-	iniModuleLoader.UnloadModules();
+	moduleLoader.UnloadModules();
 }
 
 /**
@@ -144,6 +138,7 @@ HINSTANCE __stdcall LoadLibraryNew(LPCTSTR lpLibFileName)
 		//LocalizeStrings();
 		modulesRunning = true;
 		consoleModLoader.RunModule();
+		moduleLoader.RunModules();
 	}
 
 	return result;

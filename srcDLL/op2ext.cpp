@@ -8,6 +8,8 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <intrin.h> // _ReturnAddress
+#include <exception>
+#include <string>
 
 #pragma intrinsic(_ReturnAddress)
 #ifdef __MINGW32__
@@ -112,12 +114,12 @@ OP2EXT_API bool IsConsoleModuleLoaded(const char* moduleName)
 
 OP2EXT_API bool IsIniModuleLoaded(const char* moduleName)
 {
-	return iniModuleLoader.IsModuleLoaded(moduleName);
+	return moduleLoader.IsModuleLoaded(moduleName);
 }
 
 OP2EXT_API size_t GetLoadedModuleCount()
 {
-	return iniModuleLoader.Count() + consoleModLoader.Count();
+	return moduleLoader.Count() + consoleModLoader.Count();
 }
 
 OP2EXT_API size_t GetLoadedModuleName(size_t moduleIndex, char* buffer, size_t bufferSize)
@@ -126,14 +128,18 @@ OP2EXT_API size_t GetLoadedModuleName(size_t moduleIndex, char* buffer, size_t b
 
 	std::string moduleName;
 
-	if (moduleIndex < iniModuleLoader.Count()) {
-		moduleName = iniModuleLoader.GetModuleName(moduleIndex);
+	try {
+		if (moduleIndex < moduleLoader.Count()) {
+			moduleName = moduleLoader.GetModuleName(moduleIndex);
+		}
+		else if (moduleIndex < GetLoadedModuleCount()) {
+			moduleName = consoleModLoader.GetModuleName();
+		}
 	}
-	else if (moduleIndex < GetLoadedModuleCount()) {
-		moduleName = consoleModLoader.GetModuleName();
-	}
-	else {
-		moduleName = "";
+	catch (const std::exception& e) // Prevent throwing an error across DLL boundaries
+	{
+		logger.Log("op2ext threw an exception attempting to locate and pass the module name for module loaded at index " + 
+			std::to_string(moduleIndex) + ". Details: " + std::string(e.what()));
 	}
 
 	return CopyStdStringIntoCharBuffer(moduleName, buffer, bufferSize);
