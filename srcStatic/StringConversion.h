@@ -9,8 +9,10 @@
 // Converts a LPWSTR to std::string
 bool ConvertLPWToString(std::string& stringOut, const LPWSTR pw, UINT codepage = CP_ACP);
 
-// Convert a LPCTSTR to std::string. Throws an exception if code is compiled with Unicode character set.
+// Convert a LPCTSTR to std::string
+// At compile time LPCTSTR will convert to either LPCSTR or LPCWSTR based on the UNICODE setting
 std::string ConvertLpctstrToString(LPCSTR str);
+std::wstring ConvertLpctstrToString(LPCWSTR str);
 
 // Returns 0 on success
 // Returns needed buffer size (including space for null terminator) if the destination buffer is too small
