@@ -3,7 +3,7 @@
 #include "LocalResource.h"
 #include <windows.h>
 
-std::string GetLastErrorString(std::string functionName)
+std::string GetLastErrorString()
 {
 	LocalResource<LPTSTR> lpMsgBuf;
 	DWORD lastErrorCode = GetLastError();
@@ -21,7 +21,7 @@ std::string GetLastErrorString(std::string functionName)
 	);
 
 	auto errorCodeMessage = ConvertLpctstrToString(lpMsgBuf);
-	auto errorMessage = functionName + " failed with error " + std::to_string(lastErrorCode) + ": " + errorCodeMessage;
+	auto errorMessage = "Error " + std::to_string(lastErrorCode) + ": " + errorCodeMessage;
 
 	return errorMessage;
 }
