@@ -4,6 +4,7 @@
 #include "FileSystemHelper.h"
 #include "GlobalDefines.h"
 #include "op2ext-Internal.h"
+#include "Log.h"
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <string>
@@ -124,7 +125,7 @@ void LocateVolFiles(const std::string& relativeDirectory)
 		}
 	}
 	catch (const fs::filesystem_error& e) {
-		logger.Log(e.what());
+		Log(e.what());
 	}
 }
 

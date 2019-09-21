@@ -4,6 +4,7 @@
 #include "FileSystemHelper.h"
 #include "GlobalDefines.h"
 #include "op2ext-Internal.h"
+#include "Log.h"
 #include "WindowsModule.h"
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -98,7 +99,7 @@ OP2EXT_API void Log(const char* message)
 	// These optimizations are however extremely unlikely when making
 	// calls across a module boundary (such as to exported methods).
 
-	logger.Log(message, FindModuleName(_ReturnAddress()));
+	Log(message, FindModuleName(_ReturnAddress()));
 }
 
 
@@ -138,7 +139,7 @@ OP2EXT_API size_t GetLoadedModuleName(size_t moduleIndex, char* buffer, size_t b
 	}
 	catch (const std::exception& e) // Prevent throwing an error across DLL boundaries
 	{
-		logger.Log("op2ext threw an exception attempting to locate and pass the module name for module loaded at index " + 
+		Log("op2ext threw an exception attempting to locate and pass the module name for module loaded at index " +
 			std::to_string(moduleIndex) + ". Details: " + std::string(e.what()));
 	}
 
