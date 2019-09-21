@@ -1,52 +1,51 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-<<<<<<< HEAD
-    <ClCompile Include="VolList.cpp" />
+    <ClCompile Include="GetCommandLineArguments.cpp" />
+    <ClCompile Include="ConsoleArgumentParser.cpp" />
     <ClCompile Include="FileSystemHelper.cpp" />
     <ClCompile Include="GlobalDefines.cpp" />
-    <ClCompile Include="OP2Memory.cpp" />
+    <ClCompile Include="ModuleLoader.cpp" />
     <ClCompile Include="ConsoleModuleLoader.cpp" />
-    <ClCompile Include="op2ext-Internal.cpp" />
     <ClCompile Include="Logger.cpp" />
-    <ClCompile Include="WindowsModule.cpp" />
-    <ClCompile Include="WindowsErrorCode.cpp" />
+    <ClCompile Include="op2ext-Internal.cpp" />
+    <ClCompile Include="OP2Memory.cpp" />
     <ClCompile Include="StringConversion.cpp" />
-    <ClCompile Include="ConsoleArgumentParser.cpp" />
-    <ClCompile Include="GetCommandLineArguments.cpp"/>
-    <ClCompile Include="GameModules\IpDropDown.cpp">
+    <ClCompile Include="VolList.cpp" />
+    <ClCompile Include="WindowsErrorCode.cpp" />
+    <ClCompile Include="WindowsModule.cpp" />
+    <ClCompile Include="GameModules\IniModule.cpp">
       <Filter>GameModules</Filter>
     </ClCompile>
-    <ClCompile Include="ModuleLoader.cpp" />
-    <ClCompile Include="GameModules\IniModule.cpp">
+    <ClCompile Include="GameModules\IpDropDown.cpp">
       <Filter>GameModules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="VolList.h" />
-    <ClInclude Include="FileSystemHelper.h" />
-    <ClInclude Include="GlobalDefines.h" />
-    <ClInclude Include="OP2Memory.h" />
-    <ClInclude Include="ConsoleModuleLoader.h" />
-    <ClInclude Include="op2ext-Internal.h" />
-    <ClInclude Include="Logger.h" />
-    <ClInclude Include="WindowsModule.h" />
-    <ClInclude Include="WindowsErrorCode.h" />
+    <ClInclude Include="GetCommandLineArguments.h" />
     <ClInclude Include="ConsoleArgumentParser.h" />
-    <ClInclude Include="GetCommandLineArguments.h"/>
+    <ClInclude Include="FileSystemHelper.h" />
+    <ClInclude Include="GameModule.h" />
+    <ClInclude Include="GlobalDefines.h" />
+    <ClInclude Include="ModuleLoader.h" />
+    <ClInclude Include="ConsoleModuleLoader.h" />
+    <ClInclude Include="Logger.h" />
+    <ClInclude Include="op2ext-Internal.h" />
+    <ClInclude Include="OP2Memory.h" />
     <ClInclude Include="StringConversion.h" />
-    <ClInclude Include="GameModules\IpDropDown.h">
+    <ClInclude Include="VolList.h" />
+    <ClInclude Include="WindowsErrorCode.h" />
+    <ClInclude Include="WindowsModule.h" />
+    <ClInclude Include="GameModules\IniModule.h">
       <Filter>GameModules</Filter>
     </ClInclude>
-    <ClInclude Include="GameModule.h" ./>
-    <ClInclude Include="ModuleLoader.h" />
-    <ClInclude Include="GameModules\IniModule.h">
+    <ClInclude Include="GameModules\IpDropDown.h">
       <Filter>GameModules</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="GameModules">
-      <UniqueIdentifier>{65727fee-7f83-49ac-a2ca-c0f4a41e5cc9}</UniqueIdentifier>
+      <UniqueIdentifier>{ec8f43e7-0e90-410c-9166-06a4cdbe9270}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
