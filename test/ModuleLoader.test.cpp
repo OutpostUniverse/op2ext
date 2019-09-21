@@ -37,7 +37,7 @@ TEST(ModuleLoader, NullModulePassed)
 	EXPECT_EQ(0u, moduleLoader.Count());
 }
 
-TEST(ModuleLoader, InternalModulePassed)
+TEST(ModuleLoader, BuiltInModulePassed)
 {
 	ModuleLoader moduleLoader;
 	std::unique_ptr<GameModule> ipDropDown = std::make_unique<IPDropDown>();

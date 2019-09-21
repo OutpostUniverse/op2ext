@@ -6,9 +6,9 @@
 #include <stdexcept>
 
 
-void ModuleLoader::RegisterInternalModules()
+void ModuleLoader::RegisterBuiltInModules()
 {
-	if (IsInternalModuleRequested("IPDropDown")) {
+	if (IsBuiltInModuleRequested("IPDropDown")) {
 		RegisterModule(static_cast<std::unique_ptr<GameModule>>(std::make_unique<IPDropDown>()));
 	}
 }
@@ -28,9 +28,9 @@ void ModuleLoader::RegisterExternalModules()
 	}
 }
 
-bool ModuleLoader::IsInternalModuleRequested(const std::string& moduleName)
+bool ModuleLoader::IsBuiltInModuleRequested(const std::string& moduleName)
 {
-	const auto isModuleRequested = ToLower(GetOutpost2IniSetting("InternalModules", moduleName));
+	const auto isModuleRequested = ToLower(GetOutpost2IniSetting("BuiltInModules", moduleName));
 
 	if (isModuleRequested == "yes") {
 		return true;
@@ -39,7 +39,7 @@ bool ModuleLoader::IsInternalModuleRequested(const std::string& moduleName)
 		return false;
 	}
 
-	PostErrorMessage(__FILE__, __LINE__, "Internal Module named " + moduleName + " contains an innapropriate setting. It must be set to Yes or No");
+	PostErrorMessage(__FILE__, __LINE__, "Built-in module named " + moduleName + " contains an innapropriate setting. It must be set to Yes or No");
 	return false;
 }
 
@@ -95,7 +95,7 @@ void ModuleLoader::RegisterModule(std::unique_ptr<GameModule>&& newGameModule)
 
 void ModuleLoader::LoadModules()
 {
-	RegisterInternalModules();
+	RegisterBuiltInModules();
 	RegisterExternalModules();
 
 	for (auto& gameModule : modules)
