@@ -17,8 +17,7 @@ public:
 	std::string GetModuleName(std::size_t index);
 
 	// Module Manager takes ownership of GameModule object
-	void RegisterModule(std::unique_ptr<GameModule>& newGameModule);
-	void RegisterModule(std::unique_ptr<GameModule> && newGameModule);
+	void RegisterModule(std::unique_ptr<GameModule> newGameModule);
 
 	void LoadModules();
 	bool UnloadModules();

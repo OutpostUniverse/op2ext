@@ -31,7 +31,7 @@ TEST(ModuleLoader, NullModulePassed)
 {
 	ModuleLoader moduleLoader;
 	std::unique_ptr<GameModule> gameModule;
-	EXPECT_NO_THROW(moduleLoader.RegisterModule(gameModule));
+	EXPECT_NO_THROW(moduleLoader.RegisterModule(std::move(gameModule)));
 	
 	// A null unique pointer does not count as a loaded module
 	EXPECT_EQ(0u, moduleLoader.Count());
@@ -42,7 +42,7 @@ TEST(ModuleLoader, BuiltInModulePassed)
 	ModuleLoader moduleLoader;
 	std::unique_ptr<GameModule> ipDropDown = std::make_unique<IPDropDown>();
 
-	moduleLoader.RegisterModule(ipDropDown);
+	moduleLoader.RegisterModule(std::move(ipDropDown));
 	
 	// Ensure ipDropDown is transfered into moduleLoader
 	EXPECT_TRUE(ipDropDown == nullptr);
@@ -64,10 +64,10 @@ TEST(ModuleLoader, RejectCaseInsensitiveDuplicateNames)
 {
 	ModuleLoader moduleLoader;
 
-	EXPECT_NO_THROW(moduleLoader.RegisterModule(static_cast<std::unique_ptr<GameModule>>(std::make_unique<DifferentCasedNameModule>("TestModule"))));
+	EXPECT_NO_THROW(moduleLoader.RegisterModule(std::make_unique<DifferentCasedNameModule>("TestModule")));
 	EXPECT_EQ(1u, moduleLoader.Count());
 
 	// Ensure ModuleManager does not allow multiple modules with same name but different casing
-	EXPECT_NO_THROW(moduleLoader.RegisterModule(static_cast<std::unique_ptr<GameModule>>(std::make_unique<DifferentCasedNameModule>("testmodule"))));
+	EXPECT_NO_THROW(moduleLoader.RegisterModule(std::make_unique<DifferentCasedNameModule>("testmodule")));
 	EXPECT_EQ(1u, moduleLoader.Count());
 }

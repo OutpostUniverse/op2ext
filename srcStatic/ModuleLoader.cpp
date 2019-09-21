@@ -9,7 +9,7 @@
 void ModuleLoader::RegisterBuiltInModules()
 {
 	if (IsBuiltInModuleRequested("IPDropDown")) {
-		RegisterModule(static_cast<std::unique_ptr<GameModule>>(std::make_unique<IPDropDown>()));
+		RegisterModule(std::make_unique<IPDropDown>());
 	}
 }
 
@@ -20,7 +20,7 @@ void ModuleLoader::RegisterExternalModules()
 	for (const auto& sectionName : sectionNames)
 	{
 		try {
-			RegisterModule(static_cast<std::unique_ptr<GameModule>>(std::make_unique<IniModule>(sectionName)));
+			RegisterModule(std::make_unique<IniModule>(sectionName));
 		}
 		catch (const std::exception& e) {
 			PostErrorMessage(__FILE__, __LINE__, e.what());
@@ -74,7 +74,7 @@ bool ModuleLoader::IsModuleLoaded(std::string moduleName)
 }
 
 // Module Manager takes ownership of GameModule object
-void ModuleLoader::RegisterModule(std::unique_ptr<GameModule>& newGameModule)
+void ModuleLoader::RegisterModule(std::unique_ptr<GameModule> newGameModule)
 {
 	if (newGameModule == nullptr) {
 		return;
@@ -87,11 +87,6 @@ void ModuleLoader::RegisterModule(std::unique_ptr<GameModule>& newGameModule)
 
 	modules.push_back(std::move(newGameModule));
 };
-
-void ModuleLoader::RegisterModule(std::unique_ptr<GameModule>&& newGameModule)
-{
-	RegisterModule(newGameModule);
-}
 
 void ModuleLoader::LoadModules()
 {
