@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+<<<<<<< HEAD
     <ClCompile Include="VolList.cpp" />
     <ClCompile Include="FileSystemHelper.cpp" />
     <ClCompile Include="GlobalDefines.cpp" />
@@ -12,6 +13,7 @@
     <ClCompile Include="WindowsErrorCode.cpp" />
     <ClCompile Include="StringConversion.cpp" />
     <ClCompile Include="ConsoleArgumentParser.cpp" />
+    <ClCompile Include="GetCommandLineArguments.cpp"/>
     <ClCompile Include="GameModules\IpDropDown.cpp">
       <Filter>GameModules</Filter>
     </ClCompile>
@@ -31,6 +33,7 @@
     <ClInclude Include="WindowsModule.h" />
     <ClInclude Include="WindowsErrorCode.h" />
     <ClInclude Include="ConsoleArgumentParser.h" />
+    <ClInclude Include="GetCommandLineArguments.h"/>
     <ClInclude Include="StringConversion.h" />
     <ClInclude Include="GameModules\IpDropDown.h">
       <Filter>GameModules</Filter>
