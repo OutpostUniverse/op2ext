@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "LoggerFile.h"
+#include "Logger.h"
 #include "ConsoleModuleLoader.h"
 #include "ModuleLoader.h"
 #include "VolList.h"
@@ -12,7 +12,7 @@
 // Attempting further initialization commands will cause errors.
 extern bool modulesRunning;
 
-extern LoggerFile logger;
+extern Logger* logger;
 extern VolList volList;
 extern ConsoleModuleLoader consoleModLoader;
 extern ModuleLoader moduleLoader;
