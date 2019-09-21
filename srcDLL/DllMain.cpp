@@ -75,6 +75,8 @@ int TApp::Init()
 	// Load all active modules from the .ini file
 	iniModuleLoader.LoadModules();
 
+	// ConsoleModule name matches relative folder from game exeucutable folder
+	LocateVolFiles(consoleModLoader.GetModuleName());
 	LocateVolFiles("Addon");
 	LocateVolFiles(); //Searches root directory
 
