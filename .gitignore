@@ -10,3 +10,4 @@ packages/
 *.aps
 op2ext.lib
 op2ext.dll
+testModule.dll

@@ -20,6 +20,7 @@ all: op2extLib op2extDll
 
 $(eval $(call DefineCppProject,op2extLib,op2ext.lib,srcStatic/))
 $(eval $(call DefineCppProject,op2extDll,op2ext.dll,srcDLL/,op2extLib))
+$(eval $(call DefineCppProject,testModule,testModule.dll,TestModule/,op2extDll))
 $(eval $(call DefineUnitTestProject,test,test/,op2extLib))
 
 
@@ -30,7 +31,7 @@ $(eval $(call DefineCircleCi))
 
 ifdef Outpost2Path
 
-.PHONY: install run
+.PHONY: install run install-testModule run-testModule
 
 install: $(Outpost2Path)op2ext.dll
 
@@ -39,5 +40,18 @@ $(Outpost2Path)op2ext.dll: op2ext.dll
 
 run: install
 	wine "$(Outpost2Path)Outpost2.exe"
+
+
+testModuleName := testModule
+testModulePath := $(Outpost2Path)$(testModuleName)/
+
+install-testModule: $(testModulePath)testModule.dll
+
+$(testModulePath)testModule.dll: testModule.dll
+	mkdir -p "$(testModulePath)"
+	cp testModule.dll "$(testModulePath)"
+
+run-testModule: install-testModule
+	wine "$(Outpost2Path)Outpost2.exe" /loadmod "$(testModuleName)"
 
 endif
