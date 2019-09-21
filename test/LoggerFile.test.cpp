@@ -8,6 +8,8 @@ const fs::path logPath = fs::path(GetGameDirectory()).append("Outpost2Log.txt");
 
 TEST(LoggerFile, LogFileExists)
 {
+	LoggerFile logger;
+
 	std::error_code errorCode;
 	ASSERT_TRUE(fs::exists(logPath, errorCode));
 }
