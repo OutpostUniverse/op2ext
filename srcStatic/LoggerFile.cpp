@@ -19,11 +19,6 @@ LoggerFile::LoggerFile() :
 	}
 }
 
-LoggerFile::~LoggerFile()
-{
-	logFile.close();
-}
-
 void LoggerFile::Log(const std::string& message, const std::string& moduleName)
 {
 	logFile << GetSystemDateTime() << " [" << moduleName << "] " << message << std::endl;

@@ -9,7 +9,6 @@ class LoggerFile : public Logger
 {
 public:
 	LoggerFile();
-	~LoggerFile();
 
 	void Log(const std::string& message, const std::string& moduleName = "op2ext.dll") override;
 
