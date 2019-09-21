@@ -5,6 +5,7 @@
 #include "GlobalDefines.h"
 #include "op2ext-Internal.h"
 #include "Log.h"
+#include "LoggerFile.h"
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <string>
@@ -34,10 +35,22 @@ public:
 DWORD* loadLibraryDataAddr = (DWORD*)0x00486E0A;
 DWORD loadLibraryNewAddr = (DWORD)LoadLibraryNew;
 
+// Warning: globals requiring dynamic initialization
+// Dynamic initialization order between translation units is unsequenced
+// Globals from other files should not use these before DllMain has started
+// Similarly these should not use globals from other files before DllMain has started
+// Pay careful attention to anything passed to a constructor, or called by a constructor
+LoggerFile loggerFile; // Logging to file in Outpost 2 folder
+
+
 BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 {
 	// This will be called once the program is unpacked and running
 	if (dwReason == DLL_PROCESS_ATTACH) {
+		// Setup logging
+		SetLogger(&loggerFile);
+
+		// Set load offset for Outpost2.exe module, used during memory patching
 		SetLoadOffset();
 
 		// Replace call to gTApp.Init with custom routine
