@@ -31,6 +31,7 @@
     <ClInclude Include="ModuleLoader.h" />
     <ClInclude Include="ConsoleModuleLoader.h" />
     <ClInclude Include="Log.h"/>
+    <ClInclude Include="Logger.h"/>
     <ClInclude Include="LoggerFile.h"/>
     <ClInclude Include="op2ext-Internal.h" />
     <ClInclude Include="OP2Memory.h" />
