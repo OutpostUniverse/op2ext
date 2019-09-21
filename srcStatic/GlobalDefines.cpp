@@ -51,7 +51,7 @@ std::vector<std::string> SplitString(std::string stringToSplit, char delimiter, 
 std::string TrimString(const std::string& stringToTrim, TrimOption trimOption, const std::string& whitespace)
 {
 	if (trimOption == TrimOption::None) {
-		return "";
+		return std::string();
 	}
 
 	std::size_t stringBegin = 0;
@@ -60,7 +60,7 @@ std::string TrimString(const std::string& stringToTrim, TrimOption trimOption, c
 	}
 
 	if (stringBegin == std::string::npos) {
-		return ""; // no content provided
+		return std::string(); // no content provided
 	}
 
 	auto stringEnd = stringToTrim.length();
