@@ -1,4 +1,4 @@
-#include "Logger.h"
+#include "LoggerFile.h"
 
 #include "FileSystemHelper.h"
 #include "GlobalDefines.h"
@@ -11,7 +11,7 @@
 std::string GetSystemDateTime();
 
 
-Logger::Logger() :
+LoggerFile::LoggerFile() :
 	logFile(GetGameDirectory() + "\\Outpost2Log.txt", std::ios::app | std::ios::out | std::ios::binary)
 {
 	if (!logFile.is_open()) {
@@ -19,12 +19,12 @@ Logger::Logger() :
 	}
 }
 
-Logger::~Logger()
+LoggerFile::~LoggerFile()
 {
 	logFile.close();
 }
 
-void Logger::Log(const std::string& message, const std::string& moduleName)
+void LoggerFile::Log(const std::string& message, const std::string& moduleName)
 {
 	logFile << GetSystemDateTime() << " [" << moduleName << "] " << message << std::endl;
 }

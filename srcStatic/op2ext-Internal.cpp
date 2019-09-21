@@ -6,7 +6,7 @@
 
 
 bool modulesRunning = false;
-Logger logger;
+LoggerFile logger;
 VolList volList;
 std::string moduleDirectory; // Must be defined + initialized before consoleModLoader
 ConsoleModuleLoader consoleModLoader(FindModuleDirectory());

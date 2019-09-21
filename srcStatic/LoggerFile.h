@@ -3,11 +3,11 @@
 #include <fstream>
 #include <string>
 
-class Logger
+class LoggerFile
 {
 public:
-	Logger();
-	~Logger();
+	LoggerFile();
+	~LoggerFile();
 
 	void Log(const std::string& message, const std::string& moduleName = "op2ext.dll");
 

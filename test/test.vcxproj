@@ -29,7 +29,7 @@
     <ClCompile Include="ConsolueModuleLoader.test.cpp" />
     <ClCompile Include="FileSystemHelper.test.cpp" />
     <ClCompile Include="ModuleLoader.test.cpp" />
-    <ClCompile Include="Logger.test.cpp" />
+    <ClCompile Include="LoggerFile.test.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="op2ext.test.cpp" />
     <ClCompile Include="OP2Memory.test.cpp" />
