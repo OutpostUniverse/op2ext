@@ -229,6 +229,7 @@ endef
 gtest_CXXFLAGS := -std=c++17
 gtest_SRCDIR := /usr/src/googletest/
 gtest_INCDIR := /usr/src/googletest/googletest/include/
+gmock_INCDIR := /usr/src/googletest/googlemock/include/
 gtest_BUILDDIR = $(BUILDDIR)/$(config)/gtest/
 
 # Toolchain specifc library install folders
@@ -276,7 +277,7 @@ clean-gtest:
 define DefineUnitTestProject
 
 # Unit Test Project specific flags
-$(1)_CPPFLAGS ?= $$($(3)_CPPFLAGS) $$($(1)_inputSourceFolderIncludeOptions) -I$(gtest_INCDIR)
+$(1)_CPPFLAGS ?= $$($(3)_CPPFLAGS) $$($(1)_inputSourceFolderIncludeOptions) -I$(gtest_INCDIR) -I$(gmock_INCDIR)
 $(1)_CXXFLAGS ?= $$($(3)_CXXFLAGS)
 $(1)_LDFLAGS ?= $$($(3)_LDFLAGS) $$($(1)_inputLibFolderIncludeOptions) $(gtest_LOCALBUILD_LDFLAGS)
 $(1)_LDLIBS ?= $$($(3)_LDLIBS) $$($(1)_inputLibFileIncludeOptions) $(gtest_LINK_LDLIBS)
