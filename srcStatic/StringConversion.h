@@ -33,5 +33,5 @@ enum class TrimOption
 	None
 };
 
-std::vector<std::string> SplitString(std::string stringToSplit, char delimiter, TrimOption trimOption);
+std::vector<std::string> SplitString(std::string stringToSplit, char delimiter, TrimOption trimOption = TrimOption::Both);
 std::string TrimString(const std::string& stringToTrim, TrimOption trimOption = TrimOption::Both, const std::string& whitespace = " \t");
