@@ -1,10 +1,11 @@
 #include "WindowsErrorCode.h"
 #include "StringConversion.h"
+#include "LocalResource.h"
 #include <windows.h>
 
 std::string GetLastErrorString(std::string functionName)
 {
-	LPTSTR lpMsgBuf;
+	LocalResource<LPTSTR> lpMsgBuf;
 	DWORD lastErrorCode = GetLastError();
 
 	FormatMessage(
@@ -21,8 +22,6 @@ std::string GetLastErrorString(std::string functionName)
 
 	auto errorCodeMessage = ConvertLpctstrToString(lpMsgBuf);
 	auto errorMessage = functionName + " failed with error " + std::to_string(lastErrorCode) + ": " + errorCodeMessage;
-
-	LocalFree(lpMsgBuf);
 
 	return errorMessage;
 }
