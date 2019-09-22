@@ -1,7 +1,6 @@
 #pragma once
 
 #include "GameModule.h"
-#include "GlobalDefines.h"
 #include <string>
 #include <vector>
 #include <memory>
