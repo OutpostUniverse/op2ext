@@ -27,10 +27,10 @@ std::string ToLower(std::string x);
 // Defines how leading and trailing characters of a string are trimmed.
 enum class TrimOption
 {
+	None,
 	Trailing,
 	Leading,
 	Both,
-	None
 };
 
 std::vector<std::string> SplitString(std::string stringToSplit, char delimiter, TrimOption trimOption = TrimOption::Both);
