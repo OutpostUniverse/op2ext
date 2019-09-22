@@ -25,7 +25,7 @@ ConsoleModuleLoader::ConsoleModuleLoader(const std::string& moduleRelativeDirect
 	}
 
 	moduleDirectory = fs::path(GetGameDirectory()).append(moduleRelativeDirectory).string();
-	moduleName = ToLower(moduleRelativeDirectory);
+	moduleName = moduleRelativeDirectory;
 
 	std::error_code errorCode;
 	if (!fs::is_directory(moduleDirectory, errorCode)) {
@@ -56,7 +56,7 @@ bool ConsoleModuleLoader::IsModuleLoaded(std::string moduleName)
 		return false;
 	}
 
-	return ToLowerInPlace(moduleName) == GetModuleName();
+	return ToLowerInPlace(moduleName) == ToLower(GetModuleName());
 }
 
 void ConsoleModuleLoader::LoadModule()

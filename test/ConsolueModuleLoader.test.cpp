@@ -1,6 +1,5 @@
 #include "ConsoleModuleLoader.h"
 #include "FileSystemHelper.h"
-#include "StringConversion.h"
 #include <gtest/gtest.h>
 #include <string>
 
@@ -32,7 +31,7 @@ TEST(ConsoleModuleLoader, ModuleWithoutDLL)
 
 	const auto moduleDirectory = fs::path(GetGameDirectory()) / moduleName;
 	EXPECT_EQ(moduleDirectory, consoleModLoader.GetModuleDirectory());
-	EXPECT_EQ(ToLower(moduleName), consoleModLoader.GetModuleName());
+	EXPECT_EQ(moduleName, consoleModLoader.GetModuleName());
 
 	EXPECT_TRUE(consoleModLoader.IsModuleLoaded(moduleName));
 	EXPECT_FALSE(consoleModLoader.IsModuleLoaded(""));
@@ -52,7 +51,7 @@ TEST(ConsoleModuleLoader, ModuleWithEmptyDLL)
 
 	const auto moduleDirectory = fs::path(GetGameDirectory()) / moduleName;
 	EXPECT_EQ(moduleDirectory, consoleModLoader.GetModuleDirectory());
-	EXPECT_EQ(ToLower(moduleName), consoleModLoader.GetModuleName());
+	EXPECT_EQ(moduleName, consoleModLoader.GetModuleName());
 
 	EXPECT_TRUE(consoleModLoader.IsModuleLoaded(moduleName));
 	EXPECT_FALSE(consoleModLoader.IsModuleLoaded(""));
