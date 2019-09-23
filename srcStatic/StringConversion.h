@@ -4,6 +4,7 @@
 
 #include <windows.h>
 #include <string>
+#include <vector>
 #include <cstddef>
 
 // Converts a LPWSTR to std::string
@@ -21,3 +22,16 @@ std::string& ToLowerInPlace(std::string& x);
 
 // Returns a new string where all characters have been converted to lower case
 std::string ToLower(std::string x);
+
+
+// Defines how leading and trailing characters of a string are trimmed.
+enum class TrimOption
+{
+	None,
+	Trailing,
+	Leading,
+	Both,
+};
+
+std::vector<std::string> SplitString(std::string stringToSplit, char delimiter, TrimOption trimOption = TrimOption::Both);
+std::string TrimString(const std::string& stringToTrim, TrimOption trimOption = TrimOption::Both, const std::string& whitespace = " \t");
