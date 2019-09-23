@@ -105,6 +105,21 @@ std::string TrimString(const std::string& stringToTrim, TrimOption trimOption, c
 }
 
 
+std::vector<std::string> Split(std::string stringToSplit, char delimiter)
+{
+	std::vector<std::string> strings;
+
+	std::istringstream stringStream(stringToSplit);
+	std::string currentToken;
+
+	while (std::getline(stringStream, currentToken, delimiter)) {
+		strings.push_back(currentToken);
+	}
+
+	return strings;
+}
+
+
 // Trim whitespace from both ends of string, returning copy of substring
 std::string Trim(const std::string& stringToTrim, const std::string& whitespace)
 {

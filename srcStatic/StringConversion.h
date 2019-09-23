@@ -38,6 +38,8 @@ enum class TrimOption
 std::vector<std::string> SplitString(std::string stringToSplit, char delimiter, TrimOption trimOption = TrimOption::Both);
 std::string TrimString(const std::string& stringToTrim, TrimOption trimOption = TrimOption::Both, const std::string& whitespace = " \t");
 
+std::vector<std::string> Split(std::string stringToSplit, char delimiter);
+
 std::string Trim(const std::string& stringToTrim, const std::string& whitespace = " \t");
 std::string TrimFront(const std::string& stringToTrim, const std::string& whitespace = " \t");
 std::string TrimBack(const std::string& stringToTrim, const std::string& whitespace = " \t");
