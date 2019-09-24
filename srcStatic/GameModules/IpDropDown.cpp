@@ -107,9 +107,9 @@ void WriteAddressesToIniFile()
 	// Write IP addresses to .ini file
 	std::string iniPath = GetOutpost2IniPath();
 
-	WritePrivateProfileString("IPHistory", nullptr, nullptr, iniPath.c_str());
+	WritePrivateProfileStringA("IPHistory", nullptr, nullptr, iniPath.c_str());
 
 	for (int i = 0; i < numIpStrings; i++) {
-		WritePrivateProfileString("IPHistory", std::to_string(i).c_str(), ipStrings[i], iniPath.c_str());
+		WritePrivateProfileStringA("IPHistory", std::to_string(i).c_str(), ipStrings[i], iniPath.c_str());
 	}
 }
