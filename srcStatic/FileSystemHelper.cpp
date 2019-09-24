@@ -11,7 +11,7 @@ std::string GetPrivateProfileStdString(const std::string& sectionName, const std
 std::string GetGameDirectory()
 {
 	char moduleFilename[MAX_PATH];
-	GetModuleFileName(nullptr, moduleFilename, MAX_PATH);
+	GetModuleFileNameA(nullptr, moduleFilename, MAX_PATH);
 
 	return fs::path(moduleFilename).remove_filename().string();
 }
