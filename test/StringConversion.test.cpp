@@ -276,3 +276,43 @@ TEST(StringConversion, TrimBack)
 	EXPECT_EQ("A\t A", TrimBack("A\t A"));
 	EXPECT_EQ("A\t\tA", TrimBack("A\t\tA"));
 }
+
+TEST(StringConversion, SplitAndTrim)
+{
+	// Empty string
+	EXPECT_EQ(std::vector<std::string>{}, SplitAndTrim("", ','));
+
+	// Single entry
+	EXPECT_EQ(std::vector<std::string>{"A"}, SplitAndTrim("A", ','));
+
+	// Empty multi entry
+	// EXPECT_EQ((std::vector<std::string>{"", ""}), SplitAndTrim(",", ','));
+	// EXPECT_EQ((std::vector<std::string>{"", "", ""}), SplitAndTrim(",,", ','));
+	// EXPECT_EQ((std::vector<std::string>{"", "", "", ""}), SplitAndTrim(",,,", ','));
+
+	// Multi entry
+	EXPECT_EQ((std::vector<std::string>{"A", "B"}), SplitAndTrim("A,B", ','));
+	EXPECT_EQ((std::vector<std::string>{"A", "B", "C"}), SplitAndTrim("A,B,C", ','));
+
+	// Multi entry with spaces
+	EXPECT_EQ((std::vector<std::string>{"A", "B"}), SplitAndTrim("A, B", ','));
+	EXPECT_EQ((std::vector<std::string>{"A", "B"}), SplitAndTrim("A ,B", ','));
+	EXPECT_EQ((std::vector<std::string>{"A", "B"}), SplitAndTrim("A , B", ','));
+	EXPECT_EQ((std::vector<std::string>{"A", "B", "C"}), SplitAndTrim("A, B, C", ','));
+	EXPECT_EQ((std::vector<std::string>{"A", "B", "C"}), SplitAndTrim("A ,B ,C", ','));
+	EXPECT_EQ((std::vector<std::string>{"A", "B", "C"}), SplitAndTrim("A , B , C", ','));
+
+	// Embedded spaces
+	EXPECT_EQ((std::vector<std::string>{"A A"}), SplitAndTrim("A A", ','));
+	EXPECT_EQ((std::vector<std::string>{"A A", "B  B", "C\tC"}), SplitAndTrim("A A,B  B,C\tC", ','));
+
+	// Mixed spaces with embedded spaces
+	EXPECT_EQ((std::vector<std::string>{"A A", "B  B", "C\tC"}), SplitAndTrim("A A , B  B , C\tC", ','));
+
+	// Space separated
+	EXPECT_EQ((std::vector<std::string>{"A", "B", "C"}), SplitAndTrim("A B C", ' '));
+	// EXPECT_EQ((std::vector<std::string>{"", "A", "B", "C", ""}), SplitAndTrim(" A B C ", ' '));
+	EXPECT_EQ((std::vector<std::string>{"A\tB\tC"}), SplitAndTrim("A\tB\tC", ' '));
+	EXPECT_EQ((std::vector<std::string>{"A", "B", "C"}), SplitAndTrim("A \tB\t C", ' '));
+	EXPECT_EQ((std::vector<std::string>{"A", "B", "C"}), SplitAndTrim("\tA\t \tB\t \tC\t", ' '));
+}
