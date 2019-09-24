@@ -69,48 +69,6 @@ TEST(StringConversion, Split)
 	EXPECT_EQ((std::vector<std::string>{"A\tB\tC"}), Split("A\tB\tC", ' '));
 }
 
-TEST(StringConversion, TrimString)
-{
-	// Empty string
-	EXPECT_EQ("", TrimString(""));
-
-	// Only whitespace
-	EXPECT_EQ("", TrimString(" "));
-	EXPECT_EQ("", TrimString("\t"));
-	EXPECT_EQ("", TrimString("\t "));
-	EXPECT_EQ("", TrimString(" \t"));
-	EXPECT_EQ("", TrimString("\t\t"));
-
-	// Only no whitespace
-	EXPECT_EQ("A", TrimString("A"));
-	EXPECT_EQ("AA", TrimString("AA"));
-	EXPECT_EQ("ABC", TrimString("ABC"));
-
-	// Leading whitespace
-	EXPECT_EQ("A", TrimString(" A"));
-	EXPECT_EQ("A", TrimString("\tA"));
-
-	// Trailing whitespace
-	EXPECT_EQ("A", TrimString("A "));
-	EXPECT_EQ("A", TrimString("A\t"));
-
-	// Leading and trailing whitespace
-	EXPECT_EQ("A", TrimString(" A "));
-	EXPECT_EQ("A", TrimString("\tA\t"));
-	EXPECT_EQ("A", TrimString("  A  "));
-	EXPECT_EQ("A", TrimString(" \tA\t "));
-	EXPECT_EQ("A", TrimString("\t A \t"));
-	EXPECT_EQ("A", TrimString("\t\tA\t\t"));
-
-	// Embedded whitespace
-	EXPECT_EQ("A A", TrimString("A A"));
-	EXPECT_EQ("A\tA", TrimString("A\tA"));
-	EXPECT_EQ("A  A", TrimString("A  A"));
-	EXPECT_EQ("A \tA", TrimString("A \tA"));
-	EXPECT_EQ("A\t A", TrimString("A\t A"));
-	EXPECT_EQ("A\t\tA", TrimString("A\t\tA"));
-}
-
 TEST(StringConversion, Trim)
 {
 	// Empty string
