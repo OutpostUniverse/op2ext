@@ -46,8 +46,8 @@ bool ModuleLoader::IsBuiltInModuleRequested(const std::string& moduleName)
 
 std::vector<std::string> ModuleLoader::GetModuleNames(const std::string& moduleType)
 {
-	std::string sectionNames = GetOutpost2IniSetting("Game", moduleType);
-	std::vector<std::string> sectionNamesSplit = SplitAndTrim(sectionNames, ',');
+	auto sectionNames = GetOutpost2IniSetting("Game", moduleType);
+	auto sectionNamesSplit = SplitAndTrim(sectionNames, ',');
 
 	return sectionNamesSplit;
 }
