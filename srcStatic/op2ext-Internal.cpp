@@ -8,6 +8,5 @@
 
 bool modulesRunning = false;
 VolList volList;
-std::string moduleDirectory; // Must be defined + initialized before consoleModLoader
 ConsoleModuleLoader consoleModLoader(FindModuleDirectory());
 ModuleLoader moduleLoader;

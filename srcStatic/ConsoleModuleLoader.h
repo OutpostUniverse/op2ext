@@ -22,6 +22,7 @@ private:
 	void LoadModuleDll();
 	void HookFileSearchPath();
 	static bool CallOriginalGetFilePath(const char* resourceName, /* [out] */ char* filePath);
+	static std::string& ModuleDirectory();
 
 	// For compatibility with Outpost2.exe's built in class
 	class ResManager {
