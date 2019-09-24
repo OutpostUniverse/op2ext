@@ -15,7 +15,7 @@
 void LocateVolFiles(const std::string& relativeDirectory = "");
 
 // Declaration for patch to LoadLibrary, where it loads OP2Shell.dll
-HINSTANCE __stdcall LoadLibraryNew(LPCTSTR lpLibFileName);
+HINSTANCE __stdcall NewLoadLibraryA(LPCTSTR lpLibFileName);
 
 // Brett208 12Dec17: Following code allows adding multiple language support to Outpost 2 menus.
 // Code is incomplete.
@@ -33,7 +33,7 @@ public:
 };
 
 DWORD* loadLibraryDataAddr = (DWORD*)0x00486E0A;
-DWORD loadLibraryNewAddr = (DWORD)LoadLibraryNew;
+DWORD loadLibraryNewAddr = (DWORD)NewLoadLibraryA;
 
 // Warning: globals requiring dynamic initialization
 // Dynamic initialization order between translation units is unsequenced
@@ -144,10 +144,10 @@ void LocateVolFiles(const std::string& relativeDirectory)
 	}
 }
 
-HINSTANCE __stdcall LoadLibraryNew(LPCTSTR lpLibFileName)
+HINSTANCE __stdcall NewLoadLibraryA(LPCSTR lpLibFileName)
 {
 	// First try to load it
-	HINSTANCE result = LoadLibrary(lpLibFileName);
+	HINSTANCE result = LoadLibraryA(lpLibFileName);
 
 	if (result) // if good, then setup the language data and call the mod
 	{
