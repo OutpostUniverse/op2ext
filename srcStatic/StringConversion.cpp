@@ -13,8 +13,6 @@ std::wstring ConvertLpctstrToString(LPCWSTR str)
 
 std::string ConvertLPWToString(std::wstring_view inputWideString, UINT codepage)
 {
-	// Code adapted from: https://gist.github.com/icreatetoeducate/4019717
-
 	constexpr DWORD dwFlags = 0;
 
 	// The WideCharToMultiByte function considers it an error to pass an input string of length 0
