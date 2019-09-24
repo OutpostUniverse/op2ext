@@ -1,17 +1,13 @@
 #include "Log.h"
 #include "Logger.h"
 #include <gtest/gtest.h>
+#include <gmock/gmock.h>
 
 
 TEST(Log, UnsetLoggerIsSafe) {
 	EXPECT_NO_THROW(SetLogger(nullptr));
 	EXPECT_NO_THROW(Log("This goes nowhere"));
 }
-
-
-#if __has_include(<gmock/gmock.h>)
-
-#include <gmock/gmock.h>
 
 class MockLogger : public Logger {
 public:
@@ -29,4 +25,3 @@ TEST(Log, ActiveLoggerReceivesMessages) {
 	EXPECT_NO_THROW(SetLogger(nullptr));
 }
 
-#endif
