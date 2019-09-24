@@ -18,10 +18,12 @@ bool ConvertLPWToString(std::string& stringOut, LPCWSTR inputWideString, UINT co
 	bool result = false;
 	char* p = 0;
 
+	// First determine the required buffer size (but don't convert)
 	int bsz = WideCharToMultiByte(codepage, 0, inputWideString, -1, 0, 0, 0, 0);
 
 	if (bsz > 0) {
 		p = new char[bsz];
+		// Perform the actual conversion
 		int rc = WideCharToMultiByte(codepage, 0, inputWideString, -1, p, bsz, 0, 0);
 		if (rc != 0) {
 			p[bsz - 1] = 0;
