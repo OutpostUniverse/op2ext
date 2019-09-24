@@ -4,6 +4,19 @@
 #include <type_traits>
 
 
+TEST(StringConversion, ConvertLPWToString)
+{
+	std::string output;
+
+	// Convert empty string
+	EXPECT_TRUE(ConvertLPWToString(output, L""));
+	EXPECT_EQ("", output);
+
+	// Convert non-empty string
+	EXPECT_TRUE(ConvertLPWToString(output, L"Hello world"));
+	EXPECT_EQ("Hello world", output);
+}
+
 TEST(StringConversion, ConvertLpctstrToStringNarrow)
 {
 	LPCSTR rawString = "test string";
