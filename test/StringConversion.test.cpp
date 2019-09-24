@@ -316,3 +316,14 @@ TEST(StringConversion, SplitAndTrim)
 	EXPECT_EQ((std::vector<std::string>{"A", "B", "C"}), SplitAndTrim("A \tB\t C", ' '));
 	EXPECT_EQ((std::vector<std::string>{"A", "B", "C"}), SplitAndTrim("\tA\t \tB\t \tC\t", ' '));
 }
+
+TEST(StringConversion, SplitAndTrimTrimFront)
+{
+	// Multi entry with spaces (trim only front spaces)
+	EXPECT_EQ((std::vector<std::string>{"A", "B"}), SplitAndTrim<TrimFront>("A, B", ','));
+	EXPECT_EQ((std::vector<std::string>{"A ", "B"}), SplitAndTrim<TrimFront>("A ,B", ','));
+	EXPECT_EQ((std::vector<std::string>{"A ", "B"}), SplitAndTrim<TrimFront>("A , B", ','));
+	EXPECT_EQ((std::vector<std::string>{"A", "B", "C"}), SplitAndTrim<TrimFront>("A, B, C", ','));
+	EXPECT_EQ((std::vector<std::string>{"A ", "B ", "C"}), SplitAndTrim<TrimFront>("A ,B ,C", ','));
+	EXPECT_EQ((std::vector<std::string>{"A ", "B ", "C"}), SplitAndTrim<TrimFront>("A , B , C", ','));
+}
