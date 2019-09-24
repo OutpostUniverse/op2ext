@@ -1,5 +1,5 @@
 #include "Log.h"
-#include "op2ext-Internal.h"
+#include "Logger.h"
 
 
 // Use anonymous namespace to keep globals private
