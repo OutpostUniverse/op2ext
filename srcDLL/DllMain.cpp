@@ -15,7 +15,7 @@
 void LocateVolFiles(const std::string& relativeDirectory = "");
 
 // Declaration for patch to LoadLibrary, where it loads OP2Shell.dll
-HINSTANCE __stdcall NewLoadLibraryA(LPCTSTR lpLibFileName);
+HINSTANCE __stdcall NewLoadLibraryA(LPCSTR lpLibFileName);
 
 // Brett208 12Dec17: Following code allows adding multiple language support to Outpost 2 menus.
 // Code is incomplete.
