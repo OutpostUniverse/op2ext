@@ -31,7 +31,7 @@ void SetLoadOffset()
 		return;
 	}
 
-	void* op2ModuleBase = GetModuleHandle("Outpost2.exe");
+	void* op2ModuleBase = GetModuleHandle(TEXT("Outpost2.exe"));
 
 	if (op2ModuleBase == 0) {
 		PostErrorMessage(__FILE__, __LINE__, "Could not find Outpost2.exe module base address.");
