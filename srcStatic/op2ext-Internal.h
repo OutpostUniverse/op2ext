@@ -12,7 +12,6 @@
 // Attempting further initialization commands will cause errors.
 extern bool modulesRunning;
 
-extern Logger logger;
 extern VolList volList;
 extern ConsoleModuleLoader consoleModLoader;
 extern ModuleLoader moduleLoader;

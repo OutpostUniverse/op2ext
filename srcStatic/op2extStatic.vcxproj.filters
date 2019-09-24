@@ -7,7 +7,8 @@
     <ClCompile Include="GlobalDefines.cpp" />
     <ClCompile Include="ModuleLoader.cpp" />
     <ClCompile Include="ConsoleModuleLoader.cpp" />
-    <ClCompile Include="Logger.cpp" />
+    <ClCompile Include="Log.cpp"/>
+    <ClCompile Include="LoggerFile.cpp"/>
     <ClCompile Include="op2ext-Internal.cpp" />
     <ClCompile Include="OP2Memory.cpp" />
     <ClCompile Include="StringConversion.cpp" />
@@ -29,7 +30,9 @@
     <ClInclude Include="GlobalDefines.h" />
     <ClInclude Include="ModuleLoader.h" />
     <ClInclude Include="ConsoleModuleLoader.h" />
-    <ClInclude Include="Logger.h" />
+    <ClInclude Include="Log.h"/>
+    <ClInclude Include="Logger.h"/>
+    <ClInclude Include="LoggerFile.h"/>
     <ClInclude Include="op2ext-Internal.h" />
     <ClInclude Include="OP2Memory.h" />
     <ClInclude Include="StringConversion.h" />

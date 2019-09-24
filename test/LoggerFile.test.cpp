@@ -1,4 +1,4 @@
-#include "Logger.h"
+#include "LoggerFile.h"
 #include "FileSystemHelper.h"
 #include <gtest/gtest.h>
 #include <system_error>
@@ -6,15 +6,16 @@
 
 const fs::path logPath = fs::path(GetGameDirectory()).append("Outpost2Log.txt");
 
-TEST(Logger, LogFileExists)
+TEST(LoggerFile, LogFileExists)
 {
-	std::error_code errorCode;
-	ASSERT_TRUE(fs::exists(logPath, errorCode));
+	// Creating a logger should open or create a log file
+	LoggerFile logger;
+	ASSERT_TRUE(fs::exists(logPath));
 }
 
-TEST(Logger, MessageLogged)
+TEST(LoggerFile, MessageLogged)
 {
-	Logger logger;
+	LoggerFile logger;
 
 	const uintmax_t preFileSize = fs::file_size(logPath);
 	EXPECT_NO_THROW(logger.Log("Test Log Message"));
