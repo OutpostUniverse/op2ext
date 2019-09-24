@@ -1,12 +1,11 @@
-#include "op2ext-Internal.h"
-#include "FileSystemHelper.h"
+#include "Globals.h"
 #include "ConsoleArgumentParser.h"
-#include "OP2Memory.h"
-#include "GlobalDefines.h"
-#include "LoggerFile.h"
 
 
+// Indicates if modules and Outpost 2 are running.
+// When set, attempting further initialization commands will cause errors.
 bool modulesRunning = false;
+
 VolList volList;
 ConsoleModuleLoader consoleModLoader(FindModuleDirectory());
 ModuleLoader moduleLoader;
