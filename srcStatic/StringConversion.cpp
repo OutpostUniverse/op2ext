@@ -63,21 +63,6 @@ std::string ToLower(std::string x) {
 }
 
 
-std::vector<std::string> SplitString(std::string stringToSplit, char delimiter, TrimOption trimOption)
-{
-	std::vector<std::string> strings;
-
-	std::istringstream stringStream(stringToSplit);
-	std::string currentToken;
-
-	while (std::getline(stringStream, currentToken, delimiter)) {
-		currentToken = TrimString(currentToken, trimOption);
-		strings.push_back(currentToken);
-	}
-
-	return strings;
-}
-
 // Trims both leading and trailing whitespace. The 'whitespace' character may be custom defined.
 std::string TrimString(const std::string& stringToTrim, TrimOption trimOption, const std::string& whitespace)
 {
