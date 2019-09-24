@@ -8,7 +8,7 @@
 #include <cstddef>
 
 // Converts a LPWSTR to std::string
-std::string ConvertLPWToString(std::wstring_view inputWideString, UINT codepage = CP_ACP);
+std::string ConvertWideToNarrow(std::wstring_view inputWideString, UINT codepage = CP_ACP);
 
 // Convert a LPCTSTR to std::string
 // At compile time LPCTSTR will convert to either LPCSTR or LPCWSTR based on the UNICODE setting

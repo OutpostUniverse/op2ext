@@ -18,7 +18,7 @@ std::vector<std::string> GetCommandLineArguments()
 		// Ignore the first argument, which is the path of the executable.
 		for (int i = 1; i < argumentCount; ++i) {
 			try {
-				auto argument = ConvertLPWToString(commandLineArgs[i]);
+				auto argument = ConvertWideToNarrow(commandLineArgs[i]);
 				arguments.push_back(argument);
 			} catch(const std::exception& e) {
 				throw std::runtime_error("Command line argument conversion error. Argument index: " + std::to_string(i) + " " + e.what());

@@ -4,13 +4,13 @@
 #include <type_traits>
 
 
-TEST(StringConversion, ConvertLPWToString)
+TEST(StringConversion, ConvertWideToNarrow)
 {
 	// Convert empty string
-	EXPECT_EQ("", ConvertLPWToString(L""));
+	EXPECT_EQ("", ConvertWideToNarrow(L""));
 
 	// Convert non-empty string
-	EXPECT_EQ("Hello world", ConvertLPWToString(L"Hello world"));
+	EXPECT_EQ("Hello world", ConvertWideToNarrow(L"Hello world"));
 }
 
 TEST(StringConversion, ConvertLpctstrToStringNarrow)

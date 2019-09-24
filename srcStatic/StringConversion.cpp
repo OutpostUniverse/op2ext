@@ -11,7 +11,7 @@ std::wstring ConvertLpctstrToString(LPCWSTR str)
 	return std::wstring(str);
 }
 
-std::string ConvertLPWToString(std::wstring_view inputWideString, UINT codepage)
+std::string ConvertWideToNarrow(std::wstring_view inputWideString, UINT codepage)
 {
 	constexpr DWORD dwFlags = 0;
 
