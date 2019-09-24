@@ -15,10 +15,16 @@ std::string ConvertLPWToString(std::wstring_view inputWideString, UINT codepage)
 {
 	// Code adapted from: https://gist.github.com/icreatetoeducate/4019717
 
+	// The WideCharToMultiByte function considers it an error to pass an input string of length 0
+	// Early exit if input string is empty
+	if (inputWideString.empty()) {
+		return std::string();
+	}
+
 	std::string outputString;
 
 	// First determine the required buffer size (but don't convert)
-	auto requiredBufferSize = WideCharToMultiByte(codepage, 0, inputWideString.data(), -1, nullptr, 0, nullptr, nullptr);
+	auto requiredBufferSize = WideCharToMultiByte(codepage, 0, inputWideString.data(), inputWideString.size(), nullptr, 0, nullptr, nullptr);
 	if (requiredBufferSize == 0) {
 		throw std::runtime_error("Wide to narrow string conversion failure: Unable to determine output buffer size");
 	}
@@ -26,11 +32,11 @@ std::string ConvertLPWToString(std::wstring_view inputWideString, UINT codepage)
 	// Allocate space for converted string
 	outputString.resize(requiredBufferSize);
 	// Perform the actual conversion
-	auto convertedSize = WideCharToMultiByte(codepage, 0, inputWideString.data(), -1, outputString.data(), requiredBufferSize, nullptr, nullptr);
+	auto convertedSize = WideCharToMultiByte(codepage, 0, inputWideString.data(), inputWideString.size(), outputString.data(), requiredBufferSize, nullptr, nullptr);
 	if (convertedSize == 0) {
 		throw std::runtime_error("Wide to narrow string conversion failure: Unable to convert string");
 	}
-	outputString.erase(convertedSize - 1);
+	outputString.erase(convertedSize);
 
 	return outputString;
 }
