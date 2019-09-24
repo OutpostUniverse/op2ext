@@ -11,7 +11,7 @@ std::wstring ConvertLpctstrToString(LPCWSTR str)
 	return std::wstring(str);
 }
 
-std::string ConvertLPWToString(const std::wstring& inputWideString, UINT codepage)
+std::string ConvertLPWToString(std::wstring_view inputWideString, UINT codepage)
 {
 	// Code adapted from: https://gist.github.com/icreatetoeducate/4019717
 
