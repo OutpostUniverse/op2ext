@@ -83,7 +83,7 @@ void ConsoleModuleLoader::LoadModuleDll()
 		return; // Some console modules do not contain dlls
 	}
 
-	modDllHandle = LoadLibrary(dllName.c_str());
+	modDllHandle = LoadLibraryA(dllName.c_str());
 
 	if (modDllHandle) {
 		// Call module's mod_init function
