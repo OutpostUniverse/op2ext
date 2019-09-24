@@ -2,6 +2,7 @@
 
 #include <string>
 
+
 // Outputs a debug string. Output is not logged by the logger.
 void OutputDebug(std::string message);
 

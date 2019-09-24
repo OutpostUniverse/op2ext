@@ -7,6 +7,7 @@
 #include <vector>
 #include <cstddef>
 
+
 // Converts a LPWSTR to std::string
 bool ConvertLPWToString(std::string& stringOut, const LPWSTR pw, UINT codepage = CP_ACP);
 

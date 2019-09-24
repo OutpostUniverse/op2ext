@@ -2,6 +2,7 @@
 
 #include <string>
 
+
 // Abstract class allowing memory modification of Outpost 2 to alter gameplay or fix bugs
 class GameModule
 {
