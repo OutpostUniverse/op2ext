@@ -63,21 +63,6 @@ std::string ToLower(std::string x) {
 }
 
 
-std::vector<std::string> Split(std::string stringToSplit, char delimiter)
-{
-	std::vector<std::string> strings;
-
-	std::istringstream stringStream(stringToSplit);
-	std::string currentToken;
-
-	while (std::getline(stringStream, currentToken, delimiter)) {
-		strings.push_back(currentToken);
-	}
-
-	return strings;
-}
-
-
 // Trim whitespace from both ends of string, returning copy of substring
 std::string Trim(const std::string& stringToTrim, const std::string& whitespace)
 {
@@ -111,4 +96,19 @@ std::string TrimBack(const std::string& stringToTrim, const std::string& whitesp
 	auto stringEnd = stringToTrim.find_last_not_of(whitespace);
 
 	return stringToTrim.substr(0, stringEnd + 1);
+}
+
+
+std::vector<std::string> Split(std::string stringToSplit, char delimiter)
+{
+	std::vector<std::string> strings;
+
+	std::istringstream stringStream(stringToSplit);
+	std::string currentToken;
+
+	while (std::getline(stringStream, currentToken, delimiter)) {
+		strings.push_back(currentToken);
+	}
+
+	return strings;
 }

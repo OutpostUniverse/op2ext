@@ -26,11 +26,11 @@ std::string& ToLowerInPlace(std::string& x);
 std::string ToLower(std::string x);
 
 
-std::vector<std::string> Split(std::string stringToSplit, char delimiter);
-
 std::string Trim(const std::string& stringToTrim, const std::string& whitespace = " \t");
 std::string TrimFront(const std::string& stringToTrim, const std::string& whitespace = " \t");
 std::string TrimBack(const std::string& stringToTrim, const std::string& whitespace = " \t");
+
+std::vector<std::string> Split(std::string stringToSplit, char delimiter);
 
 template <typename std::string(TrimFunction)(const std::string&, const std::string&) = Trim>
 std::vector<std::string> SplitAndTrim(std::string stringToSplit, char delimiter, const std::string& whitespace = " \t") {
