@@ -18,19 +18,19 @@ std::string ConvertLPWToString(LPCWSTR inputWideString, UINT codepage)
 	std::string outputString;
 
 	// First determine the required buffer size (but don't convert)
-	int bsz = WideCharToMultiByte(codepage, 0, inputWideString, -1, 0, 0, 0, 0);
-	if (bsz == 0) {
+	auto requiredBufferSize = WideCharToMultiByte(codepage, 0, inputWideString, -1, 0, 0, 0, 0);
+	if (requiredBufferSize == 0) {
 		throw std::runtime_error("Wide to narrow string conversion failure: Unable to determine output buffer size");
 	}
 
 	// Allocate space for converted string
-	outputString.resize(bsz);
+	outputString.resize(requiredBufferSize);
 	// Perform the actual conversion
-	int rc = WideCharToMultiByte(codepage, 0, inputWideString, -1, outputString.data(), bsz, 0, 0);
-	if (rc == 0) {
+	auto convertedSize = WideCharToMultiByte(codepage, 0, inputWideString, -1, outputString.data(), requiredBufferSize, 0, 0);
+	if (convertedSize == 0) {
 		throw std::runtime_error("Wide to narrow string conversion failure: Unable to convert string");
 	}
-	outputString.erase(bsz - 1);
+	outputString.erase(convertedSize - 1);
 
 	return outputString;
 }
