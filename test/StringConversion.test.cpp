@@ -6,15 +6,11 @@
 
 TEST(StringConversion, ConvertLPWToString)
 {
-	std::string output;
-
 	// Convert empty string
-	EXPECT_TRUE(ConvertLPWToString(output, L""));
-	EXPECT_EQ("", output);
+	EXPECT_EQ("", ConvertLPWToString(L""));
 
 	// Convert non-empty string
-	EXPECT_TRUE(ConvertLPWToString(output, L"Hello world"));
-	EXPECT_EQ("Hello world", output);
+	EXPECT_EQ("Hello world", ConvertLPWToString(L"Hello world"));
 }
 
 TEST(StringConversion, ConvertLpctstrToStringNarrow)

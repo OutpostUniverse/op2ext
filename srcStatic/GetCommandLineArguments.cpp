@@ -17,11 +17,12 @@ std::vector<std::string> GetCommandLineArguments()
 	else {
 		// Ignore the first argument, which is the path of the executable.
 		for (int i = 1; i < argumentCount; ++i) {
-			std::string argument;
-			if (!ConvertLPWToString(argument, commandLineArgs[i])) {
-				throw std::runtime_error("Unable to convert command line argument from LPWSTR to std::string. Argument index: " + std::to_string(i));
+			try {
+				auto argument = ConvertLPWToString(commandLineArgs[i]);
+				arguments.push_back(argument);
+			} catch(const std::exception& e) {
+				throw std::runtime_error("Command line argument conversion error. Argument index: " + std::to_string(i) + " " + e.what());
 			}
-			arguments.push_back(argument);
 		}
 	}
 

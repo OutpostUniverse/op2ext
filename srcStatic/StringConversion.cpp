@@ -11,29 +11,28 @@ std::wstring ConvertLpctstrToString(LPCWSTR str)
 	return std::wstring(str);
 }
 
-bool ConvertLPWToString(std::string& stringOut, LPCWSTR inputWideString, UINT codepage)
+std::string ConvertLPWToString(LPCWSTR inputWideString, UINT codepage)
 {
 	// Code adapted from: https://gist.github.com/icreatetoeducate/4019717
 
-	bool result = false;
 	std::string outputString;
 
 	// First determine the required buffer size (but don't convert)
 	int bsz = WideCharToMultiByte(codepage, 0, inputWideString, -1, 0, 0, 0, 0);
-
-	if (bsz > 0) {
-		// Allocate space for converted string
-		outputString.resize(bsz);
-		// Perform the actual conversion
-		int rc = WideCharToMultiByte(codepage, 0, inputWideString, -1, outputString.data(), bsz, 0, 0);
-		if (rc != 0) {
-			outputString.erase(bsz - 1);
-			stringOut = outputString;
-			result = true;
-		}
+	if (bsz == 0) {
+		throw std::runtime_error("Wide to narrow string conversion failure: Unable to determine output buffer size");
 	}
 
-	return result;
+	// Allocate space for converted string
+	outputString.resize(bsz);
+	// Perform the actual conversion
+	int rc = WideCharToMultiByte(codepage, 0, inputWideString, -1, outputString.data(), bsz, 0, 0);
+	if (rc == 0) {
+		throw std::runtime_error("Wide to narrow string conversion failure: Unable to convert string");
+	}
+	outputString.erase(bsz - 1);
+
+	return outputString;
 }
 
 std::size_t CopyStdStringIntoCharBuffer(const std::string& stringToCopy, char* buffer, std::size_t bufferSize)
