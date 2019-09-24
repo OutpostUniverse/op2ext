@@ -35,6 +35,7 @@ std::string ConvertWideToNarrow(std::wstring_view inputWideString, UINT codepage
 	if (convertedSize == 0) {
 		throw std::runtime_error("Wide to narrow string conversion failure: Unable to convert string");
 	}
+	// Clip output string to however many characters were actually converted
 	outputString.erase(convertedSize);
 
 	return outputString;
