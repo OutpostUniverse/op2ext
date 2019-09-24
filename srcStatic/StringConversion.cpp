@@ -4,11 +4,11 @@
 
 std::string ConvertLpctstrToString(LPCSTR str)
 {
-#if defined(UNICODE) || defined(_UNICODE)
-	throw std::runtime_error("Unicode is not supported");
-#endif
-
 	return std::string(str);
+}
+std::wstring ConvertLpctstrToString(LPCWSTR str)
+{
+	return std::wstring(str);
 }
 
 bool ConvertLPWToString(std::string& stringOut, const LPWSTR pw, UINT codepage)
