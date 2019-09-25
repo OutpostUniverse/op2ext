@@ -1,9 +1,9 @@
 #include "op2ext.h"
+#include "Globals.h"
 #include "StringConversion.h"
 #include "OP2Memory.h"
 #include "FileSystemHelper.h"
 #include "GlobalDefines.h"
-#include "op2ext-Internal.h"
 #include "Log.h"
 #include "WindowsModule.h"
 #define WIN32_LEAN_AND_MEAN

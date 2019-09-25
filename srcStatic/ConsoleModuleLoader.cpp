@@ -12,19 +12,13 @@
 #include <system_error>
 
 
-extern std::string moduleDirectory;
-
-
 ConsoleModuleLoader::ConsoleModuleLoader(const std::string& moduleRelativeDirectory)
 {
-	// Hack that clears variable not included in class
-	moduleDirectory = "";
-
 	if (moduleRelativeDirectory.empty()) {
 		return; // No Console Module Loaded
 	}
 
-	moduleDirectory = fs::path(GetGameDirectory()).append(moduleRelativeDirectory).string();
+	auto moduleDirectory = fs::path(GetGameDirectory()).append(moduleRelativeDirectory).string();
 	moduleName = moduleRelativeDirectory;
 
 	std::error_code errorCode;
@@ -33,11 +27,15 @@ ConsoleModuleLoader::ConsoleModuleLoader(const std::string& moduleRelativeDirect
 		moduleDirectory = "";
 		moduleName = "";
 	}
+
+	// Set private static instance by reference
+	ModuleDirectory() = moduleDirectory;
 }
 
 std::string ConsoleModuleLoader::GetModuleDirectory()
 {
-	return moduleDirectory;
+	// Return copy of private static
+	return ModuleDirectory();
 }
 
 std::string ConsoleModuleLoader::GetModuleName()
@@ -61,6 +59,9 @@ bool ConsoleModuleLoader::IsModuleLoaded(std::string moduleName)
 
 void ConsoleModuleLoader::LoadModule()
 {
+	// Get access to private static
+	auto moduleDirectory = ModuleDirectory();
+
 	if (moduleDirectory.empty()) {
 		return;
 	}
@@ -77,6 +78,9 @@ void ConsoleModuleLoader::LoadModule()
 
 void ConsoleModuleLoader::LoadModuleDll()
 {
+	// Get access to private static
+	auto moduleDirectory = ModuleDirectory();
+
 	const std::string dllName = fs::path(moduleDirectory).append("op2mod.dll").string();
 
 	if (!fs::exists(dllName)) {
@@ -138,6 +142,9 @@ bool ConsoleModuleLoader::CallOriginalGetFilePath(const char* resourceName, /* [
 
 bool ConsoleModuleLoader::ResManager::GetFilePath(const char* resourceName, /* [out] */ char* filePath) const
 {
+	// Get access to private static
+	auto moduleDirectory = ModuleDirectory();
+
 	// Search for resource in module folder
 	const auto path = moduleDirectory + resourceName;
 	if (INVALID_FILE_ATTRIBUTES != GetFileAttributesA(path.c_str())) {
@@ -172,4 +179,13 @@ void ConsoleModuleLoader::RunModule()
 			runFunc();
 		}
 	}
+}
+
+std::string& ConsoleModuleLoader::ModuleDirectory()
+{
+	// Function level statics are initialized on first use
+	// They are not subject to unsequenced initialization order of globals
+	// There is no order dependency on when this variable may be used
+	static std::string moduleDirectory;
+	return moduleDirectory;
 }

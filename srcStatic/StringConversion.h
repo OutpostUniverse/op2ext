@@ -7,6 +7,7 @@
 #include <vector>
 #include <cstddef>
 
+
 // Converts a LPWSTR to std::string
 std::string ConvertWideToNarrow(std::wstring_view inputWideString, UINT codepage = CP_ACP);
 

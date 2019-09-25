@@ -1,3 +1,5 @@
+#pragma once
+
 #include <string>
 
 #ifdef __cpp_lib_filesystem
@@ -7,6 +9,7 @@ namespace fs = std::filesystem;
 #include <experimental/filesystem>
 namespace fs = std::experimental::filesystem;
 #endif
+
 
 std::string GetGameDirectory();
 std::string GetOutpost2IniPath();
