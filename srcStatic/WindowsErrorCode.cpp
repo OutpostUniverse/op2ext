@@ -5,7 +5,7 @@
 
 std::string GetLastErrorString()
 {
-	LocalResource<LPSTR> lpMsgBuf;
+	LocalResource<LPCSTR> lpMsgBuf;
 	DWORD lastErrorCode = GetLastError();
 
 	FormatMessageA(
