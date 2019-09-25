@@ -5,17 +5,17 @@
 
 std::string GetLastErrorString()
 {
-	LocalResource<LPTSTR> lpMsgBuf;
+	LocalResource<LPSTR> lpMsgBuf;
 	DWORD lastErrorCode = GetLastError();
 
-	FormatMessage(
+	FormatMessageA(
 		FORMAT_MESSAGE_ALLOCATE_BUFFER |
 		FORMAT_MESSAGE_FROM_SYSTEM |
 		FORMAT_MESSAGE_IGNORE_INSERTS,
 		NULL,
 		lastErrorCode,
 		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-		reinterpret_cast<LPTSTR>(&lpMsgBuf),
+		reinterpret_cast<LPSTR>(&lpMsgBuf),
 		0,
 		NULL
 	);

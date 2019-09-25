@@ -11,7 +11,7 @@ std::string GetPrivateProfileStdString(const std::string& sectionName, const std
 std::string GetGameDirectory()
 {
 	char moduleFilename[MAX_PATH];
-	GetModuleFileName(nullptr, moduleFilename, MAX_PATH);
+	GetModuleFileNameA(nullptr, moduleFilename, MAX_PATH);
 
 	return fs::path(moduleFilename).remove_filename().string();
 }
@@ -42,7 +42,7 @@ std::string GetPrivateProfileStdString(const std::string& sectionName, const std
 		//GetPrivateProfileString's return value is the number of characters copied to the buffer,
 		// not including the terminating null character.
 		// A full buffer could be nSize - 2 if either lpAppName or lpKeyName are NULL AND the supplied buffer is too small
-		returnSize = GetPrivateProfileString(sectionName.c_str(), key.c_str(), "", &profileString[0], currentBufferSize, filename.c_str());
+		returnSize = GetPrivateProfileStringA(sectionName.c_str(), key.c_str(), "", &profileString[0], currentBufferSize, filename.c_str());
 
 		if (returnSize + 2 < currentBufferSize) {
 			break;

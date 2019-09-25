@@ -26,7 +26,7 @@ HINSTANCE IniModule::LoadModuleDll()
 	std::string dllName = GetOutpost2IniSetting(Name(), "Dll");
 
 	// Try to load a DLL with the given name (possibly "")
-	HINSTANCE dllHandle = LoadLibrary(dllName.c_str());
+	HINSTANCE dllHandle = LoadLibraryA(dllName.c_str());
 
 	if (dllHandle == 0) {
 		throw std::runtime_error("Unable to load DLL " + dllName + " from ini module section " +
