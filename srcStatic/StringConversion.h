@@ -26,14 +26,17 @@ std::string& ToLowerInPlace(std::string& x);
 std::string ToLower(std::string x);
 
 
-// Defines how leading and trailing characters of a string are trimmed.
-enum class TrimOption
-{
-	None,
-	Trailing,
-	Leading,
-	Both,
-};
+std::string Trim(const std::string& stringToTrim, const std::string& whitespace = " \t");
+std::string TrimFront(const std::string& stringToTrim, const std::string& whitespace = " \t");
+std::string TrimBack(const std::string& stringToTrim, const std::string& whitespace = " \t");
 
-std::vector<std::string> SplitString(std::string stringToSplit, char delimiter, TrimOption trimOption = TrimOption::Both);
-std::string TrimString(const std::string& stringToTrim, TrimOption trimOption = TrimOption::Both, const std::string& whitespace = " \t");
+std::vector<std::string> Split(std::string stringToSplit, char delimiter);
+
+template <typename std::string(TrimFunction)(const std::string&, const std::string&) = Trim>
+std::vector<std::string> SplitAndTrim(std::string stringToSplit, char delimiter, const std::string& whitespace = " \t") {
+	auto items = Split(stringToSplit, delimiter);
+	for (auto& item : items) {
+		item = TrimFunction(item, whitespace);
+	}
+	return items;
+}
