@@ -4,6 +4,15 @@
 #include <type_traits>
 
 
+TEST(StringConversion, ConvertWideToNarrow)
+{
+	// Convert empty string
+	EXPECT_EQ("", ConvertWideToNarrow(L""));
+
+	// Convert non-empty string
+	EXPECT_EQ("Hello world", ConvertWideToNarrow(L"Hello world"));
+}
+
 TEST(StringConversion, ConvertLpctstrToStringNarrow)
 {
 	LPCSTR rawString = "test string";
