@@ -23,7 +23,7 @@ std::string GetLastErrorString()
 		NULL
 	);
 
-	auto errorCodeMessage = ConvertLpctstrToString(lpMsgBuf);
+	auto errorCodeMessage = ConvertLpctstrToString(lpMsgBuf.get());
 	auto errorMessage = "Error " + std::to_string(lastErrorCode) + ": " + errorCodeMessage;
 
 	return errorMessage;
