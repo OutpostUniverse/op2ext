@@ -8,7 +8,7 @@
 // RAII management of LocalAlloc/LocalFree resources
 template <typename T>
 class LocalResource {
-	static_assert(std::is_pointer<T>::value, "Type must be a pointer");
+	static_assert(std::is_pointer_v<T>, "Type must be a pointer");
 public:
 	LocalResource() : resource(nullptr) {
 	}
