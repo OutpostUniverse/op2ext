@@ -8,7 +8,8 @@
 // RAII management of LocalAlloc/LocalFree resources
 template <typename T>
 class LocalResource {
-	static_assert(std::is_pointer_v<T>, "Type must be a pointer");
+	using PointerType = T;
+	static_assert(std::is_pointer_v<PointerType>, "Type must be a pointer");
 public:
 	LocalResource() : resource(nullptr) {
 	}
@@ -20,9 +21,9 @@ public:
 	}
 
 	// Auto convert to underlying type
-	operator T() const {
+	operator PointerType() const {
 		return resource;
 	}
 private:
-	T resource;
+	PointerType resource;
 };
