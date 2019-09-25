@@ -8,6 +8,9 @@ std::string GetLastErrorString()
 	LocalResource<LPCSTR> lpMsgBuf;
 	DWORD lastErrorCode = GetLastError();
 
+	// Sanity check for reinterpret_cast used below
+	static_assert(sizeof(LPSTR) == sizeof(lpMsgBuf));
+
 	FormatMessageA(
 		FORMAT_MESSAGE_ALLOCATE_BUFFER |
 		FORMAT_MESSAGE_FROM_SYSTEM |
