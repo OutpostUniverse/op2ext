@@ -8,8 +8,8 @@
 // RAII management of LocalAlloc/LocalFree resources
 template <typename T>
 class LocalResource {
-	using PointerType = T;
-	static_assert(std::is_pointer_v<PointerType>, "Type must be a pointer");
+	using PointerType = std::decay_t<T>;
+	static_assert(std::is_pointer_v<PointerType>, "Type must be a pointer or array");
 public:
 	LocalResource() : resource(nullptr) {
 	}
