@@ -10,7 +10,7 @@ template <typename T>
 class LocalResource {
 	static_assert(std::is_pointer<T>::value, "Type must be a pointer");
 public:
-	LocalResource() : resource(NULL) {
+	LocalResource() : resource(nullptr) {
 	}
 	LocalResource(T resource) : resource(resource) {
 	}
