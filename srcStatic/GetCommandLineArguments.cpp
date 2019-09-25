@@ -9,7 +9,7 @@ std::vector<std::string> GetCommandLineArguments()
 {
 	std::vector<std::string> arguments;
 	int argumentCount;
-	LocalResource<LPWSTR*> commandLineArgs = CommandLineToArgvW(GetCommandLineW(), &argumentCount);
+	LocalResource<LPWSTR[]> commandLineArgs = CommandLineToArgvW(GetCommandLineW(), &argumentCount);
 
 	if (commandLineArgs == nullptr) {
 		throw std::runtime_error("Unable to retrieve command line arguments attached to Outpost2.exe.");
