@@ -11,8 +11,8 @@
 // This may also potentially be used if a type depends on a #define setting.
 // Win32 Example: The UNICODE setting controls TCHAR, which controls LPTSTR and LPCTSTR
 // Function overload selection then results in the wrapped type std::string or std::wstring
-std::string WrapRawString(LPCSTR str);
-std::wstring WrapRawString(LPCWSTR str);
+std::string WrapRawString(const char* str);
+std::wstring WrapRawString(const wchar_t* str);
 
 // Converts a wide string to a multibyte narrow string
 std::string ConvertWideToNarrow(std::wstring_view inputWideString, UINT codepage = CP_ACP);

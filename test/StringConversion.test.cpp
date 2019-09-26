@@ -6,7 +6,7 @@
 
 TEST(StringConversion, WrapRawStringNarrow)
 {
-	LPCSTR rawString = "test string";
+	const char* rawString = "test string";
 	auto result = WrapRawString(rawString);
 	EXPECT_EQ(rawString, result);
 	EXPECT_TRUE((std::is_same<std::string, decltype(result)>::value));
@@ -14,7 +14,7 @@ TEST(StringConversion, WrapRawStringNarrow)
 
 TEST(StringConversion, WrapRawStringWide)
 {
-	LPCWSTR rawString = L"test string";
+	const wchar_t* rawString = L"test string";
 	auto result = WrapRawString(rawString);
 	EXPECT_EQ(rawString, result);
 	EXPECT_TRUE((std::is_same<std::wstring, decltype(result)>::value));

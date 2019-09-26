@@ -3,11 +3,11 @@
 #include <algorithm>
 
 
-std::string WrapRawString(LPCSTR str)
+std::string WrapRawString(const char* str)
 {
 	return std::string(str);
 }
-std::wstring WrapRawString(LPCWSTR str)
+std::wstring WrapRawString(const wchar_t* str)
 {
 	return std::wstring(str);
 }
