@@ -14,22 +14,22 @@ std::wstring WrapRawString(const wchar_t* str)
 	return std::wstring(str);
 }
 
-std::string ConvertWideToNarrow(std::wstring_view inputWideString)
+std::string ConvertWideToNarrow(const std::wstring& inputWideString)
 {
 	// Wide strings might be `wchar_t` or `char16_t`, so specify the type we want
 	// Create a UTF-8 <=> UTF-16 converter
 	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
 	// Convert from wide to narrow
-	return converter.to_bytes(std::wstring(inputWideString));
+	return converter.to_bytes(inputWideString);
 }
 
-std::wstring ConvertNarrowToWide(std::string_view inputNarrowString)
+std::wstring ConvertNarrowToWide(const std::string& inputNarrowString)
 {
 	// Wide strings might be `wchar_t` or `char16_t`, so specify the type we want
 	// Create a UTF-8 <=> UTF-16 converter
 	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
 	// Convert from narrow to wide
-	return converter.from_bytes(std::string(inputNarrowString));
+	return converter.from_bytes(inputNarrowString);
 }
 
 std::size_t CopyStdStringIntoCharBuffer(const std::string& stringToCopy, char* buffer, std::size_t bufferSize)
