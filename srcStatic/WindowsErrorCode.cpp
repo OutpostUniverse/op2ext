@@ -12,12 +12,12 @@ std::string GetLastErrorString()
 		FORMAT_MESSAGE_ALLOCATE_BUFFER |
 		FORMAT_MESSAGE_FROM_SYSTEM |
 		FORMAT_MESSAGE_IGNORE_INSERTS,
-		NULL,
+		nullptr,
 		lastErrorCode,
 		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
 		reinterpret_cast<LPSTR>(&lpMsgBuf),
 		0,
-		NULL
+		nullptr
 	);
 
 	auto errorCodeMessage = ConvertLpctstrToString(lpMsgBuf);
