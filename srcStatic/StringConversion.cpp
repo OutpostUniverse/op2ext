@@ -23,6 +23,15 @@ std::string ConvertWideToNarrow(std::wstring_view inputWideString)
 	return converter.to_bytes(std::wstring(inputWideString));
 }
 
+std::wstring ConvertNarrowToWide(std::string_view inputNarrowString)
+{
+	// Wide strings might be `wchar_t` or `char16_t`, so specify the type we want
+	// Create a UTF-8 <=> UTF-16 converter
+	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+	// Convert from narrow to wide
+	return converter.from_bytes(std::string(inputNarrowString));
+}
+
 std::size_t CopyStdStringIntoCharBuffer(const std::string& stringToCopy, char* buffer, std::size_t bufferSize)
 {
 	// Precheck valid pointer and non-zero buffer size to avoid wrap around or null termination problems

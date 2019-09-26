@@ -29,6 +29,15 @@ TEST(StringConversion, ConvertWideToNarrow)
 	EXPECT_EQ("Hello world", ConvertWideToNarrow(L"Hello world"));
 }
 
+TEST(StringConversion, ConvertNarrowToWide)
+{
+	// Convert empty string
+	EXPECT_EQ(L"", ConvertNarrowToWide(""));
+
+	// Convert non-empty string
+	EXPECT_EQ(L"Hello world", ConvertNarrowToWide("Hello world"));
+}
+
 TEST(StringConversion, ToLower)
 {
 	EXPECT_EQ("test", ToLower("TEST"));
