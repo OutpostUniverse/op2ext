@@ -13,18 +13,18 @@ TEST(StringConversion, ConvertWideToNarrow)
 	EXPECT_EQ("Hello world", ConvertWideToNarrow(L"Hello world"));
 }
 
-TEST(StringConversion, ConvertLpctstrToStringNarrow)
+TEST(StringConversion, WrapRawStringNarrow)
 {
 	LPCSTR rawString = "test string";
-	auto result = ConvertLpctstrToString(rawString);
+	auto result = WrapRawString(rawString);
 	EXPECT_EQ(rawString, result);
 	EXPECT_TRUE((std::is_same<std::string, decltype(result)>::value));
 }
 
-TEST(StringConversion, ConvertLpctstrToStringWide)
+TEST(StringConversion, WrapRawStringWide)
 {
 	LPCWSTR rawString = L"test string";
-	auto result = ConvertLpctstrToString(rawString);
+	auto result = WrapRawString(rawString);
 	EXPECT_EQ(rawString, result);
 	EXPECT_TRUE((std::is_same<std::wstring, decltype(result)>::value));
 }

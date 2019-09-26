@@ -2,11 +2,11 @@
 #include <sstream>
 #include <algorithm>
 
-std::string ConvertLpctstrToString(LPCSTR str)
+std::string WrapRawString(LPCSTR str)
 {
 	return std::string(str);
 }
-std::wstring ConvertLpctstrToString(LPCWSTR str)
+std::wstring WrapRawString(LPCWSTR str)
 {
 	return std::wstring(str);
 }

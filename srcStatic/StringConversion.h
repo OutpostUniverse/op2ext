@@ -13,8 +13,8 @@ std::string ConvertWideToNarrow(std::wstring_view inputWideString, UINT codepage
 
 // Convert a LPCTSTR to std::string
 // At compile time LPCTSTR will convert to either LPCSTR or LPCWSTR based on the UNICODE setting
-std::string ConvertLpctstrToString(LPCSTR str);
-std::wstring ConvertLpctstrToString(LPCWSTR str);
+std::string WrapRawString(LPCSTR str);
+std::wstring WrapRawString(LPCWSTR str);
 
 // Returns 0 on success
 // Returns needed buffer size (including space for null terminator) if the destination buffer is too small
