@@ -1,5 +1,4 @@
 #include "WindowsErrorCode.h"
-#include "StringConversion.h"
 #include "LocalResource.h"
 #include <windows.h>
 
