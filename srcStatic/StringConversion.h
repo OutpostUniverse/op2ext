@@ -15,7 +15,7 @@ std::string WrapRawString(const char* str);
 std::wstring WrapRawString(const wchar_t* str);
 
 // Converts a wide string to a multibyte narrow string
-std::string ConvertWideToNarrow(std::wstring_view inputWideString, UINT codepage = CP_ACP);
+std::string ConvertWideToNarrow(std::wstring_view inputWideString);
 
 // Copies a std::string to a raw character buffer
 // This is used to interface with C code
