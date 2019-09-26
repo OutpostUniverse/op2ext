@@ -4,15 +4,6 @@
 #include <type_traits>
 
 
-TEST(StringConversion, ConvertWideToNarrow)
-{
-	// Convert empty string
-	EXPECT_EQ("", ConvertWideToNarrow(L""));
-
-	// Convert non-empty string
-	EXPECT_EQ("Hello world", ConvertWideToNarrow(L"Hello world"));
-}
-
 TEST(StringConversion, WrapRawStringNarrow)
 {
 	LPCSTR rawString = "test string";
@@ -27,6 +18,15 @@ TEST(StringConversion, WrapRawStringWide)
 	auto result = WrapRawString(rawString);
 	EXPECT_EQ(rawString, result);
 	EXPECT_TRUE((std::is_same<std::wstring, decltype(result)>::value));
+}
+
+TEST(StringConversion, ConvertWideToNarrow)
+{
+	// Convert empty string
+	EXPECT_EQ("", ConvertWideToNarrow(L""));
+
+	// Convert non-empty string
+	EXPECT_EQ("Hello world", ConvertWideToNarrow(L"Hello world"));
 }
 
 TEST(StringConversion, ToLower)

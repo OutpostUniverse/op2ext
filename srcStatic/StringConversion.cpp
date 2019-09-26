@@ -2,6 +2,7 @@
 #include <sstream>
 #include <algorithm>
 
+
 std::string WrapRawString(LPCSTR str)
 {
 	return std::string(str);
