@@ -1,4 +1,6 @@
 #include "StringConversion.h"
+// Deprecation warning suppression must come before any standard library includes
+#define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
 #include <sstream>
 #include <algorithm>
 #include <locale>
