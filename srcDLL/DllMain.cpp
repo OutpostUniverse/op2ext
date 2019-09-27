@@ -55,7 +55,11 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 
 		// Replace call to gTApp.Init with custom routine
 		if (!Op2RelinkCall(0x004A8877, GetMethodVoidPointer(&TApp::Init))) {
-			return FALSE;
+			// Failed to install initial event hook
+			// The op2ext module will not be able to activate any further patches
+			// This tends to happen if op2ext.dll is loaded before or without Outpost2.exe
+			// That's fine, op2ext just won't be able to do anything
+			// No need to abort the DLL load process
 		}
 
 		// Disable any more thread attach calls
