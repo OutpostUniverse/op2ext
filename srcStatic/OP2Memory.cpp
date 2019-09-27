@@ -34,7 +34,7 @@ void SetLoadOffset()
 	void* op2ModuleBase = GetModuleHandle(TEXT("Outpost2.exe"));
 
 	if (op2ModuleBase == nullptr) {
-		PostErrorMessage(__FILE__, __LINE__, "Could not find Outpost2.exe module base address.");
+		PostErrorMessage("Could not find Outpost2.exe module base address.", __FILE__, __LINE__);
 	}
 
 	loadOffset = reinterpret_cast<std::size_t>(op2ModuleBase) - ExpectedOutpost2Addr;
@@ -54,7 +54,7 @@ bool Op2MemEdit(void* destBaseAddr, std::size_t size, Function memoryEditFunctio
 	DWORD oldAttr;
 	BOOL bSuccess = VirtualProtect(destAddr, size, PAGE_EXECUTE_READWRITE, &oldAttr);
 	if (!bSuccess) {
-		PostErrorMessage(__FILE__, __LINE__, "Error unprotecting memory at: 0x" + AddrToHexString(reinterpret_cast<std::size_t>(destAddr)) + ".");
+		PostErrorMessage("Error unprotecting memory at: 0x" + AddrToHexString(reinterpret_cast<std::size_t>(destAddr)) + ".", __FILE__, __LINE__);
 		return false;
 	}
 
@@ -110,7 +110,7 @@ bool Op2RelinkCall(std::size_t callOffset, void* newFunctionAddress)
 
 	// Verify this is being run on a CALL instruction
 	if (*reinterpret_cast<unsigned char*>(callOffset + loadOffset) != 0xE8) {
-		PostErrorMessage(__FILE__, __LINE__, "Op2RelinkCall error: No CALL instruction found at given address: " + AddrToHexString(callOffset));
+		PostErrorMessage("Op2RelinkCall error: No CALL instruction found at given address: " + AddrToHexString(callOffset), __FILE__, __LINE__);
 		return false;
 	}
 

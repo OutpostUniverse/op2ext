@@ -18,7 +18,7 @@ void DisableModalDialogs()
 	modalDialogsDisabled = true;
 }
 
-void PostErrorMessage(const std::string& sourcePathFilename, long lineInSourceCode, const std::string& errorMessage)
+void PostErrorMessage(const std::string& errorMessage, const std::string& sourcePathFilename, long lineInSourceCode)
 {
 	// __FILE__ returns absolute filename. Strip the absolute path to reduce clutter in log output
 	auto sourceFilename = fs::path(sourcePathFilename).filename().string();

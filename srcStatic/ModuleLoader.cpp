@@ -24,7 +24,7 @@ void ModuleLoader::RegisterExternalModules()
 			RegisterModule(std::make_unique<IniModule>(sectionName));
 		}
 		catch (const std::exception& e) {
-			PostErrorMessage(__FILE__, __LINE__, e.what());
+			PostErrorMessage(e.what(), __FILE__, __LINE__);
 		}
 	}
 }
@@ -40,7 +40,7 @@ bool ModuleLoader::IsBuiltInModuleRequested(const std::string& moduleName)
 		return false;
 	}
 
-	PostErrorMessage(__FILE__, __LINE__, "Built-in module named " + moduleName + " contains an innapropriate setting. It must be set to Yes or No");
+	PostErrorMessage("Built-in module named " + moduleName + " contains an innapropriate setting. It must be set to Yes or No", __FILE__, __LINE__);
 	return false;
 }
 
@@ -82,7 +82,7 @@ void ModuleLoader::RegisterModule(std::unique_ptr<GameModule> newGameModule)
 	}
 
 	if (IsModuleLoaded(newGameModule->Name())) {
-		PostErrorMessage(__FILE__, __LINE__, "You may not add a module with an existing name. Duplicate copies of module name " + newGameModule->Name() + " found.");
+		PostErrorMessage("You may not add a module with an existing name. Duplicate copies of module name " + newGameModule->Name() + " found.", __FILE__, __LINE__);
 		return;
 	}
 
@@ -100,7 +100,7 @@ void ModuleLoader::LoadModules()
 			gameModule->Load();
 		}
 		catch (const std::exception& e) {
-			PostErrorMessage(__FILE__, __LINE__, "Error loading module " + gameModule->Name() + ". " + std::string(e.what()));
+			PostErrorMessage("Error loading module " + gameModule->Name() + ". " + std::string(e.what()), __FILE__, __LINE__);
 		}
 	}
 }
@@ -119,7 +119,7 @@ bool ModuleLoader::UnloadModules()
 			}
 		}
 		catch (const std::exception& e) {
-			PostErrorMessage(__FILE__, __LINE__, "Error unloading module " + gameModule->Name() + ". " + std::string(e.what()));
+			PostErrorMessage("Error unloading module " + gameModule->Name() + ". " + std::string(e.what()), __FILE__, __LINE__);
 			areAllModulesProperlyDestroyed = false;
 		}
 	}
@@ -137,7 +137,7 @@ void ModuleLoader::RunModules()
 			gameModule->Run();
 		}
 		catch (const std::exception& e) {
-			PostErrorMessage(__FILE__, __LINE__, "Error running module " + gameModule->Name() + ". " + std::string(e.what()));
+			PostErrorMessage("Error running module " + gameModule->Name() + ". " + std::string(e.what()), __FILE__, __LINE__);
 		}
 	}
 }
