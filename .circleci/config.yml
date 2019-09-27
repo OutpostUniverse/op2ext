@@ -10,4 +10,6 @@ jobs:
       - run: make --keep-going --jobs=2 op2extLib
       - run: make --keep-going --jobs=2 op2extDll
       - run: make --keep-going --jobs=2 testLib
+      - run: make --keep-going --jobs=2 testDll
       - run: make --keep-going --jobs=2 check-testLib
+      # - run: make --keep-going --jobs=2 check-testDll
