@@ -8,7 +8,6 @@
 
 class ConsoleModuleLoader {
 public:
-	// Console module names are the relative path from the game folder (no trailing slash)
 	ConsoleModuleLoader(const std::vector<std::string>& moduleNames);
 	void LoadModules();
 	void UnloadModules();
@@ -16,7 +15,6 @@ public:
 	std::string GetModuleDirectory(std::size_t index);
 	std::string GetModuleName(std::size_t index);
 	std::size_t Count();
-	// Returns false if passed an empty string (Module name cannot be empty)
 	bool IsModuleLoaded(std::string moduleName);
 
 private:

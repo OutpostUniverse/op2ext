@@ -52,6 +52,7 @@ std::vector<std::string> ModuleLoader::GetModuleNames(const std::string& moduleT
 	return sectionNames;
 }
 
+// An INI module name is the SectionName from the INI file with its config settings
 std::string ModuleLoader::GetModuleName(std::size_t index)
 {
 	if (index >= modules.size()) {
