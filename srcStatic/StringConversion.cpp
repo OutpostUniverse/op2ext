@@ -105,7 +105,7 @@ std::string TrimBack(const std::string& stringToTrim, std::string_view whitespac
 }
 
 
-std::vector<std::string> Split(std::string stringToSplit, char delimiter)
+std::vector<std::string> Split(const std::string& stringToSplit, char delimiter)
 {
 	std::vector<std::string> strings;
 

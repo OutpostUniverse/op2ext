@@ -33,7 +33,7 @@ std::string Trim(const std::string& stringToTrim, std::string_view whitespace = 
 std::string TrimFront(const std::string& stringToTrim, std::string_view whitespace = Whitespace);
 std::string TrimBack(const std::string& stringToTrim, std::string_view whitespace = Whitespace);
 
-std::vector<std::string> Split(std::string stringToSplit, char delimiter);
+std::vector<std::string> Split(const std::string& stringToSplit, char delimiter);
 
 template <typename std::string(TrimFunction)(const std::string&, std::string_view) = Trim>
 std::vector<std::string> SplitAndTrim(std::string stringToSplit, char delimiter, std::string_view whitespace = Whitespace) {
