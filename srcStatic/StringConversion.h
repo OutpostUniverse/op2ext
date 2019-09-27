@@ -27,16 +27,16 @@ std::string& ToLowerInPlace(std::string& x);
 std::string ToLower(std::string x);
 
 
-constexpr auto Whitespace = " \t";
+constexpr std::string_view Whitespace = " \t";
 
-std::string Trim(const std::string& stringToTrim, const std::string& whitespace = Whitespace);
-std::string TrimFront(const std::string& stringToTrim, const std::string& whitespace = Whitespace);
-std::string TrimBack(const std::string& stringToTrim, const std::string& whitespace = Whitespace);
+std::string Trim(const std::string& stringToTrim, std::string_view whitespace = Whitespace);
+std::string TrimFront(const std::string& stringToTrim, std::string_view whitespace = Whitespace);
+std::string TrimBack(const std::string& stringToTrim, std::string_view whitespace = Whitespace);
 
 std::vector<std::string> Split(std::string stringToSplit, char delimiter);
 
-template <typename std::string(TrimFunction)(const std::string&, const std::string&) = Trim>
-std::vector<std::string> SplitAndTrim(std::string stringToSplit, char delimiter, const std::string& whitespace = Whitespace) {
+template <typename std::string(TrimFunction)(const std::string&, std::string_view) = Trim>
+std::vector<std::string> SplitAndTrim(std::string stringToSplit, char delimiter, std::string_view whitespace = Whitespace) {
 	auto items = Split(stringToSplit, delimiter);
 	for (auto& item : items) {
 		item = TrimFunction(item, whitespace);
