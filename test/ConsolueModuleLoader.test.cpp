@@ -8,9 +8,9 @@ TEST(ConsoleModuleLoader, NoModuleLoaded)
 {
 	ConsoleModuleLoader consoleModLoader("");
 
-	// Returns empty string if no module available
-	EXPECT_EQ("", consoleModLoader.GetModuleName());
-	EXPECT_EQ("", consoleModLoader.GetModuleDirectory());
+	// Throws an exception if the index is out of range
+	EXPECT_THROW(consoleModLoader.GetModuleName(0), std::runtime_error);
+	EXPECT_THROW(consoleModLoader.GetModuleDirectory(0), std::runtime_error);
 
 	EXPECT_EQ(0u, consoleModLoader.Count());
 
@@ -30,8 +30,8 @@ TEST(ConsoleModuleLoader, ModuleWithoutDLL)
 	ConsoleModuleLoader consoleModLoader(moduleName);
 
 	const auto moduleDirectory = fs::path(GetGameDirectory()) / moduleName;
-	EXPECT_EQ(moduleDirectory, consoleModLoader.GetModuleDirectory());
-	EXPECT_EQ(moduleName, consoleModLoader.GetModuleName());
+	EXPECT_EQ(moduleDirectory, consoleModLoader.GetModuleDirectory(0));
+	EXPECT_EQ(moduleName, consoleModLoader.GetModuleName(0));
 
 	EXPECT_TRUE(consoleModLoader.IsModuleLoaded(moduleName));
 	EXPECT_FALSE(consoleModLoader.IsModuleLoaded(""));
@@ -50,8 +50,8 @@ TEST(ConsoleModuleLoader, ModuleWithEmptyDLL)
 	ConsoleModuleLoader consoleModLoader(moduleName);
 
 	const auto moduleDirectory = fs::path(GetGameDirectory()) / moduleName;
-	EXPECT_EQ(moduleDirectory, consoleModLoader.GetModuleDirectory());
-	EXPECT_EQ(moduleName, consoleModLoader.GetModuleName());
+	EXPECT_EQ(moduleDirectory, consoleModLoader.GetModuleDirectory(0));
+	EXPECT_EQ(moduleName, consoleModLoader.GetModuleName(0));
 
 	EXPECT_TRUE(consoleModLoader.IsModuleLoaded(moduleName));
 	EXPECT_FALSE(consoleModLoader.IsModuleLoaded(""));

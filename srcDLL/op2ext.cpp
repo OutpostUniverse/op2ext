@@ -32,7 +32,14 @@ OP2EXT_API size_t GetGameDir_s(char* buffer, size_t bufferSize)
 
 OP2EXT_API size_t GetConsoleModDir_s(char* buffer, size_t bufferSize)
 {
-	return CopyStdStringIntoCharBuffer(consoleModLoader.GetModuleDirectory() + "\\", buffer, bufferSize);
+	// This is an older method that assumes only a single console module can be loaded
+	std::string consoleModuleDirectory;
+	if (consoleModLoader.Count() > 0) {
+		// Assume they care about the first loaded console module
+		consoleModuleDirectory = consoleModLoader.GetModuleDirectory(0);
+	}
+	// Copy module directory to supplied buffer
+	return CopyStdStringIntoCharBuffer(consoleModuleDirectory + "\\", buffer, bufferSize);
 }
 
 OP2EXT_API void GetGameDir(char* buffer)
@@ -48,7 +55,12 @@ OP2EXT_API void GetGameDir(char* buffer)
 
 OP2EXT_API char* GetCurrentModDir()
 {
-	std::string modDirectory = consoleModLoader.GetModuleDirectory();
+	// This is an older method that assumes only a single console module can be loaded
+	std::string modDirectory;
+	if (consoleModLoader.Count() > 0) {
+		// Assume they care about the first loaded console module
+		modDirectory = consoleModLoader.GetModuleDirectory(0);
+	}
 
 	if (modDirectory.empty()) {
 		return nullptr;
@@ -134,7 +146,7 @@ OP2EXT_API size_t GetLoadedModuleName(size_t moduleIndex, char* buffer, size_t b
 			moduleName = moduleLoader.GetModuleName(moduleIndex);
 		}
 		else if (moduleIndex < GetLoadedModuleCount()) {
-			moduleName = consoleModLoader.GetModuleName();
+			moduleName = consoleModLoader.GetModuleName(moduleIndex - moduleLoader.Count());
 		}
 	}
 	catch (const std::exception& e) // Prevent throwing an error across DLL boundaries

@@ -12,8 +12,8 @@ public:
 	void LoadModules();
 	void UnloadModules();
 	void RunModules();
-	std::string GetModuleDirectory();
-	std::string GetModuleName();
+	std::string GetModuleDirectory(std::size_t index);
+	std::string GetModuleName(std::size_t index);
 	std::size_t Count();
 	// Returns false if passed an empty string (Module name cannot be empty)
 	bool IsModuleLoaded(std::string moduleName);

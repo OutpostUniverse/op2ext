@@ -32,14 +32,20 @@ ConsoleModuleLoader::ConsoleModuleLoader(const std::string& moduleRelativeDirect
 	ModuleDirectory() = moduleDirectory;
 }
 
-std::string ConsoleModuleLoader::GetModuleDirectory()
+std::string ConsoleModuleLoader::GetModuleDirectory(std::size_t index)
 {
+	if (index >= Count()) {
+		throw std::runtime_error("Invalid console module index: " + std::to_string(index));
+	}
 	// Return copy of private static
 	return ModuleDirectory();
 }
 
-std::string ConsoleModuleLoader::GetModuleName()
+std::string ConsoleModuleLoader::GetModuleName(std::size_t index)
 {
+	if (index >= Count()) {
+		throw std::runtime_error("Invalid console module index: " + std::to_string(index));
+	}
 	return moduleName;
 }
 
@@ -50,11 +56,12 @@ std::size_t ConsoleModuleLoader::Count()
 
 bool ConsoleModuleLoader::IsModuleLoaded(std::string moduleName)
 {
-	if (Count() == 0) {
-		return false;
+	for (std::size_t i = 0; i < Count(); ++i) {
+		if (ToLowerInPlace(moduleName) == ToLower(GetModuleName(i))) {
+			return true;
+		}
 	}
-
-	return ToLowerInPlace(moduleName) == ToLower(GetModuleName());
+	return false;
 }
 
 void ConsoleModuleLoader::LoadModules()
