@@ -6,7 +6,7 @@
 
 TEST(ConsoleModuleLoader, NoModuleLoaded)
 {
-	ConsoleModuleLoader consoleModLoader("");
+	ConsoleModuleLoader consoleModLoader({});
 
 	// Throws an exception if the index is out of range
 	EXPECT_THROW(consoleModLoader.GetModuleName(0), std::runtime_error);
@@ -27,7 +27,7 @@ TEST(ConsoleModuleLoader, NoModuleLoaded)
 TEST(ConsoleModuleLoader, ModuleWithoutDLL)
 {
 	const auto moduleName("NoDllTest");
-	ConsoleModuleLoader consoleModLoader(moduleName);
+	ConsoleModuleLoader consoleModLoader({moduleName});
 
 	const auto moduleDirectory = fs::path(GetGameDirectory()) / moduleName;
 	EXPECT_EQ(moduleDirectory, consoleModLoader.GetModuleDirectory(0));
@@ -47,7 +47,7 @@ TEST(ConsoleModuleLoader, ModuleWithoutDLL)
 TEST(ConsoleModuleLoader, ModuleWithEmptyDLL)
 {
 	const std::string moduleName("InvalidDllTest");
-	ConsoleModuleLoader consoleModLoader(moduleName);
+	ConsoleModuleLoader consoleModLoader({moduleName});
 
 	const auto moduleDirectory = fs::path(GetGameDirectory()) / moduleName;
 	EXPECT_EQ(moduleDirectory, consoleModLoader.GetModuleDirectory(0));

@@ -8,7 +8,8 @@
 
 class ConsoleModuleLoader {
 public:
-	ConsoleModuleLoader(const std::string& moduleRelativeDirectory);
+	// Console module names are the relative path from the game folder (no trailing slash)
+	ConsoleModuleLoader(const std::vector<std::string>& moduleNames);
 	void LoadModules();
 	void UnloadModules();
 	void RunModules();

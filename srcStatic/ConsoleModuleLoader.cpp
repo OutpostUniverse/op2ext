@@ -12,8 +12,18 @@
 #include <system_error>
 
 
-ConsoleModuleLoader::ConsoleModuleLoader(const std::string& moduleRelativeDirectory)
+ConsoleModuleLoader::ConsoleModuleLoader(const std::vector<std::string>& moduleNames)
 {
+	if (moduleNames.empty()) {
+		return; // No console modules to load
+	}
+
+	// For now just handle the first name
+	if (moduleNames.size() > 1) {
+		throw std::runtime_error("ConsoleModuleLoader currently only supports a single loaded module");
+	}
+	auto moduleRelativeDirectory = moduleNames[0];
+
 	if (moduleRelativeDirectory.empty()) {
 		return; // No Console Module Loaded
 	}
