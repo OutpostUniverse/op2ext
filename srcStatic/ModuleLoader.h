@@ -10,15 +10,15 @@ class ModuleLoader
 {
 public:
 	inline std::size_t Count() const { return modules.size(); }
-	bool IsModuleLoaded(std::string moduleName);
-
 	std::string GetModuleName(std::size_t index);
-
-	void RegisterModule(std::unique_ptr<GameModule> newGameModule);
 
 	void LoadModules();
 	bool UnloadModules();
 	void RunModules();
+
+	bool IsModuleLoaded(std::string moduleName);
+
+	void RegisterModule(std::unique_ptr<GameModule> newGameModule);
 
 private:
 	std::vector<std::unique_ptr<GameModule>> modules;

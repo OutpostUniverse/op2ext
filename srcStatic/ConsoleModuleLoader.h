@@ -9,12 +9,15 @@
 class ConsoleModuleLoader {
 public:
 	ConsoleModuleLoader(const std::vector<std::string>& moduleNames);
+
+	std::size_t Count();
+	std::string GetModuleDirectory(std::size_t index);
+	std::string GetModuleName(std::size_t index);
+
 	void LoadModules();
 	void UnloadModules();
 	void RunModules();
-	std::string GetModuleDirectory(std::size_t index);
-	std::string GetModuleName(std::size_t index);
-	std::size_t Count();
+
 	bool IsModuleLoaded(std::string moduleName);
 
 private:
