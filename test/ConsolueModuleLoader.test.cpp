@@ -19,9 +19,9 @@ TEST(ConsoleModuleLoader, NoModuleLoaded)
 	EXPECT_FALSE(consoleModLoader.IsModuleLoaded("TEST"));
 
 	// No module present to load, functions should return without doing anything
-	EXPECT_NO_THROW(consoleModLoader.LoadModule());
-	EXPECT_NO_THROW(consoleModLoader.RunModule());
-	EXPECT_NO_THROW(consoleModLoader.UnloadModule());
+	EXPECT_NO_THROW(consoleModLoader.LoadModules());
+	EXPECT_NO_THROW(consoleModLoader.RunModules());
+	EXPECT_NO_THROW(consoleModLoader.UnloadModules());
 }
 
 TEST(ConsoleModuleLoader, ModuleWithoutDLL)
@@ -39,9 +39,9 @@ TEST(ConsoleModuleLoader, ModuleWithoutDLL)
 
 	EXPECT_EQ(1u, consoleModLoader.Count());
 
-	EXPECT_NO_THROW(consoleModLoader.LoadModule());
-	EXPECT_NO_THROW(consoleModLoader.RunModule());
-	EXPECT_NO_THROW(consoleModLoader.UnloadModule());
+	EXPECT_NO_THROW(consoleModLoader.LoadModules());
+	EXPECT_NO_THROW(consoleModLoader.RunModules());
+	EXPECT_NO_THROW(consoleModLoader.UnloadModules());
 }
 
 TEST(ConsoleModuleLoader, ModuleWithEmptyDLL)
@@ -60,9 +60,9 @@ TEST(ConsoleModuleLoader, ModuleWithEmptyDLL)
 	EXPECT_EQ(1u, consoleModLoader.Count());
 
 	// DLL file is empty and should be aborted
-	EXPECT_NO_THROW(consoleModLoader.LoadModule());
+	EXPECT_NO_THROW(consoleModLoader.LoadModules());
 
 	// Functions should return without doing anything since module load is aborted
-	EXPECT_NO_THROW(consoleModLoader.RunModule());
-	EXPECT_NO_THROW(consoleModLoader.UnloadModule());
+	EXPECT_NO_THROW(consoleModLoader.RunModules());
+	EXPECT_NO_THROW(consoleModLoader.UnloadModules());
 }

@@ -57,7 +57,7 @@ bool ConsoleModuleLoader::IsModuleLoaded(std::string moduleName)
 	return ToLowerInPlace(moduleName) == ToLower(GetModuleName());
 }
 
-void ConsoleModuleLoader::LoadModule()
+void ConsoleModuleLoader::LoadModules()
 {
 	// Get access to private static
 	auto moduleDirectory = ModuleDirectory();
@@ -155,7 +155,7 @@ bool ConsoleModuleLoader::ResManager::GetFilePath(const char* resourceName, /* [
 	return CallOriginalGetFilePath(resourceName, filePath);
 }
 
-void ConsoleModuleLoader::UnloadModule()
+void ConsoleModuleLoader::UnloadModules()
 {
 	if (modDllHandle)
 	{
@@ -168,7 +168,7 @@ void ConsoleModuleLoader::UnloadModule()
 	}
 }
 
-void ConsoleModuleLoader::RunModule()
+void ConsoleModuleLoader::RunModules()
 {
 	// Startup a module by calling its run func
 	if (modDllHandle)

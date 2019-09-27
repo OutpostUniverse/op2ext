@@ -81,7 +81,7 @@ int TApp::Init()
 	// ART_PATH (from console module), Console Module, Ini Modules, Addon directory, Game directory
 
 	// Load command line modules
-	consoleModLoader.LoadModule();
+	consoleModLoader.LoadModules();
 
 	// Load all active modules from the .ini file
 	moduleLoader.LoadModules();
@@ -108,7 +108,7 @@ void TApp::ShutDown()
 	// Call original function
 	(this->*GetMethodPointer<decltype(&TApp::ShutDown)>(0x004866E0))();
 
-	consoleModLoader.UnloadModule();
+	consoleModLoader.UnloadModules();
 	moduleLoader.UnloadModules();
 }
 
@@ -153,7 +153,7 @@ HINSTANCE __stdcall NewLoadLibraryA(LPCSTR lpLibFileName)
 	{
 		//LocalizeStrings();
 		modulesRunning = true;
-		consoleModLoader.RunModule();
+		consoleModLoader.RunModules();
 		moduleLoader.RunModules();
 	}
 

@@ -9,9 +9,9 @@
 class ConsoleModuleLoader {
 public:
 	ConsoleModuleLoader(const std::string& moduleRelativeDirectory);
-	void LoadModule();
-	void UnloadModule();
-	void RunModule();
+	void LoadModules();
+	void UnloadModules();
+	void RunModules();
 	std::string GetModuleDirectory();
 	std::string GetModuleName();
 	std::size_t Count();
