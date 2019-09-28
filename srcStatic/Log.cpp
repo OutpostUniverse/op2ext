@@ -13,15 +13,22 @@ namespace {
 	// Such values are well defined if accessed by a global object constructor before Main/DllMain starts
 	// This pointer is safely set to null before other globals are initialized
 	Logger* logger = nullptr;
+	Logger* loggerError = nullptr;
 }
 
 
 // Set logging output destination
 // Caller owns the logger and is responsible for cleanup when logger is no longer required
 // Use `SetLogger(nullptr);` to unset a logger
+
 void SetLogger(Logger* newLogger) {
 	logger = newLogger;
 }
+
+void SetLoggerError(Logger* newLogger) {
+	loggerError = newLogger;
+}
+
 
 void Log(const std::string& message, const std::string& moduleName) {
 	// Make sure a logger has been set first
@@ -54,8 +61,7 @@ void PostErrorMessage(const std::string& errorMessage, const std::string& source
 
 	const std::string formattedMessage = sourceFilename + ", Line: " + std::to_string(lineInSourceCode) + ": " + errorMessage;
 	Log(formattedMessage);
-	if (!modalDialogsDisabled) {
-		static LoggerMessageBox loggerMessageBox;
-		loggerMessageBox.Log(formattedMessage);
+	if (loggerError) {
+		loggerError->Log(formattedMessage);
 	}
 }
