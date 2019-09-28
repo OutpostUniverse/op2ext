@@ -17,7 +17,7 @@ TEST(LoggerFile, MessageLogged)
 {
 	LoggerFile logger;
 
-	const uintmax_t preFileSize = fs::file_size(logPath);
+	const auto preFileSize = fs::file_size(logPath);
 	EXPECT_NO_THROW(logger.Log("Test Log Message"));
 
 	ASSERT_GT(fs::file_size(logPath), preFileSize);
