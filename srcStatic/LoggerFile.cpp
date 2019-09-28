@@ -1,7 +1,6 @@
 #include "LoggerFile.h"
-
+#include "Log.h"
 #include "FileSystemHelper.h"
-#include "GlobalDefines.h"
 #include <cstddef>
 #include <chrono>
 #include <ctime> //gmtime

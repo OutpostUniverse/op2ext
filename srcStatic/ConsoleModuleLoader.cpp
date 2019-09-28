@@ -3,7 +3,7 @@
 #include "WindowsErrorCode.h"
 #include "OP2Memory.h"
 #include "FileSystemHelper.h"
-#include "GlobalDefines.h"
+#include "Log.h"
 #include <sstream>
 #include <algorithm>
 #include <iterator>

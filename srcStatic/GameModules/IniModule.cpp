@@ -1,7 +1,7 @@
 #include "IniModule.h"
 #include "../WindowsErrorCode.h"
 #include "../FileSystemHelper.h"
-#include "../GlobalDefines.h"
+#include "../Log.h"
 #include <stdexcept>
 
 

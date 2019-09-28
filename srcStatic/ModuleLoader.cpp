@@ -3,7 +3,7 @@
 #include "GameModules/IniModule.h"
 #include "StringConversion.h"
 #include "FileSystemHelper.h"
-#include "GlobalDefines.h"
+#include "Log.h"
 #include <stdexcept>
 
 

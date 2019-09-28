@@ -4,7 +4,6 @@
     <ClCompile Include="GetCommandLineArguments.cpp" />
     <ClCompile Include="ConsoleArgumentParser.cpp" />
     <ClCompile Include="FileSystemHelper.cpp" />
-    <ClCompile Include="GlobalDefines.cpp" />
     <ClCompile Include="ModuleLoader.cpp" />
     <ClCompile Include="ConsoleModuleLoader.cpp" />
     <ClCompile Include="Log.cpp"/>
@@ -26,7 +25,6 @@
     <ClInclude Include="ConsoleArgumentParser.h" />
     <ClInclude Include="FileSystemHelper.h" />
     <ClInclude Include="GameModule.h" />
-    <ClInclude Include="GlobalDefines.h" />
     <ClInclude Include="ModuleLoader.h" />
     <ClInclude Include="ConsoleModuleLoader.h" />
     <ClInclude Include="Log.h"/>

@@ -133,7 +133,6 @@
     <ClCompile Include="ConsoleArgumentParser.cpp" />
     <ClCompile Include="FileSystemHelper.cpp" />
     <ClCompile Include="GameModules\IniModule.cpp" />
-    <ClCompile Include="GlobalDefines.cpp" />
     <ClCompile Include="ModuleLoader.cpp" />
     <ClCompile Include="GameModules\IpDropDown.cpp" />
     <ClCompile Include="ConsoleModuleLoader.cpp" />
@@ -151,7 +150,6 @@
     <ClInclude Include="FileSystemHelper.h" />
     <ClInclude Include="GameModule.h" />
     <ClInclude Include="GameModules\IniModule.h" />
-    <ClInclude Include="GlobalDefines.h" />
     <ClInclude Include="ModuleLoader.h" />
     <ClInclude Include="GameModules\IpDropDown.h" />
     <ClInclude Include="ConsoleModuleLoader.h" />
