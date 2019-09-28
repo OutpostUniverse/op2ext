@@ -1,5 +1,4 @@
 #include "WindowsErrorCode.h"
-#include "StringConversion.h"
 #include "LocalResource.h"
 #include <windows.h>
 
@@ -20,7 +19,7 @@ std::string GetLastErrorString()
 		nullptr
 	);
 
-	auto errorCodeMessage = ConvertLpctstrToString(lpMsgBuf);
+	auto errorCodeMessage = std::string(lpMsgBuf);
 	auto errorMessage = "Error " + std::to_string(lastErrorCode) + ": " + errorCodeMessage;
 
 	return errorMessage;
