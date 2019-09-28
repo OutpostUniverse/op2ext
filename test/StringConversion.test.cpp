@@ -4,6 +4,22 @@
 #include <type_traits>
 
 
+TEST(StringConversion, WrapRawStringNarrow)
+{
+	const char* rawString = "test string";
+	auto result = WrapRawString(rawString);
+	EXPECT_EQ(rawString, result);
+	EXPECT_TRUE((std::is_same<std::string, decltype(result)>::value));
+}
+
+TEST(StringConversion, WrapRawStringWide)
+{
+	const wchar_t* rawString = L"test string";
+	auto result = WrapRawString(rawString);
+	EXPECT_EQ(rawString, result);
+	EXPECT_TRUE((std::is_same<std::wstring, decltype(result)>::value));
+}
+
 TEST(StringConversion, ConvertWideToNarrow)
 {
 	// Convert empty string
@@ -13,20 +29,13 @@ TEST(StringConversion, ConvertWideToNarrow)
 	EXPECT_EQ("Hello world", ConvertWideToNarrow(L"Hello world"));
 }
 
-TEST(StringConversion, ConvertLpctstrToStringNarrow)
+TEST(StringConversion, ConvertNarrowToWide)
 {
-	LPCSTR rawString = "test string";
-	auto result = ConvertLpctstrToString(rawString);
-	EXPECT_EQ(rawString, result);
-	EXPECT_TRUE((std::is_same<std::string, decltype(result)>::value));
-}
+	// Convert empty string
+	EXPECT_EQ(L"", ConvertNarrowToWide(""));
 
-TEST(StringConversion, ConvertLpctstrToStringWide)
-{
-	LPCWSTR rawString = L"test string";
-	auto result = ConvertLpctstrToString(rawString);
-	EXPECT_EQ(rawString, result);
-	EXPECT_TRUE((std::is_same<std::wstring, decltype(result)>::value));
+	// Convert non-empty string
+	EXPECT_EQ(L"Hello world", ConvertNarrowToWide("Hello world"));
 }
 
 TEST(StringConversion, ToLower)
