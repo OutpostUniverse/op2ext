@@ -1,10 +1,10 @@
 #include "LoggerFile.h"
 #include "FileSystemHelper.h"
 #include <gtest/gtest.h>
-#include <system_error>
-#include <cstdint>
+
 
 const fs::path logPath = fs::path(GetGameDirectory()).append("Outpost2Log.txt");
+
 
 TEST(LoggerFile, LogFileExists)
 {
