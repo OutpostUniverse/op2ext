@@ -63,7 +63,7 @@ OP2EXT_API char* GetCurrentModDir()
 OP2EXT_API void AddVolToList(const char* volFilename)
 {
 	if (modulesRunning) {
-		PostErrorMessage("VOLs may not be added to the list after game startup.", __FILE__, __LINE__);
+		PostError("VOLs may not be added to the list after game startup.");
 	}
 	else {
 		volList.AddVolFile(volFilename);
@@ -74,7 +74,7 @@ char* multiplayerVersionStringAddress = (char*)0x004E973C;
 OP2EXT_API void SetSerialNumber(char major, char minor, char patch)
 {
 	if (modulesRunning || major < 0 || major > 9 || minor < 0 || minor > 9 || patch < 0 || patch > 9) {
-		PostErrorMessage("SetSerialNumber failed. Invalid mod serial number or was called after game startup.", __FILE__, __LINE__);
+		PostError("SetSerialNumber failed. Invalid mod serial number or was called after game startup.");
 	}
 	else {
 		char buffer[8];

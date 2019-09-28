@@ -11,7 +11,7 @@ IniModule::IniModule(const std::string& iniSectionName) : GameModule(iniSectionN
 		moduleDllHandle = LoadModuleDll();
 	}
 	catch (const std::exception& error) {
-		PostErrorMessage("Unable to load dll for module " + Name() + " . " + std::string(error.what()), __FILE__, __LINE__);
+		PostError("Unable to load dll for module " + Name() + " . " + std::string(error.what()));
 		throw std::runtime_error("Unable to load ini module " + Name());
 	}
 

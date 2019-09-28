@@ -15,7 +15,7 @@ LoggerFile::LoggerFile() :
 	logFile(GetGameDirectory() + "\\Outpost2Log.txt", std::ios::app | std::ios::out | std::ios::binary)
 {
 	if (!logFile.is_open()) {
-		PostErrorMessage("Unable to create or open Outpost2Log.txt", __FILE__, __LINE__);
+		PostError("Unable to create or open Outpost2Log.txt");
 	}
 }
 

@@ -74,7 +74,7 @@ int TApp::Init()
 	if (!success) {
 		std::ostringstream stringStream;
 		stringStream << "Error unprotecting memory at: 0x" << std::hex << destinationBaseAddress << ".";
-		PostErrorMessage(stringStream.str(), __FILE__, __LINE__);
+		PostError(stringStream.str());
 	}
 
 	// Order of precedence for loading vol files is:

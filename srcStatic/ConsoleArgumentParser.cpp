@@ -18,7 +18,7 @@ std::string FindModuleDirectory()
 		const auto arguments = GetCommandLineArguments();
 		return FindModuleDirectory(arguments);
 	} catch(const std::exception& e) {
-		PostErrorMessage("Error parsing command line arguments: " + std::string(e.what()), __FILE__, __LINE__);
+		PostError("Error parsing command line arguments: " + std::string(e.what()));
 		return std::string();
 	}
 }
