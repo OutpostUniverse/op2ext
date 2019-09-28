@@ -10,7 +10,7 @@ TEST(Log, UnsetLoggerIsSafe) {
 }
 
 
-class MockLogger : public Logger {
+class LoggerMock : public Logger {
 public:
 	MOCK_METHOD2(Log, void(const std::string& message, const std::string& moduleName));
 };
@@ -27,7 +27,7 @@ protected:
 		EXPECT_NO_THROW(SetLogger(nullptr));
 	}
 
-	MockLogger logger;
+	LoggerMock logger;
 };
 
 
