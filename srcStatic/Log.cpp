@@ -8,10 +8,10 @@
 // Use anonymous namespace to keep globals private
 // Prevents other files from gaining access with a sneaky extern declaration
 namespace {
-  // Static (constant and zero) initialization happens before dynamic initialization
-  // Such values are well defined if accessed by a global object constructor before Main/DllMain starts
-  // This pointer is safely set to null before other globals are initialized
-  Logger* logger = nullptr;
+	// Static (constant and zero) initialization happens before dynamic initialization
+	// Such values are well defined if accessed by a global object constructor before Main/DllMain starts
+	// This pointer is safely set to null before other globals are initialized
+	Logger* logger = nullptr;
 }
 
 
