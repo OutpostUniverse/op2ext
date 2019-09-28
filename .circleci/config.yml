@@ -7,6 +7,7 @@ jobs:
       - run: WINEARCH=win32 winecfg
       - checkout
       - run: git submodule update --init || true
-      - run: make --keep-going
-      - run: make --keep-going test
-      - run: make --keep-going check
+      - run: make --keep-going --jobs=2 op2extLib
+      - run: make --keep-going --jobs=2 op2extDll
+      - run: make --keep-going --jobs=2 testLib
+      - run: make --keep-going --jobs=2 check-testLib
