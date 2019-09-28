@@ -1,4 +1,3 @@
-#include "Log.h"
 #include "Logger.h"
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
@@ -15,14 +14,8 @@ public:
 
 class LogMessageTest : public ::testing::Test {
 protected:
-	void SetUp() override {
-		// Install test logger
-		EXPECT_NO_THROW(SetLogger(&logger));
-	}
-	void TearDown() override {
-		// Remove test logger
-		EXPECT_NO_THROW(SetLogger(nullptr));
-	}
+	void SetUp() override;
+	void TearDown() override;
 
 	LoggerMock logger;
 };
