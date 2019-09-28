@@ -30,20 +30,22 @@ std::string& ToLowerInPlace(std::string& x);
 std::string ToLower(std::string x);
 
 
+constexpr std::string_view Whitespace = " \t";
+
 // Trim whitespace from both ends or either end of a string
-std::string Trim(const std::string& stringToTrim, const std::string& whitespace = " \t");
-std::string TrimFront(const std::string& stringToTrim, const std::string& whitespace = " \t");
-std::string TrimBack(const std::string& stringToTrim, const std::string& whitespace = " \t");
+std::string Trim(const std::string& stringToTrim, std::string_view whitespace = Whitespace);
+std::string TrimFront(const std::string& stringToTrim, std::string_view whitespace = Whitespace);
+std::string TrimBack(const std::string& stringToTrim, std::string_view whitespace = Whitespace);
 
 // Split string on all instances of a delimiter charater and return result in a vector of strings
 // The delimiter character is not included in the resulting strings
-std::vector<std::string> Split(std::string stringToSplit, char delimiter);
+std::vector<std::string> Split(const std::string& stringToSplit, char delimiter);
 
 // Split string on all instances of a delimiter character, and trim resulting strings, returning results in a vector
 // The delimiter character is not included in the resulting strings
 // If the delimiter character is a whitespace character, it is first used for splitting purposes
-template <typename std::string(TrimFunction)(const std::string&, const std::string&) = Trim>
-std::vector<std::string> SplitAndTrim(std::string stringToSplit, char delimiter, const std::string& whitespace = " \t") {
+template <typename std::string(TrimFunction)(const std::string&, std::string_view) = Trim>
+std::vector<std::string> SplitAndTrim(std::string stringToSplit, char delimiter, std::string_view whitespace = Whitespace) {
 	auto items = Split(stringToSplit, delimiter);
 	for (auto& item : items) {
 		item = TrimFunction(item, whitespace);

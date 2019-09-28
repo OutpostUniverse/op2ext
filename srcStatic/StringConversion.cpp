@@ -63,7 +63,7 @@ std::string ToLower(std::string x) {
 
 
 // Trim whitespace from both ends of string, returning copy of substring
-std::string Trim(const std::string& stringToTrim, const std::string& whitespace)
+std::string Trim(const std::string& stringToTrim, std::string_view whitespace)
 {
 	auto stringBegin = stringToTrim.find_first_not_of(whitespace);
 
@@ -78,7 +78,7 @@ std::string Trim(const std::string& stringToTrim, const std::string& whitespace)
 }
 
 // Trim whitespace from front of string, returning copy of substring
-std::string TrimFront(const std::string& stringToTrim, const std::string& whitespace)
+std::string TrimFront(const std::string& stringToTrim, std::string_view whitespace)
 {
 	auto stringBegin = stringToTrim.find_first_not_of(whitespace);
 
@@ -90,7 +90,7 @@ std::string TrimFront(const std::string& stringToTrim, const std::string& whites
 }
 
 // Trim whitespace from back of string, returning copy of substring
-std::string TrimBack(const std::string& stringToTrim, const std::string& whitespace)
+std::string TrimBack(const std::string& stringToTrim, std::string_view whitespace)
 {
 	auto stringEnd = stringToTrim.find_last_not_of(whitespace);
 
@@ -98,7 +98,7 @@ std::string TrimBack(const std::string& stringToTrim, const std::string& whitesp
 }
 
 
-std::vector<std::string> Split(std::string stringToSplit, char delimiter)
+std::vector<std::string> Split(const std::string& stringToSplit, char delimiter)
 {
 	std::vector<std::string> strings;
 
