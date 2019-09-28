@@ -23,7 +23,6 @@ int main(int argc, char** argv)
 
 void EnableTestEnvironment()
 {
-	DisableModalDialogs();
 	DisableMemoryCommands();
 }
 

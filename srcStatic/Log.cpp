@@ -40,18 +40,11 @@ void Log(const std::string& message, const std::string& moduleName) {
 
 
 
-bool modalDialogsDisabled = false;
-
 void OutputDebug(const std::string& message)
 {
 #ifdef DEBUG
 	OutputDebugString(message.c_str());
 #endif
-}
-
-void DisableModalDialogs()
-{
-	modalDialogsDisabled = true;
 }
 
 void PostErrorMessage(const std::string& errorMessage, const std::string& sourcePathFilename, long lineInSourceCode)
