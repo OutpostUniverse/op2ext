@@ -8,5 +8,5 @@ jobs:
       - checkout
       - run: git submodule update --init || true
       - run: make --keep-going
-      - run: make --keep-going test
+      - run: make --keep-going testLib
       - run: make --keep-going check
