@@ -138,6 +138,7 @@
     <ClCompile Include="ConsoleModuleLoader.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="LoggerFile.cpp" />
+    <ClCompile Include="LoggerMessageBox.cpp" />
     <ClCompile Include="OP2Memory.cpp" />
     <ClCompile Include="StringConversion.cpp" />
     <ClCompile Include="VolList.cpp" />
@@ -156,6 +157,7 @@
     <ClInclude Include="Log.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="LoggerFile.h" />
+    <ClInclude Include="LoggerMessageBox.h" />
     <ClInclude Include="OP2Memory.h" />
     <ClInclude Include="StringConversion.h" />
     <ClInclude Include="VolList.h" />

@@ -1,5 +1,6 @@
 #include "Log.h"
 #include "Logger.h"
+#include "LoggerMessageBox.h"
 #include "FileSystemHelper.h"
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -54,6 +55,7 @@ void PostErrorMessage(const std::string& errorMessage, const std::string& source
 	const std::string formattedMessage = sourceFilename + ", Line: " + std::to_string(lineInSourceCode) + ": " + errorMessage;
 	Log(formattedMessage);
 	if (!modalDialogsDisabled) {
-		MessageBoxA(nullptr, formattedMessage.c_str(), "Outpost 2 Error", MB_ICONERROR);
+		static LoggerMessageBox loggerMessageBox;
+		loggerMessageBox.Log(formattedMessage);
 	}
 }
