@@ -40,7 +40,7 @@ void Log(const std::string& message, const std::string& moduleName) {
 
 
 
-void OutputDebug(const std::string& message)
+void LogDebug(const std::string& message)
 {
 #ifdef DEBUG
 	OutputDebugString(message.c_str());
