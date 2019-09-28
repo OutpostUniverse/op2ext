@@ -33,7 +33,7 @@ void SetLoadOffset()
 
 	void* op2ModuleBase = GetModuleHandle(TEXT("Outpost2.exe"));
 
-	if (op2ModuleBase == 0) {
+	if (op2ModuleBase == nullptr) {
 		PostErrorMessage(__FILE__, __LINE__, "Could not find Outpost2.exe module base address.");
 	}
 

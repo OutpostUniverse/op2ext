@@ -28,7 +28,7 @@ HINSTANCE IniModule::LoadModuleDll()
 	// Try to load a DLL with the given name (possibly "")
 	HINSTANCE dllHandle = LoadLibraryA(dllName.c_str());
 
-	if (dllHandle == 0) {
+	if (dllHandle == NULL) {
 		throw std::runtime_error("Unable to load DLL " + dllName + " from ini module section " +
 			Name() + ". LoadLibrary " + GetLastErrorString());
 	}
@@ -39,7 +39,7 @@ HINSTANCE IniModule::LoadModuleDll()
 void IniModule::Load()
 {
 	// Call the InitMod function if it exists
-	if (initializeModuleFunction != 0) {
+	if (initializeModuleFunction != nullptr) {
 		initializeModuleFunction(Name().c_str());
 	}
 }
@@ -48,7 +48,7 @@ bool IniModule::Unload()
 {
 	bool success = true;
 
-	if (destroyModuleFunction != 0) {
+	if (destroyModuleFunction != nullptr) {
 		success = destroyModuleFunction();
 	}
 
