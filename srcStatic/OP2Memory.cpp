@@ -28,10 +28,6 @@ void DisableMemoryCommands()
 // Adjust offsets in case Outpost2.exe module is relocated
 void SetLoadOffset()
 {
-	if (memoryCommandsDisabled) {
-		return;
-	}
-
 	void* op2ModuleBase = GetModuleHandle(TEXT("Outpost2.exe"));
 
 	if (op2ModuleBase == nullptr) {
