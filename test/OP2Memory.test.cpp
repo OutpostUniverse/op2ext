@@ -2,16 +2,16 @@
 #include <gtest/gtest.h>
 
 
-extern bool memoryCommandsDisabled;
+extern bool memoryPatchingEnabled;
 
 
 class Op2RelinkCallTest : public ::testing::Test {
 protected:
   void SetUp() override {
-    memoryCommandsDisabled = false;
+    memoryPatchingEnabled = true;
   }
   void TearDown() override {
-    memoryCommandsDisabled = true;
+    memoryPatchingEnabled = false;
   }
 
   static constexpr unsigned char CallOpcode = 0xE8;

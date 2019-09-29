@@ -48,7 +48,7 @@ void SetLoadOffset()
 template <typename Function>
 bool Op2MemEdit(void* destBaseAddr, std::size_t size, Function memoryEditFunction)
 {
-	if (memoryCommandsDisabled) {
+	if (!memoryPatchingEnabled) {
 		return false;
 	}
 
@@ -108,7 +108,7 @@ bool Op2MemSetDword(void* destBaseAddr, void* dword)
 // The `callOffset` parameter is the address of the encoded DWORD
 bool Op2RelinkCall(std::size_t callOffset, void* newFunctionAddress)
 {
-	if (memoryCommandsDisabled) {
+	if (!memoryPatchingEnabled) {
 		return false;
 	}
 
@@ -125,7 +125,7 @@ bool Op2RelinkCall(std::size_t callOffset, void* newFunctionAddress)
 
 bool Op2UnprotectMemory(std::size_t destBaseAddr, std::size_t size)
 {
-	if (memoryCommandsDisabled) {
+	if (!memoryPatchingEnabled) {
 		return false;
 	}
 	
