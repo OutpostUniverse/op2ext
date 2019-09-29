@@ -278,5 +278,7 @@ TEST(StringConversion, AddrToHexString)
 TEST(StringConversion, GetDateTime)
 {
 	auto dateTime = GetDateTime();
-	EXPECT_THAT(dateTime, ::testing::HasSubstr("UTC"));
+	EXPECT_THAT(dateTime, ::testing::HasSubstr("UTC")); // UTC time zone marker
+	EXPECT_THAT(dateTime, ::testing::ContainsRegex("\\d\\d\\d\\d-\\d\\d-\\d\\d")); // ISO 8601 date format
+	EXPECT_THAT(dateTime, ::testing::ContainsRegex("\\d\\d:\\d\\d:\\d\\d")); // ISO 8601 time format
 }
