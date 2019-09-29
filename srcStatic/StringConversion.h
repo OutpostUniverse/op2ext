@@ -52,3 +52,6 @@ std::vector<std::string> SplitAndTrim(std::string stringToSplit, char delimiter,
 	}
 	return items;
 }
+
+// Convert hex address value to string
+std::string AddrToHexString(std::size_t addr);

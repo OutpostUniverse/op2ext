@@ -2,6 +2,7 @@
 #define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
 #include "StringConversion.h"
 #include <sstream>
+#include <iomanip>
 #include <algorithm>
 #include <locale>
 #include <codecvt>
@@ -110,4 +111,12 @@ std::vector<std::string> Split(const std::string& stringToSplit, char delimiter)
 	}
 
 	return strings;
+}
+
+
+std::string AddrToHexString(std::size_t addr)
+{
+	std::ostringstream stringStream;
+	stringStream << std::setfill('0') << std::setw(8) << std::hex << addr;
+	return stringStream.str();
 }
