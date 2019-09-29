@@ -58,4 +58,4 @@ std::string AddrToHexString(std::size_t addr);
 
 
 // Gets UTC date/time string using the system clock
-std::string GetSystemDateTime();
+std::string GetDateTime();

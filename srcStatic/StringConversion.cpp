@@ -124,7 +124,7 @@ std::string AddrToHexString(std::size_t addr)
 }
 
 
-std::string GetSystemDateTime()
+std::string GetDateTime()
 {
 	auto currentClock = std::chrono::system_clock::now();
 	auto time = std::chrono::system_clock::to_time_t(currentClock);
