@@ -6,7 +6,7 @@
 class Logger;
 
 
-void SetLogger(Logger* logger);
+void SetLogger(Logger* newLogger);
 void SetLoggerError(Logger* newLogger);
 
 void Log(const std::string& message, const std::string& moduleName = "op2ext.dll");
