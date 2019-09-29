@@ -7,6 +7,7 @@
 
 
 bool memoryCommandsDisabled;
+bool memoryPatchingEnabled = false;
 std::size_t loadOffset = 0;
 const std::size_t ExpectedOutpost2Addr = 0x00400000;
 
@@ -38,6 +39,8 @@ void SetLoadOffset()
 		return;
 	}
 
+	// Enable memory patching for Outpost2.exe, and set relocation offset
+	memoryPatchingEnabled = true;
 	loadOffset = reinterpret_cast<std::size_t>(op2ModuleBase) - ExpectedOutpost2Addr;
 }
 
