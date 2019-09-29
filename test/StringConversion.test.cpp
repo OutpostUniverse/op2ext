@@ -1,5 +1,6 @@
 #include "StringConversion.h"
 #include <gtest/gtest.h>
+#include <gmock/gmock.h>
 #include <string>
 #include <type_traits>
 
@@ -272,4 +273,10 @@ TEST(StringConversion, AddrToHexString)
 	EXPECT_EQ("00000000", AddrToHexString(00000000));
 	// Note casing of hex values
 	EXPECT_EQ("deadbeef", AddrToHexString(0xDEADBEEF));
+}
+
+TEST(StringConversion, GetDateTime)
+{
+	auto dateTime = GetDateTime();
+	EXPECT_THAT(dateTime, ::testing::HasSubstr("UTC"));
 }
