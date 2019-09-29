@@ -35,6 +35,7 @@ void SetLoadOffset()
 
 	if (op2ModuleBase == nullptr) {
 		PostError("Could not find Outpost2.exe module base address.");
+		return;
 	}
 
 	loadOffset = reinterpret_cast<std::size_t>(op2ModuleBase) - ExpectedOutpost2Addr;
