@@ -1,7 +1,7 @@
 #include "IniModule.h"
 #include "../WindowsErrorCode.h"
 #include "../FileSystemHelper.h"
-#include "../GlobalDefines.h"
+#include "../Log.h"
 #include <stdexcept>
 
 
@@ -11,7 +11,7 @@ IniModule::IniModule(const std::string& iniSectionName) : GameModule(iniSectionN
 		moduleDllHandle = LoadModuleDll();
 	}
 	catch (const std::exception& error) {
-		PostErrorMessage(__FILE__, __LINE__, "Unable to load dll for module " + Name() + " . " + std::string(error.what()));
+		PostError("Unable to load dll for module " + Name() + " . " + std::string(error.what()));
 		throw std::runtime_error("Unable to load ini module " + Name());
 	}
 

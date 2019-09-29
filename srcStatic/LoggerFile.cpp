@@ -1,7 +1,6 @@
 #include "LoggerFile.h"
-
+#include "Log.h"
 #include "FileSystemHelper.h"
-#include "GlobalDefines.h"
 #include <cstddef>
 #include <chrono>
 #include <ctime> //gmtime
@@ -15,7 +14,7 @@ LoggerFile::LoggerFile() :
 	logFile(GetGameDirectory() + "\\Outpost2Log.txt", std::ios::app | std::ios::out | std::ios::binary)
 {
 	if (!logFile.is_open()) {
-		PostErrorMessage(__FILE__, __LINE__, "Unable to create or open Outpost2Log.txt");
+		PostError("Unable to create or open Outpost2Log.txt");
 	}
 }
 

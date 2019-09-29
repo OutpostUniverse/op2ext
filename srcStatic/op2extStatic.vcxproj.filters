@@ -4,11 +4,11 @@
     <ClCompile Include="GetCommandLineArguments.cpp" />
     <ClCompile Include="ConsoleArgumentParser.cpp" />
     <ClCompile Include="FileSystemHelper.cpp" />
-    <ClCompile Include="GlobalDefines.cpp" />
     <ClCompile Include="ModuleLoader.cpp" />
     <ClCompile Include="ConsoleModuleLoader.cpp" />
     <ClCompile Include="Log.cpp"/>
     <ClCompile Include="LoggerFile.cpp"/>
+    <ClCompile Include="LoggerMessageBox.cpp"/>
     <ClCompile Include="OP2Memory.cpp" />
     <ClCompile Include="StringConversion.cpp" />
     <ClCompile Include="VolList.cpp" />
@@ -26,12 +26,12 @@
     <ClInclude Include="ConsoleArgumentParser.h" />
     <ClInclude Include="FileSystemHelper.h" />
     <ClInclude Include="GameModule.h" />
-    <ClInclude Include="GlobalDefines.h" />
     <ClInclude Include="ModuleLoader.h" />
     <ClInclude Include="ConsoleModuleLoader.h" />
     <ClInclude Include="Log.h"/>
     <ClInclude Include="Logger.h"/>
     <ClInclude Include="LoggerFile.h"/>
+    <ClInclude Include="LoggerMessageBox.h"/>
     <ClInclude Include="OP2Memory.h" />
     <ClInclude Include="StringConversion.h" />
     <ClInclude Include="VolList.h" />

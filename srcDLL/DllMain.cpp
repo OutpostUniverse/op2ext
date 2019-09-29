@@ -3,9 +3,9 @@
 #include "StringConversion.h"
 #include "OP2Memory.h"
 #include "FileSystemHelper.h"
-#include "GlobalDefines.h"
 #include "Log.h"
 #include "LoggerFile.h"
+#include "LoggerMessageBox.h"
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <string>
@@ -41,6 +41,7 @@ DWORD loadLibraryNewAddr = (DWORD)NewLoadLibraryA;
 // Similarly these should not use globals from other files before DllMain has started
 // Pay careful attention to anything passed to a constructor, or called by a constructor
 LoggerFile loggerFile; // Logging to file in Outpost 2 folder
+LoggerMessageBox loggerMessageBox; // Logging to pop-up message box
 
 
 BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
@@ -49,6 +50,7 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 	if (dwReason == DLL_PROCESS_ATTACH) {
 		// Setup logging
 		SetLogger(&loggerFile);
+		SetLoggerError(&loggerMessageBox);
 
 		// Set load offset for Outpost2.exe module, used during memory patching
 		SetLoadOffset();
@@ -74,7 +76,7 @@ int TApp::Init()
 	if (!success) {
 		std::ostringstream stringStream;
 		stringStream << "Error unprotecting memory at: 0x" << std::hex << destinationBaseAddress << ".";
-		PostErrorMessage(__FILE__, __LINE__, stringStream.str());
+		PostError(stringStream.str());
 	}
 
 	// Order of precedence for loading vol files is:

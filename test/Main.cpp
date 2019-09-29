@@ -1,6 +1,6 @@
 #include "FileSystemHelper.h"
 #include "OP2Memory.h"
-#include "GlobalDefines.h"
+#include "Log.h"
 #include <gtest/gtest.h>
 #include <fstream>
 
@@ -26,7 +26,6 @@ int main(int argc, char** argv)
 
 void EnableTestEnvironment()
 {
-	DisableModalDialogs();
 	DisableMemoryCommands();
 }
 
