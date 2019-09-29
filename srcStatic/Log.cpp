@@ -19,12 +19,14 @@ namespace {
 
 // Set logging output destination for each logging level
 // Caller owns the logger and is responsible for cleanup when logger is no longer required
-// Use `SetLogger(nullptr);` to unset a logger
+// Use `SetLoggerX(nullptr);` to unset a logger
 
+// Set logger for standard logging level
 void SetLogger(Logger* newLogger) {
 	logger = newLogger;
 }
 
+// Set logger for error logging level
 void SetLoggerError(Logger* newLogger) {
 	loggerError = newLogger;
 }
