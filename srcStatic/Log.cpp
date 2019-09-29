@@ -17,7 +17,7 @@ namespace {
 }
 
 
-// Set logging output destination
+// Set logging output destination for each logging level
 // Caller owns the logger and is responsible for cleanup when logger is no longer required
 // Use `SetLogger(nullptr);` to unset a logger
 
@@ -30,6 +30,7 @@ void SetLoggerError(Logger* newLogger) {
 }
 
 
+// Output log message at standard logging level
 void Log(const std::string& message, const std::string& moduleName) {
 	// Make sure a logger has been set first
 	if (logger) {
@@ -39,7 +40,8 @@ void Log(const std::string& message, const std::string& moduleName) {
 }
 
 
-
+// Output log message at Debug logging level
+// Currently this code doesn't support redirection of logging output
 void LogDebug(const std::string& message)
 {
 #ifdef DEBUG
@@ -47,6 +49,8 @@ void LogDebug(const std::string& message)
 #endif
 }
 
+// Output log message at Error logging level
+// Currently this is designed to produce a pop-up error message box
 void PostErrorMessage(const std::string& errorMessage, const std::string& sourcePathFilename, long lineInSourceCode)
 {
 	// __FILE__ returns absolute filename. Strip the absolute path to reduce clutter in log output

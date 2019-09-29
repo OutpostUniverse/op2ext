@@ -6,6 +6,7 @@
 class Logger;
 
 
+// Set logger for each of the logging levels
 void SetLogger(Logger* newLogger);
 void SetLoggerError(Logger* newLogger);
 
