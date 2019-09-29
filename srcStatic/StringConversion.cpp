@@ -134,7 +134,7 @@ std::string GetDateTime()
 	}
 
 	std::stringstream stringStream;
-	stringStream << std::put_time(&unpackedTime, "%F %T UTC");
+	stringStream << std::put_time(&unpackedTime, "%Y-%m-%d %H:%M:%S UTC");
 
 	return stringStream.str();
 }
