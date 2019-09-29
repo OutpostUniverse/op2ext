@@ -2,6 +2,7 @@
 #include <gtest/gtest.h>
 #include <array>
 
+
 using bufferType = std::array<char, 8>;
 
 

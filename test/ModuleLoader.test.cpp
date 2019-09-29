@@ -5,6 +5,7 @@
 #include <memory>
 #include <stdexcept>
 
+
 // Use to test that two modules with the same name but different casing is rejected from registering with the ModuleLoader
 // Windows file system and .ini key value pairs are case insensitive
 class DifferentCasedNameModule : public GameModule
@@ -15,6 +16,7 @@ public:
 	void Load() override {}
 	bool Unload() override { return true; }
 };
+
 
 TEST(ModuleLoader, NoModulesLoaded)
 {
