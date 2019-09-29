@@ -4,7 +4,6 @@
 #include "OP2Memory.h"
 #include "FileSystemHelper.h"
 #include "Log.h"
-#include <sstream>
 #include <algorithm>
 #include <iterator>
 #include <stdexcept>
