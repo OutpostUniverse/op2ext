@@ -55,3 +55,7 @@ std::vector<std::string> SplitAndTrim(std::string stringToSplit, char delimiter,
 
 // Convert hex address value to string
 std::string AddrToHexString(std::size_t addr);
+
+
+// Gets UTC date/time string using the system clock
+std::string GetSystemDateTime();

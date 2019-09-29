@@ -6,6 +6,8 @@
 #include <algorithm>
 #include <locale>
 #include <codecvt>
+#include <chrono> // std::chrono::system_clock::now
+#include <ctime> // gmtime
 
 
 std::string WrapRawString(const char* str)
@@ -118,5 +120,21 @@ std::string AddrToHexString(std::size_t addr)
 {
 	std::ostringstream stringStream;
 	stringStream << std::setfill('0') << std::setw(8) << std::hex << addr;
+	return stringStream.str();
+}
+
+
+std::string GetSystemDateTime()
+{
+	auto currentClock = std::chrono::system_clock::now();
+	auto time = std::chrono::system_clock::to_time_t(currentClock);
+	std::tm unpackedTime;
+	if(gmtime_s(&unpackedTime, &time)) {
+		return "<Time conversion failed>";
+	}
+
+	std::stringstream stringStream;
+	stringStream << std::put_time(&unpackedTime, "%F %T UTC");
+
 	return stringStream.str();
 }
