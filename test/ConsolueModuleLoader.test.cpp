@@ -26,7 +26,7 @@ TEST(ConsoleModuleLoader, NoModuleLoaded)
 
 TEST(ConsoleModuleLoader, ModuleWithoutDLL)
 {
-	const auto moduleName("NoDllTest");
+	const std::string moduleName("NoDllTest");
 	ConsoleModuleLoader consoleModLoader({moduleName});
 
 	const auto moduleDirectory = fs::path(GetGameDirectory()) / moduleName;

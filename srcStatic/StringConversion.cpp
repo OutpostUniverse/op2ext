@@ -1,45 +1,38 @@
+// Deprecation warning suppression must come before any standard library includes
+#define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
 #include "StringConversion.h"
 #include <sstream>
 #include <algorithm>
+#include <locale>
+#include <codecvt>
 
-std::string ConvertLpctstrToString(LPCSTR str)
+
+std::string WrapRawString(const char* str)
 {
 	return std::string(str);
 }
-std::wstring ConvertLpctstrToString(LPCWSTR str)
+std::wstring WrapRawString(const wchar_t* str)
 {
 	return std::wstring(str);
 }
 
-std::string ConvertWideToNarrow(std::wstring_view inputWideString, UINT codepage)
+
+// Define the type of converter we want for UTF-8 <=> UTF-16 conversions
+// Wide strings might use `wchar_t` or `char16_t`, so specify the type we want
+using ConverterType = std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>>;
+
+std::string ConvertWideToNarrow(const std::wstring& inputString)
 {
-	constexpr DWORD dwFlags = 0;
-
-	// The WideCharToMultiByte function considers it an error to pass an input string of length 0
-	// Early exit if input string is empty
-	if (inputWideString.empty()) {
-		return std::string();
-	}
-
-	// First determine the required buffer size (but don't convert)
-	auto requiredBufferSize = WideCharToMultiByte(codepage, dwFlags, inputWideString.data(), inputWideString.size(), nullptr, 0, nullptr, nullptr);
-	if (requiredBufferSize == 0) {
-		throw std::runtime_error("Wide to narrow string conversion failure: Unable to determine output buffer size");
-	}
-
-	std::string outputString;
-	// Allocate space for converted string
-	outputString.resize(requiredBufferSize);
-	// Perform the actual conversion
-	auto convertedSize = WideCharToMultiByte(codepage, dwFlags, inputWideString.data(), inputWideString.size(), outputString.data(), outputString.size(), nullptr, nullptr);
-	if (convertedSize == 0) {
-		throw std::runtime_error("Wide to narrow string conversion failure: Unable to convert string");
-	}
-	// Clip output string to however many characters were actually converted
-	outputString.erase(convertedSize);
-
-	return outputString;
+	// Create converter and convert string
+	return ConverterType().to_bytes(inputString);
 }
+
+std::wstring ConvertNarrowToWide(const std::string& inputString)
+{
+	// Create converter and convert string
+	return ConverterType().from_bytes(inputString);
+}
+
 
 std::size_t CopyStdStringIntoCharBuffer(const std::string& stringToCopy, char* buffer, std::size_t bufferSize)
 {
@@ -70,7 +63,7 @@ std::string ToLower(std::string x) {
 
 
 // Trim whitespace from both ends of string, returning copy of substring
-std::string Trim(const std::string& stringToTrim, const std::string& whitespace)
+std::string Trim(const std::string& stringToTrim, std::string_view whitespace)
 {
 	auto stringBegin = stringToTrim.find_first_not_of(whitespace);
 
@@ -85,7 +78,7 @@ std::string Trim(const std::string& stringToTrim, const std::string& whitespace)
 }
 
 // Trim whitespace from front of string, returning copy of substring
-std::string TrimFront(const std::string& stringToTrim, const std::string& whitespace)
+std::string TrimFront(const std::string& stringToTrim, std::string_view whitespace)
 {
 	auto stringBegin = stringToTrim.find_first_not_of(whitespace);
 
@@ -97,7 +90,7 @@ std::string TrimFront(const std::string& stringToTrim, const std::string& whites
 }
 
 // Trim whitespace from back of string, returning copy of substring
-std::string TrimBack(const std::string& stringToTrim, const std::string& whitespace)
+std::string TrimBack(const std::string& stringToTrim, std::string_view whitespace)
 {
 	auto stringEnd = stringToTrim.find_last_not_of(whitespace);
 
@@ -105,7 +98,7 @@ std::string TrimBack(const std::string& stringToTrim, const std::string& whitesp
 }
 
 
-std::vector<std::string> Split(std::string stringToSplit, char delimiter)
+std::vector<std::string> Split(const std::string& stringToSplit, char delimiter)
 {
 	std::vector<std::string> strings;
 
