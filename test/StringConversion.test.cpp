@@ -1,5 +1,6 @@
 #include "StringConversion.h"
 #include <gtest/gtest.h>
+#include <gmock/gmock.h>
 #include <string>
 #include <type_traits>
 
@@ -262,4 +263,22 @@ TEST(StringConversion, SplitAndTrimTrimFront)
 	EXPECT_EQ((std::vector<std::string>{"A", "B", "C"}), SplitAndTrim<TrimFront>("A, B, C", ','));
 	EXPECT_EQ((std::vector<std::string>{"A ", "B ", "C"}), SplitAndTrim<TrimFront>("A ,B ,C", ','));
 	EXPECT_EQ((std::vector<std::string>{"A ", "B ", "C"}), SplitAndTrim<TrimFront>("A , B , C", ','));
+}
+
+
+TEST(StringConversion, AddrToHexString)
+{
+	// Correctly pads with 0
+	EXPECT_EQ("00000000", AddrToHexString(0));
+	EXPECT_EQ("00000000", AddrToHexString(00000000));
+	// Note casing of hex values
+	EXPECT_EQ("deadbeef", AddrToHexString(0xDEADBEEF));
+}
+
+TEST(StringConversion, GetDateTime)
+{
+	auto dateTime = GetDateTime();
+	EXPECT_THAT(dateTime, ::testing::HasSubstr("UTC")); // UTC time zone marker
+	EXPECT_THAT(dateTime, ::testing::ContainsRegex("\\d\\d\\d\\d-\\d\\d-\\d\\d")); // ISO 8601 date format
+	EXPECT_THAT(dateTime, ::testing::ContainsRegex("\\d\\d:\\d\\d:\\d\\d")); // ISO 8601 time format
 }

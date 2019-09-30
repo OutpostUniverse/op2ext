@@ -1,12 +1,12 @@
 #include "VolList.h"
 #include "OP2Memory.h"
-#include "GlobalDefines.h"
+#include "Log.h"
 #include <utility>
 
 
 void VolList::AddVolFile(std::string volPath)
 {
-	OutputDebug("Add file to VolList: " + volPath + "\n");
+	LogDebug("Add file to VolList: " + volPath + "\n");
 	volPaths.push_back(std::move(volPath));
 }
 

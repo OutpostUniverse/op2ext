@@ -1,12 +1,9 @@
 #include "FileSystemHelper.h"
 #include "OP2Memory.h"
-#include "GlobalDefines.h"
+#include "Log.h"
 #include <gtest/gtest.h>
 #include <fstream>
 
-
-// Set op2ext to operate in a test environment where Outpost2.exe is unavailable
-void EnableTestEnvironment();
 
 void SetupConsoleModTestEnvironment();
 void SetupIniFile();
@@ -16,19 +13,12 @@ int main(int argc, char** argv)
 {
 	::testing::InitGoogleTest(&argc, argv);
 
-	EnableTestEnvironment();
 	SetupConsoleModTestEnvironment();
 	SetupIniFile();
 
 	return RUN_ALL_TESTS();
 }
 
-
-void EnableTestEnvironment()
-{
-	DisableModalDialogs();
-	DisableMemoryCommands();
-}
 
 void SetupConsoleModTestEnvironment()
 {

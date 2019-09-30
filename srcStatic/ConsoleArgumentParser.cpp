@@ -2,7 +2,7 @@
 #include "ConsoleArgumentParser.h"
 #include "StringConversion.h"
 #include "FileSystemHelper.h"
-#include "GlobalDefines.h"
+#include "Log.h"
 #include <stdexcept>
 
 
@@ -18,7 +18,7 @@ std::string FindModuleDirectory()
 		const auto arguments = GetCommandLineArguments();
 		return FindModuleDirectory(arguments);
 	} catch(const std::exception& e) {
-		PostErrorMessage(__FILE__, __LINE__, "Error parsing command line arguments: " + std::string(e.what()));
+		PostError("Error parsing command line arguments: " + std::string(e.what()));
 		return std::string();
 	}
 }
