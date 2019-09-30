@@ -39,7 +39,7 @@ ConsoleModuleLoader::ConsoleModuleLoader(const std::vector<std::string>& moduleN
 	}
 
 	// Store module details
-	module = {nullptr, moduleName};
+	modules.push_back({nullptr, moduleName});
 	// Set private static instance by reference
 	ModuleDirectory() = moduleDirectory;
 }
@@ -55,15 +55,15 @@ std::string ConsoleModuleLoader::GetModuleDirectory(std::size_t index)
 
 std::string ConsoleModuleLoader::GetModuleName(std::size_t index)
 {
-	if (index >= Count()) {
+	if (index >= modules.size()) {
 		throw std::runtime_error("Invalid console module index: " + std::to_string(index));
 	}
-	return module.name;
+	return modules[index].name;
 }
 
 std::size_t ConsoleModuleLoader::Count()
 {
-	return module.name != "" ? 1 : 0;
+	return modules.size();
 }
 
 // Returns false if passed an empty string (Module name cannot be empty)
@@ -94,7 +94,11 @@ void ConsoleModuleLoader::LoadModules()
 	}
 
 	HookFileSearchPath();
-	LoadModuleDll(module);
+
+	// Load all module DLLs
+	for (auto& module : modules) {
+		LoadModuleDll(module);
+	}
 }
 
 void ConsoleModuleLoader::LoadModuleDll(Module& module)
@@ -178,26 +182,30 @@ bool ConsoleModuleLoader::ResManager::GetFilePath(const char* resourceName, /* [
 
 void ConsoleModuleLoader::UnloadModules()
 {
-	if (module.dllHandle)
-	{
-		FARPROC destroyModFunc = GetProcAddress(module.dllHandle, "mod_destroy");
-		if (destroyModFunc) {
-			destroyModFunc();
-		}
+	for (auto& module : modules) {
+		if (module.dllHandle)
+		{
+			FARPROC destroyModFunc = GetProcAddress(module.dllHandle, "mod_destroy");
+			if (destroyModFunc) {
+				destroyModFunc();
+			}
 
-		FreeLibrary(module.dllHandle);
+			FreeLibrary(module.dllHandle);
+		}
 	}
 }
 
 void ConsoleModuleLoader::RunModules()
 {
-	// Startup a module by calling its run func
-	if (module.dllHandle)
-	{
-		// Call its mod_run func
-		FARPROC runFunc = GetProcAddress(module.dllHandle, "mod_run");
-		if (runFunc) {
-			runFunc();
+	for (auto& module : modules) {
+		// Startup a module by calling its run func
+		if (module.dllHandle)
+		{
+			// Call its mod_run func
+			FARPROC runFunc = GetProcAddress(module.dllHandle, "mod_run");
+			if (runFunc) {
+				runFunc();
+			}
 		}
 	}
 }

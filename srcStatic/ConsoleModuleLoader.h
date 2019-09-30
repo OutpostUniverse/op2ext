@@ -26,7 +26,7 @@ private:
 		std::string name;
 	};
 
-	Module module;
+	std::vector<Module> modules;
 
 	void LoadModuleDll(Module& moduleInfo);
 	void HookFileSearchPath();
