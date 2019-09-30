@@ -29,7 +29,7 @@ ConsoleModuleLoader::ConsoleModuleLoader(const std::vector<std::string>& moduleN
 	}
 
 	auto moduleDirectory = fs::path(GetGameDirectory()).append(moduleRelativeDirectory).string();
-	moduleName = moduleRelativeDirectory;
+	auto moduleName = moduleRelativeDirectory;
 
 	std::error_code errorCode;
 	if (!fs::is_directory(moduleDirectory, errorCode)) {
@@ -38,6 +38,8 @@ ConsoleModuleLoader::ConsoleModuleLoader(const std::vector<std::string>& moduleN
 		moduleName = "";
 	}
 
+	// Store module details
+	module = {nullptr, moduleName};
 	// Set private static instance by reference
 	ModuleDirectory() = moduleDirectory;
 }
@@ -56,12 +58,12 @@ std::string ConsoleModuleLoader::GetModuleName(std::size_t index)
 	if (index >= Count()) {
 		throw std::runtime_error("Invalid console module index: " + std::to_string(index));
 	}
-	return moduleName;
+	return module.name;
 }
 
 std::size_t ConsoleModuleLoader::Count()
 {
-	return moduleName != "" ? 1 : 0;
+	return module.name != "" ? 1 : 0;
 }
 
 // Returns false if passed an empty string (Module name cannot be empty)
@@ -92,10 +94,10 @@ void ConsoleModuleLoader::LoadModules()
 	}
 
 	HookFileSearchPath();
-	LoadModuleDll();
+	LoadModuleDll(module);
 }
 
-void ConsoleModuleLoader::LoadModuleDll()
+void ConsoleModuleLoader::LoadModuleDll(Module& module)
 {
 	// Get access to private static
 	auto moduleDirectory = ModuleDirectory();
@@ -106,11 +108,11 @@ void ConsoleModuleLoader::LoadModuleDll()
 		return; // Some console modules do not contain dlls
 	}
 
-	modDllHandle = LoadLibraryA(dllName.c_str());
+	module.dllHandle = LoadLibraryA(dllName.c_str());
 
-	if (modDllHandle) {
+	if (module.dllHandle) {
 		// Call module's mod_init function
-		FARPROC startFunc = GetProcAddress(modDllHandle, "mod_init");
+		FARPROC startFunc = GetProcAddress(module.dllHandle, "mod_init");
 		if (startFunc) {
 			startFunc();
 		}
@@ -176,24 +178,24 @@ bool ConsoleModuleLoader::ResManager::GetFilePath(const char* resourceName, /* [
 
 void ConsoleModuleLoader::UnloadModules()
 {
-	if (modDllHandle)
+	if (module.dllHandle)
 	{
-		FARPROC destroyModFunc = GetProcAddress(modDllHandle, "mod_destroy");
+		FARPROC destroyModFunc = GetProcAddress(module.dllHandle, "mod_destroy");
 		if (destroyModFunc) {
 			destroyModFunc();
 		}
 
-		FreeLibrary(modDllHandle);
+		FreeLibrary(module.dllHandle);
 	}
 }
 
 void ConsoleModuleLoader::RunModules()
 {
 	// Startup a module by calling its run func
-	if (modDllHandle)
+	if (module.dllHandle)
 	{
 		// Call its mod_run func
-		FARPROC runFunc = GetProcAddress(modDllHandle, "mod_run");
+		FARPROC runFunc = GetProcAddress(module.dllHandle, "mod_run");
 		if (runFunc) {
 			runFunc();
 		}

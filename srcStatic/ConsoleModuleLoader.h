@@ -21,10 +21,14 @@ public:
 	bool IsModuleLoaded(std::string moduleName);
 
 private:
-	HINSTANCE modDllHandle = nullptr;
-	std::string moduleName;
+	struct Module {
+		HINSTANCE dllHandle = nullptr;
+		std::string name;
+	};
 
-	void LoadModuleDll();
+	Module module;
+
+	void LoadModuleDll(Module& moduleInfo);
 	void HookFileSearchPath();
 	static bool CallOriginalGetFilePath(const char* resourceName, /* [out] */ char* filePath);
 	static std::string& ModuleDirectory();
