@@ -28,11 +28,6 @@ ConsoleModuleLoader::ConsoleModuleLoader(const std::vector<std::string>& moduleN
 		return;
 	}
 
-	// For now just handle the first name
-	if (moduleNames.size() > 1) {
-		throw std::runtime_error("ConsoleModuleLoader currently only supports a single loaded module");
-	}
-
 	for (auto& moduleName : moduleNames) {
 		auto moduleDirectory = fs::path(GetGameDirectory()).append(moduleName).string();
 
