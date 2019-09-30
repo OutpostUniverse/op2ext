@@ -9,7 +9,6 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <string>
-#include <sstream>
 
 
 void LocateVolFiles(const std::string& relativeDirectory = "");
@@ -74,9 +73,7 @@ int TApp::Init()
 	bool success = Op2UnprotectMemory(destinationBaseAddress, 0x00587000 - 0x00585000);
 
 	if (!success) {
-		std::ostringstream stringStream;
-		stringStream << "Error unprotecting memory at: 0x" << std::hex << destinationBaseAddress << ".";
-		PostError(stringStream.str());
+		PostError("Error unprotecting memory at: 0x" + AddrToHexString(destinationBaseAddress));
 	}
 
 	// Order of precedence for loading vol files is:

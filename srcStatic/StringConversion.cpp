@@ -2,9 +2,12 @@
 #define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
 #include "StringConversion.h"
 #include <sstream>
+#include <iomanip>
 #include <algorithm>
 #include <locale>
 #include <codecvt>
+#include <chrono> // std::chrono::system_clock::now
+#include <ctime> // gmtime
 
 
 std::string WrapRawString(const char* str)
@@ -110,4 +113,28 @@ std::vector<std::string> Split(const std::string& stringToSplit, char delimiter)
 	}
 
 	return strings;
+}
+
+
+std::string AddrToHexString(std::size_t addr)
+{
+	std::ostringstream stringStream;
+	stringStream << std::setfill('0') << std::setw(8) << std::hex << addr;
+	return stringStream.str();
+}
+
+
+std::string GetDateTime()
+{
+	auto currentClock = std::chrono::system_clock::now();
+	auto time = std::chrono::system_clock::to_time_t(currentClock);
+	std::tm unpackedTime;
+	if(gmtime_s(&unpackedTime, &time)) {
+		return "<Time conversion failed>";
+	}
+
+	std::stringstream stringStream;
+	stringStream << std::put_time(&unpackedTime, "%Y-%m-%d %H:%M:%S UTC");
+
+	return stringStream.str();
 }
