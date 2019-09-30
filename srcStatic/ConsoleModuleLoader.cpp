@@ -67,8 +67,9 @@ std::size_t ConsoleModuleLoader::Count()
 // Returns false if passed an empty string (Module name cannot be empty)
 bool ConsoleModuleLoader::IsModuleLoaded(std::string moduleName)
 {
+	ToLowerInPlace(moduleName);
 	for (std::size_t i = 0; i < Count(); ++i) {
-		if (ToLowerInPlace(moduleName) == ToLower(GetModuleName(i))) {
+		if (moduleName == ToLower(GetModuleName(i))) {
 			return true;
 		}
 	}
