@@ -43,7 +43,7 @@ ConsoleModuleLoader::ConsoleModuleLoader(const std::vector<std::string>& moduleN
 		}
 
 		// Store module details
-		modules.push_back({nullptr, moduleName});
+		modules.push_back({nullptr, moduleName, moduleDirectory});
 
 		// Set private static instance by reference
 		// This is still only storing a single directory, which gets overwritten each loop iteration
@@ -53,11 +53,11 @@ ConsoleModuleLoader::ConsoleModuleLoader(const std::vector<std::string>& moduleN
 
 std::string ConsoleModuleLoader::GetModuleDirectory(std::size_t index)
 {
-	if (index >= Count()) {
+	if (index >= modules.size()) {
 		throw std::runtime_error("Invalid console module index: " + std::to_string(index));
 	}
 	// Return copy of private static
-	return ModuleDirectory();
+	return modules[index].directory;
 }
 
 std::string ConsoleModuleLoader::GetModuleName(std::size_t index)
@@ -95,27 +95,21 @@ void ConsoleModuleLoader::LoadModules()
 	// Setup loading of additional resources from module folders
 	HookFileSearchPath();
 
-	// Get access to private static
-	auto moduleDirectory = ModuleDirectory();
-
-	std::error_code errorCode;
-	if (!fs::is_directory(moduleDirectory, errorCode)) {
-		PostError("Unable to access the provided module directory. " + errorCode.message());
-		return;
-	}
-
 	// Load all module DLLs
 	for (auto& module : modules) {
+		std::error_code errorCode;
+		if (!fs::is_directory(module.directory, errorCode)) {
+			PostError("Unable to access the provided module directory. " + errorCode.message());
+			continue;
+		}
+
 		LoadModuleDll(module);
 	}
 }
 
 void ConsoleModuleLoader::LoadModuleDll(Module& module)
 {
-	// Get access to private static
-	auto moduleDirectory = ModuleDirectory();
-
-	const std::string dllName = fs::path(moduleDirectory).append("op2mod.dll").string();
+	const std::string dllName = fs::path(module.directory).append("op2mod.dll").string();
 
 	if (!fs::exists(dllName)) {
 		return; // Some console modules do not contain dlls

@@ -24,6 +24,7 @@ private:
 	struct Module {
 		HINSTANCE dllHandle = nullptr;
 		std::string name;
+		std::string directory;
 	};
 
 	std::vector<Module> modules;
