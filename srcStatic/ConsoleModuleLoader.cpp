@@ -90,7 +90,8 @@ void ConsoleModuleLoader::LoadModules()
 	// Get access to private static
 	auto moduleDirectory = ModuleDirectory();
 
-	if (moduleDirectory.empty()) {
+	// Abort early to avoid hooking file search path if not needed
+	if (modules.empty()) {
 		return;
 	}
 
