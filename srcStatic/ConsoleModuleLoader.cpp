@@ -32,21 +32,23 @@ ConsoleModuleLoader::ConsoleModuleLoader(const std::vector<std::string>& moduleN
 	if (moduleNames.size() > 1) {
 		throw std::runtime_error("ConsoleModuleLoader currently only supports a single loaded module");
 	}
-	auto moduleName = moduleNames[0];
 
-	auto moduleDirectory = fs::path(GetGameDirectory()).append(moduleName).string();
+	for (auto& moduleName : moduleNames) {
+		auto moduleDirectory = fs::path(GetGameDirectory()).append(moduleName).string();
 
-	std::error_code errorCode;
-	if (!fs::is_directory(moduleDirectory, errorCode)) {
-		PostError("Unable to access the provided module directory. " + errorCode.message());
-		moduleDirectory = "";
-		moduleName = "";
+		std::error_code errorCode;
+		if (!fs::is_directory(moduleDirectory, errorCode)) {
+			PostError("Unable to access the provided module directory. " + errorCode.message());
+			continue;
+		}
+
+		// Store module details
+		modules.push_back({nullptr, moduleName});
+
+		// Set private static instance by reference
+		// This is still only storing a single directory, which gets overwritten each loop iteration
+		ModuleDirectory() = moduleDirectory;
 	}
-
-	// Store module details
-	modules.push_back({nullptr, moduleName});
-	// Set private static instance by reference
-	ModuleDirectory() = moduleDirectory;
 }
 
 std::string ConsoleModuleLoader::GetModuleDirectory(std::size_t index)
