@@ -66,3 +66,34 @@ TEST(ConsoleModuleLoader, ModuleWithEmptyDLL)
 	EXPECT_NO_THROW(consoleModuleLoader.RunModules());
 	EXPECT_NO_THROW(consoleModuleLoader.UnloadModules());
 }
+
+TEST(ConsoleModuleLoader, MultiModule) {
+	const auto exeDir = fs::path(GetGameDirectory());
+	const std::vector<std::string> moduleNames{"Module1", "Module2"};
+
+	// Create some empty test module directories
+	for (const auto& moduleName : moduleNames) {
+		fs::create_directory(exeDir / moduleName);
+	}
+
+	ConsoleModuleLoader consoleModuleLoader(moduleNames);
+
+	EXPECT_EQ(2u, consoleModuleLoader.Count());
+	EXPECT_EQ(moduleNames[0], consoleModuleLoader.GetModuleName(0));
+	EXPECT_EQ(moduleNames[1], consoleModuleLoader.GetModuleName(1));
+
+	EXPECT_TRUE(consoleModuleLoader.IsModuleLoaded(moduleNames[0]));
+	EXPECT_TRUE(consoleModuleLoader.IsModuleLoaded(moduleNames[1]));
+
+	EXPECT_FALSE(consoleModuleLoader.IsModuleLoaded(""));
+
+	EXPECT_NO_THROW(consoleModuleLoader.LoadModules());
+	EXPECT_NO_THROW(consoleModuleLoader.RunModules());
+	EXPECT_NO_THROW(consoleModuleLoader.UnloadModules());
+
+	// // Cleanup test module directories
+	// for (const auto& moduleName : moduleNames) {
+	// 	// Bug: This doesn't work under Mingw
+	// 	fs::remove(exeDir / moduleName);
+	// }
+}
