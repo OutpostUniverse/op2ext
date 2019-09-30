@@ -5,29 +5,23 @@
 #include <windows.h>
 
 
-bool memoryCommandsDisabled;
+bool memoryPatchingEnabled = false;
 std::size_t loadOffset = 0;
 const std::size_t ExpectedOutpost2Addr = 0x00400000;
 
 
-void DisableMemoryCommands()
-{
-	memoryCommandsDisabled = true;
-}
-
 // Adjust offsets in case Outpost2.exe module is relocated
 void SetLoadOffset()
 {
-	if (memoryCommandsDisabled) {
-		return;
-	}
-
 	void* op2ModuleBase = GetModuleHandle(TEXT("Outpost2.exe"));
 
 	if (op2ModuleBase == nullptr) {
 		PostError("Could not find Outpost2.exe module base address.");
+		return;
 	}
 
+	// Enable memory patching for Outpost2.exe, and set relocation offset
+	memoryPatchingEnabled = true;
 	loadOffset = reinterpret_cast<std::size_t>(op2ModuleBase) - ExpectedOutpost2Addr;
 }
 
@@ -35,7 +29,7 @@ void SetLoadOffset()
 template <typename Function>
 bool Op2MemEdit(void* destBaseAddr, std::size_t size, Function memoryEditFunction)
 {
-	if (memoryCommandsDisabled) {
+	if (!memoryPatchingEnabled) {
 		return false;
 	}
 
@@ -95,7 +89,7 @@ bool Op2MemSetDword(void* destBaseAddr, void* dword)
 // The `callOffset` parameter is the address of the encoded DWORD
 bool Op2RelinkCall(std::size_t callOffset, void* newFunctionAddress)
 {
-	if (memoryCommandsDisabled) {
+	if (!memoryPatchingEnabled) {
 		return false;
 	}
 
@@ -112,7 +106,7 @@ bool Op2RelinkCall(std::size_t callOffset, void* newFunctionAddress)
 
 bool Op2UnprotectMemory(std::size_t destBaseAddr, std::size_t size)
 {
-	if (memoryCommandsDisabled) {
+	if (!memoryPatchingEnabled) {
 		return false;
 	}
 	
