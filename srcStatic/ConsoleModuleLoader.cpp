@@ -97,12 +97,6 @@ void ConsoleModuleLoader::LoadModules()
 
 	// Load all module DLLs
 	for (auto& module : modules) {
-		std::error_code errorCode;
-		if (!fs::is_directory(module.directory, errorCode)) {
-			PostError("Unable to access the provided module directory. " + errorCode.message());
-			continue;
-		}
-
 		LoadModuleDll(module);
 	}
 }
