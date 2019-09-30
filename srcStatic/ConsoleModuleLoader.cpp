@@ -45,9 +45,8 @@ ConsoleModuleLoader::ConsoleModuleLoader(const std::vector<std::string>& moduleN
 		// Store module details
 		modules.push_back({nullptr, moduleName, moduleDirectory});
 
-		// Set private static instance by reference
-		// This is still only storing a single directory, which gets overwritten each loop iteration
-		ModuleDirectory() = moduleDirectory;
+		// Add to private static instance by reference
+		ModuleDirectories().push_back(moduleDirectory);
 	}
 }
 
@@ -165,12 +164,18 @@ bool ConsoleModuleLoader::CallOriginalGetFilePath(const char* resourceName, /* [
 bool ConsoleModuleLoader::ResManager::GetFilePath(const char* resourceName, /* [out] */ char* filePath) const
 {
 	// Get access to private static
-	auto moduleDirectory = ModuleDirectory();
+	auto moduleDirectories = ModuleDirectories();
 
-	// Search for resource in module folder
-	const auto path = moduleDirectory + resourceName;
-	if (INVALID_FILE_ATTRIBUTES != GetFileAttributesA(path.c_str())) {
-		return 0 == CopyStdStringIntoCharBuffer(path, filePath, MAX_PATH);
+	for (const auto& moduleDirectory : moduleDirectories) {
+		// Search for resource in module folder
+		const auto path = moduleDirectory + resourceName;
+		if (INVALID_FILE_ATTRIBUTES != GetFileAttributesA(path.c_str())) {
+			if (0 == CopyStdStringIntoCharBuffer(path, filePath, MAX_PATH)) {
+				return true; // Resource found
+			} else {
+				Log("MAX_PATH exceeded while trying to return path to resource: " + std::string(resourceName));
+			}
+		}
 	}
 
 	// Fallback to searching with the original built in method
@@ -207,11 +212,11 @@ void ConsoleModuleLoader::RunModules()
 	}
 }
 
-std::string& ConsoleModuleLoader::ModuleDirectory()
+std::vector<std::string>& ConsoleModuleLoader::ModuleDirectories()
 {
 	// Function level statics are initialized on first use
 	// They are not subject to unsequenced initialization order of globals
 	// There is no order dependency on when this variable may be used
-	static std::string moduleDirectory;
-	return moduleDirectory;
+	static std::vector<std::string> moduleDirectories;
+	return moduleDirectories;
 }
