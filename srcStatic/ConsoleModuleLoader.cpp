@@ -87,21 +87,22 @@ bool ConsoleModuleLoader::IsModuleLoaded(std::string moduleName)
 
 void ConsoleModuleLoader::LoadModules()
 {
-	// Get access to private static
-	auto moduleDirectory = ModuleDirectory();
-
 	// Abort early to avoid hooking file search path if not needed
 	if (modules.empty()) {
 		return;
 	}
+
+	// Setup loading of additional resources from module folders
+	HookFileSearchPath();
+
+	// Get access to private static
+	auto moduleDirectory = ModuleDirectory();
 
 	std::error_code errorCode;
 	if (!fs::is_directory(moduleDirectory, errorCode)) {
 		PostError("Unable to access the provided module directory. " + errorCode.message());
 		return;
 	}
-
-	HookFileSearchPath();
 
 	// Load all module DLLs
 	for (auto& module : modules) {
