@@ -22,14 +22,13 @@ ConsoleModuleLoader::ConsoleModuleLoader(const std::vector<std::string>& moduleN
 	if (moduleNames.size() > 1) {
 		throw std::runtime_error("ConsoleModuleLoader currently only supports a single loaded module");
 	}
-	auto moduleRelativeDirectory = moduleNames[0];
+	auto moduleName = moduleNames[0];
 
-	if (moduleRelativeDirectory.empty()) {
+	if (moduleName.empty()) {
 		return; // No Console Module Loaded
 	}
 
-	auto moduleDirectory = fs::path(GetGameDirectory()).append(moduleRelativeDirectory).string();
-	auto moduleName = moduleRelativeDirectory;
+	auto moduleDirectory = fs::path(GetGameDirectory()).append(moduleName).string();
 
 	std::error_code errorCode;
 	if (!fs::is_directory(moduleDirectory, errorCode)) {
