@@ -6,63 +6,63 @@
 
 TEST(ConsoleModuleLoader, NoModuleLoaded)
 {
-	ConsoleModuleLoader consoleModLoader({});
+	ConsoleModuleLoader consoleModuleLoader({});
 
 	// Throws an exception if the index is out of range
-	EXPECT_THROW(consoleModLoader.GetModuleName(0), std::runtime_error);
-	EXPECT_THROW(consoleModLoader.GetModuleDirectory(0), std::runtime_error);
+	EXPECT_THROW(consoleModuleLoader.GetModuleName(0), std::runtime_error);
+	EXPECT_THROW(consoleModuleLoader.GetModuleDirectory(0), std::runtime_error);
 
-	EXPECT_EQ(0u, consoleModLoader.Count());
+	EXPECT_EQ(0u, consoleModuleLoader.Count());
 
 	// Module name cannot be an empty string
-	EXPECT_FALSE(consoleModLoader.IsModuleLoaded(""));
-	EXPECT_FALSE(consoleModLoader.IsModuleLoaded("TEST"));
+	EXPECT_FALSE(consoleModuleLoader.IsModuleLoaded(""));
+	EXPECT_FALSE(consoleModuleLoader.IsModuleLoaded("TEST"));
 
 	// No module present to load, functions should return without doing anything
-	EXPECT_NO_THROW(consoleModLoader.LoadModules());
-	EXPECT_NO_THROW(consoleModLoader.RunModules());
-	EXPECT_NO_THROW(consoleModLoader.UnloadModules());
+	EXPECT_NO_THROW(consoleModuleLoader.LoadModules());
+	EXPECT_NO_THROW(consoleModuleLoader.RunModules());
+	EXPECT_NO_THROW(consoleModuleLoader.UnloadModules());
 }
 
 TEST(ConsoleModuleLoader, ModuleWithoutDLL)
 {
 	const std::string moduleName("NoDllTest");
-	ConsoleModuleLoader consoleModLoader({moduleName});
+	ConsoleModuleLoader consoleModuleLoader({moduleName});
 
 	const auto moduleDirectory = fs::path(GetGameDirectory()) / moduleName;
-	EXPECT_EQ(moduleDirectory, consoleModLoader.GetModuleDirectory(0));
-	EXPECT_EQ(moduleName, consoleModLoader.GetModuleName(0));
+	EXPECT_EQ(moduleDirectory, consoleModuleLoader.GetModuleDirectory(0));
+	EXPECT_EQ(moduleName, consoleModuleLoader.GetModuleName(0));
 
-	EXPECT_TRUE(consoleModLoader.IsModuleLoaded(moduleName));
-	EXPECT_FALSE(consoleModLoader.IsModuleLoaded(""));
-	EXPECT_FALSE(consoleModLoader.IsModuleLoaded("UnknownModule"));
+	EXPECT_TRUE(consoleModuleLoader.IsModuleLoaded(moduleName));
+	EXPECT_FALSE(consoleModuleLoader.IsModuleLoaded(""));
+	EXPECT_FALSE(consoleModuleLoader.IsModuleLoaded("UnknownModule"));
 
-	EXPECT_EQ(1u, consoleModLoader.Count());
+	EXPECT_EQ(1u, consoleModuleLoader.Count());
 
-	EXPECT_NO_THROW(consoleModLoader.LoadModules());
-	EXPECT_NO_THROW(consoleModLoader.RunModules());
-	EXPECT_NO_THROW(consoleModLoader.UnloadModules());
+	EXPECT_NO_THROW(consoleModuleLoader.LoadModules());
+	EXPECT_NO_THROW(consoleModuleLoader.RunModules());
+	EXPECT_NO_THROW(consoleModuleLoader.UnloadModules());
 }
 
 TEST(ConsoleModuleLoader, ModuleWithEmptyDLL)
 {
 	const std::string moduleName("InvalidDllTest");
-	ConsoleModuleLoader consoleModLoader({moduleName});
+	ConsoleModuleLoader consoleModuleLoader({moduleName});
 
 	const auto moduleDirectory = fs::path(GetGameDirectory()) / moduleName;
-	EXPECT_EQ(moduleDirectory, consoleModLoader.GetModuleDirectory(0));
-	EXPECT_EQ(moduleName, consoleModLoader.GetModuleName(0));
+	EXPECT_EQ(moduleDirectory, consoleModuleLoader.GetModuleDirectory(0));
+	EXPECT_EQ(moduleName, consoleModuleLoader.GetModuleName(0));
 
-	EXPECT_TRUE(consoleModLoader.IsModuleLoaded(moduleName));
-	EXPECT_FALSE(consoleModLoader.IsModuleLoaded(""));
-	EXPECT_FALSE(consoleModLoader.IsModuleLoaded("UnknownModule"));
+	EXPECT_TRUE(consoleModuleLoader.IsModuleLoaded(moduleName));
+	EXPECT_FALSE(consoleModuleLoader.IsModuleLoaded(""));
+	EXPECT_FALSE(consoleModuleLoader.IsModuleLoaded("UnknownModule"));
 
-	EXPECT_EQ(1u, consoleModLoader.Count());
+	EXPECT_EQ(1u, consoleModuleLoader.Count());
 
 	// DLL file is empty and should be aborted
-	EXPECT_NO_THROW(consoleModLoader.LoadModules());
+	EXPECT_NO_THROW(consoleModuleLoader.LoadModules());
 
 	// Functions should return without doing anything since module load is aborted
-	EXPECT_NO_THROW(consoleModLoader.RunModules());
-	EXPECT_NO_THROW(consoleModLoader.UnloadModules());
+	EXPECT_NO_THROW(consoleModuleLoader.RunModules());
+	EXPECT_NO_THROW(consoleModuleLoader.UnloadModules());
 }

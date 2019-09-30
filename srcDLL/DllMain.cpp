@@ -81,15 +81,15 @@ int TApp::Init()
 	// ART_PATH (from console module), Console Module, Ini Modules, Addon directory, Game directory
 
 	// Load command line modules
-	consoleModLoader.LoadModules();
+	consoleModuleLoader.LoadModules();
 
 	// Load all active modules from the .ini file
 	moduleLoader.LoadModules();
 
 	// Find VOL files from additional folders
-	for (std::size_t i = 0; i < consoleModLoader.Count(); ++i) {
+	for (std::size_t i = 0; i < consoleModuleLoader.Count(); ++i) {
 		// ConsoleModule name matches relative folder from game exeucutable folder
-		LocateVolFiles(consoleModLoader.GetModuleName(i));
+		LocateVolFiles(consoleModuleLoader.GetModuleName(i));
 	}
 	LocateVolFiles("Addon");
 	LocateVolFiles(); //Searches root directory
@@ -111,7 +111,7 @@ void TApp::ShutDown()
 	// Call original function
 	(this->*GetMethodPointer<decltype(&TApp::ShutDown)>(0x004866E0))();
 
-	consoleModLoader.UnloadModules();
+	consoleModuleLoader.UnloadModules();
 	moduleLoader.UnloadModules();
 }
 
@@ -156,7 +156,7 @@ HINSTANCE __stdcall NewLoadLibraryA(LPCSTR lpLibFileName)
 	{
 		//LocalizeStrings();
 		modulesRunning = true;
-		consoleModLoader.RunModules();
+		consoleModuleLoader.RunModules();
 		moduleLoader.RunModules();
 	}
 
