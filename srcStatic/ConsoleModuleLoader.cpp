@@ -23,6 +23,11 @@ ConsoleModuleLoader::ConsoleModuleLoader(const std::vector<std::string>& moduleN
 		return; // No console modules to load
 	}
 
+	if (std::any_of(moduleNames.begin(), moduleNames.end(), [](const std::string& moduleName){ return moduleName.empty(); })) {
+		PostError("All console module names must be non-empty.");
+		return;
+	}
+
 	// For now just handle the first name
 	if (moduleNames.size() > 1) {
 		throw std::runtime_error("ConsoleModuleLoader currently only supports a single loaded module");
