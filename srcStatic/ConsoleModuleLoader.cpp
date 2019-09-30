@@ -18,15 +18,16 @@ ConsoleModuleLoader::ConsoleModuleLoader(const std::vector<std::string>& moduleN
 		return; // No console modules to load
 	}
 
+	// Temporary check. This will eventually become an error.
+	if (moduleNames.size() == 1 && moduleNames[0].empty()) {
+		return; // No console modules to load
+	}
+
 	// For now just handle the first name
 	if (moduleNames.size() > 1) {
 		throw std::runtime_error("ConsoleModuleLoader currently only supports a single loaded module");
 	}
 	auto moduleName = moduleNames[0];
-
-	if (moduleName.empty()) {
-		return; // No Console Module Loaded
-	}
 
 	auto moduleDirectory = fs::path(GetGameDirectory()).append(moduleName).string();
 
