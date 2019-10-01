@@ -16,6 +16,9 @@ public:
 	std::string GetValue(const std::string& sectionName, const std::string& keyName) const;
 	IniSection operator[](std::string sectionName) const;
 
+	void ClearSection(const std::string& sectionName);
+	void SetValue(const std::string& sectionName, const std::string& keyName, const std::string& value);
+
 private:
 	const std::string fileName;
 };
@@ -29,6 +32,9 @@ public:
 	const std::string& FileName() const;
 	const std::string& SectionName() const;
 	std::string operator[](std::string keyName) const;
+
+	void ClearSection();
+	void SetValue(const std::string& keyName, const std::string& value);
 
 private:
 	const std::string fileName;
