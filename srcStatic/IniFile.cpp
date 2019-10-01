@@ -4,9 +4,6 @@
 #include <windows.h>
 
 
-std::string GetPrivateProfileStdString(const std::string& sectionName, const std::string& key, const std::string& filename);
-
-
 IniFile::IniFile(std::string fileName)
 	: fileName(std::move(fileName))
 {
@@ -36,7 +33,30 @@ void IniFile::SetValue(const std::string& sectionName, const std::string& keyNam
 // This can be used for convenient one-off use
 // This may be less efficienct for repeated use to fetch multiple values
 std::string IniFile::GetValue(const std::string& fileName, const std::string& sectionName, const std::string& keyName) {
-	return GetPrivateProfileStdString(sectionName, keyName, fileName);
+	const std::size_t bufferInterval = 1024;
+	auto currentBufferSize = bufferInterval;
+	std::string profileString;
+	DWORD returnSize;
+
+	while (true)
+	{
+		profileString.resize(currentBufferSize);
+
+		//GetPrivateProfileString's return value is the number of characters copied to the buffer,
+		// not including the terminating null character.
+		// A full buffer could be nSize - 2 if either lpAppName or lpKeyName are NULL AND the supplied buffer is too small
+		returnSize = GetPrivateProfileStringA(sectionName.c_str(), keyName.c_str(), "", &profileString[0], currentBufferSize, fileName.c_str());
+
+		if (returnSize + 2 < currentBufferSize) {
+			break;
+		}
+
+		currentBufferSize += bufferInterval;
+	}
+
+	profileString.resize(returnSize);
+
+	return profileString;
 }
 
 
