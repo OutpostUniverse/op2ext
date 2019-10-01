@@ -28,9 +28,13 @@ TEST(ConsoleModuleLoader, NoModuleLoaded)
 TEST(ConsoleModuleLoader, ModuleWithoutDLL)
 {
 	const std::string moduleName("NoDllTest");
+
+	// Test will need temporary module directory with no DLL present
+	const auto moduleDirectory = fs::path(GetGameDirectory()) / moduleName;
+	fs::create_directory(moduleDirectory);
+
 	ConsoleModuleLoader consoleModuleLoader({moduleName});
 
-	const auto moduleDirectory = fs::path(GetGameDirectory()) / moduleName;
 	EXPECT_EQ(moduleDirectory, consoleModuleLoader.GetModuleDirectory(0));
 	EXPECT_EQ(moduleName, consoleModuleLoader.GetModuleName(0));
 
@@ -43,6 +47,10 @@ TEST(ConsoleModuleLoader, ModuleWithoutDLL)
 	EXPECT_NO_THROW(consoleModuleLoader.LoadModules());
 	EXPECT_NO_THROW(consoleModuleLoader.RunModules());
 	EXPECT_NO_THROW(consoleModuleLoader.UnloadModules());
+
+	// Cleanup test module directory
+	// Use Win API directly since fs::remove doesn't work under Mingw
+	EXPECT_NE(0, RemoveDirectoryW(moduleDirectory.wstring().c_str()));
 }
 
 TEST(ConsoleModuleLoader, ModuleWithEmptyDLL)
