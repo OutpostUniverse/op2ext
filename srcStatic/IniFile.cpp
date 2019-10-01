@@ -27,17 +27,17 @@ IniSection IniFile::operator[](std::string sectionName) const {
 
 // Remove an entire section along with all keys and values it contains
 void IniFile::ClearSection(const std::string& sectionName) {
-	WritePrivateProfileStringA(sectionName.c_str(), nullptr, nullptr, fileName.c_str());
+	IniFile::ClearSection(fileName, sectionName);
 }
 
 // Remove a single key and its associated value from a section
 void IniFile::ClearKey(const std::string& sectionName, const std::string& keyName) {
-	WritePrivateProfileStringA(sectionName.c_str(), keyName.c_str(), nullptr, fileName.c_str());
+	IniFile::ClearKey(fileName, sectionName, keyName);
 }
 
 // Set a new value for a given key in a given section
 void IniFile::SetValue(const std::string& sectionName, const std::string& keyName, const std::string& value) {
-	WritePrivateProfileStringA(sectionName.c_str(), keyName.c_str(), value.c_str(), fileName.c_str());
+	IniFile::SetValue(fileName, sectionName, keyName, value);
 }
 
 
@@ -111,15 +111,15 @@ std::string IniSection::operator[](std::string keyName) const {
 
 // Remove an entire section along with all keys and values it contains
 void IniSection::ClearSection() {
-	WritePrivateProfileStringA(sectionName.c_str(), nullptr, nullptr, fileName.c_str());
+	IniFile::ClearSection(fileName, sectionName);
 }
 
 // Remove a single key and its associated value from a section
 void IniSection::ClearKey(const std::string& keyName) {
-	WritePrivateProfileStringA(sectionName.c_str(), keyName.c_str(), nullptr, fileName.c_str());
+	IniFile::ClearKey(fileName, sectionName, keyName);
 }
 
 // Set a new value for a key within a section
 void IniSection::SetValue(const std::string& keyName, const std::string& value) {
-	WritePrivateProfileStringA(sectionName.c_str(), keyName.c_str(), value.c_str(), fileName.c_str());
+	IniFile::SetValue(fileName, sectionName, keyName, value);
 }
