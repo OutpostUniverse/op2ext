@@ -37,6 +37,7 @@ public:
 
 	const std::string& FileName() const;
 	const std::string& SectionName() const;
+	std::string GetValue(const std::string& keyName) const;
 	std::string operator[](std::string keyName) const;
 
 	void ClearSection();

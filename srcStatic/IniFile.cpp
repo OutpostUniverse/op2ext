@@ -105,6 +105,12 @@ const std::string& IniSection::SectionName() const {
 }
 
 // Get the value of a key within a section
+std::string IniSection::GetValue(const std::string& keyName) const {
+	return IniFile::GetValue(fileName, sectionName, keyName);
+}
+
+// Get the value of a key within a section
+// Alternate syntax for GetValue
 std::string IniSection::operator[](std::string keyName) const {
 	return IniFile::GetValue(fileName, sectionName, keyName);
 }
