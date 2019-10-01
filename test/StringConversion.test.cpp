@@ -1,6 +1,7 @@
 #include "StringConversion.h"
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
+#include <array>
 #include <string>
 #include <type_traits>
 
@@ -38,6 +39,40 @@ TEST(StringConversion, ConvertNarrowToWide)
 	// Convert non-empty string
 	EXPECT_EQ(L"Hello world", ConvertNarrowToWide("Hello world"));
 }
+
+
+using bufferType = std::array<char, 8>;
+
+TEST(CopyStdStringIntoCharBuffer, NullDestination) {
+	EXPECT_EQ(5u, CopyStdStringIntoCharBuffer(std::string("Test"), nullptr, 0));
+}
+
+TEST(CopyStdStringIntoCharBuffer, EmptyDestination) {
+	bufferType buffer{};
+	EXPECT_EQ(5u, CopyStdStringIntoCharBuffer(std::string("Test"), buffer.data(), 0));
+	EXPECT_EQ(bufferType{}, buffer);
+}
+
+TEST(CopyStdStringIntoCharBuffer, TooShortSizeDestination) {
+	bufferType buffer{};
+	// Copy with no room for full string + null terminator
+	// Should copy most of the string, and null terminate
+	EXPECT_EQ(5u, CopyStdStringIntoCharBuffer(std::string("Test"), buffer.data(), 4));
+	EXPECT_EQ("Tes", std::string(buffer.data()));
+}
+
+TEST(CopyStdStringIntoCharBuffer, MinimumSizeDestination) {
+	bufferType buffer{};
+	EXPECT_EQ(0u, CopyStdStringIntoCharBuffer(std::string("Test"), buffer.data(), 5));
+	EXPECT_EQ("Test", std::string(buffer.data()));
+}
+
+TEST(CopyStdStringIntoCharBuffer, NormalDestination) {
+	bufferType buffer{};
+	EXPECT_EQ(0u, CopyStdStringIntoCharBuffer(std::string("Test"), buffer.data(), sizeof(buffer)));
+	EXPECT_EQ("Test", std::string(buffer.data()));
+}
+
 
 TEST(StringConversion, ToLower)
 {
