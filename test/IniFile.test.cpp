@@ -57,6 +57,9 @@ TEST(IniFile, StaticMethodsWriteRead) {
 	// Both values removed
 	EXPECT_EQ("", IniFile::GetValue(iniFileName, "SectionName", "KeyName1"));
 	EXPECT_EQ("", IniFile::GetValue(iniFileName, "SectionName", "KeyName2"));
+
+	// Cleanup test file
+	fs::remove(iniFileName);
 }
 
 TEST(IniFile, IniFileWriteRead) {
@@ -85,6 +88,9 @@ TEST(IniFile, IniFileWriteRead) {
 	// Both values removed
 	EXPECT_EQ("", iniFile.GetValue("SectionName", "KeyName1"));
 	EXPECT_EQ("", iniFile.GetValue("SectionName", "KeyName2"));
+
+	// Cleanup test file
+	fs::remove(iniFileName);
 }
 
 TEST(IniFile, IniSectionWriteRead) {
@@ -125,4 +131,7 @@ TEST(IniFile, IniSectionWriteRead) {
 	// Alternate syntax returns same data
 	EXPECT_EQ("", iniSection["KeyName1"]);
 	EXPECT_EQ("", iniSection["KeyName2"]);
+
+	// Cleanup test file
+	fs::remove(iniFileName);
 }
