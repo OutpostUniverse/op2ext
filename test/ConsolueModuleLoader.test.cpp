@@ -91,9 +91,9 @@ TEST(ConsoleModuleLoader, MultiModule) {
 	EXPECT_NO_THROW(consoleModuleLoader.RunModules());
 	EXPECT_NO_THROW(consoleModuleLoader.UnloadModules());
 
-	// // Cleanup test module directories
-	// for (const auto& moduleName : moduleNames) {
-	// 	// Bug: This doesn't work under Mingw
-	// 	fs::remove(exeDir / moduleName);
-	// }
+	// Cleanup test module directories
+	for (const auto& moduleName : moduleNames) {
+		// Use Win API directly since fs::remove doesn't work under Mingw
+		EXPECT_NE(0, RemoveDirectoryW((exeDir / moduleName).wstring().c_str()));
+	}
 }
