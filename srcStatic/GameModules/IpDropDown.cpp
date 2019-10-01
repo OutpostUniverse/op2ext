@@ -38,12 +38,10 @@ BOOL __stdcall EnableWindowNew(HWND hWnd, BOOL bEnable)
 	auto iniSection = IniSection(GetOutpost2IniPath(), "IPHistory");
 
 	// populate the list with strings
-	char tmpStr[4];
 	numIpStrings = 0;
 	for (int i = 0; i < 10; i++)
 	{
-		_snprintf_s(tmpStr, sizeof(tmpStr), "%d", i);
-		std::string ipString = iniSection[tmpStr];
+		std::string ipString = iniSection[std::to_string(i)];
 		strcpy_s(ipStrings[i], ipString.c_str());
 
 		if (strlen(ipStrings[i]) > 0)
