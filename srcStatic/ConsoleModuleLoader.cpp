@@ -33,7 +33,7 @@ ConsoleModuleLoader::ConsoleModuleLoader(const std::vector<std::string>& moduleN
 
 		std::error_code errorCode;
 		if (!fs::is_directory(moduleDirectory, errorCode)) {
-			PostError("Unable to access the provided module directory. " + errorCode.message());
+			PostError("Unable to access the provided module directory: " + moduleName + " : "+ errorCode.message());
 			continue;
 		}
 
