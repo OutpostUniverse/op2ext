@@ -2,6 +2,7 @@
 #include "FileSystemHelper.h"
 #include <gtest/gtest.h>
 #include <string>
+#include <fstream>
 
 
 TEST(ConsoleModuleLoader, NoModuleLoaded)
@@ -47,9 +48,18 @@ TEST(ConsoleModuleLoader, ModuleWithoutDLL)
 TEST(ConsoleModuleLoader, ModuleWithEmptyDLL)
 {
 	const std::string moduleName("InvalidDllTest");
+
+	// Test will need temporary module directory and invalid DLL file
+	const auto moduleDirectory = fs::path(GetGameDirectory()) / moduleName;
+	const auto dllFile = moduleDirectory / "op2mod.dll";
+	// Create temporary module directory
+	fs::create_directory(moduleDirectory);
+	// Create empty DLL file
+	// Temporary object, immediately destructed, side effect creates file of size 0
+	std::ofstream(dllFile.string());
+
 	ConsoleModuleLoader consoleModuleLoader({moduleName});
 
-	const auto moduleDirectory = fs::path(GetGameDirectory()) / moduleName;
 	EXPECT_EQ(moduleDirectory, consoleModuleLoader.GetModuleDirectory(0));
 	EXPECT_EQ(moduleName, consoleModuleLoader.GetModuleName(0));
 
@@ -65,6 +75,11 @@ TEST(ConsoleModuleLoader, ModuleWithEmptyDLL)
 	// Functions should return without doing anything since module load is aborted
 	EXPECT_NO_THROW(consoleModuleLoader.RunModules());
 	EXPECT_NO_THROW(consoleModuleLoader.UnloadModules());
+
+	// Cleanup test module DLL and directory
+	// Use Win API directly since fs::remove doesn't work under Mingw
+	EXPECT_NE(0, DeleteFileW(dllFile.wstring().c_str()));
+	EXPECT_NE(0, RemoveDirectoryW(moduleDirectory.wstring().c_str()));
 }
 
 TEST(ConsoleModuleLoader, MultiModule) {
