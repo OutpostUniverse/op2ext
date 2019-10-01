@@ -17,7 +17,7 @@ const std::string& IniFile::FileName() const {
 }
 
 std::string IniFile::GetValue(const std::string& sectionName, const std::string& keyName) const {
-	return GetPrivateProfileStdString(sectionName, keyName, fileName);
+	return IniFile::GetValue(fileName, sectionName, keyName);
 }
 
 IniSection IniFile::operator[](std::string sectionName) const {
@@ -54,7 +54,7 @@ const std::string& IniSection::SectionName() const {
 }
 
 std::string IniSection::operator[](std::string keyName) const {
-	return GetPrivateProfileStdString(sectionName, keyName, fileName);
+	return IniFile::GetValue(fileName, sectionName, keyName);
 }
 
 void IniSection::ClearSection() {
