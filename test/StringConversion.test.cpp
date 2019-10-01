@@ -43,16 +43,6 @@ TEST(StringConversion, ConvertNarrowToWide)
 
 using bufferType = std::array<char, 8>;
 
-TEST(CopyStdStringIntoCharBuffer, NullDestination) {
-	EXPECT_EQ(5u, CopyStdStringIntoCharBuffer(std::string("Test"), nullptr, 0));
-}
-
-TEST(CopyStdStringIntoCharBuffer, EmptyDestination) {
-	bufferType buffer{};
-	EXPECT_EQ(5u, CopyStdStringIntoCharBuffer(std::string("Test"), buffer.data(), 0));
-	EXPECT_EQ(bufferType{}, buffer);
-}
-
 TEST(CopyStdStringIntoCharBuffer, TooShortSizeDestination) {
 	bufferType buffer{};
 	// Copy with no room for full string + null terminator
@@ -71,6 +61,33 @@ TEST(CopyStdStringIntoCharBuffer, NormalDestination) {
 	bufferType buffer{};
 	EXPECT_EQ(0u, CopyStdStringIntoCharBuffer(std::string("Test"), buffer.data(), sizeof(buffer)));
 	EXPECT_EQ("Test", std::string(buffer.data()));
+}
+
+TEST(StringConversion, CopyStdStringIntoCharBufferSafeNoOutputConditions)
+{
+	constexpr char nonce = 'Z';
+	char buffer[8];
+
+	// The nonce should never be overwritten
+	buffer[0] = nonce;
+
+	// Null buffer of size zero
+	EXPECT_EQ(1u, CopyStdStringIntoCharBuffer("", nullptr, 0));
+	EXPECT_EQ(nonce, buffer[0]);
+	EXPECT_EQ(2u, CopyStdStringIntoCharBuffer("A", nullptr, 0));
+	EXPECT_EQ(nonce, buffer[0]);
+
+	// Null buffer with non-zero size
+	EXPECT_EQ(1u, CopyStdStringIntoCharBuffer("", nullptr, sizeof(buffer)));
+	EXPECT_EQ(nonce, buffer[0]);
+	EXPECT_EQ(2u, CopyStdStringIntoCharBuffer("A", nullptr, sizeof(buffer)));
+	EXPECT_EQ(nonce, buffer[0]);
+
+	// Valid buffer but with size zero
+	EXPECT_EQ(1u, CopyStdStringIntoCharBuffer("", buffer, 0));
+	EXPECT_EQ(nonce, buffer[0]);
+	EXPECT_EQ(2u, CopyStdStringIntoCharBuffer("A", buffer, 0));
+	EXPECT_EQ(nonce, buffer[0]);
 }
 
 
