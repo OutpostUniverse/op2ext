@@ -19,6 +19,8 @@ public:
 	void ClearSection(const std::string& sectionName);
 	void SetValue(const std::string& sectionName, const std::string& keyName, const std::string& value);
 
+	static std::string GetValue(const std::string& fileName, const std::string& sectionName, const std::string& keyName);
+
 private:
 	const std::string fileName;
 };

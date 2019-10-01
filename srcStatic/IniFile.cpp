@@ -32,6 +32,13 @@ void IniFile::SetValue(const std::string& sectionName, const std::string& keyNam
 	WritePrivateProfileStringA(sectionName.c_str(), keyName.c_str(), value.c_str(), fileName.c_str());
 }
 
+// Allow fetching values without explicitly creating an object
+// This can be used for convenient one-off use
+// This may be less efficienct for repeated use to fetch multiple values
+std::string IniFile::GetValue(const std::string& fileName, const std::string& sectionName, const std::string& keyName) {
+	return GetPrivateProfileStdString(sectionName, keyName, fileName);
+}
+
 
 IniSection::IniSection(std::string fileName, std::string sectionName)
 	: fileName(std::move(fileName)), sectionName(std::move(sectionName))
