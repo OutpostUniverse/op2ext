@@ -28,6 +28,7 @@
     <ClCompile Include="ConsoleArgumentParser.test.cpp" />
     <ClCompile Include="ConsolueModuleLoader.test.cpp" />
     <ClCompile Include="FileSystemHelper.test.cpp" />
+    <ClCompile Include="IniFile.test.cpp" />
     <ClCompile Include="Log.test.cpp" />
     <ClCompile Include="ModuleLoader.test.cpp" />
     <ClCompile Include="LoggerFile.test.cpp" />
