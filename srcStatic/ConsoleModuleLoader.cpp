@@ -28,7 +28,7 @@ ConsoleModuleLoader::ConsoleModuleLoader(const std::vector<std::string>& moduleN
 		return;
 	}
 
-	for (auto& moduleName : moduleNames) {
+	for (const auto& moduleName : moduleNames) {
 		auto moduleDirectory = fs::path(GetGameDirectory()).append(moduleName).string();
 
 		std::error_code errorCode;
@@ -179,7 +179,7 @@ bool ConsoleModuleLoader::ResManager::GetFilePath(const char* resourceName, /* [
 
 void ConsoleModuleLoader::UnloadModules()
 {
-	for (auto& module : modules) {
+	for (const auto& module : modules) {
 		if (module.dllHandle)
 		{
 			FARPROC destroyModFunc = GetProcAddress(module.dllHandle, "mod_destroy");
@@ -194,7 +194,7 @@ void ConsoleModuleLoader::UnloadModules()
 
 void ConsoleModuleLoader::RunModules()
 {
-	for (auto& module : modules) {
+	for (const auto& module : modules) {
 		// Startup a module by calling its run func
 		if (module.dllHandle)
 		{
