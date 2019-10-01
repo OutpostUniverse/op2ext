@@ -22,6 +22,12 @@ DWORD* populateComboBoxAddr = (DWORD*)0x004197C1;
 DWORD* saveIpTextAddr = (DWORD*)0x004C0E36;
 void* nopDataAddr = (void*)0x0041988F;
 
+
+IPDropDown::IPDropDown()
+	: GameModule("IPDropDown")
+{
+}
+
 void IPDropDown::Load()
 {
 	// patch the call to EnableWindow so we can add strings.
