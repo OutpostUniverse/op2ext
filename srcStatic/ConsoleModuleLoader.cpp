@@ -10,6 +10,13 @@
 #include <system_error>
 
 
+// For compatibility with Outpost2.exe's built in class
+class ResManager {
+public:
+	bool GetFilePath(const char* resourceName, /* [out] */ char* filePath) const;
+};
+
+
 // Console module names are the relative path from the game folder (no trailing slash)
 ConsoleModuleLoader::ConsoleModuleLoader(const std::vector<std::string>& moduleNames)
 {
@@ -145,7 +152,7 @@ void ConsoleModuleLoader::HookFileSearchPath()
 		0x004977E4,
 	};
 	// Convert a pointer to member function to a regular `void*` value
-	auto getFilePath = &ConsoleModuleLoader::ResManager::GetFilePath;
+	auto getFilePath = &ResManager::GetFilePath;
 	const auto getFilePathAddr = reinterpret_cast<void*&>(getFilePath);  // MSVC specific cast
 
 	for (const auto callAddr : callsToGetFilePath) {
@@ -156,15 +163,15 @@ void ConsoleModuleLoader::HookFileSearchPath()
 bool ConsoleModuleLoader::CallOriginalGetFilePath(const char* resourceName, /* [out] */ char* filePath)
 {
 	// Use Outpost2.exe's built in ResManager object, and its associated member function
-	ConsoleModuleLoader::ResManager& resManager = *reinterpret_cast<ResManager*>(0x56C028);
-	auto originalGetFilePath = GetMethodPointer<decltype(&ConsoleModuleLoader::ResManager::GetFilePath)>(0x00471590);
+	ResManager& resManager = *reinterpret_cast<ResManager*>(0x56C028);
+	auto originalGetFilePath = GetMethodPointer<decltype(&ResManager::GetFilePath)>(0x00471590);
 	return (resManager.*originalGetFilePath)(resourceName, filePath);
 }
 
-bool ConsoleModuleLoader::ResManager::GetFilePath(const char* resourceName, /* [out] */ char* filePath) const
+bool ResManager::GetFilePath(const char* resourceName, /* [out] */ char* filePath) const
 {
 	// Get access to private static
-	auto moduleDirectories = ModuleDirectories();
+	auto moduleDirectories = ConsoleModuleLoader::ModuleDirectories();
 
 	for (const auto& moduleDirectory : moduleDirectories) {
 		// Search for resource in module folder
@@ -179,7 +186,7 @@ bool ConsoleModuleLoader::ResManager::GetFilePath(const char* resourceName, /* [
 	}
 
 	// Fallback to searching with the original built in method
-	return CallOriginalGetFilePath(resourceName, filePath);
+	return ConsoleModuleLoader::CallOriginalGetFilePath(resourceName, filePath);
 }
 
 void ConsoleModuleLoader::UnloadModules()
