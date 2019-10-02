@@ -35,7 +35,7 @@ private:
 	void LoadModuleDll(Module& moduleInfo);
 
 	friend ResManager;
-	void HookFileSearchPath();
+	static void HookFileSearchPath();
 	static bool CallOriginalGetFilePath(const char* resourceName, /* [out] */ char* filePath);
 	static std::vector<std::string>& ModuleDirectories();
 };
