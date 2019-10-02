@@ -140,6 +140,7 @@
     <ClCompile Include="LoggerFile.cpp" />
     <ClCompile Include="LoggerMessageBox.cpp" />
     <ClCompile Include="OP2Memory.cpp" />
+    <ClCompile Include="ResourceSearchPath.cpp" />
     <ClCompile Include="StringConversion.cpp" />
     <ClCompile Include="VolList.cpp" />
     <ClCompile Include="WindowsErrorCode.cpp" />
@@ -159,6 +160,7 @@
     <ClInclude Include="LoggerFile.h" />
     <ClInclude Include="LoggerMessageBox.h" />
     <ClInclude Include="OP2Memory.h" />
+    <ClInclude Include="ResourceSearchPath.h" />
     <ClInclude Include="StringConversion.h" />
     <ClInclude Include="VolList.h" />
     <ClInclude Include="WindowsErrorCode.h" />
