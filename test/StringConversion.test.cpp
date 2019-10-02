@@ -39,6 +39,59 @@ TEST(StringConversion, ConvertNarrowToWide)
 	EXPECT_EQ(L"Hello world", ConvertNarrowToWide("Hello world"));
 }
 
+
+TEST(StringConversion, CopyStdStringIntoCharBufferSafeNoOutputConditions)
+{
+	constexpr char nonce = 'Z';
+	char buffer[8];
+
+	// The nonce should never be overwritten
+	buffer[0] = nonce;
+
+	// Null buffer of size zero
+	EXPECT_EQ(1u, CopyStdStringIntoCharBuffer("", nullptr, 0));
+	EXPECT_EQ(nonce, buffer[0]);
+	EXPECT_EQ(2u, CopyStdStringIntoCharBuffer("A", nullptr, 0));
+	EXPECT_EQ(nonce, buffer[0]);
+
+	// Null buffer with non-zero size
+	EXPECT_EQ(1u, CopyStdStringIntoCharBuffer("", nullptr, sizeof(buffer)));
+	EXPECT_EQ(nonce, buffer[0]);
+	EXPECT_EQ(2u, CopyStdStringIntoCharBuffer("A", nullptr, sizeof(buffer)));
+	EXPECT_EQ(nonce, buffer[0]);
+
+	// Valid buffer but with size zero
+	EXPECT_EQ(1u, CopyStdStringIntoCharBuffer("", buffer, 0));
+	EXPECT_EQ(nonce, buffer[0]);
+	EXPECT_EQ(2u, CopyStdStringIntoCharBuffer("A", buffer, 0));
+	EXPECT_EQ(nonce, buffer[0]);
+}
+
+TEST(StringConversion, CopyStdStringIntoCharBuffer)
+{
+	constexpr char nonce = 'Z';
+	constexpr char null = '\0';
+	char buffer[8];
+
+	// Empty string (must still null terminate)
+	buffer[0] = nonce;
+	EXPECT_EQ(0u, CopyStdStringIntoCharBuffer("", buffer, sizeof(buffer)));
+	EXPECT_EQ(null, buffer[0]);
+	// Short string (extra buffer space to spare)
+	buffer[1] = nonce;
+	EXPECT_EQ(0u, CopyStdStringIntoCharBuffer("A", buffer, sizeof(buffer)));
+	EXPECT_EQ(null, buffer[1]);
+	// Precise sized string (just enough room for null terminator)
+	buffer[7] = nonce;
+	EXPECT_EQ(0u, CopyStdStringIntoCharBuffer("1234567", buffer, sizeof(buffer)));
+	EXPECT_EQ(null, buffer[7]);
+	// Overflow sized string (just barely no room for null terminator)
+	buffer[7] = nonce;
+	EXPECT_EQ(9u, CopyStdStringIntoCharBuffer("12345678", buffer, sizeof(buffer)));
+	EXPECT_EQ(null, buffer[7]);
+}
+
+
 TEST(StringConversion, ToLower)
 {
 	EXPECT_EQ("test", ToLower("TEST"));
