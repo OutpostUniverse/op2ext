@@ -7,5 +7,5 @@
 
 extern bool modulesRunning;
 extern VolList volList;
-extern ConsoleModuleLoader consoleModLoader;
+extern ConsoleModuleLoader consoleModuleLoader;
 extern ModuleLoader moduleLoader;

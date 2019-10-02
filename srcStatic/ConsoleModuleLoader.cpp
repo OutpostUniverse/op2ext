@@ -7,90 +7,106 @@
 #include <algorithm>
 #include <iterator>
 #include <stdexcept>
-#include <cstddef>
 #include <system_error>
 
 
-ConsoleModuleLoader::ConsoleModuleLoader(const std::string& moduleRelativeDirectory)
+// Console module names are the relative path from the game folder (no trailing slash)
+ConsoleModuleLoader::ConsoleModuleLoader(const std::vector<std::string>& moduleNames)
 {
-	if (moduleRelativeDirectory.empty()) {
-		return; // No Console Module Loaded
+	if (moduleNames.empty()) {
+		return; // No console modules to load
 	}
 
-	auto moduleDirectory = fs::path(GetGameDirectory()).append(moduleRelativeDirectory).string();
-	moduleName = moduleRelativeDirectory;
-
-	std::error_code errorCode;
-	if (!fs::is_directory(moduleDirectory, errorCode)) {
-		PostError("Unable to access the provided module directory. " + errorCode.message());
-		moduleDirectory = "";
-		moduleName = "";
+	// Temporary check. This will eventually become an error.
+	if (moduleNames.size() == 1 && moduleNames[0].empty()) {
+		return; // No console modules to load
 	}
 
-	// Set private static instance by reference
-	ModuleDirectory() = moduleDirectory;
+	if (std::any_of(moduleNames.begin(), moduleNames.end(), [](const std::string& moduleName){ return moduleName.empty(); })) {
+		PostError("All console module names must be non-empty.");
+		return;
+	}
+
+	for (const auto& moduleName : moduleNames) {
+		auto moduleDirectory = fs::path(GetGameDirectory()).append(moduleName).string();
+
+		std::error_code errorCode;
+		if (!fs::is_directory(moduleDirectory, errorCode)) {
+			PostError("Unable to access the provided module directory: " + moduleName + " : "+ errorCode.message());
+			continue;
+		}
+
+		// Store module details
+		modules.push_back({nullptr, moduleName, moduleDirectory});
+
+		// Add to private static instance by reference
+		ModuleDirectories().push_back(moduleDirectory);
+	}
 }
 
-std::string ConsoleModuleLoader::GetModuleDirectory()
+std::string ConsoleModuleLoader::GetModuleDirectory(std::size_t index)
 {
+	if (index >= modules.size()) {
+		throw std::runtime_error("Invalid console module index: " + std::to_string(index));
+	}
 	// Return copy of private static
-	return ModuleDirectory();
+	return modules[index].directory;
 }
 
-std::string ConsoleModuleLoader::GetModuleName()
+std::string ConsoleModuleLoader::GetModuleName(std::size_t index)
 {
-	return moduleName;
+	if (index >= modules.size()) {
+		throw std::runtime_error("Invalid console module index: " + std::to_string(index));
+	}
+	return modules[index].name;
 }
 
 std::size_t ConsoleModuleLoader::Count()
 {
-	return moduleName != "" ? 1 : 0;
+	return modules.size();
 }
 
+// Returns false if passed an empty string (Module name cannot be empty)
 bool ConsoleModuleLoader::IsModuleLoaded(std::string moduleName)
 {
-	if (Count() == 0) {
-		return false;
+	ToLowerInPlace(moduleName);
+	for (std::size_t i = 0; i < Count(); ++i) {
+		if (moduleName == ToLower(GetModuleName(i))) {
+			return true;
+		}
 	}
-
-	return ToLowerInPlace(moduleName) == ToLower(GetModuleName());
+	return false;
 }
 
-void ConsoleModuleLoader::LoadModule()
+void ConsoleModuleLoader::LoadModules()
 {
-	// Get access to private static
-	auto moduleDirectory = ModuleDirectory();
-
-	if (moduleDirectory.empty()) {
+	// Abort early to avoid hooking file search path if not needed
+	if (modules.empty()) {
 		return;
 	}
 
-	std::error_code errorCode;
-	if (!fs::is_directory(moduleDirectory, errorCode)) {
-		PostError("Unable to access the provided module directory. " + errorCode.message());
-		return;
-	}
-
+	// Setup loading of additional resources from module folders
 	HookFileSearchPath();
-	LoadModuleDll();
+
+	// Load all module DLLs
+	for (auto& module : modules) {
+		LoadModuleDll(module);
+	}
 }
 
-void ConsoleModuleLoader::LoadModuleDll()
+void ConsoleModuleLoader::LoadModuleDll(Module& module)
 {
-	// Get access to private static
-	auto moduleDirectory = ModuleDirectory();
-
-	const std::string dllName = fs::path(moduleDirectory).append("op2mod.dll").string();
+	const std::string dllName = fs::path(module.directory).append("op2mod.dll").string();
 
 	if (!fs::exists(dllName)) {
 		return; // Some console modules do not contain dlls
 	}
 
-	modDllHandle = LoadLibraryA(dllName.c_str());
+	module.dllHandle = LoadLibraryA(dllName.c_str());
 
-	if (modDllHandle) {
+	if (module.dllHandle) {
 		// Call module's mod_init function
-		FARPROC startFunc = GetProcAddress(modDllHandle, "mod_init");
+		FARPROC startFunc = GetProcAddress(module.dllHandle, "mod_init");
 		if (startFunc) {
 			startFunc();
 		}
@@ -142,49 +158,59 @@ bool ConsoleModuleLoader::CallOriginalGetFilePath(const char* resourceName, /* [
 bool ConsoleModuleLoader::ResManager::GetFilePath(const char* resourceName, /* [out] */ char* filePath) const
 {
 	// Get access to private static
-	auto moduleDirectory = ModuleDirectory();
+	auto moduleDirectories = ModuleDirectories();
 
-	// Search for resource in module folder
-	const auto path = moduleDirectory + resourceName;
-	if (INVALID_FILE_ATTRIBUTES != GetFileAttributesA(path.c_str())) {
-		return 0 == CopyStdStringIntoCharBuffer(path, filePath, MAX_PATH);
+	for (const auto& moduleDirectory : moduleDirectories) {
+		// Search for resource in module folder
+		const auto path = moduleDirectory + resourceName;
+		if (INVALID_FILE_ATTRIBUTES != GetFileAttributesA(path.c_str())) {
+			if (0 == CopyStdStringIntoCharBuffer(path, filePath, MAX_PATH)) {
+				return true; // Resource found
+			} else {
+				Log("MAX_PATH exceeded while trying to return path to resource: " + std::string(resourceName));
+			}
+		}
 	}
 
 	// Fallback to searching with the original built in method
 	return CallOriginalGetFilePath(resourceName, filePath);
 }
 
-void ConsoleModuleLoader::UnloadModule()
+void ConsoleModuleLoader::UnloadModules()
 {
-	if (modDllHandle)
-	{
-		FARPROC destroyModFunc = GetProcAddress(modDllHandle, "mod_destroy");
-		if (destroyModFunc) {
-			destroyModFunc();
-		}
+	for (const auto& module : modules) {
+		if (module.dllHandle)
+		{
+			FARPROC destroyModFunc = GetProcAddress(module.dllHandle, "mod_destroy");
+			if (destroyModFunc) {
+				destroyModFunc();
+			}
 
-		FreeLibrary(modDllHandle);
-	}
-}
-
-void ConsoleModuleLoader::RunModule()
-{
-	// Startup a module by calling its run func
-	if (modDllHandle)
-	{
-		// Call its mod_run func
-		FARPROC runFunc = GetProcAddress(modDllHandle, "mod_run");
-		if (runFunc) {
-			runFunc();
+			FreeLibrary(module.dllHandle);
 		}
 	}
 }
 
-std::string& ConsoleModuleLoader::ModuleDirectory()
+void ConsoleModuleLoader::RunModules()
+{
+	for (const auto& module : modules) {
+		// Startup a module by calling its run func
+		if (module.dllHandle)
+		{
+			// Call its mod_run func
+			FARPROC runFunc = GetProcAddress(module.dllHandle, "mod_run");
+			if (runFunc) {
+				runFunc();
+			}
+		}
+	}
+}
+
+std::vector<std::string>& ConsoleModuleLoader::ModuleDirectories()
 {
 	// Function level statics are initialized on first use
 	// They are not subject to unsequenced initialization order of globals
 	// There is no order dependency on when this variable may be used
-	static std::string moduleDirectory;
-	return moduleDirectory;
+	static std::vector<std::string> moduleDirectories;
+	return moduleDirectories;
 }

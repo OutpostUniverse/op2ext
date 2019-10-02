@@ -7,5 +7,5 @@
 bool modulesRunning = false;
 
 VolList volList;
-ConsoleModuleLoader consoleModLoader(FindModuleDirectory());
+ConsoleModuleLoader consoleModuleLoader({FindModuleDirectory()});
 ModuleLoader moduleLoader;

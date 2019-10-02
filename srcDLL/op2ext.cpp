@@ -31,7 +31,14 @@ OP2EXT_API size_t GetGameDir_s(char* buffer, size_t bufferSize)
 
 OP2EXT_API size_t GetConsoleModDir_s(char* buffer, size_t bufferSize)
 {
-	return CopyStdStringIntoCharBuffer(consoleModLoader.GetModuleDirectory() + "\\", buffer, bufferSize);
+	// This is an older method that assumes only a single console module can be loaded
+	std::string consoleModuleDirectory;
+	if (consoleModuleLoader.Count() > 0) {
+		// Assume they care about the first loaded console module
+		consoleModuleDirectory = consoleModuleLoader.GetModuleDirectory(0);
+	}
+	// Copy module directory to supplied buffer
+	return CopyStdStringIntoCharBuffer(consoleModuleDirectory + "\\", buffer, bufferSize);
 }
 
 OP2EXT_API void GetGameDir(char* buffer)
@@ -47,7 +54,12 @@ OP2EXT_API void GetGameDir(char* buffer)
 
 OP2EXT_API char* GetCurrentModDir()
 {
-	std::string modDirectory = consoleModLoader.GetModuleDirectory();
+	// This is an older method that assumes only a single console module can be loaded
+	std::string modDirectory;
+	if (consoleModuleLoader.Count() > 0) {
+		// Assume they care about the first loaded console module
+		modDirectory = consoleModuleLoader.GetModuleDirectory(0);
+	}
 
 	if (modDirectory.empty()) {
 		return nullptr;
@@ -109,7 +121,7 @@ OP2EXT_API bool IsModuleLoaded(const char* moduleName)
 
 OP2EXT_API bool IsConsoleModuleLoaded(const char* moduleName)
 {
-	return consoleModLoader.IsModuleLoaded(moduleName);
+	return consoleModuleLoader.IsModuleLoaded(moduleName);
 }
 
 OP2EXT_API bool IsIniModuleLoaded(const char* moduleName)
@@ -119,7 +131,7 @@ OP2EXT_API bool IsIniModuleLoaded(const char* moduleName)
 
 OP2EXT_API size_t GetLoadedModuleCount()
 {
-	return moduleLoader.Count() + consoleModLoader.Count();
+	return moduleLoader.Count() + consoleModuleLoader.Count();
 }
 
 OP2EXT_API size_t GetLoadedModuleName(size_t moduleIndex, char* buffer, size_t bufferSize)
@@ -133,7 +145,7 @@ OP2EXT_API size_t GetLoadedModuleName(size_t moduleIndex, char* buffer, size_t b
 			moduleName = moduleLoader.GetModuleName(moduleIndex);
 		}
 		else if (moduleIndex < GetLoadedModuleCount()) {
-			moduleName = consoleModLoader.GetModuleName();
+			moduleName = consoleModuleLoader.GetModuleName(moduleIndex - moduleLoader.Count());
 		}
 	}
 	catch (const std::exception& e) // Prevent throwing an error across DLL boundaries
