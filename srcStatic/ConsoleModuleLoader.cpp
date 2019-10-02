@@ -38,10 +38,16 @@ ConsoleModuleLoader::ConsoleModuleLoader(const std::vector<std::string>& moduleN
 
 		// Store module details
 		modules.push_back({nullptr, moduleName, moduleDirectory});
-
-		// Add to private static instance by reference
-		ModuleDirectories().push_back(moduleDirectory);
 	}
+
+	// Build list of module directories
+	std::vector<std::string> moduleDirectories;
+	moduleDirectories.reserve(modules.size());
+	for (const auto& module: modules) {
+		moduleDirectories.push_back(module.directory);
+	}
+	// Add module directories to resource search path
+	ModuleDirectories() = std::move(moduleDirectories);
 }
 
 std::string ConsoleModuleLoader::GetModuleDirectory(std::size_t index)
