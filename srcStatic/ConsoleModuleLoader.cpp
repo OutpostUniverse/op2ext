@@ -54,7 +54,7 @@ ConsoleModuleLoader::ConsoleModuleLoader(const std::vector<std::string>& moduleN
 		moduleDirectories.push_back(module.directory);
 	}
 	// Add module directories to resource search path
-	ModuleDirectories() = std::move(moduleDirectories);
+	ResourceSearchPath::ModuleDirectories() = std::move(moduleDirectories);
 }
 
 std::string ConsoleModuleLoader::GetModuleDirectory(std::size_t index)
@@ -99,7 +99,7 @@ void ConsoleModuleLoader::LoadModules()
 	}
 
 	// Setup loading of additional resources from module folders
-	HookFileSearchPath();
+	ResourceSearchPath::HookFileSearchPath();
 
 	// Load all module DLLs
 	for (auto& module : modules) {
@@ -132,7 +132,7 @@ void ConsoleModuleLoader::LoadModuleDll(Module& module)
 	}
 }
 
-void ConsoleModuleLoader::HookFileSearchPath()
+void ResourceSearchPath::HookFileSearchPath()
 {
 	const std::vector<std::size_t> callsToGetFilePath{
 		0x00402E4B,
@@ -160,7 +160,7 @@ void ConsoleModuleLoader::HookFileSearchPath()
 	}
 }
 
-bool ConsoleModuleLoader::CallOriginalGetFilePath(const char* resourceName, /* [out] */ char* filePath)
+bool ResourceSearchPath::CallOriginalGetFilePath(const char* resourceName, /* [out] */ char* filePath)
 {
 	// Use Outpost2.exe's built in ResManager object, and its associated member function
 	ResManager& resManager = *reinterpret_cast<ResManager*>(0x56C028);
@@ -171,7 +171,7 @@ bool ConsoleModuleLoader::CallOriginalGetFilePath(const char* resourceName, /* [
 bool ResManager::GetFilePath(const char* resourceName, /* [out] */ char* filePath) const
 {
 	// Get access to private static
-	auto moduleDirectories = ConsoleModuleLoader::ModuleDirectories();
+	auto moduleDirectories = ResourceSearchPath::ModuleDirectories();
 
 	for (const auto& moduleDirectory : moduleDirectories) {
 		// Search for resource in module folder
@@ -186,7 +186,7 @@ bool ResManager::GetFilePath(const char* resourceName, /* [out] */ char* filePat
 	}
 
 	// Fallback to searching with the original built in method
-	return ConsoleModuleLoader::CallOriginalGetFilePath(resourceName, filePath);
+	return ResourceSearchPath::CallOriginalGetFilePath(resourceName, filePath);
 }
 
 void ConsoleModuleLoader::UnloadModules()
@@ -219,7 +219,7 @@ void ConsoleModuleLoader::RunModules()
 	}
 }
 
-std::vector<std::string>& ConsoleModuleLoader::ModuleDirectories()
+std::vector<std::string>& ResourceSearchPath::ModuleDirectories()
 {
 	// Function level statics are initialized on first use
 	// They are not subject to unsequenced initialization order of globals

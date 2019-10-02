@@ -6,9 +6,6 @@
 #include <cstddef>
 
 
-class ResManager;
-
-
 class ConsoleModuleLoader {
 public:
 	ConsoleModuleLoader(const std::vector<std::string>& moduleNames);
@@ -33,9 +30,19 @@ private:
 	std::vector<Module> modules;
 
 	void LoadModuleDll(Module& moduleInfo);
+};
 
-	friend ResManager;
+
+class ResManager;
+
+
+class ResourceSearchPath {
+public:
 	static void HookFileSearchPath();
+
+private:
+	friend ResManager;
+	friend ConsoleModuleLoader;
 	static bool CallOriginalGetFilePath(const char* resourceName, /* [out] */ char* filePath);
 	static std::vector<std::string>& ModuleDirectories();
 };
