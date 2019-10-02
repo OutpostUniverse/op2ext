@@ -54,7 +54,7 @@ ConsoleModuleLoader::ConsoleModuleLoader(const std::vector<std::string>& moduleN
 		moduleDirectories.push_back(module.directory);
 	}
 	// Add module directories to resource search path
-	ResourceSearchPath::ModuleDirectories() = std::move(moduleDirectories);
+	ResourceSearchPath::Set(std::move(moduleDirectories));
 }
 
 std::string ConsoleModuleLoader::GetModuleDirectory(std::size_t index)
@@ -99,7 +99,7 @@ void ConsoleModuleLoader::LoadModules()
 	}
 
 	// Setup loading of additional resources from module folders
-	ResourceSearchPath::HookFileSearchPath();
+	ResourceSearchPath::Activate();
 
 	// Load all module DLLs
 	for (auto& module : modules) {
@@ -217,6 +217,16 @@ void ConsoleModuleLoader::RunModules()
 			}
 		}
 	}
+}
+
+void ResourceSearchPath::Set(std::vector<std::string> paths)
+{
+	ModuleDirectories() = std::move(paths);
+}
+
+void ResourceSearchPath::Activate()
+{
+	HookFileSearchPath();
 }
 
 std::vector<std::string>& ResourceSearchPath::ModuleDirectories()
