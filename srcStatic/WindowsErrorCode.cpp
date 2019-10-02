@@ -4,8 +4,11 @@
 
 std::string GetLastErrorString()
 {
-	LocalResource<LPSTR> lpMsgBuf;
+	LocalResource<LPCSTR> lpMsgBuf;
 	DWORD lastErrorCode = GetLastError();
+
+	// Sanity check for reinterpret_cast used below
+	static_assert(sizeof(LPSTR) == sizeof(lpMsgBuf));
 
 	FormatMessageA(
 		FORMAT_MESSAGE_ALLOCATE_BUFFER |
@@ -19,7 +22,7 @@ std::string GetLastErrorString()
 		nullptr
 	);
 
-	auto errorCodeMessage = std::string(lpMsgBuf);
+	auto errorCodeMessage = std::string(lpMsgBuf.get());
 	auto errorMessage = "Error " + std::to_string(lastErrorCode) + ": " + errorCodeMessage;
 
 	return errorMessage;
