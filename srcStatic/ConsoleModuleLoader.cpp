@@ -53,7 +53,7 @@ ConsoleModuleLoader::ConsoleModuleLoader(const std::vector<std::string>& moduleN
 std::string ConsoleModuleLoader::GetModuleDirectory(std::size_t index)
 {
 	if (index >= modules.size()) {
-		throw std::runtime_error("Invalid console module index: " + std::to_string(index));
+		throw std::runtime_error("GetModuleDirectory: Invalid console module index: " + std::to_string(index));
 	}
 	// Return copy of private static
 	return modules[index].directory;
@@ -62,7 +62,7 @@ std::string ConsoleModuleLoader::GetModuleDirectory(std::size_t index)
 std::string ConsoleModuleLoader::GetModuleName(std::size_t index)
 {
 	if (index >= modules.size()) {
-		throw std::runtime_error("Invalid console module index: " + std::to_string(index));
+		throw std::runtime_error("GetModuleName: Invalid console module index: " + std::to_string(index));
 	}
 	return modules[index].name;
 }
