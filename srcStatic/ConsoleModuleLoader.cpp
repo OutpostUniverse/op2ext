@@ -38,7 +38,7 @@ ConsoleModuleLoader::ConsoleModuleLoader(const std::vector<std::string>& moduleN
 
 		// Store module details
 		// Make sure module directory ends with a trailing slash
-		modules.push_back({nullptr, moduleName, (moduleDirectory / "\\").string()});
+		modules.push_back({nullptr, moduleName, moduleDirectory.string() + "\\"});
 	}
 
 	// Build list of module directories

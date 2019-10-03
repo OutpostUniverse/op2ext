@@ -31,12 +31,12 @@ TEST(ConsoleModuleLoader, ModuleWithoutDLL)
 
 	// Test will need temporary module directory with no DLL present
 	// Ensure module directory ends with a trailing slash
-	const auto moduleDirectory = fs::path(GetGameDirectory()) / moduleName / "\\";
+	const auto moduleDirectory = fs::path(GetGameDirectory()) / moduleName;
 	fs::create_directory(moduleDirectory);
 
 	ConsoleModuleLoader consoleModuleLoader({moduleName});
 
-	EXPECT_EQ(moduleDirectory.string(), consoleModuleLoader.GetModuleDirectory(0));
+	EXPECT_EQ(moduleDirectory.string() + "\\", consoleModuleLoader.GetModuleDirectory(0));
 	EXPECT_EQ(moduleName, consoleModuleLoader.GetModuleName(0));
 
 	EXPECT_TRUE(consoleModuleLoader.IsModuleLoaded(moduleName));
@@ -60,7 +60,7 @@ TEST(ConsoleModuleLoader, ModuleWithEmptyDLL)
 
 	// Test will need temporary module directory and invalid DLL file
 	// Ensure module directory ends with a trailing slash
-	const auto moduleDirectory = fs::path(GetGameDirectory()) / moduleName / "\\";
+	const auto moduleDirectory = fs::path(GetGameDirectory()) / moduleName;
 	const auto dllFile = moduleDirectory / "op2mod.dll";
 	// Create temporary module directory
 	fs::create_directory(moduleDirectory);
@@ -70,7 +70,7 @@ TEST(ConsoleModuleLoader, ModuleWithEmptyDLL)
 
 	ConsoleModuleLoader consoleModuleLoader({moduleName});
 
-	EXPECT_EQ(moduleDirectory.string(), consoleModuleLoader.GetModuleDirectory(0));
+	EXPECT_EQ(moduleDirectory.string() + "\\", consoleModuleLoader.GetModuleDirectory(0));
 	EXPECT_EQ(moduleName, consoleModuleLoader.GetModuleName(0));
 
 	EXPECT_TRUE(consoleModuleLoader.IsModuleLoaded(moduleName));
