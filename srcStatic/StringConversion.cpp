@@ -115,6 +115,19 @@ std::vector<std::string> Split(const std::string& stringToSplit, char delimiter)
 	return strings;
 }
 
+std::vector<std::string> ParseCsv(const std::string& csv, char delimiter, std::string_view whitespace)
+{
+	// First check if input string is empty (or only whitespace)
+	auto trimmedCsv = Trim(csv, whitespace);
+	if (trimmedCsv.empty()) {
+		return {}; // Empty (no data)
+	}
+
+	// Split data into vector of strings
+	// At least one data element will be returned
+	return SplitAndTrim(trimmedCsv, delimiter, whitespace);
+}
+
 
 std::string AddrToHexString(std::size_t addr)
 {
