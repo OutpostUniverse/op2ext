@@ -29,12 +29,15 @@ default_CC := $(CC)
 
 gcc_CXX := g++
 gcc_CC := gcc
+gcc_ASM_FORMAT := elf64
 
 clang_CXX := clang++
 clang_CC := clang
+clang_ASM_FORMAT := elf64
 
 mingw_CXX := i686-w64-mingw32-g++
 mingw_CC := i686-w64-mingw32-gcc
+mingw_ASM_FORMAT := coff
 
 
 # Set default config name
@@ -43,6 +46,7 @@ config ?= default
 # Set global variables based on selected config name
 CXX = $($(config)_CXX)
 CC = $($(config)_CC)
+ASM_FORMAT = $($(config)_ASM_FORMAT)
 
 
 #### General compile rules ####
@@ -58,8 +62,10 @@ POSTCOMPILE = mv -f $(DEPNAME).temp $(DEPNAME) && touch $@
 # Variable to create missing output folders
 MKDIR = mkdir -p "$(@D)"
 
-# Variable with main C++ compile rule (with dependency generation)
+# Main source language compile rules (with dependency generation where possible)
+COMPILE.c = $(CC) $(OUTPUT_OPTION) $(DEPFLAGS) $(CPPFLAGS) $(CFLAGS) $(TARGET_ARCH) -c $<
 COMPILE.cpp = $(CXX) $(OUTPUT_OPTION) $(DEPFLAGS) $(CPPFLAGS) $(CXXFLAGS) $(TARGET_ARCH) -c $<
+COMPILE.asm = nasm $(DEPFLAGS) -f $(ASM_FORMAT) -o "$@" $<
 
 # Output coloring variables
 Green := \e[1;32m
@@ -84,10 +90,22 @@ White := \e[0m
 	@$(MKDIR)
 	ar rcs "$@" $^
 
+# Rule to build intermediate files from C
+%.c.o:
+	@$(MKDIR)
+	$(COMPILE.c)
+	@$(POSTCOMPILE)
+
 # Rule to build intermediate files from C++
 %.cpp.o:
 	@$(MKDIR)
 	$(COMPILE.cpp)
+	@$(POSTCOMPILE)
+
+# Rule to build intermediate files from Assembly
+%.asm.o:
+	@$(MKDIR)
+	$(COMPILE.asm)
 	@$(POSTCOMPILE)
 
 # Ensure missing dependency files don't generate a warning
@@ -152,8 +170,13 @@ $(1)_OUTPUT := $(2)
 $(1)_SRCFINDPATTERN := $(3)
 $(1)_SRCDIR := $(dir $(3))
 
-# Project specific source files (directory scan), and associated object and dependency files
-$(1)_SRCS := $$(shell find $$($(1)_SRCFINDPATTERN) -name '*.cpp')
+# Project specific source files (directory scan)
+$(1)_c_SRCS := $$(shell find $$($(1)_SRCFINDPATTERN) -name '*.c')
+$(1)_cpp_SRCS := $$(shell find $$($(1)_SRCFINDPATTERN) -name '*.cpp')
+$(1)_asm_SRCS := $$(shell find $$($(1)_SRCFINDPATTERN) -name '*.asm')
+# Collect list of all source files
+$(1)_SRCS := $$($(1)_c_SRCS) $$($(1)_cpp_SRCS) $$($(1)_asm_SRCS)
+# Build list of intermediate files (object and dependency files)
 $(1)_OBJS := $$(patsubst $$($(1)_SRCDIR)%,$$($(1)_INTDIR)%.o,$$($(1)_SRCS))
 $(1)_DEPS := $$(patsubst %.o,%.d,$$($(1)_OBJS))
 
