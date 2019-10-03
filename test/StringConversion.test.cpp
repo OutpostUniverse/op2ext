@@ -318,6 +318,25 @@ TEST(StringConversion, SplitAndTrimTrimFront)
 	EXPECT_EQ((std::vector<std::string>{"A ", "B ", "C"}), SplitAndTrim<TrimFront>("A , B , C", ','));
 }
 
+TEST(StringConversion, ParseCsv)
+{
+	// Parsing empty (or whitespace only) string gives no data
+	EXPECT_EQ((std::vector<std::string>{}), ParseCsv(""));
+	EXPECT_EQ((std::vector<std::string>{}), ParseCsv(" "));
+	EXPECT_EQ((std::vector<std::string>{}), ParseCsv("\t"));
+	EXPECT_EQ((std::vector<std::string>{}), ParseCsv(" \t"));
+
+	// Parsing returns placeholders for implied data
+	// EXPECT_EQ((std::vector<std::string>{"", ""}), ParseCsv(","));
+	// EXPECT_EQ((std::vector<std::string>{"A", ""}), ParseCsv("A, "));
+	EXPECT_EQ((std::vector<std::string>{"", "B"}), ParseCsv(", B"));
+
+	// Regular data parsing
+	EXPECT_EQ((std::vector<std::string>{"A"}), ParseCsv("A"));
+	EXPECT_EQ((std::vector<std::string>{"A", "B"}), ParseCsv("A, B"));
+	EXPECT_EQ((std::vector<std::string>{"A", "B", "C"}), ParseCsv("A, B, C"));
+}
+
 
 TEST(StringConversion, AddrToHexString)
 {
