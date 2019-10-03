@@ -136,6 +136,7 @@
     <ClCompile Include="ModuleLoader.cpp" />
     <ClCompile Include="GameModules\IpDropDown.cpp" />
     <ClCompile Include="ConsoleModuleLoader.cpp" />
+    <ClCompile Include="IniFile.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="LoggerFile.cpp" />
     <ClCompile Include="LoggerMessageBox.cpp" />
@@ -155,6 +156,7 @@
     <ClInclude Include="ModuleLoader.h" />
     <ClInclude Include="GameModules\IpDropDown.h" />
     <ClInclude Include="ConsoleModuleLoader.h" />
+    <ClInclude Include="IniFile.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="LoggerFile.h" />

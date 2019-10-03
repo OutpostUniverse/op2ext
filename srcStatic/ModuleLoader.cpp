@@ -4,7 +4,19 @@
 #include "StringConversion.h"
 #include "FileSystemHelper.h"
 #include "Log.h"
+#include <utility>
 #include <stdexcept>
+
+
+ModuleLoader::ModuleLoader()
+	: iniFile(IniFile(GetOutpost2IniPath()))
+{
+}
+
+ModuleLoader::ModuleLoader(IniFile iniFile)
+	: iniFile(std::move(iniFile))
+{
+}
 
 
 void ModuleLoader::RegisterBuiltInModules()
@@ -21,7 +33,7 @@ void ModuleLoader::RegisterExternalModules()
 	for (const auto& sectionName : sectionNames)
 	{
 		try {
-			RegisterModule(std::make_unique<IniModule>(sectionName));
+			RegisterModule(std::make_unique<IniModule>(iniFile[sectionName]));
 		}
 		catch (const std::exception& e) {
 			PostError(e.what());
@@ -31,7 +43,7 @@ void ModuleLoader::RegisterExternalModules()
 
 bool ModuleLoader::IsBuiltInModuleRequested(const std::string& moduleName)
 {
-	const auto isModuleRequested = ToLower(GetOutpost2IniSetting("BuiltInModules", moduleName));
+	const auto isModuleRequested = ToLower(iniFile.GetValue("BuiltInModules", moduleName));
 
 	if (isModuleRequested == "yes") {
 		return true;
@@ -46,7 +58,7 @@ bool ModuleLoader::IsBuiltInModuleRequested(const std::string& moduleName)
 
 std::vector<std::string> ModuleLoader::GetModuleNames(const std::string& moduleType)
 {
-	auto sectionNamesString = GetOutpost2IniSetting("Game", moduleType);
+	auto sectionNamesString = iniFile.GetValue("Game", moduleType);
 	auto sectionNames = SplitAndTrim(sectionNamesString, ',');
 
 	return sectionNames;
