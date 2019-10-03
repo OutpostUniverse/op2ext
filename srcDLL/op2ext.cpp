@@ -33,9 +33,9 @@ OP2EXT_API size_t GetConsoleModDir_s(char* buffer, size_t bufferSize)
 {
 	// This is an older method that assumes only a single console module can be loaded
 	std::string consoleModuleDirectory;
-	if (consoleModuleLoader.Count() > 0) {
+	if (consoleModuleLoader->Count() > 0) {
 		// Assume they care about the first loaded console module
-		consoleModuleDirectory = consoleModuleLoader.GetModuleDirectory(0);
+		consoleModuleDirectory = consoleModuleLoader->GetModuleDirectory(0);
 	}
 	// Copy module directory to supplied buffer
 	return CopyStdStringIntoCharBuffer(consoleModuleDirectory + "\\", buffer, bufferSize);
@@ -56,9 +56,9 @@ OP2EXT_API char* GetCurrentModDir()
 {
 	// This is an older method that assumes only a single console module can be loaded
 	std::string modDirectory;
-	if (consoleModuleLoader.Count() > 0) {
+	if (consoleModuleLoader->Count() > 0) {
 		// Assume they care about the first loaded console module
-		modDirectory = consoleModuleLoader.GetModuleDirectory(0);
+		modDirectory = consoleModuleLoader->GetModuleDirectory(0);
 	}
 
 	if (modDirectory.empty()) {
@@ -77,7 +77,7 @@ OP2EXT_API void AddVolToList(const char* volFilename)
 		PostError("VOLs may not be added to the list after game startup.");
 	}
 	else {
-		volList.AddVolFile(volFilename);
+		volList->AddVolFile(volFilename);
 	}
 }
 
@@ -121,17 +121,17 @@ OP2EXT_API bool IsModuleLoaded(const char* moduleName)
 
 OP2EXT_API bool IsConsoleModuleLoaded(const char* moduleName)
 {
-	return consoleModuleLoader.IsModuleLoaded(moduleName);
+	return consoleModuleLoader->IsModuleLoaded(moduleName);
 }
 
 OP2EXT_API bool IsIniModuleLoaded(const char* moduleName)
 {
-	return moduleLoader.IsModuleLoaded(moduleName);
+	return moduleLoader->IsModuleLoaded(moduleName);
 }
 
 OP2EXT_API size_t GetLoadedModuleCount()
 {
-	return moduleLoader.Count() + consoleModuleLoader.Count();
+	return moduleLoader->Count() + consoleModuleLoader->Count();
 }
 
 OP2EXT_API size_t GetLoadedModuleName(size_t moduleIndex, char* buffer, size_t bufferSize)
@@ -141,11 +141,11 @@ OP2EXT_API size_t GetLoadedModuleName(size_t moduleIndex, char* buffer, size_t b
 	std::string moduleName;
 
 	try {
-		if (moduleIndex < moduleLoader.Count()) {
-			moduleName = moduleLoader.GetModuleName(moduleIndex);
+		if (moduleIndex < moduleLoader->Count()) {
+			moduleName = moduleLoader->GetModuleName(moduleIndex);
 		}
 		else if (moduleIndex < GetLoadedModuleCount()) {
-			moduleName = consoleModuleLoader.GetModuleName(moduleIndex - moduleLoader.Count());
+			moduleName = consoleModuleLoader->GetModuleName(moduleIndex - moduleLoader->Count());
 		}
 	}
 	catch (const std::exception& e) // Prevent throwing an error across DLL boundaries
