@@ -84,8 +84,8 @@ White := \e[0m
 	@$(MKDIR)
 	ar rcs "$@" $^
 
-# Rule to build intermediate project files
-%.o:
+# Rule to build intermediate files from C++
+%.cpp.o:
 	@$(MKDIR)
 	$(COMPILE.cpp)
 	@$(POSTCOMPILE)
@@ -154,7 +154,7 @@ $(1)_SRCDIR := $(dir $(3))
 
 # Project specific source files (directory scan), and associated object and dependency files
 $(1)_SRCS := $$(shell find $$($(1)_SRCFINDPATTERN) -name '*.cpp')
-$(1)_OBJS := $$(patsubst $$($(1)_SRCDIR)%.cpp,$$($(1)_INTDIR)%.o,$$($(1)_SRCS))
+$(1)_OBJS := $$(patsubst $$($(1)_SRCDIR)%,$$($(1)_INTDIR)%.o,$$($(1)_SRCS))
 $(1)_DEPS := $$(patsubst %.o,%.d,$$($(1)_OBJS))
 
 endef
@@ -191,7 +191,7 @@ $$($(1)_OUTPUT): $$($(1)_OBJS) $$($(1)_inputLibs)
 intermediate-$(1): $$($(1)_OBJS)
 
 # Object files depend on source and dependency files
-$$($(1)_OBJS): $$($(1)_INTDIR)%.o: $$($(1)_SRCDIR)%.cpp $$($(1)_INTDIR)%.d
+$$($(1)_OBJS): $$($(1)_INTDIR)%.o: $$($(1)_SRCDIR)% $$($(1)_INTDIR)%.d
 
 # Include all generated dependency info
 # (The `wildcard` will filter out files that don't exist to avoid warnings)
