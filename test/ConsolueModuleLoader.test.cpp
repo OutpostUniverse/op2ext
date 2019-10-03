@@ -35,7 +35,7 @@ TEST(ConsoleModuleLoader, ModuleWithoutDLL)
 
 	ConsoleModuleLoader consoleModuleLoader({moduleName});
 
-	EXPECT_EQ(moduleDirectory, consoleModuleLoader.GetModuleDirectory(0));
+	EXPECT_EQ(moduleDirectory.string(), consoleModuleLoader.GetModuleDirectory(0));
 	EXPECT_EQ(moduleName, consoleModuleLoader.GetModuleName(0));
 
 	EXPECT_TRUE(consoleModuleLoader.IsModuleLoaded(moduleName));
@@ -68,7 +68,7 @@ TEST(ConsoleModuleLoader, ModuleWithEmptyDLL)
 
 	ConsoleModuleLoader consoleModuleLoader({moduleName});
 
-	EXPECT_EQ(moduleDirectory, consoleModuleLoader.GetModuleDirectory(0));
+	EXPECT_EQ(moduleDirectory.string(), consoleModuleLoader.GetModuleDirectory(0));
 	EXPECT_EQ(moduleName, consoleModuleLoader.GetModuleName(0));
 
 	EXPECT_TRUE(consoleModuleLoader.IsModuleLoaded(moduleName));
