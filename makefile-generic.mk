@@ -52,7 +52,7 @@ CC = $($(config)_CC)
 
 # Variables to track dependencies
 DEPNAME = $(patsubst %.o,%.d,$@)
-DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPNAME).temp
+DEPFLAGS = -MT $@ -MD -MP -MF $(DEPNAME).temp
 POSTCOMPILE = mv -f $(DEPNAME).temp $(DEPNAME) && touch $@
 
 # Variable to create missing output folders
