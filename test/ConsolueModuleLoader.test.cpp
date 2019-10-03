@@ -30,7 +30,8 @@ TEST(ConsoleModuleLoader, ModuleWithoutDLL)
 	const std::string moduleName("NoDllTest");
 
 	// Test will need temporary module directory with no DLL present
-	const auto moduleDirectory = fs::path(GetGameDirectory()) / moduleName;
+	// Ensure module directory ends with a trailing slash
+	const auto moduleDirectory = fs::path(GetGameDirectory()) / moduleName / "\\";
 	fs::create_directory(moduleDirectory);
 
 	ConsoleModuleLoader consoleModuleLoader({moduleName});
@@ -58,7 +59,8 @@ TEST(ConsoleModuleLoader, ModuleWithEmptyDLL)
 	const std::string moduleName("InvalidDllTest");
 
 	// Test will need temporary module directory and invalid DLL file
-	const auto moduleDirectory = fs::path(GetGameDirectory()) / moduleName;
+	// Ensure module directory ends with a trailing slash
+	const auto moduleDirectory = fs::path(GetGameDirectory()) / moduleName / "\\";
 	const auto dllFile = moduleDirectory / "op2mod.dll";
 	// Create temporary module directory
 	fs::create_directory(moduleDirectory);
