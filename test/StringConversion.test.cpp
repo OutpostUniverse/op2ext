@@ -327,8 +327,8 @@ TEST(StringConversion, ParseCsv)
 	EXPECT_EQ((std::vector<std::string>{}), ParseCsv(" \t"));
 
 	// Parsing returns placeholders for implied data
-	// EXPECT_EQ((std::vector<std::string>{"", ""}), ParseCsv(","));
-	// EXPECT_EQ((std::vector<std::string>{"A", ""}), ParseCsv("A, "));
+	EXPECT_EQ((std::vector<std::string>{"", ""}), ParseCsv(","));
+	EXPECT_EQ((std::vector<std::string>{"A", ""}), ParseCsv("A, "));
 	EXPECT_EQ((std::vector<std::string>{"", "B"}), ParseCsv(", B"));
 
 	// Regular data parsing
