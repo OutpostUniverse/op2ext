@@ -1,4 +1,5 @@
 #include "Globals.h"
+#include "ConsoleArgumentParser.h"
 #include "ModuleLoader.h"
 #include "StringConversion.h"
 #include "OP2Memory.h"
@@ -50,6 +51,11 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 		// Setup logging
 		SetLogger(&loggerFile);
 		SetLoggerError(&loggerMessageBox);
+
+		// Construct global objects
+		volList = std::make_unique<VolList>();
+		consoleModuleLoader = std::make_unique<ConsoleModuleLoader>(std::vector{FindModuleDirectory()});
+		moduleLoader = std::make_unique<ModuleLoader>();
 
 		// Set load offset for Outpost2.exe module, used during memory patching
 		SetLoadOffset();
