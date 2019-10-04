@@ -26,7 +26,7 @@ int StubExt = 0;
 OP2EXT_API size_t GetGameDir_s(char* buffer, size_t bufferSize)
 {
 	// Adding "\\" to end of directory is required for backward compatibility.
-	return CopyStdStringIntoCharBuffer(GetGameDirectory() + "\\", buffer, bufferSize);
+	return CopyStringViewIntoCharBuffer(GetGameDirectory() + "\\", buffer, bufferSize);
 }
 
 OP2EXT_API size_t GetConsoleModDir_s(char* buffer, size_t bufferSize)
@@ -38,7 +38,7 @@ OP2EXT_API size_t GetConsoleModDir_s(char* buffer, size_t bufferSize)
 		consoleModuleDirectory = consoleModuleLoader->GetModuleDirectory(0);
 	}
 	// Copy module directory to supplied buffer
-	return CopyStdStringIntoCharBuffer(consoleModuleDirectory + "\\", buffer, bufferSize);
+	return CopyStringViewIntoCharBuffer(consoleModuleDirectory + "\\", buffer, bufferSize);
 }
 
 OP2EXT_API void GetGameDir(char* buffer)
@@ -154,5 +154,5 @@ OP2EXT_API size_t GetLoadedModuleName(size_t moduleIndex, char* buffer, size_t b
 			std::to_string(moduleIndex) + ". Details: " + std::string(e.what()));
 	}
 
-	return CopyStdStringIntoCharBuffer(moduleName, buffer, bufferSize);
+	return CopyStringViewIntoCharBuffer(moduleName, buffer, bufferSize);
 }
