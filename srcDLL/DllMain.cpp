@@ -1,4 +1,5 @@
 #include "Globals.h"
+#include "ConsoleArgumentParser.h"
 #include "ModuleLoader.h"
 #include "StringConversion.h"
 #include "OP2Memory.h"
@@ -51,6 +52,11 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 		SetLogger(&loggerFile);
 		SetLoggerError(&loggerMessageBox);
 
+		// Construct global objects
+		volList = std::make_unique<VolList>();
+		consoleModuleLoader = std::make_unique<ConsoleModuleLoader>(std::vector{FindModuleDirectory()});
+		moduleLoader = std::make_unique<ModuleLoader>();
+
 		// Set load offset for Outpost2.exe module, used during memory patching
 		SetLoadOffset();
 
@@ -80,20 +86,20 @@ int TApp::Init()
 	// ART_PATH (from console module), Console Module, Ini Modules, Addon directory, Game directory
 
 	// Load command line modules
-	consoleModuleLoader.LoadModules();
+	consoleModuleLoader->LoadModules();
 
 	// Load all active modules from the .ini file
-	moduleLoader.LoadModules();
+	moduleLoader->LoadModules();
 
 	// Find VOL files from additional folders
-	for (std::size_t i = 0; i < consoleModuleLoader.Count(); ++i) {
+	for (std::size_t i = 0; i < consoleModuleLoader->Count(); ++i) {
 		// ConsoleModule name matches relative folder from game exeucutable folder
-		LocateVolFiles(consoleModuleLoader.GetModuleName(i));
+		LocateVolFiles(consoleModuleLoader->GetModuleName(i));
 	}
 	LocateVolFiles("Addon");
 	LocateVolFiles(); //Searches root directory
 
-	volList.LoadVolFiles();
+	volList->LoadVolFiles();
 
 	// Replace call to LoadLibrary with custom routine (address is indirect)
 	Op2MemSetDword(loadLibraryDataAddr, (int)&loadLibraryNewAddr);
@@ -110,8 +116,8 @@ void TApp::ShutDown()
 	// Call original function
 	(this->*GetMethodPointer<decltype(&TApp::ShutDown)>(0x004866E0))();
 
-	consoleModuleLoader.UnloadModules();
-	moduleLoader.UnloadModules();
+	consoleModuleLoader->UnloadModules();
+	moduleLoader->UnloadModules();
 }
 
 /**
@@ -137,7 +143,7 @@ void LocateVolFiles(const std::string& relativeDirectory)
 			const auto extension = ToLower(filePath.extension().string());
 
 			if (extension == ".vol") {
-				volList.AddVolFile((fs::path(relativeDirectory) / filePath.filename()).string());
+				volList->AddVolFile((fs::path(relativeDirectory) / filePath.filename()).string());
 			}
 		}
 	}
@@ -155,8 +161,8 @@ HINSTANCE __stdcall NewLoadLibraryA(LPCSTR lpLibFileName)
 	{
 		//LocalizeStrings();
 		modulesRunning = true;
-		consoleModuleLoader.RunModules();
-		moduleLoader.RunModules();
+		consoleModuleLoader->RunModules();
+		moduleLoader->RunModules();
 	}
 
 	return result;
