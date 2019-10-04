@@ -48,3 +48,22 @@ TEST(op2ext, GetGameDir) {
 	// Path ends with a trailing slash
 	EXPECT_EQ('\\', gameDir.back());
 }
+
+TEST(op2ext, GetGameDirMethodsGiveSameResult) {
+	char gameDirectory[MAX_PATH];
+	char gameDirectorySafe[MAX_PATH];
+
+	// GetGameDir is deprecated, so suppress compiler warning from test code
+	// MSVC tags use of deprecated methods as C4996
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#pragma warning(suppress : 4996)
+	EXPECT_NO_THROW(GetGameDir(gameDirectory));
+#pragma GCC diagnostic pop
+
+	// On success return value is 0, and buffer contains path of specified format
+	EXPECT_EQ(0u, GetGameDir_s(gameDirectorySafe, MAX_PATH));
+
+	// Result of both methods sould match, assuming sufficient buffer space
+	EXPECT_STREQ(gameDirectory, gameDirectorySafe);
+}
