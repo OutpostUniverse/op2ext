@@ -133,3 +133,9 @@ TEST(op2ext, AddVolToList) {
 	// Use Win API directly since it's already imported
 	EXPECT_NE(0, DeleteFileA(volPath.c_str()));
 }
+
+TEST(op2ext, SetSerialNumber) {
+	// Can set any single digit with no errors
+	EXPECT_NO_THROW(SetSerialNumber(0, 0, 0));
+	EXPECT_NO_THROW(SetSerialNumber(9, 9, 9));
+}
