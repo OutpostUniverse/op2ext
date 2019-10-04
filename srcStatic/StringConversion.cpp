@@ -37,7 +37,7 @@ std::wstring ConvertNarrowToWide(const std::string& inputString)
 }
 
 
-std::size_t CopyStdStringIntoCharBuffer(const std::string& stringToCopy, char* buffer, std::size_t bufferSize)
+std::size_t CopyStringViewIntoCharBuffer(std::string_view stringToCopy, char* buffer, std::size_t bufferSize)
 {
 	// Precheck valid pointer and non-zero buffer size to avoid wrap around or null termination problems
 	if (buffer != nullptr && bufferSize > 0) {

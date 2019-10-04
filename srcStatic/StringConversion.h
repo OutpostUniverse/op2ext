@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <string_view>
 #include <vector>
 #include <cstddef>
 
@@ -17,11 +18,11 @@ std::wstring WrapRawString(const wchar_t* str);
 std::string ConvertWideToNarrow(const std::wstring& inputWideString);
 std::wstring ConvertNarrowToWide(const std::string& inputNarrowString);
 
-// Copies a std::string to a raw character buffer
+// Copies a std::string_view into a raw character buffer
 // This is used to interface with C code
 // Returns 0 on success
 // Returns needed buffer size (including space for null terminator) if the destination buffer is too small
-std::size_t CopyStdStringIntoCharBuffer(const std::string& stringToCopy, char* buffer, std::size_t bufferSize);
+std::size_t CopyStringViewIntoCharBuffer(std::string_view stringToCopy, char* buffer, std::size_t bufferSize);
 
 // Converts all characters in string lower case
 std::string& ToLowerInPlace(std::string& x);

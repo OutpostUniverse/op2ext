@@ -79,7 +79,7 @@ bool ResManager::GetFilePath(const char* resourceName, /* [out] */ char* filePat
 		// Search for resource in module folder
 		const auto path = moduleDirectory + resourceName;
 		if (INVALID_FILE_ATTRIBUTES != GetFileAttributesA(path.c_str())) {
-			if (0 == CopyStdStringIntoCharBuffer(path, filePath, MAX_PATH)) {
+			if (0 == CopyStringViewIntoCharBuffer(path, filePath, MAX_PATH)) {
 				return true; // Resource found
 			} else {
 				Log("MAX_PATH exceeded while trying to return path to resource: " + std::string(resourceName));
