@@ -28,3 +28,23 @@ TEST(op2ext, GetGameDir_s) {
 	// Path ends with a trailing slash
 	EXPECT_EQ('\\', gameDir.back());
 }
+
+TEST(op2ext, GetGameDir) {
+	char gameDirectory[MAX_PATH];
+
+	// GetGameDir is deprecated, so suppress compiler warning from test code
+	// MSVC tags use of deprecated methods as C4996
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#pragma warning(suppress : 4996)
+	EXPECT_NO_THROW(GetGameDir(gameDirectory));
+#pragma GCC diagnostic pop
+
+	std::string_view gameDir{gameDirectory};
+	// Path plus null terminator should fit within buffer size
+	ASSERT_TRUE(gameDir.length() < MAX_PATH);
+	// Path is null terminated (this is outside the string_view window)
+	EXPECT_EQ(0, gameDirectory[gameDir.length()]);
+	// Path ends with a trailing slash
+	EXPECT_EQ('\\', gameDir.back());
+}
