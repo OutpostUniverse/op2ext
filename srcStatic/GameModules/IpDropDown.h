@@ -5,7 +5,7 @@
 class IPDropDown : public GameModule
 {
 public:
-	IPDropDown() : GameModule("IPDropDown") { }
+	IPDropDown();
 
 	void Load() override;
 	bool Unload() override { return true; }

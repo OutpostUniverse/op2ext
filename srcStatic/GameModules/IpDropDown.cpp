@@ -1,6 +1,7 @@
 #include "IpDropDown.h"
 #include "../FileSystemHelper.h"
 #include "../OP2Memory.h"
+#include "../IniFile.h"
 #include <winsock.h> // From winsock.h, using functions inet_addr & gethostbyname.
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -21,6 +22,12 @@ DWORD* populateComboBoxAddr = (DWORD*)0x004197C1;
 DWORD* saveIpTextAddr = (DWORD*)0x004C0E36;
 void* nopDataAddr = (void*)0x0041988F;
 
+
+IPDropDown::IPDropDown()
+	: GameModule("IPDropDown")
+{
+}
+
 void IPDropDown::Load()
 {
 	// patch the call to EnableWindow so we can add strings.
@@ -34,13 +41,13 @@ BOOL __stdcall EnableWindowNew(HWND hWnd, BOOL bEnable)
 	// enable the window
 	BOOL result = EnableWindow(hWnd, bEnable);
 
+	auto iniSection = IniSection(GetOutpost2IniPath(), "IPHistory");
+
 	// populate the list with strings
-	char tmpStr[4];
 	numIpStrings = 0;
 	for (int i = 0; i < 10; i++)
 	{
-		_snprintf_s(tmpStr, sizeof(tmpStr), "%d", i);
-		std::string ipString = GetOutpost2IniSetting("IPHistory", tmpStr);
+		std::string ipString = iniSection[std::to_string(i)];
 		strcpy_s(ipStrings[i], ipString.c_str());
 
 		if (strlen(ipStrings[i]) > 0)
@@ -104,12 +111,10 @@ unsigned long __stdcall inet_addrNew(const char* cp)
 
 void WriteAddressesToIniFile()
 {
-	// Write IP addresses to .ini file
-	std::string iniPath = GetOutpost2IniPath();
+	auto iniSection = IniSection(GetOutpost2IniPath(), "IPHistory");
 
-	WritePrivateProfileStringA("IPHistory", nullptr, nullptr, iniPath.c_str());
-
+	iniSection.ClearSection();
 	for (int i = 0; i < numIpStrings; i++) {
-		WritePrivateProfileStringA("IPHistory", std::to_string(i).c_str(), ipStrings[i], iniPath.c_str());
+		iniSection.SetValue(std::to_string(i), ipStrings[i]);
 	}
 }

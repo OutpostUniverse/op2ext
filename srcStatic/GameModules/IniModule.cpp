@@ -1,17 +1,18 @@
 #include "IniModule.h"
 #include "../WindowsErrorCode.h"
-#include "../FileSystemHelper.h"
-#include "../GlobalDefines.h"
+#include "../Log.h"
+#include <utility>
 #include <stdexcept>
 
 
-IniModule::IniModule(const std::string& iniSectionName) : GameModule(iniSectionName)
+IniModule::IniModule(IniSection iniSection)
+	: GameModule(iniSection.SectionName()), iniSection(std::move(iniSection))
 {
 	try {
 		moduleDllHandle = LoadModuleDll();
 	}
 	catch (const std::exception& error) {
-		PostErrorMessage(__FILE__, __LINE__, "Unable to load dll for module " + Name() + " . " + std::string(error.what()));
+		PostError("Unable to load dll for module " + Name() + " . " + std::string(error.what()));
 		throw std::runtime_error("Unable to load ini module " + Name());
 	}
 
@@ -23,7 +24,7 @@ IniModule::IniModule(const std::string& iniSectionName) : GameModule(iniSectionN
 HINSTANCE IniModule::LoadModuleDll()
 {
 	// Get the DLL name from the corresponding section
-	std::string dllName = GetOutpost2IniSetting(Name(), "Dll");
+	std::string dllName = iniSection["Dll"];
 
 	// Try to load a DLL with the given name (possibly "")
 	HINSTANCE dllHandle = LoadLibraryA(dllName.c_str());

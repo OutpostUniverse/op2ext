@@ -1,15 +1,15 @@
 #include "Globals.h"
+#include "ConsoleArgumentParser.h"
 #include "ModuleLoader.h"
 #include "StringConversion.h"
 #include "OP2Memory.h"
 #include "FileSystemHelper.h"
-#include "GlobalDefines.h"
 #include "Log.h"
 #include "LoggerFile.h"
+#include "LoggerMessageBox.h"
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <string>
-#include <sstream>
 
 
 void LocateVolFiles(const std::string& relativeDirectory = "");
@@ -41,6 +41,7 @@ DWORD loadLibraryNewAddr = (DWORD)NewLoadLibraryA;
 // Similarly these should not use globals from other files before DllMain has started
 // Pay careful attention to anything passed to a constructor, or called by a constructor
 LoggerFile loggerFile; // Logging to file in Outpost 2 folder
+LoggerMessageBox loggerMessageBox; // Logging to pop-up message box
 
 
 BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
@@ -49,6 +50,12 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 	if (dwReason == DLL_PROCESS_ATTACH) {
 		// Setup logging
 		SetLogger(&loggerFile);
+		SetLoggerError(&loggerMessageBox);
+
+		// Construct global objects
+		volList = std::make_unique<VolList>();
+		consoleModuleLoader = std::make_unique<ConsoleModuleLoader>(std::vector{FindModuleDirectory()});
+		moduleLoader = std::make_unique<ModuleLoader>();
 
 		// Set load offset for Outpost2.exe module, used during memory patching
 		SetLoadOffset();
@@ -76,26 +83,27 @@ int TApp::Init()
 	bool success = Op2UnprotectMemory(destinationBaseAddress, 0x00587000 - 0x00585000);
 
 	if (!success) {
-		std::ostringstream stringStream;
-		stringStream << "Error unprotecting memory at: 0x" << std::hex << destinationBaseAddress << ".";
-		PostErrorMessage(__FILE__, __LINE__, stringStream.str());
+		PostError("Error unprotecting memory at: 0x" + AddrToHexString(destinationBaseAddress));
 	}
 
 	// Order of precedence for loading vol files is:
 	// ART_PATH (from console module), Console Module, Ini Modules, Addon directory, Game directory
 
 	// Load command line modules
-	consoleModLoader.LoadModule();
+	consoleModuleLoader->LoadModules();
 
 	// Load all active modules from the .ini file
-	moduleLoader.LoadModules();
+	moduleLoader->LoadModules();
 
-	// ConsoleModule name matches relative folder from game exeucutable folder
-	LocateVolFiles(consoleModLoader.GetModuleName());
+	// Find VOL files from additional folders
+	for (std::size_t i = 0; i < consoleModuleLoader->Count(); ++i) {
+		// ConsoleModule name matches relative folder from game exeucutable folder
+		LocateVolFiles(consoleModuleLoader->GetModuleName(i));
+	}
 	LocateVolFiles("Addon");
 	LocateVolFiles(); //Searches root directory
 
-	volList.LoadVolFiles();
+	volList->LoadVolFiles();
 
 	// Replace call to LoadLibrary with custom routine (address is indirect)
 	Op2MemSetDword(loadLibraryDataAddr, (int)&loadLibraryNewAddr);
@@ -112,8 +120,8 @@ void TApp::ShutDown()
 	// Call original function
 	(this->*GetMethodPointer<decltype(&TApp::ShutDown)>(0x004866E0))();
 
-	consoleModLoader.UnloadModule();
-	moduleLoader.UnloadModules();
+	consoleModuleLoader->UnloadModules();
+	moduleLoader->UnloadModules();
 }
 
 /**
@@ -139,7 +147,7 @@ void LocateVolFiles(const std::string& relativeDirectory)
 			const auto extension = ToLower(filePath.extension().string());
 
 			if (extension == ".vol") {
-				volList.AddVolFile((fs::path(relativeDirectory) / filePath.filename()).string());
+				volList->AddVolFile((fs::path(relativeDirectory) / filePath.filename()).string());
 			}
 		}
 	}
@@ -157,8 +165,8 @@ HINSTANCE __stdcall NewLoadLibraryA(LPCSTR lpLibFileName)
 	{
 		//LocalizeStrings();
 		modulesRunning = true;
-		consoleModLoader.RunModule();
-		moduleLoader.RunModules();
+		consoleModuleLoader->RunModules();
+		moduleLoader->RunModules();
 	}
 
 	return result;

@@ -2,9 +2,12 @@
 #define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
 #include "StringConversion.h"
 #include <sstream>
+#include <iomanip>
 #include <algorithm>
 #include <locale>
 #include <codecvt>
+#include <chrono> // std::chrono::system_clock::now
+#include <ctime> // gmtime
 
 
 std::string WrapRawString(const char* str)
@@ -34,7 +37,7 @@ std::wstring ConvertNarrowToWide(const std::string& inputString)
 }
 
 
-std::size_t CopyStdStringIntoCharBuffer(const std::string& stringToCopy, char* buffer, std::size_t bufferSize)
+std::size_t CopyStringViewIntoCharBuffer(std::string_view stringToCopy, char* buffer, std::size_t bufferSize)
 {
 	// Precheck valid pointer and non-zero buffer size to avoid wrap around or null termination problems
 	if (buffer != nullptr && bufferSize > 0) {
@@ -102,12 +105,51 @@ std::vector<std::string> Split(const std::string& stringToSplit, char delimiter)
 {
 	std::vector<std::string> strings;
 
-	std::istringstream stringStream(stringToSplit);
-	std::string currentToken;
-
-	while (std::getline(stringStream, currentToken, delimiter)) {
-		strings.push_back(currentToken);
+	std::size_t start = 0;
+	std::size_t end = stringToSplit.find(delimiter);
+	while (end != std::string::npos) {
+		strings.push_back(stringToSplit.substr(start, end - start));
+		start = end + 1;
+		end = stringToSplit.find(delimiter, start);
 	}
+	strings.push_back(stringToSplit.substr(start, end - start));
 
 	return strings;
+}
+
+std::vector<std::string> ParseCsv(const std::string& csv, char delimiter, std::string_view whitespace)
+{
+	// First check if input string is empty (or only whitespace)
+	auto trimmedCsv = Trim(csv, whitespace);
+	if (trimmedCsv.empty()) {
+		return {}; // Empty (no data)
+	}
+
+	// Split data into vector of strings
+	// At least one data element will be returned
+	return SplitAndTrim(trimmedCsv, delimiter, whitespace);
+}
+
+
+std::string AddrToHexString(std::size_t addr)
+{
+	std::ostringstream stringStream;
+	stringStream << std::setfill('0') << std::setw(8) << std::hex << addr;
+	return stringStream.str();
+}
+
+
+std::string GetDateTime()
+{
+	auto currentClock = std::chrono::system_clock::now();
+	auto time = std::chrono::system_clock::to_time_t(currentClock);
+	std::tm unpackedTime;
+	if(gmtime_s(&unpackedTime, &time)) {
+		return "<Time conversion failed>";
+	}
+
+	std::stringstream stringStream;
+	stringStream << std::put_time(&unpackedTime, "%Y-%m-%d %H:%M:%S UTC");
+
+	return stringStream.str();
 }

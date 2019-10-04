@@ -1,97 +1,119 @@
 #include "ConsoleModuleLoader.h"
+#include "ResourceSearchPath.h"
 #include "StringConversion.h"
 #include "WindowsErrorCode.h"
-#include "OP2Memory.h"
 #include "FileSystemHelper.h"
-#include "GlobalDefines.h"
-#include <sstream>
+#include "Log.h"
 #include <algorithm>
 #include <iterator>
 #include <stdexcept>
-#include <cstddef>
 #include <system_error>
 
 
-ConsoleModuleLoader::ConsoleModuleLoader(const std::string& moduleRelativeDirectory)
+// Console module names are the relative path from the game folder (no trailing slash)
+ConsoleModuleLoader::ConsoleModuleLoader(const std::vector<std::string>& moduleNames)
 {
-	if (moduleRelativeDirectory.empty()) {
-		return; // No Console Module Loaded
+	if (moduleNames.empty()) {
+		return; // No console modules to load
 	}
 
-	auto moduleDirectory = fs::path(GetGameDirectory()).append(moduleRelativeDirectory).string();
-	moduleName = moduleRelativeDirectory;
-
-	std::error_code errorCode;
-	if (!fs::is_directory(moduleDirectory, errorCode)) {
-		PostErrorMessage(__FILE__, __LINE__, "Unable to access the provided module directory. " + errorCode.message());
-		moduleDirectory = "";
-		moduleName = "";
+	// Temporary check. This will eventually become an error.
+	if (moduleNames.size() == 1 && moduleNames[0].empty()) {
+		return; // No console modules to load
 	}
 
-	// Set private static instance by reference
-	ModuleDirectory() = moduleDirectory;
+	if (std::any_of(moduleNames.begin(), moduleNames.end(), [](const std::string& moduleName){ return moduleName.empty(); })) {
+		PostError("All console module names must be non-empty.");
+		return;
+	}
+
+	for (const auto& moduleName : moduleNames) {
+		auto moduleDirectory = fs::path(GetGameDirectory()) / moduleName;
+
+		std::error_code errorCode;
+		if (!fs::is_directory(moduleDirectory, errorCode)) {
+			PostError("Unable to access the provided module directory: " + moduleName + " : "+ errorCode.message());
+			continue;
+		}
+
+		// Store module details
+		// Make sure module directory ends with a trailing slash
+		modules.push_back({nullptr, moduleName, moduleDirectory.string() + "\\"});
+	}
+
+	// Build list of module directories
+	std::vector<std::string> moduleDirectories;
+	moduleDirectories.reserve(modules.size());
+	for (const auto& module: modules) {
+		moduleDirectories.push_back(module.directory);
+	}
+	// Add module directories to resource search path
+	ResourceSearchPath::Set(std::move(moduleDirectories));
 }
 
-std::string ConsoleModuleLoader::GetModuleDirectory()
+std::string ConsoleModuleLoader::GetModuleDirectory(std::size_t index)
 {
+	if (index >= modules.size()) {
+		throw std::runtime_error("GetModuleDirectory: Invalid console module index: " + std::to_string(index));
+	}
 	// Return copy of private static
-	return ModuleDirectory();
+	return modules[index].directory;
 }
 
-std::string ConsoleModuleLoader::GetModuleName()
+std::string ConsoleModuleLoader::GetModuleName(std::size_t index)
 {
-	return moduleName;
+	if (index >= modules.size()) {
+		throw std::runtime_error("GetModuleName: Invalid console module index: " + std::to_string(index));
+	}
+	return modules[index].name;
 }
 
 std::size_t ConsoleModuleLoader::Count()
 {
-	return moduleName != "" ? 1 : 0;
+	return modules.size();
 }
 
+// Returns false if passed an empty string (Module name cannot be empty)
 bool ConsoleModuleLoader::IsModuleLoaded(std::string moduleName)
 {
-	if (Count() == 0) {
-		return false;
+	ToLowerInPlace(moduleName);
+	for (std::size_t i = 0; i < Count(); ++i) {
+		if (moduleName == ToLower(GetModuleName(i))) {
+			return true;
+		}
 	}
-
-	return ToLowerInPlace(moduleName) == ToLower(GetModuleName());
+	return false;
 }
 
-void ConsoleModuleLoader::LoadModule()
+void ConsoleModuleLoader::LoadModules()
 {
-	// Get access to private static
-	auto moduleDirectory = ModuleDirectory();
-
-	if (moduleDirectory.empty()) {
+	// Abort early to avoid hooking file search path if not needed
+	if (modules.empty()) {
 		return;
 	}
 
-	std::error_code errorCode;
-	if (!fs::is_directory(moduleDirectory, errorCode)) {
-		PostErrorMessage(__FILE__, __LINE__, "Unable to access the provided module directory. " + errorCode.message());
-		return;
-	}
+	// Setup loading of additional resources from module folders
+	ResourceSearchPath::Activate();
 
-	HookFileSearchPath();
-	LoadModuleDll();
+	// Load all module DLLs
+	for (auto& module : modules) {
+		LoadModuleDll(module);
+	}
 }
 
-void ConsoleModuleLoader::LoadModuleDll()
+void ConsoleModuleLoader::LoadModuleDll(Module& module)
 {
-	// Get access to private static
-	auto moduleDirectory = ModuleDirectory();
-
-	const std::string dllName = fs::path(moduleDirectory).append("op2mod.dll").string();
+	const std::string dllName = fs::path(module.directory).append("op2mod.dll").string();
 
 	if (!fs::exists(dllName)) {
 		return; // Some console modules do not contain dlls
 	}
 
-	modDllHandle = LoadLibraryA(dllName.c_str());
+	module.dllHandle = LoadLibraryA(dllName.c_str());
 
-	if (modDllHandle) {
+	if (module.dllHandle) {
 		// Call module's mod_init function
-		FARPROC startFunc = GetProcAddress(modDllHandle, "mod_init");
+		FARPROC startFunc = GetProcAddress(module.dllHandle, "mod_init");
 		if (startFunc) {
 			startFunc();
 		}
@@ -100,92 +122,36 @@ void ConsoleModuleLoader::LoadModuleDll()
 		const std::string errorMessage("Unable to load console module's dll from " + dllName +
 			". LoadLibrary " + GetLastErrorString());
 
-		PostErrorMessage(__FILE__, __LINE__, errorMessage);
+		PostError(errorMessage);
 	}
 }
 
-void ConsoleModuleLoader::HookFileSearchPath()
+void ConsoleModuleLoader::UnloadModules()
 {
-	const std::vector<std::size_t> callsToGetFilePath{
-		0x00402E4B,
-		0x004038A9,
-		0x0045003C,
-		0x0045035D,
-		0x0046078C,
-		0x00460B13,
-		0x00471089,
-		0x0047118B,
-		0x0047121E,
-		0x004712B7,
-		0x00485C69,
-		0x004882CB,
-		0x00488967,
-		0x00489433,
-		0x004977E4,
-	};
-	// Convert a pointer to member function to a regular `void*` value
-	auto getFilePath = &ConsoleModuleLoader::ResManager::GetFilePath;
-	const auto getFilePathAddr = reinterpret_cast<void*&>(getFilePath);  // MSVC specific cast
+	for (const auto& module : modules) {
+		if (module.dllHandle)
+		{
+			FARPROC destroyModFunc = GetProcAddress(module.dllHandle, "mod_destroy");
+			if (destroyModFunc) {
+				destroyModFunc();
+			}
 
-	for (const auto callAddr : callsToGetFilePath) {
-		Op2RelinkCall(callAddr, getFilePathAddr);
-	}
-}
-
-bool ConsoleModuleLoader::CallOriginalGetFilePath(const char* resourceName, /* [out] */ char* filePath)
-{
-	// Use Outpost2.exe's built in ResManager object, and its associated member function
-	ConsoleModuleLoader::ResManager& resManager = *reinterpret_cast<ResManager*>(0x56C028);
-	auto originalGetFilePath = GetMethodPointer<decltype(&ConsoleModuleLoader::ResManager::GetFilePath)>(0x00471590);
-	return (resManager.*originalGetFilePath)(resourceName, filePath);
-}
-
-bool ConsoleModuleLoader::ResManager::GetFilePath(const char* resourceName, /* [out] */ char* filePath) const
-{
-	// Get access to private static
-	auto moduleDirectory = ModuleDirectory();
-
-	// Search for resource in module folder
-	const auto path = moduleDirectory + resourceName;
-	if (INVALID_FILE_ATTRIBUTES != GetFileAttributesA(path.c_str())) {
-		return 0 == CopyStdStringIntoCharBuffer(path, filePath, MAX_PATH);
-	}
-
-	// Fallback to searching with the original built in method
-	return CallOriginalGetFilePath(resourceName, filePath);
-}
-
-void ConsoleModuleLoader::UnloadModule()
-{
-	if (modDllHandle)
-	{
-		FARPROC destroyModFunc = GetProcAddress(modDllHandle, "mod_destroy");
-		if (destroyModFunc) {
-			destroyModFunc();
-		}
-
-		FreeLibrary(modDllHandle);
-	}
-}
-
-void ConsoleModuleLoader::RunModule()
-{
-	// Startup a module by calling its run func
-	if (modDllHandle)
-	{
-		// Call its mod_run func
-		FARPROC runFunc = GetProcAddress(modDllHandle, "mod_run");
-		if (runFunc) {
-			runFunc();
+			FreeLibrary(module.dllHandle);
 		}
 	}
 }
 
-std::string& ConsoleModuleLoader::ModuleDirectory()
+void ConsoleModuleLoader::RunModules()
 {
-	// Function level statics are initialized on first use
-	// They are not subject to unsequenced initialization order of globals
-	// There is no order dependency on when this variable may be used
-	static std::string moduleDirectory;
-	return moduleDirectory;
+	for (const auto& module : modules) {
+		// Startup a module by calling its run func
+		if (module.dllHandle)
+		{
+			// Call its mod_run func
+			FARPROC runFunc = GetProcAddress(module.dllHandle, "mod_run");
+			if (runFunc) {
+				runFunc();
+			}
+		}
+	}
 }

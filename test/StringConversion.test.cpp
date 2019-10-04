@@ -1,5 +1,6 @@
 #include "StringConversion.h"
 #include <gtest/gtest.h>
+#include <gmock/gmock.h>
 #include <string>
 #include <type_traits>
 
@@ -37,6 +38,59 @@ TEST(StringConversion, ConvertNarrowToWide)
 	// Convert non-empty string
 	EXPECT_EQ(L"Hello world", ConvertNarrowToWide("Hello world"));
 }
+
+
+TEST(StringConversion, CopyStringViewIntoCharBufferSafeNoOutputConditions)
+{
+	constexpr char nonce = 'Z';
+	char buffer[8];
+
+	// The nonce should never be overwritten
+	buffer[0] = nonce;
+
+	// Null buffer of size zero
+	EXPECT_EQ(1u, CopyStringViewIntoCharBuffer("", nullptr, 0));
+	EXPECT_EQ(nonce, buffer[0]);
+	EXPECT_EQ(2u, CopyStringViewIntoCharBuffer("A", nullptr, 0));
+	EXPECT_EQ(nonce, buffer[0]);
+
+	// Null buffer with non-zero size
+	EXPECT_EQ(1u, CopyStringViewIntoCharBuffer("", nullptr, sizeof(buffer)));
+	EXPECT_EQ(nonce, buffer[0]);
+	EXPECT_EQ(2u, CopyStringViewIntoCharBuffer("A", nullptr, sizeof(buffer)));
+	EXPECT_EQ(nonce, buffer[0]);
+
+	// Valid buffer but with size zero
+	EXPECT_EQ(1u, CopyStringViewIntoCharBuffer("", buffer, 0));
+	EXPECT_EQ(nonce, buffer[0]);
+	EXPECT_EQ(2u, CopyStringViewIntoCharBuffer("A", buffer, 0));
+	EXPECT_EQ(nonce, buffer[0]);
+}
+
+TEST(StringConversion, CopyStringViewIntoCharBuffer)
+{
+	constexpr char nonce = 'Z';
+	constexpr char null = '\0';
+	char buffer[8];
+
+	// Empty string (must still null terminate)
+	buffer[0] = nonce;
+	EXPECT_EQ(0u, CopyStringViewIntoCharBuffer("", buffer, sizeof(buffer)));
+	EXPECT_EQ(null, buffer[0]);
+	// Short string (extra buffer space to spare)
+	buffer[1] = nonce;
+	EXPECT_EQ(0u, CopyStringViewIntoCharBuffer("A", buffer, sizeof(buffer)));
+	EXPECT_EQ(null, buffer[1]);
+	// Precise sized string (just enough room for null terminator)
+	buffer[7] = nonce;
+	EXPECT_EQ(0u, CopyStringViewIntoCharBuffer("1234567", buffer, sizeof(buffer)));
+	EXPECT_EQ(null, buffer[7]);
+	// Overflow sized string (just barely no room for null terminator)
+	buffer[7] = nonce;
+	EXPECT_EQ(9u, CopyStringViewIntoCharBuffer("12345678", buffer, sizeof(buffer)));
+	EXPECT_EQ(null, buffer[7]);
+}
+
 
 TEST(StringConversion, ToLower)
 {
@@ -185,15 +239,15 @@ TEST(StringConversion, TrimBack)
 TEST(StringConversion, Split)
 {
 	// Empty string
-	EXPECT_EQ(std::vector<std::string>{}, Split("", ','));
+	EXPECT_EQ(std::vector<std::string>{""}, Split("", ','));
 
 	// Single entry
 	EXPECT_EQ(std::vector<std::string>{"A"}, Split("A", ','));
 
 	// Empty multi entry
-	// EXPECT_EQ((std::vector<std::string>{"", ""}), Split(",", ','));
-	// EXPECT_EQ((std::vector<std::string>{"", "", ""}), Split(",,", ','));
-	// EXPECT_EQ((std::vector<std::string>{"", "", "", ""}), Split(",,,", ','));
+	EXPECT_EQ((std::vector<std::string>{"", ""}), Split(",", ','));
+	EXPECT_EQ((std::vector<std::string>{"", "", ""}), Split(",,", ','));
+	EXPECT_EQ((std::vector<std::string>{"", "", "", ""}), Split(",,,", ','));
 
 	// Multi entry
 	EXPECT_EQ((std::vector<std::string>{"A", "B"}), Split("A,B", ','));
@@ -209,22 +263,22 @@ TEST(StringConversion, Split)
 
 	// Space separated
 	EXPECT_EQ((std::vector<std::string>{"A", "B", "C"}), Split("A B C", ' '));
-	// EXPECT_EQ((std::vector<std::string>{"", "A", "B", "C", ""}), Split(" A B C ", ' '));
+	EXPECT_EQ((std::vector<std::string>{"", "A", "B", "C", ""}), Split(" A B C ", ' '));
 	EXPECT_EQ((std::vector<std::string>{"A\tB\tC"}), Split("A\tB\tC", ' '));
 }
 
 TEST(StringConversion, SplitAndTrim)
 {
 	// Empty string
-	EXPECT_EQ(std::vector<std::string>{}, SplitAndTrim("", ','));
+	EXPECT_EQ(std::vector<std::string>{""}, SplitAndTrim("", ','));
 
 	// Single entry
 	EXPECT_EQ(std::vector<std::string>{"A"}, SplitAndTrim("A", ','));
 
 	// Empty multi entry
-	// EXPECT_EQ((std::vector<std::string>{"", ""}), SplitAndTrim(",", ','));
-	// EXPECT_EQ((std::vector<std::string>{"", "", ""}), SplitAndTrim(",,", ','));
-	// EXPECT_EQ((std::vector<std::string>{"", "", "", ""}), SplitAndTrim(",,,", ','));
+	EXPECT_EQ((std::vector<std::string>{"", ""}), SplitAndTrim(",", ','));
+	EXPECT_EQ((std::vector<std::string>{"", "", ""}), SplitAndTrim(",,", ','));
+	EXPECT_EQ((std::vector<std::string>{"", "", "", ""}), SplitAndTrim(",,,", ','));
 
 	// Multi entry
 	EXPECT_EQ((std::vector<std::string>{"A", "B"}), SplitAndTrim("A,B", ','));
@@ -247,7 +301,7 @@ TEST(StringConversion, SplitAndTrim)
 
 	// Space separated
 	EXPECT_EQ((std::vector<std::string>{"A", "B", "C"}), SplitAndTrim("A B C", ' '));
-	// EXPECT_EQ((std::vector<std::string>{"", "A", "B", "C", ""}), SplitAndTrim(" A B C ", ' '));
+	EXPECT_EQ((std::vector<std::string>{"", "A", "B", "C", ""}), SplitAndTrim(" A B C ", ' '));
 	EXPECT_EQ((std::vector<std::string>{"A\tB\tC"}), SplitAndTrim("A\tB\tC", ' '));
 	EXPECT_EQ((std::vector<std::string>{"A", "B", "C"}), SplitAndTrim("A \tB\t C", ' '));
 	EXPECT_EQ((std::vector<std::string>{"A", "B", "C"}), SplitAndTrim("\tA\t \tB\t \tC\t", ' '));
@@ -262,4 +316,41 @@ TEST(StringConversion, SplitAndTrimTrimFront)
 	EXPECT_EQ((std::vector<std::string>{"A", "B", "C"}), SplitAndTrim<TrimFront>("A, B, C", ','));
 	EXPECT_EQ((std::vector<std::string>{"A ", "B ", "C"}), SplitAndTrim<TrimFront>("A ,B ,C", ','));
 	EXPECT_EQ((std::vector<std::string>{"A ", "B ", "C"}), SplitAndTrim<TrimFront>("A , B , C", ','));
+}
+
+TEST(StringConversion, ParseCsv)
+{
+	// Parsing empty (or whitespace only) string gives no data
+	EXPECT_EQ((std::vector<std::string>{}), ParseCsv(""));
+	EXPECT_EQ((std::vector<std::string>{}), ParseCsv(" "));
+	EXPECT_EQ((std::vector<std::string>{}), ParseCsv("\t"));
+	EXPECT_EQ((std::vector<std::string>{}), ParseCsv(" \t"));
+
+	// Parsing returns placeholders for implied data
+	EXPECT_EQ((std::vector<std::string>{"", ""}), ParseCsv(","));
+	EXPECT_EQ((std::vector<std::string>{"A", ""}), ParseCsv("A, "));
+	EXPECT_EQ((std::vector<std::string>{"", "B"}), ParseCsv(", B"));
+
+	// Regular data parsing
+	EXPECT_EQ((std::vector<std::string>{"A"}), ParseCsv("A"));
+	EXPECT_EQ((std::vector<std::string>{"A", "B"}), ParseCsv("A, B"));
+	EXPECT_EQ((std::vector<std::string>{"A", "B", "C"}), ParseCsv("A, B, C"));
+}
+
+
+TEST(StringConversion, AddrToHexString)
+{
+	// Correctly pads with 0
+	EXPECT_EQ("00000000", AddrToHexString(0));
+	EXPECT_EQ("00000000", AddrToHexString(00000000));
+	// Note casing of hex values
+	EXPECT_EQ("deadbeef", AddrToHexString(0xDEADBEEF));
+}
+
+TEST(StringConversion, GetDateTime)
+{
+	auto dateTime = GetDateTime();
+	EXPECT_THAT(dateTime, ::testing::HasSubstr("UTC")); // UTC time zone marker
+	EXPECT_THAT(dateTime, ::testing::ContainsRegex("\\d\\d\\d\\d-\\d\\d-\\d\\d")); // ISO 8601 date format
+	EXPECT_THAT(dateTime, ::testing::ContainsRegex("\\d\\d:\\d\\d:\\d\\d")); // ISO 8601 time format
 }

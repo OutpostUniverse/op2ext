@@ -3,8 +3,20 @@
 #include "GameModules/IniModule.h"
 #include "StringConversion.h"
 #include "FileSystemHelper.h"
-#include "GlobalDefines.h"
+#include "Log.h"
+#include <utility>
 #include <stdexcept>
+
+
+ModuleLoader::ModuleLoader()
+	: iniFile(IniFile(GetOutpost2IniPath()))
+{
+}
+
+ModuleLoader::ModuleLoader(IniFile iniFile)
+	: iniFile(std::move(iniFile))
+{
+}
 
 
 void ModuleLoader::RegisterBuiltInModules()
@@ -21,17 +33,17 @@ void ModuleLoader::RegisterExternalModules()
 	for (const auto& sectionName : sectionNames)
 	{
 		try {
-			RegisterModule(std::make_unique<IniModule>(sectionName));
+			RegisterModule(std::make_unique<IniModule>(iniFile[sectionName]));
 		}
 		catch (const std::exception& e) {
-			PostErrorMessage(__FILE__, __LINE__, e.what());
+			PostError(e.what());
 		}
 	}
 }
 
 bool ModuleLoader::IsBuiltInModuleRequested(const std::string& moduleName)
 {
-	const auto isModuleRequested = ToLower(GetOutpost2IniSetting("BuiltInModules", moduleName));
+	const auto isModuleRequested = ToLower(iniFile.GetValue("BuiltInModules", moduleName));
 
 	if (isModuleRequested == "yes") {
 		return true;
@@ -40,18 +52,19 @@ bool ModuleLoader::IsBuiltInModuleRequested(const std::string& moduleName)
 		return false;
 	}
 
-	PostErrorMessage(__FILE__, __LINE__, "Built-in module named " + moduleName + " contains an innapropriate setting. It must be set to Yes or No");
+	PostError("Built-in module named " + moduleName + " contains an innapropriate setting. It must be set to Yes or No");
 	return false;
 }
 
 std::vector<std::string> ModuleLoader::GetModuleNames(const std::string& moduleType)
 {
-	auto sectionNamesString = GetOutpost2IniSetting("Game", moduleType);
-	auto sectionNames = SplitAndTrim(sectionNamesString, ',');
+	auto sectionNamesString = iniFile.GetValue("Game", moduleType);
+	auto sectionNames = ParseCsv(sectionNamesString);
 
 	return sectionNames;
 }
 
+// An INI module name is the SectionName from the INI file with its config settings
 std::string ModuleLoader::GetModuleName(std::size_t index)
 {
 	if (index >= modules.size()) {
@@ -82,7 +95,7 @@ void ModuleLoader::RegisterModule(std::unique_ptr<GameModule> newGameModule)
 	}
 
 	if (IsModuleLoaded(newGameModule->Name())) {
-		PostErrorMessage(__FILE__, __LINE__, "You may not add a module with an existing name. Duplicate copies of module name " + newGameModule->Name() + " found.");
+		PostError("You may not add a module with an existing name. Duplicate copies of module name " + newGameModule->Name() + " found.");
 		return;
 	}
 
@@ -100,7 +113,7 @@ void ModuleLoader::LoadModules()
 			gameModule->Load();
 		}
 		catch (const std::exception& e) {
-			PostErrorMessage(__FILE__, __LINE__, "Error loading module " + gameModule->Name() + ". " + std::string(e.what()));
+			PostError("Error loading module " + gameModule->Name() + ". " + std::string(e.what()));
 		}
 	}
 }
@@ -119,7 +132,7 @@ bool ModuleLoader::UnloadModules()
 			}
 		}
 		catch (const std::exception& e) {
-			PostErrorMessage(__FILE__, __LINE__, "Error unloading module " + gameModule->Name() + ". " + std::string(e.what()));
+			PostError("Error unloading module " + gameModule->Name() + ". " + std::string(e.what()));
 			areAllModulesProperlyDestroyed = false;
 		}
 	}
@@ -137,7 +150,7 @@ void ModuleLoader::RunModules()
 			gameModule->Run();
 		}
 		catch (const std::exception& e) {
-			PostErrorMessage(__FILE__, __LINE__, "Error running module " + gameModule->Name() + ". " + std::string(e.what()));
+			PostError("Error running module " + gameModule->Name() + ". " + std::string(e.what()));
 		}
 	}
 }

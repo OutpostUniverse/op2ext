@@ -1,42 +1,27 @@
 #include "OP2Memory.h"
-#include "GlobalDefines.h"
+#include "Log.h"
+#include "StringConversion.h"
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-#include <sstream>
-#include <iomanip>
 
 
-bool memoryCommandsDisabled;
+bool memoryPatchingEnabled = false;
 std::size_t loadOffset = 0;
 const std::size_t ExpectedOutpost2Addr = 0x00400000;
 
 
-std::string AddrToHexString(std::size_t addr)
-{
-	std::ostringstream stringStream;
-	stringStream << std::setfill('0') << std::setw(8) << std::hex << addr;
-	return stringStream.str();
-}
-
-
-void DisableMemoryCommands()
-{
-	memoryCommandsDisabled = true;
-}
-
 // Adjust offsets in case Outpost2.exe module is relocated
 void SetLoadOffset()
 {
-	if (memoryCommandsDisabled) {
-		return;
-	}
-
 	void* op2ModuleBase = GetModuleHandle(TEXT("Outpost2.exe"));
 
 	if (op2ModuleBase == nullptr) {
-		PostErrorMessage(__FILE__, __LINE__, "Could not find Outpost2.exe module base address.");
+		PostError("Could not find Outpost2.exe module base address.");
+		return;
 	}
 
+	// Enable memory patching for Outpost2.exe, and set relocation offset
+	memoryPatchingEnabled = true;
 	loadOffset = reinterpret_cast<std::size_t>(op2ModuleBase) - ExpectedOutpost2Addr;
 }
 
@@ -44,7 +29,7 @@ void SetLoadOffset()
 template <typename Function>
 bool Op2MemEdit(void* destBaseAddr, std::size_t size, Function memoryEditFunction)
 {
-	if (memoryCommandsDisabled) {
+	if (!memoryPatchingEnabled) {
 		return false;
 	}
 
@@ -54,7 +39,7 @@ bool Op2MemEdit(void* destBaseAddr, std::size_t size, Function memoryEditFunctio
 	DWORD oldAttr;
 	BOOL bSuccess = VirtualProtect(destAddr, size, PAGE_EXECUTE_READWRITE, &oldAttr);
 	if (!bSuccess) {
-		PostErrorMessage(__FILE__, __LINE__, "Error unprotecting memory at: 0x" + AddrToHexString(reinterpret_cast<std::size_t>(destAddr)) + ".");
+		PostError("Error unprotecting memory at: 0x" + AddrToHexString(reinterpret_cast<std::size_t>(destAddr)) + ".");
 		return false;
 	}
 
@@ -104,13 +89,13 @@ bool Op2MemSetDword(void* destBaseAddr, void* dword)
 // The `callOffset` parameter is the address of the encoded DWORD
 bool Op2RelinkCall(std::size_t callOffset, void* newFunctionAddress)
 {
-	if (memoryCommandsDisabled) {
+	if (!memoryPatchingEnabled) {
 		return false;
 	}
 
 	// Verify this is being run on a CALL instruction
 	if (*reinterpret_cast<unsigned char*>(callOffset + loadOffset) != 0xE8) {
-		PostErrorMessage(__FILE__, __LINE__, "Op2RelinkCall error: No CALL instruction found at given address: " + AddrToHexString(callOffset));
+		PostError("Op2RelinkCall error: No CALL instruction found at given address: " + AddrToHexString(callOffset));
 		return false;
 	}
 
@@ -121,7 +106,7 @@ bool Op2RelinkCall(std::size_t callOffset, void* newFunctionAddress)
 
 bool Op2UnprotectMemory(std::size_t destBaseAddr, std::size_t size)
 {
-	if (memoryCommandsDisabled) {
+	if (!memoryPatchingEnabled) {
 		return false;
 	}
 	

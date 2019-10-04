@@ -3,7 +3,6 @@
 #include "StringConversion.h"
 #include "OP2Memory.h"
 #include "FileSystemHelper.h"
-#include "GlobalDefines.h"
 #include "Log.h"
 #include "WindowsModule.h"
 #define WIN32_LEAN_AND_MEAN
@@ -27,12 +26,19 @@ int StubExt = 0;
 OP2EXT_API size_t GetGameDir_s(char* buffer, size_t bufferSize)
 {
 	// Adding "\\" to end of directory is required for backward compatibility.
-	return CopyStdStringIntoCharBuffer(GetGameDirectory() + "\\", buffer, bufferSize);
+	return CopyStringViewIntoCharBuffer(GetGameDirectory() + "\\", buffer, bufferSize);
 }
 
 OP2EXT_API size_t GetConsoleModDir_s(char* buffer, size_t bufferSize)
 {
-	return CopyStdStringIntoCharBuffer(consoleModLoader.GetModuleDirectory() + "\\", buffer, bufferSize);
+	// This is an older method that assumes only a single console module can be loaded
+	std::string consoleModuleDirectory;
+	if (consoleModuleLoader->Count() > 0) {
+		// Assume they care about the first loaded console module
+		consoleModuleDirectory = consoleModuleLoader->GetModuleDirectory(0);
+	}
+	// Copy module directory to supplied buffer
+	return CopyStringViewIntoCharBuffer(consoleModuleDirectory + "\\", buffer, bufferSize);
 }
 
 OP2EXT_API void GetGameDir(char* buffer)
@@ -48,7 +54,12 @@ OP2EXT_API void GetGameDir(char* buffer)
 
 OP2EXT_API char* GetCurrentModDir()
 {
-	std::string modDirectory = consoleModLoader.GetModuleDirectory();
+	// This is an older method that assumes only a single console module can be loaded
+	std::string modDirectory;
+	if (consoleModuleLoader->Count() > 0) {
+		// Assume they care about the first loaded console module
+		modDirectory = consoleModuleLoader->GetModuleDirectory(0);
+	}
 
 	if (modDirectory.empty()) {
 		return nullptr;
@@ -63,10 +74,10 @@ OP2EXT_API char* GetCurrentModDir()
 OP2EXT_API void AddVolToList(const char* volFilename)
 {
 	if (modulesRunning) {
-		PostErrorMessage(__FILE__, __LINE__, "VOLs may not be added to the list after game startup.");
+		PostError("VOLs may not be added to the list after game startup.");
 	}
 	else {
-		volList.AddVolFile(volFilename);
+		volList->AddVolFile(volFilename);
 	}
 }
 
@@ -74,7 +85,7 @@ char* multiplayerVersionStringAddress = (char*)0x004E973C;
 OP2EXT_API void SetSerialNumber(char major, char minor, char patch)
 {
 	if (modulesRunning || major < 0 || major > 9 || minor < 0 || minor > 9 || patch < 0 || patch > 9) {
-		PostErrorMessage(__FILE__, __LINE__, "SetSerialNumber failed. Invalid mod serial number or was called after game startup.");
+		PostError("SetSerialNumber failed. Invalid mod serial number or was called after game startup.");
 	}
 	else {
 		char buffer[8];
@@ -110,17 +121,17 @@ OP2EXT_API bool IsModuleLoaded(const char* moduleName)
 
 OP2EXT_API bool IsConsoleModuleLoaded(const char* moduleName)
 {
-	return consoleModLoader.IsModuleLoaded(moduleName);
+	return consoleModuleLoader->IsModuleLoaded(moduleName);
 }
 
 OP2EXT_API bool IsIniModuleLoaded(const char* moduleName)
 {
-	return moduleLoader.IsModuleLoaded(moduleName);
+	return moduleLoader->IsModuleLoaded(moduleName);
 }
 
 OP2EXT_API size_t GetLoadedModuleCount()
 {
-	return moduleLoader.Count() + consoleModLoader.Count();
+	return moduleLoader->Count() + consoleModuleLoader->Count();
 }
 
 OP2EXT_API size_t GetLoadedModuleName(size_t moduleIndex, char* buffer, size_t bufferSize)
@@ -130,11 +141,11 @@ OP2EXT_API size_t GetLoadedModuleName(size_t moduleIndex, char* buffer, size_t b
 	std::string moduleName;
 
 	try {
-		if (moduleIndex < moduleLoader.Count()) {
-			moduleName = moduleLoader.GetModuleName(moduleIndex);
+		if (moduleIndex < moduleLoader->Count()) {
+			moduleName = moduleLoader->GetModuleName(moduleIndex);
 		}
 		else if (moduleIndex < GetLoadedModuleCount()) {
-			moduleName = consoleModLoader.GetModuleName();
+			moduleName = consoleModuleLoader->GetModuleName(moduleIndex - moduleLoader->Count());
 		}
 	}
 	catch (const std::exception& e) // Prevent throwing an error across DLL boundaries
@@ -143,5 +154,5 @@ OP2EXT_API size_t GetLoadedModuleName(size_t moduleIndex, char* buffer, size_t b
 			std::to_string(moduleIndex) + ". Details: " + std::string(e.what()));
 	}
 
-	return CopyStdStringIntoCharBuffer(moduleName, buffer, bufferSize);
+	return CopyStringViewIntoCharBuffer(moduleName, buffer, bufferSize);
 }

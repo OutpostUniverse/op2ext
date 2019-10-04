@@ -1,11 +1,10 @@
 #include "Globals.h"
-#include "ConsoleArgumentParser.h"
 
 
 // Indicates if modules and Outpost 2 are running.
 // When set, attempting further initialization commands will cause errors.
 bool modulesRunning = false;
 
-VolList volList;
-ConsoleModuleLoader consoleModLoader(FindModuleDirectory());
-ModuleLoader moduleLoader;
+std::unique_ptr<VolList> volList;
+std::unique_ptr<ConsoleModuleLoader> consoleModuleLoader;
+std::unique_ptr<ModuleLoader> moduleLoader;

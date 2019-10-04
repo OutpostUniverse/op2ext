@@ -1,12 +1,14 @@
 #pragma once
 
 #include "../GameModule.h"
+#include "../IniFile.h"
 #include <windows.h>
+
 
 class IniModule : public GameModule
 {
 public:
-	IniModule(const std::string& iniSectionName);
+	IniModule(IniSection iniSection);
 
 	void Load() override;
 	bool Unload() override;
@@ -18,6 +20,7 @@ private:
 
 	HINSTANCE LoadModuleDll();
 
+	IniSection iniSection;
 	HINSTANCE moduleDllHandle;
 	InitializeModuleFunction initializeModuleFunction;
 	DestroyModuleFunction destroyModuleFunction;
