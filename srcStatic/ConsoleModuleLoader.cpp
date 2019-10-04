@@ -28,7 +28,7 @@ ConsoleModuleLoader::ConsoleModuleLoader(const std::vector<std::string>& moduleN
 	}
 
 	for (const auto& moduleName : moduleNames) {
-		auto moduleDirectory = fs::path(GetGameDirectory()).append(moduleName).string();
+		auto moduleDirectory = fs::path(GetGameDirectory()) / moduleName;
 
 		std::error_code errorCode;
 		if (!fs::is_directory(moduleDirectory, errorCode)) {
@@ -37,7 +37,8 @@ ConsoleModuleLoader::ConsoleModuleLoader(const std::vector<std::string>& moduleN
 		}
 
 		// Store module details
-		modules.push_back({nullptr, moduleName, moduleDirectory});
+		// Make sure module directory ends with a trailing slash
+		modules.push_back({nullptr, moduleName, moduleDirectory.string() + "\\"});
 	}
 
 	// Build list of module directories
@@ -53,7 +54,7 @@ ConsoleModuleLoader::ConsoleModuleLoader(const std::vector<std::string>& moduleN
 std::string ConsoleModuleLoader::GetModuleDirectory(std::size_t index)
 {
 	if (index >= modules.size()) {
-		throw std::runtime_error("Invalid console module index: " + std::to_string(index));
+		throw std::runtime_error("GetModuleDirectory: Invalid console module index: " + std::to_string(index));
 	}
 	// Return copy of private static
 	return modules[index].directory;
@@ -62,7 +63,7 @@ std::string ConsoleModuleLoader::GetModuleDirectory(std::size_t index)
 std::string ConsoleModuleLoader::GetModuleName(std::size_t index)
 {
 	if (index >= modules.size()) {
-		throw std::runtime_error("Invalid console module index: " + std::to_string(index));
+		throw std::runtime_error("GetModuleName: Invalid console module index: " + std::to_string(index));
 	}
 	return modules[index].name;
 }
