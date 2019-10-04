@@ -1,6 +1,7 @@
 #include "op2ext.h"
 #include <gtest/gtest.h>
 #include <string_view>
+#include <fstream>
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
@@ -90,4 +91,45 @@ TEST(op2ext, GetConsoleModDir_s) {
 	EXPECT_EQ(0, consoleModDir[consoleModDirView.length()]);
 	// Path ends with a trailing slash
 	EXPECT_EQ('\\', consoleModDirView.back());
+}
+
+TEST(op2ext, AddVolToList) {
+	// Test Invalid volume filename
+	// No exceptions are allowed across the C-only interface
+	// This may result in logging
+	EXPECT_NO_THROW(AddVolToList("VolumeDoesNotExist.vol"));
+
+	// Set path to test VOL file
+	char gameDir[MAX_PATH];
+	GetGameDir_s(gameDir, sizeof(gameDir));
+	const auto volPath = std::string(gameDir) + "TestVolume.vol";
+
+	// Define the VOL file contents
+	const unsigned char volData[] = {
+		0x56, 0x4F, 0x4C, 0x20, // "VOL "
+		0x1C, 0x00, 0x00, 0x80, // 28 byte section
+		0x76, 0x6F, 0x6C, 0x68, // "volh"
+		0x00, 0x00, 0x00, 0x80, // 00 byte section
+		0x76, 0x6F, 0x6C, 0x73, // "vols"
+		0x04, 0x00, 0x00, 0x80, // 04 byte section
+		0x00, 0x00, 0x00, 0x00, // 00 byte string table
+		0x76, 0x6F, 0x6C, 0x69, // "voli"
+		0x00, 0x00, 0x00, 0x80, // 00 byte section
+	};
+	// Create test VOL file
+	// Use base class since `ofstream` is `basic_ofstream<char>`
+	// We want to `write` an array of `unsigned char`
+	// Use temporary object that auto destructs and closes after write
+	std::basic_ofstream<unsigned char>(volPath).write(volData, sizeof(volData));
+
+	// Test loading 100 volumes
+	// There should be no volume load limit
+	for (auto i = 0; i < 100; ++i)
+	{
+		EXPECT_NO_THROW(AddVolToList(volPath.c_str()));
+	}
+
+	// Cleanup test VOL file
+	// Use Win API directly since it's already imported
+	EXPECT_NE(0, DeleteFileA(volPath.c_str()));
 }
