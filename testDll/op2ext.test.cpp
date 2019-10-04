@@ -139,3 +139,8 @@ TEST(op2ext, SetSerialNumber) {
 	EXPECT_NO_THROW(SetSerialNumber(0, 0, 0));
 	EXPECT_NO_THROW(SetSerialNumber(9, 9, 9));
 }
+
+TEST(op2ext, Log) {
+	// Can log any text message
+	EXPECT_NO_THROW(Log("Test adding a message to log file"));
+}
