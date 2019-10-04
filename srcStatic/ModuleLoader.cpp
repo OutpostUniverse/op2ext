@@ -59,7 +59,7 @@ bool ModuleLoader::IsBuiltInModuleRequested(const std::string& moduleName)
 std::vector<std::string> ModuleLoader::GetModuleNames(const std::string& moduleType)
 {
 	auto sectionNamesString = iniFile.GetValue("Game", moduleType);
-	auto sectionNames = SplitAndTrim(sectionNamesString, ',');
+	auto sectionNames = ParseCsv(sectionNamesString);
 
 	return sectionNames;
 }

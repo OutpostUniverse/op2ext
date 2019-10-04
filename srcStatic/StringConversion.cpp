@@ -105,14 +105,29 @@ std::vector<std::string> Split(const std::string& stringToSplit, char delimiter)
 {
 	std::vector<std::string> strings;
 
-	std::istringstream stringStream(stringToSplit);
-	std::string currentToken;
-
-	while (std::getline(stringStream, currentToken, delimiter)) {
-		strings.push_back(currentToken);
+	std::size_t start = 0;
+	std::size_t end = stringToSplit.find(delimiter);
+	while (end != std::string::npos) {
+		strings.push_back(stringToSplit.substr(start, end - start));
+		start = end + 1;
+		end = stringToSplit.find(delimiter, start);
 	}
+	strings.push_back(stringToSplit.substr(start, end - start));
 
 	return strings;
+}
+
+std::vector<std::string> ParseCsv(const std::string& csv, char delimiter, std::string_view whitespace)
+{
+	// First check if input string is empty (or only whitespace)
+	auto trimmedCsv = Trim(csv, whitespace);
+	if (trimmedCsv.empty()) {
+		return {}; // Empty (no data)
+	}
+
+	// Split data into vector of strings
+	// At least one data element will be returned
+	return SplitAndTrim(trimmedCsv, delimiter, whitespace);
 }
 
 

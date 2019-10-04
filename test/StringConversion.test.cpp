@@ -239,15 +239,15 @@ TEST(StringConversion, TrimBack)
 TEST(StringConversion, Split)
 {
 	// Empty string
-	EXPECT_EQ(std::vector<std::string>{}, Split("", ','));
+	EXPECT_EQ(std::vector<std::string>{""}, Split("", ','));
 
 	// Single entry
 	EXPECT_EQ(std::vector<std::string>{"A"}, Split("A", ','));
 
 	// Empty multi entry
-	// EXPECT_EQ((std::vector<std::string>{"", ""}), Split(",", ','));
-	// EXPECT_EQ((std::vector<std::string>{"", "", ""}), Split(",,", ','));
-	// EXPECT_EQ((std::vector<std::string>{"", "", "", ""}), Split(",,,", ','));
+	EXPECT_EQ((std::vector<std::string>{"", ""}), Split(",", ','));
+	EXPECT_EQ((std::vector<std::string>{"", "", ""}), Split(",,", ','));
+	EXPECT_EQ((std::vector<std::string>{"", "", "", ""}), Split(",,,", ','));
 
 	// Multi entry
 	EXPECT_EQ((std::vector<std::string>{"A", "B"}), Split("A,B", ','));
@@ -263,22 +263,22 @@ TEST(StringConversion, Split)
 
 	// Space separated
 	EXPECT_EQ((std::vector<std::string>{"A", "B", "C"}), Split("A B C", ' '));
-	// EXPECT_EQ((std::vector<std::string>{"", "A", "B", "C", ""}), Split(" A B C ", ' '));
+	EXPECT_EQ((std::vector<std::string>{"", "A", "B", "C", ""}), Split(" A B C ", ' '));
 	EXPECT_EQ((std::vector<std::string>{"A\tB\tC"}), Split("A\tB\tC", ' '));
 }
 
 TEST(StringConversion, SplitAndTrim)
 {
 	// Empty string
-	EXPECT_EQ(std::vector<std::string>{}, SplitAndTrim("", ','));
+	EXPECT_EQ(std::vector<std::string>{""}, SplitAndTrim("", ','));
 
 	// Single entry
 	EXPECT_EQ(std::vector<std::string>{"A"}, SplitAndTrim("A", ','));
 
 	// Empty multi entry
-	// EXPECT_EQ((std::vector<std::string>{"", ""}), SplitAndTrim(",", ','));
-	// EXPECT_EQ((std::vector<std::string>{"", "", ""}), SplitAndTrim(",,", ','));
-	// EXPECT_EQ((std::vector<std::string>{"", "", "", ""}), SplitAndTrim(",,,", ','));
+	EXPECT_EQ((std::vector<std::string>{"", ""}), SplitAndTrim(",", ','));
+	EXPECT_EQ((std::vector<std::string>{"", "", ""}), SplitAndTrim(",,", ','));
+	EXPECT_EQ((std::vector<std::string>{"", "", "", ""}), SplitAndTrim(",,,", ','));
 
 	// Multi entry
 	EXPECT_EQ((std::vector<std::string>{"A", "B"}), SplitAndTrim("A,B", ','));
@@ -301,7 +301,7 @@ TEST(StringConversion, SplitAndTrim)
 
 	// Space separated
 	EXPECT_EQ((std::vector<std::string>{"A", "B", "C"}), SplitAndTrim("A B C", ' '));
-	// EXPECT_EQ((std::vector<std::string>{"", "A", "B", "C", ""}), SplitAndTrim(" A B C ", ' '));
+	EXPECT_EQ((std::vector<std::string>{"", "A", "B", "C", ""}), SplitAndTrim(" A B C ", ' '));
 	EXPECT_EQ((std::vector<std::string>{"A\tB\tC"}), SplitAndTrim("A\tB\tC", ' '));
 	EXPECT_EQ((std::vector<std::string>{"A", "B", "C"}), SplitAndTrim("A \tB\t C", ' '));
 	EXPECT_EQ((std::vector<std::string>{"A", "B", "C"}), SplitAndTrim("\tA\t \tB\t \tC\t", ' '));
@@ -316,6 +316,25 @@ TEST(StringConversion, SplitAndTrimTrimFront)
 	EXPECT_EQ((std::vector<std::string>{"A", "B", "C"}), SplitAndTrim<TrimFront>("A, B, C", ','));
 	EXPECT_EQ((std::vector<std::string>{"A ", "B ", "C"}), SplitAndTrim<TrimFront>("A ,B ,C", ','));
 	EXPECT_EQ((std::vector<std::string>{"A ", "B ", "C"}), SplitAndTrim<TrimFront>("A , B , C", ','));
+}
+
+TEST(StringConversion, ParseCsv)
+{
+	// Parsing empty (or whitespace only) string gives no data
+	EXPECT_EQ((std::vector<std::string>{}), ParseCsv(""));
+	EXPECT_EQ((std::vector<std::string>{}), ParseCsv(" "));
+	EXPECT_EQ((std::vector<std::string>{}), ParseCsv("\t"));
+	EXPECT_EQ((std::vector<std::string>{}), ParseCsv(" \t"));
+
+	// Parsing returns placeholders for implied data
+	EXPECT_EQ((std::vector<std::string>{"", ""}), ParseCsv(","));
+	EXPECT_EQ((std::vector<std::string>{"A", ""}), ParseCsv("A, "));
+	EXPECT_EQ((std::vector<std::string>{"", "B"}), ParseCsv(", B"));
+
+	// Regular data parsing
+	EXPECT_EQ((std::vector<std::string>{"A"}), ParseCsv("A"));
+	EXPECT_EQ((std::vector<std::string>{"A", "B"}), ParseCsv("A, B"));
+	EXPECT_EQ((std::vector<std::string>{"A", "B", "C"}), ParseCsv("A, B, C"));
 }
 
 

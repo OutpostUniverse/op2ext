@@ -53,6 +53,10 @@ std::vector<std::string> SplitAndTrim(std::string stringToSplit, char delimiter,
 	return items;
 }
 
+// Parses a list of comma separated values
+// Whitespace between elements is stripped
+std::vector<std::string> ParseCsv(const std::string& csv, char delimiter = ',', std::string_view whitespace = Whitespace);
+
 // Convert hex address value to string
 std::string AddrToHexString(std::size_t addr);
 
