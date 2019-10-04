@@ -144,3 +144,22 @@ TEST(op2ext, Log) {
 	// Can log any text message
 	EXPECT_NO_THROW(Log("Test adding a message to log file"));
 }
+
+TEST(op2ext, IsModuleLoaded) {
+	EXPECT_FALSE(IsModuleLoaded(""));
+	EXPECT_FALSE(IsModuleLoaded("NonExistentModuleName"));
+}
+
+TEST(op2ext, IsConsoleModuleLoaded) {
+	EXPECT_FALSE(IsModuleLoaded(""));
+	EXPECT_FALSE(IsModuleLoaded("NonExistentModuleName"));
+}
+
+TEST(op2ext, IsIniModuleLoaded) {
+	EXPECT_FALSE(IsModuleLoaded(""));
+	EXPECT_FALSE(IsModuleLoaded("NonExistentModuleName"));
+}
+
+TEST(op2ext, GetLoadedModuleCount) {
+	EXPECT_EQ(0u, GetLoadedModuleCount());
+}
