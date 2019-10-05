@@ -18,7 +18,10 @@ bool EnableOp2MemoryPatching()
 	void* op2ModuleBase = GetModuleHandle(TEXT("Outpost2.exe"));
 
 	if (op2ModuleBase == nullptr) {
-		PostError("Could not find Outpost2.exe module base address.");
+		// Could not find Outpost2.exe module base address
+		// This can never happen if Outpost2.exe was the one that loaded op2ext.dll
+		// Failure likely means op2ext.dll was loaded elsewhere, such as a unit test
+		// We should just fail silently in this case
 		return false;
 	}
 
