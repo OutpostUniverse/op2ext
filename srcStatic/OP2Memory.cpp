@@ -10,9 +10,10 @@ std::size_t loadOffset = 0;
 const std::size_t ExpectedOutpost2Addr = 0x00400000;
 
 
+// Enabled patching of Outpost2.exe memory
 // Adjust offsets in case Outpost2.exe module is relocated
 // Returns true on success, or false on failure
-bool SetLoadOffset()
+bool EnableOp2MemoryPatching()
 {
 	void* op2ModuleBase = GetModuleHandle(TEXT("Outpost2.exe"));
 

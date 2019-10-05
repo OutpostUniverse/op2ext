@@ -58,7 +58,7 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 		moduleLoader = std::make_unique<ModuleLoader>();
 
 		// Set load offset for Outpost2.exe module, used during memory patching
-		SetLoadOffset();
+		EnableOp2MemoryPatching();
 
 		// Replace call to gTApp.Init with custom routine
 		if (!Op2RelinkCall(0x004A8877, GetMethodVoidPointer(&TApp::Init))) {

@@ -6,7 +6,7 @@
 #include <type_traits>
 
 
-bool SetLoadOffset();
+bool EnableOp2MemoryPatching();
 
 bool Op2MemCopy(void* destBaseAddr, void* sourceAddr, int size);
 bool Op2MemSet(void* destBaseAddr, unsigned char value, int size);
