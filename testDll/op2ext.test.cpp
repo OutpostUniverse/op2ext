@@ -163,3 +163,26 @@ TEST(op2ext, IsIniModuleLoaded) {
 TEST(op2ext, GetLoadedModuleCount) {
 	EXPECT_EQ(0u, GetLoadedModuleCount());
 }
+
+TEST(op2ext, GetLoadedModuleName) {
+	constexpr char Nonce = 255;
+	char moduleName[256] = {Nonce};
+
+	// No crash on nullptr buffer
+	// Returns required buffer size (must include space for null terminator)
+	EXPECT_NE(0u, GetLoadedModuleName(0, nullptr, 0));
+	EXPECT_NE(0u, GetLoadedModuleName(0, nullptr, sizeof(moduleName)));
+
+	// Returns needed buffer size when supplied buffer is too small
+	// Buffer is not modified beyond specified length
+	EXPECT_NE(0u, GetLoadedModuleName(0, moduleName, 0));
+	EXPECT_EQ(Nonce, moduleName[0]);
+
+	// On success return value is 0, and buffer contains module name
+	EXPECT_EQ(0u, GetLoadedModuleName(0, moduleName, sizeof(moduleName)));
+	std::string_view moduleNameView{moduleName};
+	// Module name plus null terminator should fit within buffer size
+	ASSERT_TRUE(moduleNameView.length() < sizeof(moduleName));
+	// Module name is null terminated (this is outside the string_view window)
+	EXPECT_EQ(0, moduleName[moduleNameView.length()]);
+}
