@@ -12,4 +12,4 @@ jobs:
       - run: make --keep-going --jobs=2 testLib
       - run: make --keep-going --jobs=2 testDll
       - run: make --keep-going --jobs=2 check-testLib
-      # - run: make --keep-going --jobs=2 check-testDll
+      - run: make --keep-going --jobs=2 check-testDll
