@@ -1,5 +1,6 @@
 #include "DllModule.h"
 #include "../WindowsErrorCode.h"
+#include <stdexcept>
 
 DllModule::DllModule(const std::string& moduleName)
 	: GameModule(moduleName) { }
