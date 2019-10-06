@@ -25,6 +25,16 @@ IniSection IniFile::operator[](std::string sectionName) const {
 	return IniSection(fileName, std::move(sectionName));
 }
 
+// Get list of all section names
+std::vector<std::string> IniFile::GetSectionNames() const {
+	return IniFile::GetSectionNames(fileName);
+}
+
+// Get list of all Key names within a section
+std::vector<std::string> IniFile::GetKeyNames(const std::string& sectionName) {
+	return IniFile::GetKeyNames(fileName, sectionName);
+}
+
 // Remove an entire section along with all keys and values it contains
 void IniFile::ClearSection(const std::string& sectionName) {
 	IniFile::ClearSection(fileName, sectionName);
@@ -133,6 +143,11 @@ std::string IniSection::GetValue(const std::string& keyName) const {
 // Alternate syntax for GetValue
 std::string IniSection::operator[](std::string keyName) const {
 	return IniFile::GetValue(fileName, sectionName, keyName);
+}
+
+// Get list of all Key names within a section
+std::vector<std::string> IniSection::GetKeyNames() {
+	return IniFile::GetKeyNames(fileName, sectionName);
 }
 
 // Remove an entire section along with all keys and values it contains

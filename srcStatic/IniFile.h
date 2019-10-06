@@ -16,6 +16,8 @@ public:
 	const std::string& FileName() const;
 	std::string GetValue(const std::string& sectionName, const std::string& keyName) const;
 	IniSection operator[](std::string sectionName) const;
+	std::vector<std::string> GetSectionNames() const;
+	std::vector<std::string> GetKeyNames(const std::string& sectionName);
 
 	void ClearSection(const std::string& sectionName);
 	void ClearKey(const std::string& sectionName, const std::string& keyName);
@@ -45,6 +47,7 @@ public:
 	const std::string& SectionName() const;
 	std::string GetValue(const std::string& keyName) const;
 	std::string operator[](std::string keyName) const;
+	std::vector<std::string> GetKeyNames();
 
 	void ClearSection();
 	void ClearKey(const std::string& keyName);
