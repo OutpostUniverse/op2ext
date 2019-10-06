@@ -17,8 +17,8 @@ IniModule::IniModule(IniSection iniSection)
 	}
 
 	// Search for dll's initialization & destroy functions
-	initializeModuleFunction = (InitializeModuleFunction)GetProcAddress(moduleDllHandle, "InitMod");
-	destroyModuleFunction = (DestroyModuleFunction)GetProcAddress(moduleDllHandle, "DestroyMod");
+	loadModuleFunction = (LoadModuleFunction)GetProcAddress(moduleDllHandle, "InitMod");
+	unloadModuleFunction = (UnloadModuleFunction)GetProcAddress(moduleDllHandle, "DestroyMod");
 };
 
 HINSTANCE IniModule::LoadModuleDll()
@@ -40,8 +40,8 @@ HINSTANCE IniModule::LoadModuleDll()
 void IniModule::Load()
 {
 	// Call the InitMod function if it exists
-	if (initializeModuleFunction != nullptr) {
-		initializeModuleFunction(Name().c_str());
+	if (loadModuleFunction != nullptr) {
+		loadModuleFunction(Name().c_str());
 	}
 }
 
@@ -49,8 +49,8 @@ bool IniModule::Unload()
 {
 	bool success = true;
 
-	if (destroyModuleFunction != nullptr) {
-		success = destroyModuleFunction();
+	if (unloadModuleFunction != nullptr) {
+		success = unloadModuleFunction();
 	}
 
 	FreeLibrary(moduleDllHandle);

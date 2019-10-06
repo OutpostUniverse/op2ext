@@ -15,13 +15,13 @@ public:
 
 private:
 	// Export (not absolutely required, but should be used if any additional parameters are read from the .ini file)
-	typedef void(*InitializeModuleFunction)(const char* iniSectionName);
-	typedef bool(*DestroyModuleFunction)();
+	typedef void(*LoadModuleFunction)(const char* iniSectionName);
+	typedef bool(*UnloadModuleFunction)();
 
 	HINSTANCE LoadModuleDll();
 
 	IniSection iniSection;
 	HINSTANCE moduleDllHandle;
-	InitializeModuleFunction initializeModuleFunction;
-	DestroyModuleFunction destroyModuleFunction;
+	LoadModuleFunction loadModuleFunction;
+	UnloadModuleFunction unloadModuleFunction;
 };
