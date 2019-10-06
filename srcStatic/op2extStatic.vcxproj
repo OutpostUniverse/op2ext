@@ -129,6 +129,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="GameModules\DllModule.cpp" />
     <ClCompile Include="GetCommandLineArguments.cpp" />
     <ClCompile Include="ConsoleArgumentParser.cpp" />
     <ClCompile Include="FileSystemHelper.cpp" />
@@ -148,6 +149,7 @@
     <ClCompile Include="WindowsModule.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GameModules\DllModule.h" />
     <ClInclude Include="GetCommandLineArguments.h" />
     <ClInclude Include="ConsoleArgumentParser.h" />
     <ClInclude Include="FileSystemHelper.h" />

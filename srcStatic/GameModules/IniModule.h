@@ -1,11 +1,10 @@
 #pragma once
 
-#include "../GameModule.h"
+#include "DllModule.h"
 #include "../IniFile.h"
-#include <windows.h>
 
 
-class IniModule : public GameModule
+class IniModule : public DllModule
 {
 public:
 	IniModule(IniSection iniSection);
@@ -18,10 +17,8 @@ private:
 	typedef void(*LoadModuleFunction)(const char* iniSectionName);
 	typedef bool(*UnloadModuleFunction)();
 
-	HINSTANCE LoadModuleDll();
-
 	IniSection iniSection;
-	HINSTANCE moduleDllHandle;
+
 	LoadModuleFunction loadModuleFunction;
 	UnloadModuleFunction unloadModuleFunction;
 };

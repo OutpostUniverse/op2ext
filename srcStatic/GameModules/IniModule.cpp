@@ -1,15 +1,15 @@
 #include "IniModule.h"
-#include "../WindowsErrorCode.h"
 #include "../Log.h"
 #include <utility>
 #include <stdexcept>
 
 
 IniModule::IniModule(IniSection iniSection)
-	: GameModule(iniSection.SectionName()), iniSection(std::move(iniSection))
+	: DllModule(iniSection.SectionName()), iniSection(std::move(iniSection))
 {
 	try {
-		moduleDllHandle = LoadModuleDll();
+		// Get the DLL name from the corresponding section
+		LoadModuleDll(iniSection["Dll"]);
 	}
 	catch (const std::exception& error) {
 		PostError("Unable to load dll for module " + Name() + " . " + std::string(error.what()));
@@ -20,22 +20,6 @@ IniModule::IniModule(IniSection iniSection)
 	loadModuleFunction = (LoadModuleFunction)GetProcAddress(moduleDllHandle, "InitMod");
 	unloadModuleFunction = (UnloadModuleFunction)GetProcAddress(moduleDllHandle, "DestroyMod");
 };
-
-HINSTANCE IniModule::LoadModuleDll()
-{
-	// Get the DLL name from the corresponding section
-	std::string dllName = iniSection["Dll"];
-
-	// Try to load a DLL with the given name (possibly "")
-	HINSTANCE dllHandle = LoadLibraryA(dllName.c_str());
-
-	if (dllHandle == NULL) {
-		throw std::runtime_error("Unable to load DLL " + dllName + " from ini module section " +
-			Name() + ". LoadLibrary " + GetLastErrorString());
-	}
-
-	return dllHandle;
-}
 
 void IniModule::Load()
 {
