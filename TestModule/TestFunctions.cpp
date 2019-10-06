@@ -117,7 +117,7 @@ void TestIsConsoleModuleLoaded()
 	const std::string moduleName("TestModule");
 	std::string outputString("Console Module " + moduleName);
 
-	if (IsConsoleModuleLoaded(moduleName.c_str())) {
+	if (IsModuleLoaded(moduleName.c_str())) {
 		outputString += " is loaded\n";
 	}
 	else {
@@ -132,7 +132,7 @@ void TestIsIniModuleLoaded()
 	const std::string moduleName("NetFix");
 	std::string outputString("Ini Module " + moduleName);
 
-	if (IsIniModuleLoaded(moduleName.c_str())) {
+	if (IsModuleLoaded(moduleName.c_str())) {
 		outputString += " is loaded\n" ;
 	}
 	else {

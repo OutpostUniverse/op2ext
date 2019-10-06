@@ -1,29 +1,12 @@
-#include "ConsoleModuleLoader.h"
+#include "ModuleLoader.h"
 #include "FileSystemHelper.h"
+#include "IniFile.h"
+#include <windows.h>
 #include <gtest/gtest.h>
 #include <string>
 #include <fstream>
+#include <stdexcept>
 
-
-TEST(ConsoleModuleLoader, NoModuleLoaded)
-{
-	ConsoleModuleLoader consoleModuleLoader({});
-
-	// Throws an exception if the index is out of range
-	EXPECT_THROW(consoleModuleLoader.GetModuleName(0), std::runtime_error);
-	EXPECT_THROW(consoleModuleLoader.GetModuleDirectory(0), std::runtime_error);
-
-	EXPECT_EQ(0u, consoleModuleLoader.Count());
-
-	// Module name cannot be an empty string
-	EXPECT_FALSE(consoleModuleLoader.IsModuleLoaded(""));
-	EXPECT_FALSE(consoleModuleLoader.IsModuleLoaded("TEST"));
-
-	// No module present to load, functions should return without doing anything
-	EXPECT_NO_THROW(consoleModuleLoader.LoadModules());
-	EXPECT_NO_THROW(consoleModuleLoader.RunModules());
-	EXPECT_NO_THROW(consoleModuleLoader.UnloadModules());
-}
 
 TEST(ConsoleModuleLoader, ModuleWithoutDLL)
 {
@@ -34,20 +17,23 @@ TEST(ConsoleModuleLoader, ModuleWithoutDLL)
 	const auto moduleDirectory = fs::path(GetGameDirectory()) / moduleName;
 	fs::create_directory(moduleDirectory);
 
-	ConsoleModuleLoader consoleModuleLoader({moduleName});
+	const std::string iniFileName{ GetGameDirectory() + "TestIniFile.NonExistentData.ini" };
+	IniFile iniFile(iniFileName);
+	ModuleLoader moduleLoader(iniFileName, {moduleName});
+	
+	EXPECT_NO_THROW(moduleLoader.LoadModules());
+	EXPECT_NO_THROW(moduleLoader.RunModules());
 
-	EXPECT_EQ(moduleDirectory.string() + "\\", consoleModuleLoader.GetModuleDirectory(0));
-	EXPECT_EQ(moduleName, consoleModuleLoader.GetModuleName(0));
+	EXPECT_EQ(moduleDirectory.string() + "\\", moduleLoader.GetModuleDirectory(0));
+	EXPECT_EQ(moduleName, moduleLoader.GetModuleName(0));
 
-	EXPECT_TRUE(consoleModuleLoader.IsModuleLoaded(moduleName));
-	EXPECT_FALSE(consoleModuleLoader.IsModuleLoaded(""));
-	EXPECT_FALSE(consoleModuleLoader.IsModuleLoaded("UnknownModule"));
+	EXPECT_TRUE(moduleLoader.IsModuleLoaded(moduleName));
+	EXPECT_FALSE(moduleLoader.IsModuleLoaded(""));
+	EXPECT_FALSE(moduleLoader.IsModuleLoaded("UnknownModule"));
 
-	EXPECT_EQ(1u, consoleModuleLoader.Count());
+	EXPECT_EQ(1u, moduleLoader.Count());
 
-	EXPECT_NO_THROW(consoleModuleLoader.LoadModules());
-	EXPECT_NO_THROW(consoleModuleLoader.RunModules());
-	EXPECT_NO_THROW(consoleModuleLoader.UnloadModules());
+	EXPECT_NO_THROW(moduleLoader.UnloadModules());
 
 	// Cleanup test module directory
 	// Use Win API directly since fs::remove doesn't work under Mingw
@@ -62,29 +48,35 @@ TEST(ConsoleModuleLoader, ModuleWithEmptyDLL)
 	// Ensure module directory ends with a trailing slash
 	const auto moduleDirectory = fs::path(GetGameDirectory()) / moduleName;
 	const auto dllFile = moduleDirectory / "op2mod.dll";
+	
 	// Create temporary module directory
 	fs::create_directory(moduleDirectory);
+
 	// Create empty DLL file
 	// Temporary object, immediately destructed, side effect creates file of size 0
 	std::ofstream(dllFile.string());
 
-	ConsoleModuleLoader consoleModuleLoader({moduleName});
-
-	EXPECT_EQ(moduleDirectory.string() + "\\", consoleModuleLoader.GetModuleDirectory(0));
-	EXPECT_EQ(moduleName, consoleModuleLoader.GetModuleName(0));
-
-	EXPECT_TRUE(consoleModuleLoader.IsModuleLoaded(moduleName));
-	EXPECT_FALSE(consoleModuleLoader.IsModuleLoaded(""));
-	EXPECT_FALSE(consoleModuleLoader.IsModuleLoaded("UnknownModule"));
-
-	EXPECT_EQ(1u, consoleModuleLoader.Count());
+	const std::string iniFileName{ GetGameDirectory() + "TestIniFile.NonExistentData.ini" };
+	IniFile iniFile(iniFileName);
+	ModuleLoader moduleLoader(iniFileName, {moduleName});
 
 	// DLL file is empty and should be aborted
-	EXPECT_NO_THROW(consoleModuleLoader.LoadModules());
+	EXPECT_NO_THROW(moduleLoader.LoadModules());
 
 	// Functions should return without doing anything since module load is aborted
-	EXPECT_NO_THROW(consoleModuleLoader.RunModules());
-	EXPECT_NO_THROW(consoleModuleLoader.UnloadModules());
+	EXPECT_NO_THROW(moduleLoader.RunModules());
+
+	// Due to invalid dll, no module exists to get directory from
+	EXPECT_THROW(moduleLoader.GetModuleDirectory(0), std::out_of_range);
+	EXPECT_THROW(moduleLoader.GetModuleName(0), std::out_of_range);
+
+	EXPECT_FALSE(moduleLoader.IsModuleLoaded(moduleName));
+	EXPECT_FALSE(moduleLoader.IsModuleLoaded(""));
+	EXPECT_FALSE(moduleLoader.IsModuleLoaded("UnknownModule"));
+
+	EXPECT_EQ(0u, moduleLoader.Count());
+
+	EXPECT_NO_THROW(moduleLoader.UnloadModules());
 
 	// Cleanup test module DLL and directory
 	// Use Win API directly since fs::remove doesn't work under Mingw
@@ -101,20 +93,23 @@ TEST(ConsoleModuleLoader, MultiModule) {
 		fs::create_directory(exeDir / moduleName);
 	}
 
-	ConsoleModuleLoader consoleModuleLoader(moduleNames);
+	const std::string iniFileName{ GetGameDirectory() + "TestIniFile.NonExistentData.ini" };
+	IniFile iniFile(iniFileName);
+	ModuleLoader moduleLoader(iniFile, moduleNames);
 
-	EXPECT_EQ(2u, consoleModuleLoader.Count());
-	EXPECT_EQ(moduleNames[0], consoleModuleLoader.GetModuleName(0));
-	EXPECT_EQ(moduleNames[1], consoleModuleLoader.GetModuleName(1));
+	EXPECT_NO_THROW(moduleLoader.LoadModules());
+	EXPECT_NO_THROW(moduleLoader.RunModules());
 
-	EXPECT_TRUE(consoleModuleLoader.IsModuleLoaded(moduleNames[0]));
-	EXPECT_TRUE(consoleModuleLoader.IsModuleLoaded(moduleNames[1]));
+	EXPECT_EQ(2u, moduleLoader.Count());
+	EXPECT_EQ(moduleNames[0], moduleLoader.GetModuleName(0));
+	EXPECT_EQ(moduleNames[1], moduleLoader.GetModuleName(1));
 
-	EXPECT_FALSE(consoleModuleLoader.IsModuleLoaded(""));
+	EXPECT_TRUE(moduleLoader.IsModuleLoaded(moduleNames[0]));
+	EXPECT_TRUE(moduleLoader.IsModuleLoaded(moduleNames[1]));
 
-	EXPECT_NO_THROW(consoleModuleLoader.LoadModules());
-	EXPECT_NO_THROW(consoleModuleLoader.RunModules());
-	EXPECT_NO_THROW(consoleModuleLoader.UnloadModules());
+	EXPECT_FALSE(moduleLoader.IsModuleLoaded(""));
+
+	EXPECT_NO_THROW(moduleLoader.UnloadModules());
 
 	// Cleanup test module directories
 	for (const auto& moduleName : moduleNames) {

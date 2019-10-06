@@ -5,7 +5,6 @@
     <ClCompile Include="ConsoleArgumentParser.cpp" />
     <ClCompile Include="FileSystemHelper.cpp" />
     <ClCompile Include="ModuleLoader.cpp" />
-    <ClCompile Include="ConsoleModuleLoader.cpp" />
     <ClCompile Include="IniFile.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="LoggerFile.cpp" />
@@ -25,6 +24,9 @@
     <ClCompile Include="GameModules\DllModule.cpp">
       <Filter>GameModules</Filter>
     </ClCompile>
+    <ClCompile Include="GameModules\ConsoleModule.cpp">
+      <Filter>GameModules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GetCommandLineArguments.h" />
@@ -32,7 +34,6 @@
     <ClInclude Include="FileSystemHelper.h" />
     <ClInclude Include="GameModule.h" />
     <ClInclude Include="ModuleLoader.h" />
-    <ClInclude Include="ConsoleModuleLoader.h" />
     <ClInclude Include="IniFile.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="Logger.h" />
@@ -51,6 +52,9 @@
       <Filter>GameModules</Filter>
     </ClInclude>
     <ClInclude Include="GameModules\DllModule.h">
+      <Filter>GameModules</Filter>
+    </ClInclude>
+    <ClInclude Include="GameModules\ConsoleModule.h">
       <Filter>GameModules</Filter>
     </ClInclude>
   </ItemGroup>

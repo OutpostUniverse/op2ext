@@ -6,5 +6,4 @@
 bool modulesRunning = false;
 
 std::unique_ptr<VolList> volList;
-std::unique_ptr<ConsoleModuleLoader> consoleModuleLoader;
 std::unique_ptr<ModuleLoader> moduleLoader;

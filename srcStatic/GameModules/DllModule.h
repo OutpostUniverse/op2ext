@@ -12,7 +12,7 @@ public:
 	DllModule(const std::string& moduleName);
 
 protected:
-	HINSTANCE moduleDllHandle;
+	HINSTANCE moduleDllHandle = nullptr;
 
 	// Call from constructor of derived class
 	void LoadModuleDll(const std::string& dllPath);
