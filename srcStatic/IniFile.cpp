@@ -46,30 +46,18 @@ void IniFile::SetValue(const std::string& sectionName, const std::string& keyNam
 // This can be used for convenient one-off use
 // This may be less efficienct for repeated use to fetch multiple values
 std::string IniFile::GetValue(const std::string& fileName, const std::string& sectionName, const std::string& keyName) {
-	const std::size_t bufferInterval = 1024;
-	auto currentBufferSize = bufferInterval;
-	std::string profileString;
-	DWORD returnSize;
+	// Allocate buffer space
+	// The Win API GetPrivateProfileString has a maximum limit of 2^16 characters
+	// Trying to retrieve a longer string from the Win API will fail in unusual ways
+	std::string resultString;
+	resultString.resize(65536);
 
-	while (true)
-	{
-		profileString.resize(currentBufferSize);
+	// Read result from INI file
+	DWORD returnSize = GetPrivateProfileStringA(sectionName.c_str(), keyName.c_str(), "", resultString.data(), resultString.size(), fileName.c_str());
+	// Resize to returned data size (which doesn't include null terminator)
+	resultString.resize(returnSize);
 
-		//GetPrivateProfileString's return value is the number of characters copied to the buffer,
-		// not including the terminating null character.
-		// A full buffer could be nSize - 2 if either lpAppName or lpKeyName are NULL AND the supplied buffer is too small
-		returnSize = GetPrivateProfileStringA(sectionName.c_str(), keyName.c_str(), "", &profileString[0], currentBufferSize, fileName.c_str());
-
-		if (returnSize + 2 < currentBufferSize) {
-			break;
-		}
-
-		currentBufferSize += bufferInterval;
-	}
-
-	profileString.resize(returnSize);
-
-	return profileString;
+	return resultString;
 }
 
 // Remove an entire section along with all keys and values it contains
