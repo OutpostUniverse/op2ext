@@ -38,6 +38,9 @@ TEST(IniFile, StaticMethodsWriteRead) {
 	// Initially no data
 	EXPECT_EQ("", IniFile::GetValue(iniFileName, "SectionName", "KeyName1"));
 	EXPECT_EQ("", IniFile::GetValue(iniFileName, "SectionName", "KeyName2"));
+	// Initially no Section and Key names
+	EXPECT_EQ((std::vector<std::string>{}), IniFile::GetSectionNames(iniFileName));
+	EXPECT_EQ((std::vector<std::string>{}), IniFile::GetKeyNames(iniFileName, "SectionName"));
 
 	// Create data
 	EXPECT_NO_THROW(IniFile::SetValue(iniFileName, "SectionName", "KeyName1", "SomeValue1"));
@@ -45,18 +48,27 @@ TEST(IniFile, StaticMethodsWriteRead) {
 	// Data now present
 	EXPECT_EQ("SomeValue1", IniFile::GetValue(iniFileName, "SectionName", "KeyName1"));
 	EXPECT_EQ("SomeValue2", IniFile::GetValue(iniFileName, "SectionName", "KeyName2"));
+	// Section and Key names now present
+	EXPECT_EQ((std::vector<std::string>{"SectionName"}), IniFile::GetSectionNames(iniFileName));
+	EXPECT_EQ((std::vector<std::string>{"KeyName1", "KeyName2"}), IniFile::GetKeyNames(iniFileName, "SectionName"));
 
 	// Delete a key
 	EXPECT_NO_THROW(IniFile::ClearKey(iniFileName, "SectionName", "KeyName1"));
 	// One value removed
 	EXPECT_EQ("", IniFile::GetValue(iniFileName, "SectionName", "KeyName1"));
 	EXPECT_EQ("SomeValue2", IniFile::GetValue(iniFileName, "SectionName", "KeyName2"));
+	// Section and one Key name now present
+	EXPECT_EQ((std::vector<std::string>{"SectionName"}), IniFile::GetSectionNames(iniFileName));
+	EXPECT_EQ((std::vector<std::string>{"KeyName2"}), IniFile::GetKeyNames(iniFileName, "SectionName"));
 
 	// Delete a section
 	EXPECT_NO_THROW(IniFile::ClearSection(iniFileName, "SectionName"));
 	// Both values removed
 	EXPECT_EQ("", IniFile::GetValue(iniFileName, "SectionName", "KeyName1"));
 	EXPECT_EQ("", IniFile::GetValue(iniFileName, "SectionName", "KeyName2"));
+	// No Section and Key names
+	EXPECT_EQ((std::vector<std::string>{}), IniFile::GetSectionNames(iniFileName));
+	EXPECT_EQ((std::vector<std::string>{}), IniFile::GetKeyNames(iniFileName, "SectionName"));
 
 	// Cleanup test file
 	fs::remove(iniFileName);

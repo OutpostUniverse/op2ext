@@ -49,6 +49,16 @@ std::string IniFile::GetValue(const std::string& fileName, const std::string& se
 	return IniFile::GetIniString(fileName.c_str(), sectionName.c_str(), keyName.c_str());
 }
 
+std::vector<std::string> IniFile::GetSectionNames(const std::string& fileName) {
+	auto resultBuffer = IniFile::GetIniString(fileName.c_str(), nullptr, nullptr);
+	return SplitResultOnNull(resultBuffer);
+}
+
+std::vector<std::string> IniFile::GetKeyNames(const std::string& fileName, const std::string& sectionName) {
+	auto resultBuffer = IniFile::GetIniString(fileName.c_str(), sectionName.c_str(), nullptr);
+	return SplitResultOnNull(resultBuffer);
+}
+
 // Remove an entire section along with all keys and values it contains
 void IniFile::ClearSection(const std::string& fileName, const std::string& sectionName) {
 	WritePrivateProfileStringA(sectionName.c_str(), nullptr, nullptr, fileName.c_str());
@@ -79,6 +89,22 @@ std::string IniFile::GetIniString(const char* fileName, const char* sectionName,
 	resultString.resize(returnSize);
 
 	return resultString;
+}
+
+// This splits a buffer containing a packed array of null terminated strings
+std::vector<std::string> IniFile::SplitResultOnNull(std::string arrayBuffer) {
+	std::vector<std::string> result;
+
+	std::size_t start = 0;
+	std::size_t end = arrayBuffer.find('\0', start);
+
+	while (end != std::string::npos) {
+		result.push_back(arrayBuffer.substr(start, end - start));
+		start = end + 1;
+		end = arrayBuffer.find('\0', start);
+	}
+
+	return result;
 }
 
 
