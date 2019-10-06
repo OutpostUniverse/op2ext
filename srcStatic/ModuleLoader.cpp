@@ -26,7 +26,7 @@ void ModuleLoader::RegisterBuiltInModules()
 	}
 }
 
-void ModuleLoader::RegisterExternalModules()
+void ModuleLoader::RegisterIniModules()
 {
 	const auto sectionNames = GetModuleNames("ExternalModules");
 
@@ -105,7 +105,7 @@ void ModuleLoader::RegisterModule(std::unique_ptr<GameModule> newGameModule)
 void ModuleLoader::LoadModules()
 {
 	RegisterBuiltInModules();
-	RegisterExternalModules();
+	RegisterIniModules();
 
 	for (auto& gameModule : modules)
 	{

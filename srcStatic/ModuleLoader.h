@@ -29,7 +29,7 @@ private:
 	std::vector<std::unique_ptr<GameModule>> modules;
 
 	void RegisterBuiltInModules();
-	void RegisterExternalModules();
+	void RegisterIniModules();
 	bool IsBuiltInModuleRequested(const std::string& moduleName);
 	std::vector<std::string> GetModuleNames(const std::string& moduleType);
 };
