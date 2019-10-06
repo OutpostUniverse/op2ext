@@ -46,18 +46,7 @@ void IniFile::SetValue(const std::string& sectionName, const std::string& keyNam
 // This can be used for convenient one-off use
 // This may be less efficienct for repeated use to fetch multiple values
 std::string IniFile::GetValue(const std::string& fileName, const std::string& sectionName, const std::string& keyName) {
-	// Allocate buffer space
-	// The Win API GetPrivateProfileString has a maximum limit of 2^16 characters
-	// Trying to retrieve a longer string from the Win API will fail in unusual ways
-	std::string resultString;
-	resultString.resize(65536);
-
-	// Read result from INI file
-	DWORD returnSize = GetPrivateProfileStringA(sectionName.c_str(), keyName.c_str(), "", resultString.data(), resultString.size(), fileName.c_str());
-	// Resize to returned data size (which doesn't include null terminator)
-	resultString.resize(returnSize);
-
-	return resultString;
+	return IniFile::GetIniString(fileName.c_str(), sectionName.c_str(), keyName.c_str());
 }
 
 // Remove an entire section along with all keys and values it contains
@@ -73,6 +62,23 @@ void IniFile::ClearKey(const std::string& fileName, const std::string& sectionNa
 // Set a new value for a key within a section
 void IniFile::SetValue(const std::string& fileName, const std::string& sectionName, const std::string& keyName, const std::string& value) {
 	WritePrivateProfileStringA(sectionName.c_str(), keyName.c_str(), value.c_str(), fileName.c_str());
+}
+
+// Delegate to Windows API to read INI file
+// Wrap result in std::string
+std::string IniFile::GetIniString(const char* fileName, const char* sectionName, const char* keyName) {
+	// Allocate buffer space
+	// The Win API GetPrivateProfileString has a maximum limit of 2^16 characters
+	// Trying to retrieve a longer string from the Win API will fail in unusual ways
+	std::string resultString;
+	resultString.resize(65536);
+
+	// Read result from INI file
+	DWORD returnSize = GetPrivateProfileStringA(sectionName, keyName, "", resultString.data(), resultString.size(), fileName);
+	// Resize to returned data size (which doesn't include null terminator)
+	resultString.resize(returnSize);
+
+	return resultString;
 }
 
 

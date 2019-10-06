@@ -27,6 +27,8 @@ public:
 
 private:
 	const std::string fileName;
+
+	static std::string GetIniString(const char* fileName, const char* sectionName, const char* keyName);
 };
 
 
