@@ -12,8 +12,7 @@ IniModule::IniModule(IniSection iniSection)
 		LoadModuleDll(iniSection["Dll"]);
 	}
 	catch (const std::exception& error) {
-		PostError("Unable to load dll for module " + Name() + " . " + std::string(error.what()));
-		throw std::runtime_error("Unable to load ini module " + Name());
+		throw std::runtime_error("Unable to load dll for module " + Name() + ". " + std::string(error.what()));
 	}
 
 	// Search for dll's initialization & destroy functions

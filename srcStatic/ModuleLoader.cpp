@@ -36,7 +36,7 @@ void ModuleLoader::RegisterExternalModules()
 			RegisterModule(std::make_unique<IniModule>(iniFile[sectionName]));
 		}
 		catch (const std::exception& e) {
-			PostError(e.what());
+			PostError("Unable to load ini module " + sectionName + ". " + e.what());
 		}
 	}
 }
