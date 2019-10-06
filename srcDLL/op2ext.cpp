@@ -55,18 +55,18 @@ OP2EXT_API void GetGameDir(char* buffer)
 OP2EXT_API char* GetCurrentModDir()
 {
 	// This is an older method that assumes only a single console module can be loaded
-	std::string modDirectory;
+	std::string moduleDirectory;
 	if (consoleModuleLoader->Count() > 0) {
 		// Assume they care about the first loaded console module
-		modDirectory = consoleModuleLoader->GetModuleDirectory(0);
+		moduleDirectory = consoleModuleLoader->GetModuleDirectory(0);
 	}
 
-	if (modDirectory.empty()) {
+	if (moduleDirectory.empty()) {
 		return nullptr;
 	}
 
-	char* cStr = new char[modDirectory.length() + 1];
-	strcpy_s(cStr, modDirectory.length() + 1, modDirectory.c_str());
+	char* cStr = new char[moduleDirectory.length() + 1];
+	strcpy_s(cStr, moduleDirectory.length() + 1, moduleDirectory.c_str());
 
 	return cStr;
 }
