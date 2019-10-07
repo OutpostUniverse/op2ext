@@ -22,3 +22,12 @@ std::string GetOutpost2IniSetting(const std::string& sectionName, const std::str
 {
 	return IniFile::GetValue(GetOutpost2IniPath(), sectionName, key);
 }
+
+
+bool IsDirectory(const std::string& path)
+{
+	// Use a modified path to work around a Mingw bug
+	// With Mingw is_directory will return false for paths with a trailing slash
+	auto modifiedPath = fs::path(path) / ".";
+	return fs::is_directory(modifiedPath);
+}

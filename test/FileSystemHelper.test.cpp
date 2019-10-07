@@ -27,3 +27,13 @@ TEST(FileSystemHelper, GetOutpost2IniSetting)
 	EXPECT_EQ("", GetOutpost2IniSetting("Game", "BadKey"));
 	EXPECT_EQ("", GetOutpost2IniSetting("BadSectionName", "BadKey"));
 }
+
+
+TEST(FileSystemHelper, IsDirectory)
+{
+	EXPECT_TRUE(IsDirectory("/"));
+	EXPECT_TRUE(IsDirectory("./"));
+
+	EXPECT_FALSE(IsDirectory("NonExistentPath"));
+	EXPECT_FALSE(IsDirectory("NonExistentPath/"));
+}
