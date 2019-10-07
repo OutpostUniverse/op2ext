@@ -46,7 +46,7 @@ void ModuleLoader::RegisterConsoleModules()
 	}
 
 	std::vector<std::string> moduleDirectories;
-	moduleDirectories.reserve(modules.size());
+	moduleDirectories.reserve(consoleModuleNames.size());
 
 	for (const auto& moduleName : consoleModuleNames)
 	{
