@@ -38,6 +38,9 @@ TEST(IniFile, StaticMethodsWriteRead) {
 	// Initially no data
 	EXPECT_EQ("", IniFile::GetValue(iniFileName, "SectionName", "KeyName1"));
 	EXPECT_EQ("", IniFile::GetValue(iniFileName, "SectionName", "KeyName2"));
+	// Initially no Section and Key names
+	EXPECT_EQ((std::vector<std::string>{}), IniFile::GetSectionNames(iniFileName));
+	EXPECT_EQ((std::vector<std::string>{}), IniFile::GetKeyNames(iniFileName, "SectionName"));
 
 	// Create data
 	EXPECT_NO_THROW(IniFile::SetValue(iniFileName, "SectionName", "KeyName1", "SomeValue1"));
@@ -45,18 +48,27 @@ TEST(IniFile, StaticMethodsWriteRead) {
 	// Data now present
 	EXPECT_EQ("SomeValue1", IniFile::GetValue(iniFileName, "SectionName", "KeyName1"));
 	EXPECT_EQ("SomeValue2", IniFile::GetValue(iniFileName, "SectionName", "KeyName2"));
+	// Section and Key names now present
+	EXPECT_EQ((std::vector<std::string>{"SectionName"}), IniFile::GetSectionNames(iniFileName));
+	EXPECT_EQ((std::vector<std::string>{"KeyName1", "KeyName2"}), IniFile::GetKeyNames(iniFileName, "SectionName"));
 
 	// Delete a key
 	EXPECT_NO_THROW(IniFile::ClearKey(iniFileName, "SectionName", "KeyName1"));
 	// One value removed
 	EXPECT_EQ("", IniFile::GetValue(iniFileName, "SectionName", "KeyName1"));
 	EXPECT_EQ("SomeValue2", IniFile::GetValue(iniFileName, "SectionName", "KeyName2"));
+	// Section and one Key name now present
+	EXPECT_EQ((std::vector<std::string>{"SectionName"}), IniFile::GetSectionNames(iniFileName));
+	EXPECT_EQ((std::vector<std::string>{"KeyName2"}), IniFile::GetKeyNames(iniFileName, "SectionName"));
 
 	// Delete a section
 	EXPECT_NO_THROW(IniFile::ClearSection(iniFileName, "SectionName"));
 	// Both values removed
 	EXPECT_EQ("", IniFile::GetValue(iniFileName, "SectionName", "KeyName1"));
 	EXPECT_EQ("", IniFile::GetValue(iniFileName, "SectionName", "KeyName2"));
+	// No Section and Key names
+	EXPECT_EQ((std::vector<std::string>{}), IniFile::GetSectionNames(iniFileName));
+	EXPECT_EQ((std::vector<std::string>{}), IniFile::GetKeyNames(iniFileName, "SectionName"));
 
 	// Cleanup test file
 	fs::remove(iniFileName);
@@ -69,6 +81,9 @@ TEST(IniFile, IniFileWriteRead) {
 	// Initially no data
 	EXPECT_EQ("", iniFile.GetValue("SectionName", "KeyName1"));
 	EXPECT_EQ("", iniFile.GetValue("SectionName", "KeyName2"));
+	// Initially no Section and Key names
+	EXPECT_EQ((std::vector<std::string>{}), iniFile.GetSectionNames());
+	EXPECT_EQ((std::vector<std::string>{}), iniFile.GetKeyNames("SectionName"));
 
 	// Create data
 	EXPECT_NO_THROW(iniFile.SetValue("SectionName", "KeyName1", "SomeValue1"));
@@ -76,18 +91,27 @@ TEST(IniFile, IniFileWriteRead) {
 	// Data now present
 	EXPECT_EQ("SomeValue1", iniFile.GetValue("SectionName", "KeyName1"));
 	EXPECT_EQ("SomeValue2", iniFile.GetValue("SectionName", "KeyName2"));
+	// Section and Key names now present
+	EXPECT_EQ((std::vector<std::string>{"SectionName"}), iniFile.GetSectionNames());
+	EXPECT_EQ((std::vector<std::string>{"KeyName1", "KeyName2"}), iniFile.GetKeyNames("SectionName"));
 
 	// Delete a key
 	EXPECT_NO_THROW(iniFile.ClearKey("SectionName", "KeyName1"));
 	// One value removed
 	EXPECT_EQ("", iniFile.GetValue("SectionName", "KeyName1"));
 	EXPECT_EQ("SomeValue2", iniFile.GetValue("SectionName", "KeyName2"));
+	// Section and one Key name now present
+	EXPECT_EQ((std::vector<std::string>{"SectionName"}), iniFile.GetSectionNames());
+	EXPECT_EQ((std::vector<std::string>{"KeyName2"}), iniFile.GetKeyNames("SectionName"));
 
 	// Delete a section
 	EXPECT_NO_THROW(iniFile.ClearSection("SectionName"));
 	// Both values removed
 	EXPECT_EQ("", iniFile.GetValue("SectionName", "KeyName1"));
 	EXPECT_EQ("", iniFile.GetValue("SectionName", "KeyName2"));
+	// No Section and Key names
+	EXPECT_EQ((std::vector<std::string>{}), iniFile.GetSectionNames());
+	EXPECT_EQ((std::vector<std::string>{}), iniFile.GetKeyNames("SectionName"));
 
 	// Cleanup test file
 	fs::remove(iniFileName);
@@ -103,6 +127,8 @@ TEST(IniFile, IniSectionWriteRead) {
 	// Alternate syntax returns same data
 	EXPECT_EQ("", iniSection["KeyName1"]);
 	EXPECT_EQ("", iniSection["KeyName2"]);
+	// Initially no Key names
+	EXPECT_EQ((std::vector<std::string>{}), iniSection.GetKeyNames());
 
 	// Create data
 	EXPECT_NO_THROW(iniSection.SetValue("KeyName1", "SomeValue1"));
@@ -113,6 +139,8 @@ TEST(IniFile, IniSectionWriteRead) {
 	// Alternate syntax returns same data
 	EXPECT_EQ("SomeValue1", iniSection["KeyName1"]);
 	EXPECT_EQ("SomeValue2", iniSection["KeyName2"]);
+	// Key names now present
+	EXPECT_EQ((std::vector<std::string>{"KeyName1", "KeyName2"}), iniSection.GetKeyNames());
 
 	// Delete a key
 	EXPECT_NO_THROW(iniSection.ClearKey("KeyName1"));
@@ -122,6 +150,8 @@ TEST(IniFile, IniSectionWriteRead) {
 	// Alternate syntax returns same data
 	EXPECT_EQ("", iniSection["KeyName1"]);
 	EXPECT_EQ("SomeValue2", iniSection["KeyName2"]);
+	// One Key name now present
+	EXPECT_EQ((std::vector<std::string>{"KeyName2"}), iniSection.GetKeyNames());
 
 	// Delete a section
 	EXPECT_NO_THROW(iniSection.ClearSection());
@@ -131,6 +161,8 @@ TEST(IniFile, IniSectionWriteRead) {
 	// Alternate syntax returns same data
 	EXPECT_EQ("", iniSection["KeyName1"]);
 	EXPECT_EQ("", iniSection["KeyName2"]);
+	// No Key names
+	EXPECT_EQ((std::vector<std::string>{}), iniSection.GetKeyNames());
 
 	// Cleanup test file
 	fs::remove(iniFileName);
