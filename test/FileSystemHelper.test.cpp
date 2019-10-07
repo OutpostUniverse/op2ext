@@ -37,3 +37,12 @@ TEST(FileSystemHelper, IsDirectory)
 	EXPECT_FALSE(IsDirectory("NonExistentPath"));
 	EXPECT_FALSE(IsDirectory("NonExistentPath/"));
 }
+
+TEST(FileSystemHelper, Exists)
+{
+	EXPECT_TRUE(Exists("/"));
+	EXPECT_TRUE(Exists("./"));
+
+	EXPECT_FALSE(Exists("NonExistentPath"));
+	EXPECT_FALSE(Exists("NonExistentPath/"));
+}

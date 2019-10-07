@@ -31,3 +31,11 @@ bool IsDirectory(const std::string& path)
 	auto modifiedPath = fs::path(path) / ".";
 	return fs::is_directory(modifiedPath);
 }
+
+bool Exists(const std::string& path)
+{
+	// Use a modified path to work around a Mingw bug
+	// With Mingw exists will return false for paths with a trailing slash
+	auto modifiedPath = fs::path(path) / ".";
+	return fs::exists(modifiedPath);
+}
