@@ -1,6 +1,7 @@
 #include "ConsoleModule.h"
 #include "../FileSystemHelper.h"
 #include "../Log.h"
+#include "../WindowsErrorCode.h"
 #include <windows.h>
 #include <stdexcept>
 
@@ -8,10 +9,9 @@ ConsoleModule::ConsoleModule(const std::string& moduleName) : DllModule(moduleNa
 {
 	moduleDirectory = (fs::path(GetGameDirectory()) / moduleName).string() + "\\";
 
-	std::error_code errorCode;
-	if (!fs::is_directory(moduleDirectory, errorCode)) {
+	if (!IsDirectory(moduleDirectory)) {
 		throw std::runtime_error("Unable to access the provided module directory: " + 
-			moduleDirectory + " : " + errorCode.message());
+			moduleDirectory + " : " + GetLastErrorString());
 	}
 
 
