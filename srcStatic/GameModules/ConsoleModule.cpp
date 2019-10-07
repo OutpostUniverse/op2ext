@@ -14,18 +14,12 @@ ConsoleModule::ConsoleModule(const std::string& moduleName) : DllModule(moduleNa
 			moduleDirectory + " : " + GetLastErrorString());
 	}
 
-
-	try {
-		const auto dllPath = fs::path(moduleDirectory).append("op2mod.dll").string();
-		if (!fs::exists(dllPath)) {
-			return; // Some console modules do not contain dlls
-		}
-
-		LoadModuleDll(dllPath);
+	const auto dllPath = fs::path(moduleDirectory).append("op2mod.dll").string();
+	if (!fs::exists(dllPath)) {
+		return; // Some console modules do not contain dlls
 	}
-	catch (const std::exception& error) {
-		throw std::runtime_error("Unable to load dll for module " + Name() + " . " + std::string(error.what()));
-	}
+
+	LoadModuleDll(dllPath);
 
 	// Search for dll's initialization & destroy functions
 	loadModuleFunction = (LoadModuleFunction)GetProcAddress(moduleDllHandle, "mod_init");
