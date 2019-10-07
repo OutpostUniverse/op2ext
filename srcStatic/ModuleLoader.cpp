@@ -118,12 +118,7 @@ std::string ModuleLoader::GetModuleDirectory(std::size_t index)
 		throw std::out_of_range("GetModuleDirectory: Invalid module index: " + std::to_string(index));
 	}
 
-	ConsoleModule* consoleModule = dynamic_cast<ConsoleModule*>(modules[index].get());
-	if (consoleModule != nullptr) {
-		return consoleModule->Directory();
-	}
-
-	return std::string();
+	return modules[index].get()->Directory();
 }
 
 

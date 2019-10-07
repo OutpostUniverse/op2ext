@@ -13,7 +13,7 @@ public:
 	bool Unload() override;
 	void Run() override;
 
-	inline std::string Directory() { return moduleDirectory; }
+	inline std::string Directory() override { return moduleDirectory; }
 
 private:
 	typedef void(*LoadModuleFunction)();
