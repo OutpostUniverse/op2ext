@@ -89,7 +89,7 @@ int TApp::Init()
 	// Find VOL files from additional folders
 	for (std::size_t i = 0; i < moduleLoader->Count(); ++i) {
 		std::string moduleDirectory = moduleLoader->GetModuleDirectory(i);
-		if (moduleDirectory != std::string()) {
+		if (!moduleDirectory.empty()) {
 			LocateVolFiles();
 		}
 	}
