@@ -11,8 +11,11 @@ void DllModule::LoadModuleDll(const std::string& dllPath)
 	HINSTANCE dllHandle = LoadLibraryA(dllPath.c_str());
 
 	if (dllHandle == nullptr) {
-		throw std::runtime_error("Unable to load DLL " + dllPath + " from ini module section " +
-			Name() + ". LoadLibrary " + GetLastErrorString());
+		throw std::runtime_error(
+			"Unable to load DLL for module: " + Name() +
+			" DLL path: " + dllPath +
+			" LoadLibrary " + GetLastErrorString()
+		);
 	}
 
 	this->moduleDllHandle = dllHandle;
