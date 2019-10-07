@@ -25,6 +25,16 @@ IniSection IniFile::operator[](std::string sectionName) const {
 	return IniSection(fileName, std::move(sectionName));
 }
 
+// Get list of all section names
+std::vector<std::string> IniFile::GetSectionNames() const {
+	return IniFile::GetSectionNames(fileName);
+}
+
+// Get list of all Key names within a section
+std::vector<std::string> IniFile::GetKeyNames(const std::string& sectionName) {
+	return IniFile::GetKeyNames(fileName, sectionName);
+}
+
 // Remove an entire section along with all keys and values it contains
 void IniFile::ClearSection(const std::string& sectionName) {
 	IniFile::ClearSection(fileName, sectionName);
@@ -46,30 +56,17 @@ void IniFile::SetValue(const std::string& sectionName, const std::string& keyNam
 // This can be used for convenient one-off use
 // This may be less efficienct for repeated use to fetch multiple values
 std::string IniFile::GetValue(const std::string& fileName, const std::string& sectionName, const std::string& keyName) {
-	const std::size_t bufferInterval = 1024;
-	auto currentBufferSize = bufferInterval;
-	std::string profileString;
-	DWORD returnSize;
+	return IniFile::GetIniString(fileName.c_str(), sectionName.c_str(), keyName.c_str());
+}
 
-	while (true)
-	{
-		profileString.resize(currentBufferSize);
+std::vector<std::string> IniFile::GetSectionNames(const std::string& fileName) {
+	auto resultBuffer = IniFile::GetIniString(fileName.c_str(), nullptr, nullptr);
+	return SplitResultOnNull(resultBuffer);
+}
 
-		//GetPrivateProfileString's return value is the number of characters copied to the buffer,
-		// not including the terminating null character.
-		// A full buffer could be nSize - 2 if either lpAppName or lpKeyName are NULL AND the supplied buffer is too small
-		returnSize = GetPrivateProfileStringA(sectionName.c_str(), keyName.c_str(), "", &profileString[0], currentBufferSize, fileName.c_str());
-
-		if (returnSize + 2 < currentBufferSize) {
-			break;
-		}
-
-		currentBufferSize += bufferInterval;
-	}
-
-	profileString.resize(returnSize);
-
-	return profileString;
+std::vector<std::string> IniFile::GetKeyNames(const std::string& fileName, const std::string& sectionName) {
+	auto resultBuffer = IniFile::GetIniString(fileName.c_str(), sectionName.c_str(), nullptr);
+	return SplitResultOnNull(resultBuffer);
 }
 
 // Remove an entire section along with all keys and values it contains
@@ -85,6 +82,39 @@ void IniFile::ClearKey(const std::string& fileName, const std::string& sectionNa
 // Set a new value for a key within a section
 void IniFile::SetValue(const std::string& fileName, const std::string& sectionName, const std::string& keyName, const std::string& value) {
 	WritePrivateProfileStringA(sectionName.c_str(), keyName.c_str(), value.c_str(), fileName.c_str());
+}
+
+// Delegate to Windows API to read INI file
+// Wrap result in std::string
+std::string IniFile::GetIniString(const char* fileName, const char* sectionName, const char* keyName) {
+	// Allocate buffer space
+	// The Win API GetPrivateProfileString has a maximum limit of 2^16 characters
+	// Trying to retrieve a longer string from the Win API will fail in unusual ways
+	std::string resultString;
+	resultString.resize(65536);
+
+	// Read result from INI file
+	DWORD returnSize = GetPrivateProfileStringA(sectionName, keyName, "", resultString.data(), resultString.size(), fileName);
+	// Resize to returned data size (which doesn't include null terminator)
+	resultString.resize(returnSize);
+
+	return resultString;
+}
+
+// This splits a buffer containing a packed array of null terminated strings
+std::vector<std::string> IniFile::SplitResultOnNull(std::string arrayBuffer) {
+	std::vector<std::string> result;
+
+	std::size_t start = 0;
+	std::size_t end = arrayBuffer.find('\0', start);
+
+	while (end != std::string::npos) {
+		result.push_back(arrayBuffer.substr(start, end - start));
+		start = end + 1;
+		end = arrayBuffer.find('\0', start);
+	}
+
+	return result;
 }
 
 
@@ -113,6 +143,11 @@ std::string IniSection::GetValue(const std::string& keyName) const {
 // Alternate syntax for GetValue
 std::string IniSection::operator[](std::string keyName) const {
 	return IniFile::GetValue(fileName, sectionName, keyName);
+}
+
+// Get list of all Key names within a section
+std::vector<std::string> IniSection::GetKeyNames() {
+	return IniFile::GetKeyNames(fileName, sectionName);
 }
 
 // Remove an entire section along with all keys and values it contains
