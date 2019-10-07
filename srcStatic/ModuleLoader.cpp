@@ -115,7 +115,7 @@ std::string ModuleLoader::GetModuleName(std::size_t index)
 std::string ModuleLoader::GetModuleDirectory(std::size_t index)
 {
 	if (index >= modules.size()) {
-		throw std::out_of_range("GetModuleDirectory: Invalid console module index: " + std::to_string(index));
+		throw std::out_of_range("GetModuleDirectory: Invalid module index: " + std::to_string(index));
 	}
 
 	ConsoleModule* consoleModule = dynamic_cast<ConsoleModule*>(modules[index].get());
