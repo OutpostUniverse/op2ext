@@ -12,8 +12,7 @@ void DllModule::LoadModuleDll(const std::string& dllPath)
 
 	if (dllHandle == nullptr) {
 		throw std::runtime_error(
-			"Unable to load DLL for module: " + Name() +
-			" DLL path: " + dllPath +
+			"Unable to load DLL path: " + dllPath +
 			" LoadLibrary " + GetLastErrorString()
 		);
 	}
