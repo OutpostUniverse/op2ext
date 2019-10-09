@@ -6,6 +6,10 @@
 #include <windows.h>
 
 
+// MSVC C4068 (unknown pragma) is issued on calls to #pragma GCC
+#pragma warning(disable: 4068)
+
+
 TEST(op2ext, GetGameDir_s) {
 	constexpr char Nonce = 255;
 	char gameDirectory[MAX_PATH] = {Nonce};
@@ -186,3 +190,5 @@ TEST(op2ext, GetLoadedModuleName) {
 	// Module name is null terminated (this is outside the string_view window)
 	EXPECT_EQ(0, moduleName[moduleNameView.length()]);
 }
+
+#pragma warning(default: 4068)
