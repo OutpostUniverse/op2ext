@@ -5,11 +5,10 @@
     <ClCompile Include="ConsoleArgumentParser.cpp" />
     <ClCompile Include="FileSystemHelper.cpp" />
     <ClCompile Include="ModuleLoader.cpp" />
-    <ClCompile Include="ConsoleModuleLoader.cpp" />
-    <ClCompile Include="IniFile.cpp"/>
-    <ClCompile Include="Log.cpp"/>
-    <ClCompile Include="LoggerFile.cpp"/>
-    <ClCompile Include="LoggerMessageBox.cpp"/>
+    <ClCompile Include="IniFile.cpp" />
+    <ClCompile Include="Log.cpp" />
+    <ClCompile Include="LoggerFile.cpp" />
+    <ClCompile Include="LoggerMessageBox.cpp" />
     <ClCompile Include="OP2Memory.cpp" />
     <ClCompile Include="ResourceSearchPath.cpp" />
     <ClCompile Include="StringConversion.cpp" />
@@ -22,6 +21,12 @@
     <ClCompile Include="GameModules\IpDropDown.cpp">
       <Filter>GameModules</Filter>
     </ClCompile>
+    <ClCompile Include="GameModules\DllModule.cpp">
+      <Filter>GameModules</Filter>
+    </ClCompile>
+    <ClCompile Include="GameModules\ConsoleModule.cpp">
+      <Filter>GameModules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GetCommandLineArguments.h" />
@@ -29,12 +34,11 @@
     <ClInclude Include="FileSystemHelper.h" />
     <ClInclude Include="GameModule.h" />
     <ClInclude Include="ModuleLoader.h" />
-    <ClInclude Include="ConsoleModuleLoader.h" />
-    <ClInclude Include="IniFile.h"/>
-    <ClInclude Include="Log.h"/>
-    <ClInclude Include="Logger.h"/>
-    <ClInclude Include="LoggerFile.h"/>
-    <ClInclude Include="LoggerMessageBox.h"/>
+    <ClInclude Include="IniFile.h" />
+    <ClInclude Include="Log.h" />
+    <ClInclude Include="Logger.h" />
+    <ClInclude Include="LoggerFile.h" />
+    <ClInclude Include="LoggerMessageBox.h" />
     <ClInclude Include="OP2Memory.h" />
     <ClInclude Include="ResourceSearchPath.h" />
     <ClInclude Include="StringConversion.h" />
@@ -45,6 +49,12 @@
       <Filter>GameModules</Filter>
     </ClInclude>
     <ClInclude Include="GameModules\IpDropDown.h">
+      <Filter>GameModules</Filter>
+    </ClInclude>
+    <ClInclude Include="GameModules\DllModule.h">
+      <Filter>GameModules</Filter>
+    </ClInclude>
+    <ClInclude Include="GameModules\ConsoleModule.h">
       <Filter>GameModules</Filter>
     </ClInclude>
   </ItemGroup>

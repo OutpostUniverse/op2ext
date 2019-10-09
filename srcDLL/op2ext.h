@@ -61,17 +61,9 @@ OP2EXT_API void Log(const char* message);
 
 
 // Performs a case insensitive search of loaded module names, returning true if found.
+// Returns false if passed an empty string (Module name cannot be empty).
 // See GetLoadedModuleName's description for details on how module names are formatted.
 OP2EXT_API bool IsModuleLoaded(const char* moduleName);
-
-// Performs a case insensitive comparison of the loaded console module name.
-// Returns false if passed an empty string (Module name cannot be empty).
-// See GetLoadedModuleName's description for details on how console module names are formatted.
-OP2EXT_API bool IsConsoleModuleLoaded(const char* moduleName);
-
-// Performs a case insensitive search of loaded ini module names, returning true if found.
-// See GetLoadedModuleName's description for details on how ini module names are formatted.
-OP2EXT_API bool IsIniModuleLoaded(const char* moduleName);
 
 // Returns the number of loaded modules (.ini and console combined)
 OP2EXT_API size_t GetLoadedModuleCount();

@@ -129,13 +129,14 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="GameModules\ConsoleModule.cpp" />
+    <ClCompile Include="GameModules\DllModule.cpp" />
     <ClCompile Include="GetCommandLineArguments.cpp" />
     <ClCompile Include="ConsoleArgumentParser.cpp" />
     <ClCompile Include="FileSystemHelper.cpp" />
     <ClCompile Include="GameModules\IniModule.cpp" />
     <ClCompile Include="ModuleLoader.cpp" />
     <ClCompile Include="GameModules\IpDropDown.cpp" />
-    <ClCompile Include="ConsoleModuleLoader.cpp" />
     <ClCompile Include="IniFile.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="LoggerFile.cpp" />
@@ -148,6 +149,8 @@
     <ClCompile Include="WindowsModule.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GameModules\ConsoleModule.h" />
+    <ClInclude Include="GameModules\DllModule.h" />
     <ClInclude Include="GetCommandLineArguments.h" />
     <ClInclude Include="ConsoleArgumentParser.h" />
     <ClInclude Include="FileSystemHelper.h" />
@@ -155,7 +158,6 @@
     <ClInclude Include="GameModules\IniModule.h" />
     <ClInclude Include="ModuleLoader.h" />
     <ClInclude Include="GameModules\IpDropDown.h" />
-    <ClInclude Include="ConsoleModuleLoader.h" />
     <ClInclude Include="IniFile.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="Logger.h" />

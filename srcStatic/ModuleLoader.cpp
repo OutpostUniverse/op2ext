@@ -1,23 +1,26 @@
 #include "ModuleLoader.h"
 #include "GameModules/IpDropDown.h"
+#include "GameModules/ConsoleModule.h"
 #include "GameModules/IniModule.h"
 #include "StringConversion.h"
 #include "FileSystemHelper.h"
+#include "ResourceSearchPath.h"
 #include "Log.h"
+#include "ConsoleArgumentParser.h"
 #include <utility>
 #include <stdexcept>
 
 
 ModuleLoader::ModuleLoader()
-	: iniFile(IniFile(GetOutpost2IniPath()))
+	: iniFile(IniFile(GetOutpost2IniPath())), consoleModuleNames({ FindModuleDirectory() })
 {
 }
 
-ModuleLoader::ModuleLoader(IniFile iniFile)
-	: iniFile(std::move(iniFile))
+ModuleLoader::ModuleLoader(IniFile iniFile, std::vector<std::string> consoleModuleNames)
+	: iniFile(std::move(iniFile)), consoleModuleNames(consoleModuleNames)
 {
-}
 
+}
 
 void ModuleLoader::RegisterBuiltInModules()
 {
@@ -26,7 +29,42 @@ void ModuleLoader::RegisterBuiltInModules()
 	}
 }
 
-void ModuleLoader::RegisterExternalModules()
+void ModuleLoader::RegisterConsoleModules()
+{
+	if (consoleModuleNames.empty()) {
+		return; // No console modules to load
+	}
+
+	// Temporary check. This will eventually become an error.
+	if (consoleModuleNames.size() == 1 && consoleModuleNames[0].empty()) {
+		return; // No console modules to load
+	}
+
+	if (std::any_of(consoleModuleNames.begin(), consoleModuleNames.end(), [](const std::string& consoleModuleName) { return consoleModuleName.empty(); })) {
+		PostError("All console module names must be non-empty.");
+		return;
+	}
+
+	std::vector<std::string> moduleDirectories;
+	moduleDirectories.reserve(consoleModuleNames.size());
+
+	for (const auto& moduleName : consoleModuleNames)
+	{
+		try {
+			auto consoleModule = std::make_unique<ConsoleModule>(moduleName);
+			moduleDirectories.push_back(consoleModule->Directory());
+
+			RegisterModule(std::move(consoleModule));
+		}
+		catch (const std::exception& e) {
+			PostError("Unable to load console module " + moduleName + ". " + e.what());
+		}
+	}
+
+	ResourceSearchPath::Set(std::move(moduleDirectories));
+}
+
+void ModuleLoader::RegisterIniModules()
 {
 	const auto sectionNames = GetModuleNames("ExternalModules");
 
@@ -36,7 +74,7 @@ void ModuleLoader::RegisterExternalModules()
 			RegisterModule(std::make_unique<IniModule>(iniFile[sectionName]));
 		}
 		catch (const std::exception& e) {
-			PostError(e.what());
+			PostError("Unable to load ini module " + sectionName + ". " + e.what());
 		}
 	}
 }
@@ -74,6 +112,16 @@ std::string ModuleLoader::GetModuleName(std::size_t index)
 	return modules[index]->Name();
 }
 
+std::string ModuleLoader::GetModuleDirectory(std::size_t index)
+{
+	if (index >= modules.size()) {
+		throw std::out_of_range("GetModuleDirectory: Invalid module index: " + std::to_string(index));
+	}
+
+	return modules[index].get()->Directory();
+}
+
+
 bool ModuleLoader::IsModuleLoaded(std::string moduleName)
 {
 	ToLowerInPlace(moduleName);
@@ -104,8 +152,19 @@ void ModuleLoader::RegisterModule(std::unique_ptr<GameModule> newGameModule)
 
 void ModuleLoader::LoadModules()
 {
+	RegisterConsoleModules();
 	RegisterBuiltInModules();
-	RegisterExternalModules();
+	RegisterIniModules();
+
+	// Abort early to avoid hooking file search path if not needed
+	if (modules.empty()) {
+		return;
+	}
+
+	// Setup loading of additional resources from module folders
+	ResourceSearchPath::Activate();
+
+
 
 	for (auto& gameModule : modules)
 	{

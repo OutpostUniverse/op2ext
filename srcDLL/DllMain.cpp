@@ -1,5 +1,4 @@
 #include "Globals.h"
-#include "ConsoleArgumentParser.h"
 #include "ModuleLoader.h"
 #include "StringConversion.h"
 #include "OP2Memory.h"
@@ -54,7 +53,6 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 
 		// Construct global objects
 		volList = std::make_unique<VolList>();
-		consoleModuleLoader = std::make_unique<ConsoleModuleLoader>(std::vector{FindModuleDirectory()});
 		moduleLoader = std::make_unique<ModuleLoader>();
 
 		// Set load offset for Outpost2.exe module, used during memory patching
@@ -85,16 +83,15 @@ int TApp::Init()
 	// Order of precedence for loading vol files is:
 	// ART_PATH (from console module), Console Module, Ini Modules, Addon directory, Game directory
 
-	// Load command line modules
-	consoleModuleLoader->LoadModules();
-
 	// Load all active modules from the .ini file
 	moduleLoader->LoadModules();
 
 	// Find VOL files from additional folders
-	for (std::size_t i = 0; i < consoleModuleLoader->Count(); ++i) {
-		// ConsoleModule name matches relative folder from game exeucutable folder
-		LocateVolFiles(consoleModuleLoader->GetModuleName(i));
+	for (std::size_t i = 0; i < moduleLoader->Count(); ++i) {
+		std::string moduleDirectory = moduleLoader->GetModuleDirectory(i);
+		if (!moduleDirectory.empty()) {
+			LocateVolFiles(moduleLoader->GetModuleName(i));
+		}
 	}
 	LocateVolFiles("Addon");
 	LocateVolFiles(); //Searches root directory
@@ -116,7 +113,6 @@ void TApp::ShutDown()
 	// Call original function
 	(this->*GetMethodPointer<decltype(&TApp::ShutDown)>(0x004866E0))();
 
-	consoleModuleLoader->UnloadModules();
 	moduleLoader->UnloadModules();
 }
 
@@ -161,7 +157,6 @@ HINSTANCE __stdcall NewLoadLibraryA(LPCSTR lpLibFileName)
 	{
 		//LocalizeStrings();
 		modulesRunning = true;
-		consoleModuleLoader->RunModules();
 		moduleLoader->RunModules();
 	}
 
