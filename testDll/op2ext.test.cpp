@@ -11,7 +11,7 @@
 
 
 TEST(op2ext, GetGameDir_s) {
-	constexpr char Nonce = 255;
+	constexpr char Nonce = 'Z';
 	char gameDirectory[MAX_PATH] = {Nonce};
 
 	// No crash on nullptr buffer
@@ -74,7 +74,7 @@ TEST(op2ext, GetGameDirMethodsGiveSameResult) {
 }
 
 TEST(op2ext, GetConsoleModDir_s) {
-	constexpr char Nonce = 255;
+	constexpr char Nonce = 'Z';
 	char consoleModDir[MAX_PATH] = {Nonce};
 
 	// No crash on nullptr buffer
@@ -169,7 +169,7 @@ TEST(op2ext, GetLoadedModuleCount) {
 }
 
 TEST(op2ext, GetLoadedModuleName) {
-	constexpr char Nonce = 255;
+	constexpr char Nonce = 'Z';
 	char moduleName[256] = {Nonce};
 
 	// No crash on nullptr buffer
