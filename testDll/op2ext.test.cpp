@@ -6,8 +6,17 @@
 #include <windows.h>
 
 
-// MSVC C4068 (unknown pragma) is issued on calls to #pragma GCC
-#pragma warning(disable: 4068)
+#ifdef __MINGW32__
+#define DISABLE_DEPRECATED_WARNING \
+_Pragma("GCC diagnostic push") \
+_Pragma("GCC diagnostic ignored \"-Wdeprecated-declarations\"")
+#define DISABLE_DEPRECATED_WARNING_END \
+_Pragma("GCC diagnostic pop")
+#else
+#define DISABLE_DEPRECATED_WARNING \
+__pragma(warning(suppress : 4996))
+#define DISABLE_DEPRECATED_WARNING_END
+#endif
 
 
 TEST(op2ext, GetGameDir_s) {
@@ -39,11 +48,9 @@ TEST(op2ext, GetGameDir) {
 
 	// GetGameDir is deprecated, so suppress compiler warning from test code
 	// MSVC tags use of deprecated methods as C4996
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-#pragma warning(suppress : 4996)
+	DISABLE_DEPRECATED_WARNING
 	EXPECT_NO_THROW(GetGameDir(gameDirectory));
-#pragma GCC diagnostic pop
+	DISABLE_DEPRECATED_WARNING_END
 
 	std::string_view gameDir{gameDirectory};
 	// Path plus null terminator should fit within buffer size
@@ -60,11 +67,9 @@ TEST(op2ext, GetGameDirMethodsGiveSameResult) {
 
 	// GetGameDir is deprecated, so suppress compiler warning from test code
 	// MSVC tags use of deprecated methods as C4996
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-#pragma warning(suppress : 4996)
+	DISABLE_DEPRECATED_WARNING
 	EXPECT_NO_THROW(GetGameDir(gameDirectory));
-#pragma GCC diagnostic pop
+	DISABLE_DEPRECATED_WARNING_END
 
 	// On success return value is 0, and buffer contains path of specified format
 	EXPECT_EQ(0u, GetGameDir_s(gameDirectorySafe, MAX_PATH));
@@ -190,5 +195,3 @@ TEST(op2ext, GetLoadedModuleName) {
 	// Module name is null terminated (this is outside the string_view window)
 	EXPECT_EQ(0, moduleName[moduleNameView.length()]);
 }
-
-#pragma warning(default: 4068)
