@@ -26,7 +26,7 @@
   <PropertyGroup Label="UserMacros" />
   <ItemGroup>
     <ClCompile Include="ConsoleArgumentParser.test.cpp" />
-    <ClCompile Include="ConsolueModule.test.cpp" />
+    <ClCompile Include="ConsoleModule.test.cpp" />
     <ClCompile Include="FileSystemHelper.test.cpp" />
     <ClCompile Include="IniFile.test.cpp" />
     <ClCompile Include="Log.test.cpp" />
