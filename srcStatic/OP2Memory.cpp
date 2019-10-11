@@ -10,19 +10,25 @@ std::size_t loadOffset = 0;
 const std::size_t ExpectedOutpost2Addr = 0x00400000;
 
 
+// Enabled patching of Outpost2.exe memory
 // Adjust offsets in case Outpost2.exe module is relocated
-void SetLoadOffset()
+// Returns true on success, or false on failure
+bool EnableOp2MemoryPatching()
 {
 	void* op2ModuleBase = GetModuleHandle(TEXT("Outpost2.exe"));
 
 	if (op2ModuleBase == nullptr) {
-		PostError("Could not find Outpost2.exe module base address.");
-		return;
+		// Could not find Outpost2.exe module base address
+		// This can never happen if Outpost2.exe was the one that loaded op2ext.dll
+		// Failure likely means op2ext.dll was loaded elsewhere, such as a unit test
+		// We should just fail silently in this case
+		return false;
 	}
 
 	// Enable memory patching for Outpost2.exe, and set relocation offset
 	memoryPatchingEnabled = true;
 	loadOffset = reinterpret_cast<std::size_t>(op2ModuleBase) - ExpectedOutpost2Addr;
+	return true;
 }
 
 
