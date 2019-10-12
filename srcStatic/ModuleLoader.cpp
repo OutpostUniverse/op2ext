@@ -8,6 +8,7 @@
 #include "Log.h"
 #include "ConsoleArgumentParser.h"
 #include <utility>
+#include <algorithm>
 #include <stdexcept>
 
 
