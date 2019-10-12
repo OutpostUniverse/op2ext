@@ -56,11 +56,17 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 		moduleLoader = std::make_unique<ModuleLoader>();
 
 		// Set load offset for Outpost2.exe module, used during memory patching
-		SetLoadOffset();
-
-		// Replace call to gTApp.Init with custom routine
-		if (!Op2RelinkCall(0x004A8877, GetMethodVoidPointer(&TApp::Init))) {
-			return FALSE;
+		// If this fails, it's because Outpost2.exe is not loaded
+		// Failure means op2ext.dll was loaded by something else, such as a unit test
+		// For unit tests, just stay in memory, it's not an error if this fails
+		if (EnableOp2MemoryPatching()) {
+			// Replace call to gTApp.Init with custom routine
+			// This hook is needed to further bootstrap the rest of module loading
+			// If this fails, the module loader won't be able to active further patches
+			if (!Op2RelinkCall(0x004A8877, GetMethodVoidPointer(&TApp::Init))) {
+				PostError("Failed to install initial TApp.Init even hook");
+				return FALSE;
+			}
 		}
 
 		// Disable any more thread attach calls

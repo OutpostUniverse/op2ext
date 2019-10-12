@@ -16,4 +16,6 @@ build:
 test_script:
   - cd %APPVEYOR_BUILD_FOLDER%\test
   - '%APPVEYOR_BUILD_FOLDER%\%CONFIGURATION%\test.exe'
+  - cd %APPVEYOR_BUILD_FOLDER%\testDll
+  - '%APPVEYOR_BUILD_FOLDER%\%CONFIGURATION%\testDll.exe'
   - cd %APPVEYOR_BUILD_FOLDER%
