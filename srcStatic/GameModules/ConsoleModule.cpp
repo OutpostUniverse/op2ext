@@ -15,7 +15,7 @@ ConsoleModule::ConsoleModule(const std::string& moduleName) : DllModule(moduleNa
 	}
 
 	const auto dllPath = fs::path(moduleDirectory).append("op2mod.dll").string();
-	if (!fs::exists(dllPath)) {
+	if (!Exists(dllPath)) {
 		return; // Some console modules do not contain dlls
 	}
 
