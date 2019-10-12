@@ -3,7 +3,7 @@
 #include <gtest/gtest.h>
 
 
-const fs::path logPath = fs::path(GetGameDirectory()).append("Outpost2Log.txt");
+const fs::path logPath = fs::path(GetExeDirectory()).append("Outpost2Log.txt");
 
 
 TEST(LoggerFile, LogFileExists)

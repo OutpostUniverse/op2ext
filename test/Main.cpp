@@ -20,7 +20,7 @@ int main(int argc, char** argv)
 
 void SetupIniFile()
 {
-	std::ofstream stream(fs::path(GetGameDirectory()).append("Outpost2.ini").string());
+	std::ofstream stream(fs::path(GetExeDirectory()).append("Outpost2.ini").string());
 	stream << "[Game]" << std::endl;
 	stream << "Music=1" << std::endl;
 	stream.close();

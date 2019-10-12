@@ -7,7 +7,7 @@
 
 ConsoleModule::ConsoleModule(const std::string& moduleName) : DllModule(moduleName)
 {
-	moduleDirectory = (fs::path(GetGameDirectory()) / moduleName).string() + "\\";
+	moduleDirectory = (fs::path(GetExeDirectory()) / moduleName).string() + "\\";
 
 	if (!IsDirectory(moduleDirectory)) {
 		throw std::runtime_error("Unable to access the provided module directory: " + 

@@ -4,7 +4,7 @@
 
 
 TEST(IniFile, NonExistentDataRead) {
-	const std::string iniFileName{GetGameDirectory() + "TestIniFile.NonExistentData.ini"};
+	const std::string iniFileName{GetExeDirectory() + "TestIniFile.NonExistentData.ini"};
 	IniFile iniFile(iniFileName);
 
 	// Returns the full path
@@ -33,7 +33,7 @@ TEST(IniFile, NonExistentDataRead) {
 }
 
 TEST(IniFile, StaticMethodsWriteRead) {
-	const std::string iniFileName{GetGameDirectory() + "TestIniFile.StaticMethods.ini"};
+	const std::string iniFileName{GetExeDirectory() + "TestIniFile.StaticMethods.ini"};
 
 	// Initially no data
 	EXPECT_EQ("", IniFile::GetValue(iniFileName, "SectionName", "KeyName1"));
@@ -75,7 +75,7 @@ TEST(IniFile, StaticMethodsWriteRead) {
 }
 
 TEST(IniFile, IniFileWriteRead) {
-	const std::string iniFileName{GetGameDirectory() + "TestIniFile.WriteRead.ini"};
+	const std::string iniFileName{GetExeDirectory() + "TestIniFile.WriteRead.ini"};
 	IniFile iniFile(iniFileName);
 
 	// Initially no data
@@ -118,7 +118,7 @@ TEST(IniFile, IniFileWriteRead) {
 }
 
 TEST(IniFile, IniSectionWriteRead) {
-	const std::string iniFileName{GetGameDirectory() + "TestIniSection.WriteRead.ini"};
+	const std::string iniFileName{GetExeDirectory() + "TestIniSection.WriteRead.ini"};
 	IniSection iniSection(iniFileName, "SectionName");
 
 	// Initially no data
