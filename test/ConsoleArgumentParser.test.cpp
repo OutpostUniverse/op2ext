@@ -5,30 +5,43 @@
 
 
 TEST(ConsoleArgumentParser, NoArgument) {
-	EXPECT_EQ("", FindModuleDirectory(std::vector<std::string> { }));
+	EXPECT_TRUE(FindModuleDirectories({ }).empty());
 }
 
 TEST(ConsoleArgumentParser, WellFormedNoSpaces)
 {
 	const std::string path("path");
-	EXPECT_EQ(path, FindModuleDirectory(std::vector<std::string> { "/loadmod", path }));
+	const auto directories = FindModuleDirectories({ "/loadmod", path });
+
+	EXPECT_EQ(1u, directories.size());
+	EXPECT_EQ(path, directories[0]);
 }
 
 TEST(ConsoleArgmunetParser, WellFormedSpaces)
 {
 	const std::string path("path with spaces");
-	EXPECT_EQ(path, FindModuleDirectory(std::vector<std::string> { "/loadmod", path }));
+	const auto directories = FindModuleDirectories({ "/loadmod", path });
+	
+	EXPECT_EQ(1u, directories.size());
+	EXPECT_EQ(path, directories[0]);
 }
 
 
 TEST(ConsoleArgumentParser, WrongSwitchName) {
-	EXPECT_THROW(FindModuleDirectory(std::vector<std::string> { "/WrongSwitch" }), std::runtime_error);
+	EXPECT_THROW(FindModuleDirectories({ "/WrongSwitch" }), std::runtime_error);
 }
 
 TEST(ConsoleArgumentParser, NoSwitchArgument) {
-	EXPECT_THROW(FindModuleDirectory(std::vector<std::string> { "/loadmod" }), std::runtime_error);
+	EXPECT_THROW(FindModuleDirectories({ "/loadmod" }), std::runtime_error);
 }
 
-TEST(ConsoleArgumentParser, TooManyArguments) {
-	EXPECT_THROW(FindModuleDirectory(std::vector<std::string> { "/loadmod", "path1", "path2" }), std::runtime_error);
+TEST(ConsoleArgumentParser, MultipleArguments) {
+	const std::string path1("path1");
+	const std::string path2("path2");
+
+	const auto directories = FindModuleDirectories({ "/loadmod", path1, path2 });
+
+	EXPECT_EQ(2u, directories.size());
+	EXPECT_EQ(path1, directories[0]);
+	EXPECT_EQ(path2, directories[1]);
 }

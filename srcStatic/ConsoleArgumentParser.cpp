@@ -9,30 +9,33 @@
 std::vector<std::string> GetCommandLineArguments();
 std::string GetSwitch(std::vector<std::string>& arguments);
 std::string ParseSwitchName(std::string switchName);
-std::string ParseLoadModCommand(std::vector<std::string> arguments);
 
 
-std::string FindModuleDirectory()
+std::vector<std::string> FindModuleDirectories()
 {
 	try {
 		const auto arguments = GetCommandLineArguments();
-		return FindModuleDirectory(arguments);
+		return FindModuleDirectories(arguments);
 	} catch(const std::exception& e) {
 		PostError("Error parsing command line arguments: " + std::string(e.what()));
-		return std::string();
+		return {};
 	}
 }
 
-std::string FindModuleDirectory(std::vector<std::string> arguments)
+std::vector<std::string> FindModuleDirectories(std::vector<std::string> arguments)
 {
 	const std::string switchName = GetSwitch(arguments);
 
 	if (switchName.empty()) {
-		return std::string();
+		return {};
 	}
 
 	if (switchName == "loadmod") {
-		return ParseLoadModCommand(arguments);
+		if (arguments.empty()) {
+			throw std::runtime_error("No relative directory argument provided for the switch loadmod");
+		}
+
+		return arguments;
 	}
 
 	throw std::runtime_error("Provided switch is not supported: " + switchName);
@@ -62,17 +65,4 @@ std::string ParseSwitchName(std::string switchName)
 	ToLowerInPlace(switchName);
 
 	return switchName;
-}
-
-std::string ParseLoadModCommand(std::vector<std::string> arguments)
-{
-	if (arguments.empty()) {
-		throw std::runtime_error("No relative directory argument provided for the switch loadmod");
-	}
-
-	if (arguments.size() > 1) {
-		throw std::runtime_error("Too many arguments passed into switch LoadMod. If module relative directory contains spaces, surround the directory in quotes");
-	}
-
-	return arguments[0];
 }
