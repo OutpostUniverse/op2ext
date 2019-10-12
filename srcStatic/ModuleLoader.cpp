@@ -12,7 +12,7 @@
 
 
 ModuleLoader::ModuleLoader()
-	: iniFile(IniFile(GetOutpost2IniPath())), consoleModuleNames({ FindModuleDirectory() })
+	: iniFile(IniFile(GetOutpost2IniPath())), consoleModuleNames(FindModuleDirectories())
 {
 }
 
