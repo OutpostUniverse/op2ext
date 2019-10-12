@@ -1,5 +1,6 @@
 #include "ConsoleModule.h"
 #include "../FileSystemHelper.h"
+#include "../FsInclude.h"
 #include "../Log.h"
 #include "../WindowsErrorCode.h"
 #include <windows.h>

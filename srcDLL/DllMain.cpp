@@ -3,6 +3,7 @@
 #include "StringConversion.h"
 #include "OP2Memory.h"
 #include "FileSystemHelper.h"
+#include "FsInclude.h"
 #include "Log.h"
 #include "LoggerFile.h"
 #include "LoggerMessageBox.h"

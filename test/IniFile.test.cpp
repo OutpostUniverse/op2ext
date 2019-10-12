@@ -1,5 +1,6 @@
 #include "IniFile.h"
 #include "FileSystemHelper.h"
+#include "FsInclude.h"
 #include <gtest/gtest.h>
 
 

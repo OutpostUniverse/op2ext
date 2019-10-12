@@ -1,5 +1,6 @@
 #include "ModuleLoader.h"
 #include "FileSystemHelper.h"
+#include "FsInclude.h"
 #include "IniFile.h"
 #include <windows.h>
 #include <gtest/gtest.h>
