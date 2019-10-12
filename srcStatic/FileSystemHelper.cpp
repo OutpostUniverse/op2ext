@@ -5,7 +5,7 @@
 #include <cstddef>
 
 
-std::string GetGameDirectory()
+std::string GetExeDirectory()
 {
 	char moduleFilename[MAX_PATH];
 	GetModuleFileNameA(nullptr, moduleFilename, MAX_PATH);
@@ -15,7 +15,7 @@ std::string GetGameDirectory()
 
 std::string GetOutpost2IniPath()
 {
-	return fs::path(GetGameDirectory()).append("outpost2.ini").string();
+	return fs::path(GetExeDirectory()).append("outpost2.ini").string();
 }
 
 std::string GetOutpost2IniSetting(const std::string& sectionName, const std::string& key)

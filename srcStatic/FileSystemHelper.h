@@ -11,7 +11,7 @@ namespace fs = std::experimental::filesystem;
 #endif
 
 
-std::string GetGameDirectory();
+std::string GetExeDirectory();
 std::string GetOutpost2IniPath();
 std::string GetOutpost2IniSetting(const std::string& sectionName, const std::string& key);
 

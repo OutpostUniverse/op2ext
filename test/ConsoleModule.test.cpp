@@ -14,10 +14,10 @@ TEST(ConsoleModuleLoader, ModuleWithoutDLL)
 
 	// Test will need temporary module directory with no DLL present
 	// Ensure module directory ends with a trailing slash
-	const auto moduleDirectory = fs::path(GetGameDirectory()) / moduleName;
+	const auto moduleDirectory = fs::path(GetExeDirectory()) / moduleName;
 	fs::create_directory(moduleDirectory);
 
-	const std::string iniFileName{ GetGameDirectory() + "TestIniFile.NonExistentData.ini" };
+	const std::string iniFileName{ GetExeDirectory() + "TestIniFile.NonExistentData.ini" };
 	IniFile iniFile(iniFileName);
 	ModuleLoader moduleLoader(iniFileName, {moduleName});
 	
@@ -46,7 +46,7 @@ TEST(ConsoleModuleLoader, ModuleWithEmptyDLL)
 
 	// Test will need temporary module directory and invalid DLL file
 	// Ensure module directory ends with a trailing slash
-	const auto moduleDirectory = fs::path(GetGameDirectory()) / moduleName;
+	const auto moduleDirectory = fs::path(GetExeDirectory()) / moduleName;
 	const auto dllFile = moduleDirectory / "op2mod.dll";
 	
 	// Create temporary module directory
@@ -56,7 +56,7 @@ TEST(ConsoleModuleLoader, ModuleWithEmptyDLL)
 	// Temporary object, immediately destructed, side effect creates file of size 0
 	std::ofstream(dllFile.string());
 
-	const std::string iniFileName{ GetGameDirectory() + "TestIniFile.NonExistentData.ini" };
+	const std::string iniFileName{ GetExeDirectory() + "TestIniFile.NonExistentData.ini" };
 	IniFile iniFile(iniFileName);
 	ModuleLoader moduleLoader(iniFileName, {moduleName});
 
@@ -85,7 +85,7 @@ TEST(ConsoleModuleLoader, ModuleWithEmptyDLL)
 }
 
 TEST(ConsoleModuleLoader, MultiModule) {
-	const auto exeDir = fs::path(GetGameDirectory());
+	const auto exeDir = fs::path(GetExeDirectory());
 	const std::vector<std::string> moduleNames{"Module1", "Module2"};
 
 	// Create some empty test module directories
@@ -93,7 +93,7 @@ TEST(ConsoleModuleLoader, MultiModule) {
 		fs::create_directory(exeDir / moduleName);
 	}
 
-	const std::string iniFileName{ GetGameDirectory() + "TestIniFile.NonExistentData.ini" };
+	const std::string iniFileName{ GetExeDirectory() + "TestIniFile.NonExistentData.ini" };
 	IniFile iniFile(iniFileName);
 	ModuleLoader moduleLoader(iniFile, moduleNames);
 

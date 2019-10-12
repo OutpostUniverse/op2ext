@@ -26,7 +26,7 @@ int StubExt = 0;
 OP2EXT_API size_t GetGameDir_s(char* buffer, size_t bufferSize)
 {
 	// Adding "\\" to end of directory is required for backward compatibility.
-	return CopyStringViewIntoCharBuffer(GetGameDirectory() + "\\", buffer, bufferSize);
+	return CopyStringViewIntoCharBuffer(GetExeDirectory() + "\\", buffer, bufferSize);
 }
 
 OP2EXT_API size_t GetConsoleModDir_s(char* buffer, size_t bufferSize)
@@ -44,7 +44,7 @@ OP2EXT_API size_t GetConsoleModDir_s(char* buffer, size_t bufferSize)
 OP2EXT_API void GetGameDir(char* buffer)
 {
 	// Adding "\\" to end of directory is required for backward compatibility.
-	std::string gameDirectory = GetGameDirectory() + "\\";
+	std::string gameDirectory = GetExeDirectory() + "\\";
 
 	// Unable to use the newer funciton strcpy_s since we do not know the size of buffer,
 	// causing a security concern.

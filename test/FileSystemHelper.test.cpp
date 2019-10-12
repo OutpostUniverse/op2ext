@@ -2,8 +2,8 @@
 #include <gtest/gtest.h>
 
 
-TEST(FileSystemHelper, GetGameDirectory) {
-	auto gameDirectory = fs::path(GetGameDirectory());
+TEST(FileSystemHelper, GetExeDirectory) {
+	auto gameDirectory = fs::path(GetExeDirectory());
 	// Work around MinGW failures for paths that end with a directory separator
 	gameDirectory += ".";
 	EXPECT_TRUE(gameDirectory.is_absolute()) << gameDirectory.string() + " is not an absolute path.";

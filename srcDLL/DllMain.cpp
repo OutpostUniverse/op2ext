@@ -130,7 +130,7 @@ for inclusion in Outpost 2. Does not recursively search subdirectories.
 */
 void LocateVolFiles(const std::string& relativeDirectory)
 {
-	const auto absoluteDirectory = fs::path(GetGameDirectory()) / fs::path(relativeDirectory);
+	const auto absoluteDirectory = fs::path(GetExeDirectory()) / fs::path(relativeDirectory);
 
 	// Append directory "." to work around Mingw bug with `is_directory`
 	if (!fs::is_directory(absoluteDirectory / ".")) {
