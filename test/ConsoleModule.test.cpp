@@ -86,12 +86,12 @@ TEST(ConsoleModuleLoader, ModuleWithEmptyDLL)
 }
 
 TEST(ConsoleModuleLoader, MultiModule) {
-	const auto exeDir = fs::path(GetExeDirectory());
+	const auto exeDirectory = fs::path(GetExeDirectory());
 	const std::vector<std::string> moduleNames{"Module1", "Module2"};
 
 	// Create some empty test module directories
 	for (const auto& moduleName : moduleNames) {
-		fs::create_directory(exeDir / moduleName);
+		fs::create_directory(exeDirectory / moduleName);
 	}
 
 	const std::string iniFileName{ GetExeDirectory() + "TestIniFile.NonExistentData.ini" };
@@ -115,6 +115,6 @@ TEST(ConsoleModuleLoader, MultiModule) {
 	// Cleanup test module directories
 	for (const auto& moduleName : moduleNames) {
 		// Use Win API directly since fs::remove doesn't work under Mingw
-		EXPECT_NE(0, RemoveDirectoryW((exeDir / moduleName).wstring().c_str()));
+		EXPECT_NE(0, RemoveDirectoryW((exeDirectory / moduleName).wstring().c_str()));
 	}
 }
