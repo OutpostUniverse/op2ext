@@ -34,6 +34,7 @@ public:
 DWORD* loadLibraryDataAddr = (DWORD*)0x00486E0A;
 DWORD loadLibraryNewAddr = (DWORD)LoadShell;
 
+bool InstallTAppEventHooks();
 void OnLoadShell();
 
 // Warning: globals requiring dynamic initialization
@@ -62,11 +63,11 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 		// Failure means op2ext.dll was loaded by something else, such as a unit test
 		// For unit tests, just stay in memory, it's not an error if this fails
 		if (EnableOp2MemoryPatching()) {
-			// Replace call to gTApp.Init with custom routine
-			// This hook is needed to further bootstrap the rest of module loading
+			// Initiall TApp event hooks
+			// These hooks are needed to further bootstrap the rest of module loading
 			// If this fails, the module loader won't be able to active further patches
-			if (!Op2RelinkCall(0x004A8877, GetMethodVoidPointer(&TApp::Init))) {
-				PostError("Failed to install initial TApp.Init even hook");
+			if (!InstallTAppEventHooks()) {
+				PostError("Failed to install initial TApp event hooks. Module loading disabled.");
 				return FALSE;
 			}
 		}
@@ -76,6 +77,22 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 	}
 
 	return TRUE;
+}
+
+bool InstallTAppEventHooks()
+{
+	// Replace call to gTApp.Init with custom routine
+	if (!Op2RelinkCall(0x004A8877, GetMethodVoidPointer(&TApp::Init))) {
+		return false;
+	}
+
+	// Replace call to gTApp.ShutDown with custom routine
+	Op2RelinkCall(0x004A88A5, GetMethodVoidPointer(&TApp::ShutDown));
+
+	// Replace call to LoadLibrary with custom routine (address is indirect)
+	Op2MemSetDword(loadLibraryDataAddr, (int)&loadLibraryNewAddr);
+
+	return true;
 }
 
 int TApp::Init()
@@ -105,12 +122,6 @@ int TApp::Init()
 	LocateVolFiles(); //Searches root directory
 
 	volList->LoadVolFiles();
-
-	// Replace call to LoadLibrary with custom routine (address is indirect)
-	Op2MemSetDword(loadLibraryDataAddr, (int)&loadLibraryNewAddr);
-
-	// Replace call to gTApp.ShutDown with custom routine
-	Op2RelinkCall(0x004A88A5, GetMethodVoidPointer(&TApp::ShutDown));
 
 	// Call original function
 	return (this->*GetMethodPointer<decltype(&TApp::Init)>(0x00485B20))();
