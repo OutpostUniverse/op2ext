@@ -95,7 +95,7 @@ bool InstallTAppEventHooks()
 	return true;
 }
 
-int TApp::Init()
+bool InstallDepPatch()
 {
 	// Set the execute flag on the DSEG section so DEP doesn't terminate the game
 	const std::size_t destinationBaseAddress = 0x00585000;
@@ -104,6 +104,14 @@ int TApp::Init()
 	if (!success) {
 		PostError("Error unprotecting memory at: 0x" + AddrToHexString(destinationBaseAddress));
 	}
+
+	return success;
+}
+
+int TApp::Init()
+{
+	// Install DEP patch so newer versions of Windows don't terminate the game
+	InstallDepPatch();
 
 	// Order of precedence for loading vol files is:
 	// ART_PATH (from console module), Console Module, Ini Modules, Addon directory, Game directory
