@@ -34,6 +34,8 @@ public:
 DWORD* loadLibraryDataAddr = (DWORD*)0x00486E0A;
 DWORD loadLibraryNewAddr = (DWORD)LoadShell;
 
+void OnLoadShell();
+
 // Warning: globals requiring dynamic initialization
 // Dynamic initialization order between translation units is unsequenced
 // Globals from other files should not use these before DllMain has started
@@ -161,10 +163,15 @@ HINSTANCE __stdcall LoadShell(LPCSTR lpLibFileName)
 
 	if (hInstance) // if good, then setup the language data and call the mod
 	{
-		//LocalizeStrings();
-		modulesRunning = true;
-		moduleLoader->RunModules();
+		OnLoadShell();
 	}
 
 	return hInstance;
+}
+
+void OnLoadShell()
+{
+	//LocalizeStrings();
+	modulesRunning = true;
+	moduleLoader->RunModules();
 }
