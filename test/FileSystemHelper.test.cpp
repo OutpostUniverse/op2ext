@@ -4,11 +4,11 @@
 
 
 TEST(FileSystemHelper, GetExeDirectory) {
-	auto gameDirectory = fs::path(GetExeDirectory());
-	auto gameDirectoryString = gameDirectory.string();
-	EXPECT_TRUE(gameDirectory.is_absolute()) << gameDirectoryString + " is not an absolute path.";
-	EXPECT_TRUE(Exists(gameDirectoryString)) << gameDirectoryString + " does not exist on filesystem.";
-	EXPECT_TRUE(IsDirectory(gameDirectoryString)) << gameDirectoryString + " is not a directory.";
+	auto exeDirectory = fs::path(GetExeDirectory());
+	auto exeDirectoryString = exeDirectory.string();
+	EXPECT_TRUE(exeDirectory.is_absolute()) << exeDirectoryString + " is not an absolute path.";
+	EXPECT_TRUE(Exists(exeDirectoryString)) << exeDirectoryString + " does not exist on filesystem.";
+	EXPECT_TRUE(IsDirectory(exeDirectoryString)) << exeDirectoryString + " is not a directory.";
 }
 
 TEST(FileSystemHelper, GetOutpost2IniPath) {
