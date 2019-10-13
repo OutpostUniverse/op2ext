@@ -1,7 +1,6 @@
 #include "Log.h"
 #include "Logger.h"
 #include "LoggerMessageBox.h"
-#include "FileSystemHelper.h"
 #include "FsInclude.h"
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>

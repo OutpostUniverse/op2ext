@@ -1,7 +1,6 @@
 #include "GetCommandLineArguments.h"
 #include "ConsoleArgumentParser.h"
 #include "StringConversion.h"
-#include "FileSystemHelper.h"
 #include "Log.h"
 #include <stdexcept>
 
