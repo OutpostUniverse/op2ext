@@ -1,5 +1,6 @@
 #include "ConsoleModule.h"
 #include "../FileSystemHelper.h"
+#include "../FsInclude.h"
 #include "../Log.h"
 #include "../WindowsErrorCode.h"
 #include <windows.h>
@@ -15,7 +16,7 @@ ConsoleModule::ConsoleModule(const std::string& moduleName) : DllModule(moduleNa
 	}
 
 	const auto dllPath = fs::path(moduleDirectory).append("op2mod.dll").string();
-	if (!fs::exists(dllPath)) {
+	if (!Exists(dllPath)) {
 		return; // Some console modules do not contain dlls
 	}
 

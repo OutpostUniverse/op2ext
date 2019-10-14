@@ -154,6 +154,7 @@
     <ClInclude Include="GetCommandLineArguments.h" />
     <ClInclude Include="ConsoleArgumentParser.h" />
     <ClInclude Include="FileSystemHelper.h" />
+    <ClInclude Include="FsInclude.h" />
     <ClInclude Include="GameModule.h" />
     <ClInclude Include="GameModules\IniModule.h" />
     <ClInclude Include="ModuleLoader.h" />

@@ -3,6 +3,7 @@
 #include "StringConversion.h"
 #include "OP2Memory.h"
 #include "FileSystemHelper.h"
+#include "FsInclude.h"
 #include "Log.h"
 #include "LoggerFile.h"
 #include "LoggerMessageBox.h"
@@ -130,10 +131,9 @@ for inclusion in Outpost 2. Does not recursively search subdirectories.
 */
 void LocateVolFiles(const std::string& relativeDirectory)
 {
-	const auto absoluteDirectory = fs::path(GetExeDirectory()) / fs::path(relativeDirectory);
+	const auto absoluteDirectory = (fs::path(GetExeDirectory()) / relativeDirectory).string();
 
-	// Append directory "." to work around Mingw bug with `is_directory`
-	if (!fs::is_directory(absoluteDirectory / ".")) {
+	if (!IsDirectory(absoluteDirectory)) {
 		return;
 	}
 

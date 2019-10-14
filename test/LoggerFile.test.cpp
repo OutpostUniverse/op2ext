@@ -1,16 +1,17 @@
 #include "LoggerFile.h"
 #include "FileSystemHelper.h"
+#include "FsInclude.h"
 #include <gtest/gtest.h>
 
 
-const fs::path logPath = fs::path(GetExeDirectory()).append("Outpost2Log.txt");
+const auto logPath = fs::path(GetExeDirectory()).append("Outpost2Log.txt").string();
 
 
 TEST(LoggerFile, LogFileExists)
 {
 	// Creating a logger should open or create a log file
 	LoggerFile logger;
-	ASSERT_TRUE(fs::exists(logPath));
+	ASSERT_TRUE(Exists(logPath));
 }
 
 TEST(LoggerFile, MessageLogged)

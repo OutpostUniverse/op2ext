@@ -1,14 +1,14 @@
 #include "FileSystemHelper.h"
+#include "FsInclude.h"
 #include <gtest/gtest.h>
 
 
 TEST(FileSystemHelper, GetExeDirectory) {
-	auto gameDirectory = fs::path(GetExeDirectory());
-	// Work around MinGW failures for paths that end with a directory separator
-	gameDirectory += ".";
-	EXPECT_TRUE(gameDirectory.is_absolute()) << gameDirectory.string() + " is not an absolute path.";
-	EXPECT_TRUE(fs::exists(gameDirectory)) << gameDirectory.string() + " does not exist on filesystem.";
-	EXPECT_TRUE(fs::is_directory(gameDirectory)) << gameDirectory.string() + " is not a directory.";
+	auto exeDirectory = fs::path(GetExeDirectory());
+	auto exeDirectoryString = exeDirectory.string();
+	EXPECT_TRUE(exeDirectory.is_absolute()) << exeDirectoryString + " is not an absolute path.";
+	EXPECT_TRUE(Exists(exeDirectoryString)) << exeDirectoryString + " does not exist on filesystem.";
+	EXPECT_TRUE(IsDirectory(exeDirectoryString)) << exeDirectoryString + " is not a directory.";
 }
 
 TEST(FileSystemHelper, GetOutpost2IniPath) {
