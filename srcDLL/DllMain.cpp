@@ -94,6 +94,17 @@ bool InstallTAppEventHooks()
 	return true;
 }
 
+// Patch to prevent crashes on newer versions of Windows.
+// DEP (Data Execution Prevention) was first released with Windows XP SP2.
+// The intent was to prevent execution of data as code in non-code segments,
+// such as on the heap and on the stack, typical in buffer overflow exploits.
+// It works using the execute bit of the virtual memory system, crashing the
+// program if it tries to execute code from a non-executable page.
+// In Outpost2.exe there is a DSEG segment, which contains both data and code.
+// The code in this segment appears to be hand optimized assembly routines for
+// software graphics rendering.
+// This segments needs all of read/write for data and execute for code.
+// (And also read/write of code to support the self modifying code)
 bool InstallDepPatch()
 {
 	// Set the execute flag on the DSEG section so DEP doesn't terminate the game
