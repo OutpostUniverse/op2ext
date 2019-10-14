@@ -25,7 +25,7 @@ ModuleLoader::ModuleLoader(IniFile iniFile, std::vector<std::string> consoleModu
 
 void ModuleLoader::RegisterBuiltInModules()
 {
-	if (IsBuiltInModuleRequested("IPDropDown")) {
+	if (IsModuleRequested("BuiltInModules", "IPDropDown")) {
 		RegisterModule(std::make_unique<IPDropDown>());
 	}
 }
@@ -80,9 +80,9 @@ void ModuleLoader::RegisterIniModules()
 	}
 }
 
-bool ModuleLoader::IsBuiltInModuleRequested(const std::string& moduleName)
+bool ModuleLoader::IsModuleRequested(const std::string& sectionName, const std::string& moduleName)
 {
-	const auto isModuleRequested = ToLower(iniFile.GetValue("BuiltInModules", moduleName));
+	const auto isModuleRequested = ToLower(iniFile.GetValue(sectionName, moduleName));
 
 	if (isModuleRequested == "yes") {
 		return true;
@@ -91,7 +91,7 @@ bool ModuleLoader::IsBuiltInModuleRequested(const std::string& moduleName)
 		return false;
 	}
 
-	PostError("Built-in module named " + moduleName + " contains an innapropriate setting. It must be set to Yes or No");
+	PostError("Module named " + moduleName + " contains an innapropriate setting. It must be set to Yes or No");
 	return false;
 }
 
