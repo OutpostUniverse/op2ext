@@ -63,7 +63,7 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 		// Failure means op2ext.dll was loaded by something else, such as a unit test
 		// For unit tests, just stay in memory, it's not an error if this fails
 		if (EnableOp2MemoryPatching()) {
-			// Initiall TApp event hooks
+			// Install TApp event hooks
 			// These hooks are needed to further bootstrap the rest of module loading
 			// If this fails, the module loader won't be able to active further patches
 			if (!InstallTAppEventHooks()) {
