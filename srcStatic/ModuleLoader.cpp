@@ -91,7 +91,7 @@ bool ModuleLoader::IsModuleRequested(const std::string& sectionName, const std::
 		return false;
 	}
 
-	PostError("Module named " + moduleName + " contains an innapropriate setting. It must be set to Yes or No");
+	PostError("Module named " + moduleName + " contains an innapropriate setting of " + isModuleRequested + ". It must be set to Yes or No");
 	return false;
 }
 
