@@ -34,6 +34,5 @@ private:
 	// Console module names are the relative path from the game folder (no trailing slash)
 	void RegisterConsoleModules();
 	void RegisterIniModules();
-	bool IsBuiltInModuleRequested(const std::string& moduleName);
-	std::vector<std::string> GetModuleNames(const std::string& moduleType);
+	bool IsModuleRequested(const std::string& sectionName, const std::string& moduleName);
 };
