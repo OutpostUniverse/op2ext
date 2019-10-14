@@ -13,6 +13,7 @@
 
 
 void LocateVolFiles(const std::string& relativeDirectory = "");
+bool InstallDepPatch();
 
 // Declaration for patch to LoadLibrary, where it loads OP2Shell.dll
 HINSTANCE __stdcall LoadShell(LPCSTR lpLibFileName);
@@ -34,6 +35,9 @@ public:
 
 DWORD* loadLibraryDataAddr = (DWORD*)0x00486E0A;
 DWORD loadLibraryNewAddr = (DWORD)LoadShell;
+
+bool InstallTAppEventHooks();
+void OnLoadShell();
 
 // Warning: globals requiring dynamic initialization
 // Dynamic initialization order between translation units is unsequenced
@@ -61,11 +65,9 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 		// Failure means op2ext.dll was loaded by something else, such as a unit test
 		// For unit tests, just stay in memory, it's not an error if this fails
 		if (EnableOp2MemoryPatching()) {
-			// Replace call to gTApp.Init with custom routine
-			// This hook is needed to further bootstrap the rest of module loading
-			// If this fails, the module loader won't be able to active further patches
-			if (!Op2RelinkCall(0x004A8877, GetMethodVoidPointer(&TApp::Init))) {
-				PostError("Failed to install initial TApp.Init even hook");
+			// These hooks are needed to further bootstrap the rest of module loading
+			if (!InstallTAppEventHooks()) {
+				PostError("Failed to install initial TApp event hooks. Module loading and patching disabled.");
 				return FALSE;
 			}
 		}
@@ -77,7 +79,34 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 	return TRUE;
 }
 
-int TApp::Init()
+bool InstallTAppEventHooks()
+{
+	// Replace call to gTApp.Init with custom routine
+	if (!Op2RelinkCall(0x004A8877, GetMethodVoidPointer(&TApp::Init))) {
+		return false;
+	}
+
+	// Replace call to gTApp.ShutDown with custom routine
+	Op2RelinkCall(0x004A88A5, GetMethodVoidPointer(&TApp::ShutDown));
+
+	// Replace call to LoadLibrary with custom routine (address is indirect)
+	Op2MemSetDword(loadLibraryDataAddr, &loadLibraryNewAddr);
+
+	return true;
+}
+
+// Patch to prevent crashes on newer versions of Windows.
+// DEP (Data Execution Prevention) was first released with Windows XP SP2.
+// The intent was to prevent execution of data as code in non-code segments,
+// such as on the heap and on the stack, typical in buffer overflow exploits.
+// It works using the execute bit of the virtual memory system, crashing the
+// program if it tries to execute code from a non-executable page.
+// In Outpost2.exe there is a DSEG segment, which contains both data and code.
+// The code in this segment appears to be hand optimized assembly routines for
+// software graphics rendering.
+// This segments needs all of read/write for data and execute for code.
+// (And also read/write of code to support the self modifying code)
+bool InstallDepPatch()
 {
 	// Set the execute flag on the DSEG section so DEP doesn't terminate the game
 	const std::size_t destinationBaseAddress = 0x00585000;
@@ -86,6 +115,14 @@ int TApp::Init()
 	if (!success) {
 		PostError("Error unprotecting memory at: 0x" + AddrToHexString(destinationBaseAddress));
 	}
+
+	return success;
+}
+
+int TApp::Init()
+{
+	// Install DEP patch so newer versions of Windows don't terminate the game
+	InstallDepPatch();
 
 	// Order of precedence for loading vol files is:
 	// ART_PATH (from console module), Console Module, Ini Modules, Addon directory, Game directory
@@ -104,12 +141,6 @@ int TApp::Init()
 	LocateVolFiles(); //Searches root directory
 
 	volList->LoadVolFiles();
-
-	// Replace call to LoadLibrary with custom routine (address is indirect)
-	Op2MemSetDword(loadLibraryDataAddr, (int)&loadLibraryNewAddr);
-
-	// Replace call to gTApp.ShutDown with custom routine
-	Op2RelinkCall(0x004A88A5, GetMethodVoidPointer(&TApp::ShutDown));
 
 	// Call original function
 	return (this->*GetMethodPointer<decltype(&TApp::Init)>(0x00485B20))();
@@ -159,12 +190,19 @@ HINSTANCE __stdcall LoadShell(LPCSTR lpLibFileName)
 	// First try to load it
 	HINSTANCE hInstance = LoadLibraryA(lpLibFileName);
 
-	if (hInstance) // if good, then setup the language data and call the mod
+	if (hInstance)
 	{
-		//LocalizeStrings();
-		modulesRunning = true;
-		moduleLoader->RunModules();
+		OnLoadShell();
 	}
 
 	return hInstance;
+}
+
+void OnLoadShell()
+{
+	// Language support disabled. Was experimental before, but had version problems.
+	//LocalizeStrings();
+
+	modulesRunning = true;
+	moduleLoader->RunModules();
 }
