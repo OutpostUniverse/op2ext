@@ -13,11 +13,11 @@ void WriteExternalModuleIniFile(const std::string& iniFilename, const std::vecto
 {
 	std::ofstream iniFileStream(iniFilename);
 
-	iniFileStream << "[ExternalModules]\n";
+	iniFileStream << "[ExternalModules]" << std::endl;
 
 	for (const auto& sectionPair : sectionPairs)
 	{
-		iniFileStream << sectionPair << "\n";
+		iniFileStream << sectionPair << std::endl;
 	}
 
 	iniFileStream.close();
