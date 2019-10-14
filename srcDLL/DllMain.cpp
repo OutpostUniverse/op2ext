@@ -12,6 +12,7 @@
 
 
 void LocateVolFiles(const std::string& relativeDirectory = "");
+bool InstallDepPatch();
 
 // Declaration for patch to LoadLibrary, where it loads OP2Shell.dll
 HINSTANCE __stdcall LoadShell(LPCSTR lpLibFileName);
