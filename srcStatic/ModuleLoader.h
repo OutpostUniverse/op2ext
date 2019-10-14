@@ -35,5 +35,4 @@ private:
 	void RegisterConsoleModules();
 	void RegisterIniModules();
 	bool IsModuleRequested(const std::string& sectionName, const std::string& moduleName);
-	std::vector<std::string> GetModuleNames(const std::string& moduleType);
 };
