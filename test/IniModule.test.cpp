@@ -18,7 +18,6 @@ void WriteExternalModuleIniFile(const std::string& iniFilename, const std::vecto
 	for (const auto& sectionPair : sectionPairs)
 	{
 		iniFileStream << sectionPair << "\n";
-		//iniFileStream << "Test = yes\n";
 	}
 
 	iniFileStream.close();
