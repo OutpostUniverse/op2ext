@@ -1,6 +1,7 @@
 #include "FileSystemHelper.h"
 #include "FsInclude.h"
 #include <gtest/gtest.h>
+#include <fstream>
 
 
 TEST(FileSystemHelper, GetExeDirectory) {
@@ -18,6 +19,12 @@ TEST(FileSystemHelper, GetOutpost2IniPath) {
 
 TEST(FileSystemHelper, GetOutpost2IniSetting)
 {
+	// Create some test data
+	std::ofstream stream(GetOutpost2IniPath());
+	stream << "[Game]" << std::endl;
+	stream << "Music=1" << std::endl;
+	stream.close();
+
 	EXPECT_EQ("1", GetOutpost2IniSetting("Game", "Music"));
 	
 	// Check Case Insensitive
