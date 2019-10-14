@@ -12,6 +12,8 @@ public:
 	inline std::size_t Count() { return messageStack.size(); }
 
 	std::string Pop();
+	// Returns true if passed comparison string is contained within logged message.
+	bool Pop(const std::string& comparison);
 
 private:
 	std::vector<std::string> messageStack;
