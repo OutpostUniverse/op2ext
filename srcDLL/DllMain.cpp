@@ -190,7 +190,7 @@ HINSTANCE __stdcall LoadShell(LPCSTR lpLibFileName)
 	// First try to load it
 	HINSTANCE hInstance = LoadLibraryA(lpLibFileName);
 
-	if (hInstance) // if good, then setup the language data and call the mod
+	if (hInstance)
 	{
 		OnLoadShell();
 	}
@@ -200,7 +200,9 @@ HINSTANCE __stdcall LoadShell(LPCSTR lpLibFileName)
 
 void OnLoadShell()
 {
+	// Language support disabled. Was experimental before, but had version problems.
 	//LocalizeStrings();
+
 	modulesRunning = true;
 	moduleLoader->RunModules();
 }
