@@ -1,4 +1,6 @@
 #include "TestLog.h"
+#include "TestLogger.h"
+
 
 // Use anonymous namespace to keep globals private
 namespace {

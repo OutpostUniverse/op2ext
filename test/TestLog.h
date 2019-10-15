@@ -2,7 +2,6 @@
 
 #include "TestLogger.h"
 
-class TestLogger;
 
 void ResetTestLog();
 
