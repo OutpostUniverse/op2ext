@@ -25,7 +25,7 @@ ModuleLoader::ModuleLoader(IniFile iniFile, std::vector<std::string> consoleModu
 
 void ModuleLoader::RegisterBuiltInModules()
 {
-	if (IsBuiltInModuleRequested("IPDropDown")) {
+	if (IsModuleRequested("BuiltInModules", "IPDropDown")) {
 		RegisterModule(std::make_unique<IPDropDown>());
 	}
 }
@@ -67,22 +67,23 @@ void ModuleLoader::RegisterConsoleModules()
 
 void ModuleLoader::RegisterIniModules()
 {
-	const auto sectionNames = GetModuleNames("ExternalModules");
-
-	for (const auto& sectionName : sectionNames)
+	for (const auto moduleName : iniFile.GetKeyNames("ExternalModules"))
 	{
-		try {
-			RegisterModule(std::make_unique<IniModule>(iniFile[sectionName]));
-		}
-		catch (const std::exception& e) {
-			PostError("Unable to load ini module " + sectionName + ". " + e.what());
+		if (IsModuleRequested("ExternalModules", moduleName)) 
+		{
+			try {
+				RegisterModule(std::make_unique<IniModule>(iniFile[moduleName]));
+			}
+			catch (const std::exception& e) {
+				PostError("Unable to load ini module " + moduleName + ". " + e.what());
+			}
 		}
 	}
 }
 
-bool ModuleLoader::IsBuiltInModuleRequested(const std::string& moduleName)
+bool ModuleLoader::IsModuleRequested(const std::string& sectionName, const std::string& moduleName)
 {
-	const auto isModuleRequested = ToLower(iniFile.GetValue("BuiltInModules", moduleName));
+	const auto isModuleRequested = ToLower(iniFile.GetValue(sectionName, moduleName));
 
 	if (isModuleRequested == "yes") {
 		return true;
@@ -91,16 +92,8 @@ bool ModuleLoader::IsBuiltInModuleRequested(const std::string& moduleName)
 		return false;
 	}
 
-	PostError("Built-in module named " + moduleName + " contains an innapropriate setting. It must be set to Yes or No");
+	PostError("Module named " + moduleName + " contains an innapropriate setting of " + isModuleRequested + ". It must be set to Yes or No");
 	return false;
-}
-
-std::vector<std::string> ModuleLoader::GetModuleNames(const std::string& moduleType)
-{
-	auto sectionNamesString = iniFile.GetValue("Game", moduleType);
-	auto sectionNames = ParseCsv(sectionNamesString);
-
-	return sectionNames;
 }
 
 // An INI module name is the SectionName from the INI file with its config settings
