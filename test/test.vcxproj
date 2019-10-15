@@ -31,6 +31,7 @@
     <ClCompile Include="IniFile.test.cpp" />
     <ClCompile Include="IniModule.test.cpp" />
     <ClCompile Include="Log.test.cpp" />
+    <ClCompile Include="TestLog.cpp" />
     <ClCompile Include="ModuleLoader.test.cpp" />
     <ClCompile Include="LoggerFile.test.cpp" />
     <ClCompile Include="LogMessageTest.cpp" />
@@ -48,6 +49,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="TestLog.h" />
     <ClInclude Include="TestLogger.h" />
   </ItemGroup>
   <ItemDefinitionGroup />

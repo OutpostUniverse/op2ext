@@ -1,7 +1,7 @@
 #include "GameModules/IpDropDown.h"
 #include "GameModules/IniModule.h"
 #include "ModuleLoader.h"
-#include "TestLogger.h"
+#include "TestLog.h"
 #include <gtest/gtest.h>
 #include <memory>
 #include <stdexcept>
@@ -65,7 +65,7 @@ TEST(ModuleLoader, BuiltInModulePassed)
 
 TEST(ModuleLoader, RejectCaseInsensitiveDuplicateNames)
 {
-	ResetTestErrorLogger();
+	ResetTestLog();
 
 	ModuleLoader moduleLoader;
 

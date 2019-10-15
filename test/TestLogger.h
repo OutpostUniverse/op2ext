@@ -5,10 +5,6 @@
 #include <string>
 #include <vector>
 
-class TestLogger;
-
-void ResetTestErrorLogger();
-TestLogger& GetErrorLogger();
 
 class TestLogger : public Logger
 {

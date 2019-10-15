@@ -1,23 +1,6 @@
 #include "TestLogger.h"
 
 
-// Use anonymous namespace to keep globals private
-namespace {
-	TestLogger errorLogger;
-}
-
-void ResetTestErrorLogger()
-{
-	errorLogger.Clear();
-	SetLoggerError(&errorLogger);
-}
-
-TestLogger& GetErrorLogger()
-{
-	return errorLogger;
-}
-
-
 void TestLogger::Log(const std::string& message, const std::string& moduleName)
 {
 	messageStack.push_back(message);
