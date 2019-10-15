@@ -75,7 +75,8 @@ TEST(ModuleLoader, RejectCaseInsensitiveDuplicateNames)
 
 	// Ensure ModuleManager does not allow multiple modules with same name but different casing
 	EXPECT_NO_THROW(moduleLoader.RegisterModule(std::make_unique<DifferentCasedNameModule>("testmodule")));
+	EXPECT_EQ(1u, moduleLoader.Count());
+
 	EXPECT_EQ(1u, GetErrorLogger().Count());
 	EXPECT_TRUE(GetErrorLogger().Pop("You may not add a module with an existing name"));
-	EXPECT_EQ(1u, moduleLoader.Count());
 }

@@ -2,6 +2,7 @@
 #include "FsInclude.h"
 #include "IniFile.h"
 #include "ModuleLoader.h"
+#include "TestLog.h"
 #include <fstream>
 #include <string>
 #include <string_view>
@@ -25,6 +26,8 @@ void WriteExternalModuleIniFile(const std::string& iniFilename, const std::vecto
 
 TEST(IniModule, NoDll)
 {
+	ResetTestLog();
+
 	const auto iniFilename = fs::path(GetExeDirectory()) / fs::path("IniModuleTest.ini");
 	WriteExternalModuleIniFile(iniFilename.string(), { "Test = yes" });
 
@@ -34,11 +37,16 @@ TEST(IniModule, NoDll)
 	EXPECT_NO_THROW(moduleLoader.LoadModules());
 	EXPECT_EQ(0u, moduleLoader.Count());
 
+	EXPECT_EQ(1u, GetErrorLogger().Count());
+	EXPECT_TRUE(GetErrorLogger().Pop("Unable to load dll for module"));
+
 	fs::remove(iniFilename);
 }
 
 TEST(IniModule, InappropriateValue)
 {
+	ResetTestLog();
+
 	const auto iniFilename = fs::path(GetExeDirectory()) / fs::path("IniModuleTest.ini");
 	WriteExternalModuleIniFile(iniFilename.string(), { "Test = InappropriateValue" });
 
@@ -47,6 +55,9 @@ TEST(IniModule, InappropriateValue)
 	// Inappropriate value for if module should be loaded. An error should post, but program continues to run 
 	EXPECT_NO_THROW(moduleLoader.LoadModules());
 	EXPECT_EQ(0u, moduleLoader.Count());
+
+	EXPECT_EQ(1u, GetErrorLogger().Count());
+	EXPECT_TRUE(GetErrorLogger().Pop("contains an innapropriate setting of"));
 
 	fs::remove(iniFilename);
 }
