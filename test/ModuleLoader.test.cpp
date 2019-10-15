@@ -2,7 +2,6 @@
 #include "GameModules/IniModule.h"
 #include "ModuleLoader.h"
 #include "TestLogger.h"
-#include "Log.h"
 #include <gtest/gtest.h>
 #include <memory>
 #include <stdexcept>
@@ -66,20 +65,17 @@ TEST(ModuleLoader, BuiltInModulePassed)
 
 TEST(ModuleLoader, RejectCaseInsensitiveDuplicateNames)
 {
-	TestLogger errorLogger;
-	SetLoggerError(&errorLogger);
+	ResetTestErrorLogger();
 
 	ModuleLoader moduleLoader;
 
 	EXPECT_NO_THROW(moduleLoader.RegisterModule(std::make_unique<DifferentCasedNameModule>("TestModule")));
 	EXPECT_EQ(1u, moduleLoader.Count());
-	EXPECT_EQ(0u, errorLogger.Count());
+	EXPECT_EQ(0u, GetErrorLogger().Count());
 
 	// Ensure ModuleManager does not allow multiple modules with same name but different casing
 	EXPECT_NO_THROW(moduleLoader.RegisterModule(std::make_unique<DifferentCasedNameModule>("testmodule")));
-	EXPECT_EQ(1u, errorLogger.Count());
-	EXPECT_TRUE(errorLogger.Pop("You may not add a module with an existing name"));
+	EXPECT_EQ(1u, GetErrorLogger().Count());
+	EXPECT_TRUE(GetErrorLogger().Pop("You may not add a module with an existing name"));
 	EXPECT_EQ(1u, moduleLoader.Count());
-
-	SetLoggerError(nullptr);
 }

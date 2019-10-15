@@ -1,8 +1,14 @@
 #pragma once
 
+#include "Log.h"
 #include "Logger.h"
 #include <string>
 #include <vector>
+
+class TestLogger;
+
+void ResetTestErrorLogger();
+TestLogger& GetErrorLogger();
 
 class TestLogger : public Logger
 {
