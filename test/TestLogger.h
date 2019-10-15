@@ -10,7 +10,7 @@ class TestLogger : public Logger
 {
 public:
 	void Log(const std::string& message, const std::string& moduleName = "op2ext.dll");
-	inline void Clear() { messageStack.empty(); }
+	inline void Clear() { messageStack.clear(); }
 	inline std::size_t Count() { return messageStack.size(); }
 
 	std::string Pop();
