@@ -11,6 +11,11 @@
 
 class IniModuleTest : public LogMessageTest {
 protected:
+	void TearDown() {
+		fs::remove(iniFilename);
+		LogMessageTest::TearDown();
+	}
+
 	const fs::path iniFilename = fs::path(GetExeDirectory()) / fs::path("IniModuleTest.ini");
 };
 
@@ -40,9 +45,6 @@ TEST_F(IniModuleTest, NoDll)
 	EXPECT_CALL(logger, Log(::testing::HasSubstr("Unable to load dll for module"), "op2ext.dll")).Times(1);
 	EXPECT_NO_THROW(moduleLoader.LoadModules());
 	EXPECT_EQ(0u, moduleLoader.Count());
-
-
-	fs::remove(iniFilename);
 }
 
 TEST_F(IniModuleTest, InappropriateValue)
@@ -55,7 +57,4 @@ TEST_F(IniModuleTest, InappropriateValue)
 	EXPECT_CALL(logger, Log(::testing::HasSubstr("contains an innapropriate setting of"), "op2ext.dll")).Times(1);
 	EXPECT_NO_THROW(moduleLoader.LoadModules());
 	EXPECT_EQ(0u, moduleLoader.Count());
-
-
-	fs::remove(iniFilename);
 }
