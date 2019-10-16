@@ -10,6 +10,8 @@
 
 
 class IniModuleTest : public LogMessageTest {
+protected:
+	const fs::path iniFilename = fs::path(GetExeDirectory()) / fs::path("IniModuleTest.ini");
 };
 
 
@@ -30,7 +32,6 @@ void WriteExternalModuleIniFile(const std::string& iniFilename, const std::vecto
 
 TEST_F(IniModuleTest, NoDll)
 {
-	const auto iniFilename = fs::path(GetExeDirectory()) / fs::path("IniModuleTest.ini");
 	WriteExternalModuleIniFile(iniFilename.string(), { "Test = yes" });
 
 	ModuleLoader moduleLoader(IniFile(iniFilename.string()), {});
@@ -46,7 +47,6 @@ TEST_F(IniModuleTest, NoDll)
 
 TEST_F(IniModuleTest, InappropriateValue)
 {
-	const auto iniFilename = fs::path(GetExeDirectory()) / fs::path("IniModuleTest.ini");
 	WriteExternalModuleIniFile(iniFilename.string(), { "Test = InappropriateValue" });
 
 	ModuleLoader moduleLoader(IniFile(iniFilename.string()), {});
