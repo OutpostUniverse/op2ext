@@ -41,9 +41,8 @@ EXPORT void mod_run()
 {
 	OutputDebugString("Test Module mod_run called.\n");
 
-	TestIsModuleLoaded();
 	TestIsConsoleModuleLoaded();
-	TestIsIniModuleLoaded();
+	TestIsModuleLoaded();
 	TestGetLoadedModuleNames();
 }
 
@@ -60,6 +59,9 @@ EXPORT void InitMod(char* sectionName)
 {
 	OutputDebugString("Test Module InitMod called.\n");
 
+	TestIsIniModuleLoaded();
+	TestIsModuleLoaded();
+	TestGetLoadedModuleNames();
 	TestIniSectionName(sectionName);
 }
 
