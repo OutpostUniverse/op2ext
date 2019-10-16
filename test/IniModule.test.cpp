@@ -16,24 +16,20 @@ protected:
 		LogMessageTest::TearDown();
 	}
 
+	// sectionPairs is a non-line terminated list of keys and values. EG: TestModule = No
+	void WriteExternalModuleIniFile(const std::string& iniFilename, const std::vector<std::string_view> sectionPairs)
+	{
+		std::ofstream iniFileStream(iniFilename);
+
+		iniFileStream << "[ExternalModules]" << std::endl;
+		for (const auto& sectionPair : sectionPairs) {
+			iniFileStream << sectionPair << std::endl;
+		}
+	}
+
 	const fs::path iniFilename = fs::path(GetExeDirectory()) / fs::path("IniModuleTest.ini");
 };
 
-
-// sectionPairs is a non-line terminated list of keys and values. EG: TestModule = No
-void WriteExternalModuleIniFile(const std::string& iniFilename, const std::vector<std::string_view> sectionPairs)
-{
-	std::ofstream iniFileStream(iniFilename);
-
-	iniFileStream << "[ExternalModules]" << std::endl;
-
-	for (const auto& sectionPair : sectionPairs)
-	{
-		iniFileStream << sectionPair << std::endl;
-	}
-
-	iniFileStream.close();
-}
 
 TEST_F(IniModuleTest, NoDll)
 {
