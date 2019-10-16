@@ -13,14 +13,14 @@ std::string GetOP2IniPath();
 
 void TestIniSectionName(std::string sectionName)
 {
-	Log(("Passed IniSection name: " + sectionName + "\n").c_str());
+	Log(("Passed IniSection name: " + sectionName).c_str());
 
 	const int bufferSize = 1024;
 	char buffer[bufferSize];
 
 	GetPrivateProfileString(sectionName.c_str(), "Initialized", "", buffer, bufferSize, GetOP2IniPath().c_str());
 
-	std::string iniPropertyString = "Initialized Property from Outpost2.ini: " + std::string(buffer) + "\n";
+	std::string iniPropertyString = "Initialized Property from Outpost2.ini: " + std::string(buffer);
 	Log(iniPropertyString.c_str());
 }
 
@@ -41,10 +41,10 @@ void TestIsModuleLoaded()
 	std::string outputString("Module " + moduleName);
 
 	if (IsModuleLoaded(moduleName.c_str())) {
-		outputString += " is loaded\n";
+		outputString += " is loaded";
 	}
 	else {
-		outputString += " is not loaded\n";
+		outputString += " is not loaded";
 	}
 
 	Log(outputString.c_str());
@@ -56,10 +56,10 @@ void TestIsConsoleModuleLoaded()
 	std::string outputString("Console Module " + moduleName);
 
 	if (IsModuleLoaded(moduleName.c_str())) {
-		outputString += " is loaded\n";
+		outputString += " is loaded";
 	}
 	else {
-		outputString += " is not loaded\n";
+		outputString += " is not loaded";
 	}
 
 	Log(outputString.c_str());
@@ -71,10 +71,10 @@ void TestIsIniModuleLoaded()
 	std::string outputString("Ini Module " + moduleName);
 
 	if (IsModuleLoaded(moduleName.c_str())) {
-		outputString += " is loaded\n" ;
+		outputString += " is loaded" ;
 	}
 	else {
-		outputString += " is not loaded\n";
+		outputString += " is not loaded";
 	}
 
 	Log(outputString.c_str());
@@ -83,7 +83,7 @@ void TestIsIniModuleLoaded()
 void TestGetLoadedModuleNames()
 {
 	const std::size_t moduleCount = GetLoadedModuleCount();
-	std::string outputString = "The following " + std::to_string(moduleCount) + " modules are loaded (ini and console combined):\n";
+	std::string outputString = "The following " + std::to_string(moduleCount) + " modules are loaded (ini and console combined):";
 	Log(outputString.c_str());
 
 	std::vector<std::string> moduleNames;
@@ -103,7 +103,7 @@ void TestGetLoadedModuleNames()
 	}
 
 	for (const auto& moduleName : moduleNames) {
-		const std::string moduleNameOutput = "   " + moduleName + "\n";
+		const std::string moduleNameOutput = "   " + moduleName;
 		Log(moduleNameOutput.c_str());
 	}
 }

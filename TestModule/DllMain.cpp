@@ -34,12 +34,12 @@ std::string GetOP2IniPath();
 
 EXPORT void mod_init()
 {
-	Log("Test Module mod_init called.\n");
+	Log("Test Module mod_init called.");
 }
 
 EXPORT void mod_run()
 {
-	Log("Test Module mod_run called.\n");
+	Log("Test Module mod_run called.");
 
 	TestIsConsoleModuleLoaded();
 	TestIsModuleLoaded();
@@ -48,7 +48,7 @@ EXPORT void mod_run()
 
 EXPORT void mod_destroy()
 {
-	Log("Test Module mod_destroy called.\n");
+	Log("Test Module mod_destroy called.");
 }
 
 
@@ -57,7 +57,7 @@ EXPORT void mod_destroy()
 
 EXPORT void InitMod(char* sectionName)
 {
-	Log("Test Module InitMod called.\n");
+	Log("Test Module InitMod called.");
 
 	TestIsIniModuleLoaded();
 	TestIsModuleLoaded();
@@ -67,5 +67,5 @@ EXPORT void InitMod(char* sectionName)
 
 EXPORT void DestroyMod()
 {
-	Log("Test Module DestroyMod called.\n");
+	Log("Test Module DestroyMod called.");
 }
