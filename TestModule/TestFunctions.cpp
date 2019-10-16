@@ -13,7 +13,7 @@ std::string GetOP2IniPath();
 
 void TestIniSectionName(std::string sectionName)
 {
-	OutputDebugString(("Passed IniSection name: " + sectionName + "\n").c_str());
+	Log(("Passed IniSection name: " + sectionName + "\n").c_str());
 
 	const int bufferSize = 1024;
 	char buffer[bufferSize];
@@ -21,7 +21,7 @@ void TestIniSectionName(std::string sectionName)
 	GetPrivateProfileString(sectionName.c_str(), "Initialized", "", buffer, bufferSize, GetOP2IniPath().c_str());
 
 	std::string iniPropertyString = "Initialized Property from Outpost2.ini: " + std::string(buffer) + "\n";
-	OutputDebugString(iniPropertyString.c_str());
+	Log(iniPropertyString.c_str());
 }
 
 std::string GetOP2IniPath()
@@ -47,7 +47,7 @@ void TestIsModuleLoaded()
 		outputString += " is not loaded\n";
 	}
 
-	OutputDebugString(outputString.c_str());
+	Log(outputString.c_str());
 }
 
 void TestIsConsoleModuleLoaded()
@@ -62,7 +62,7 @@ void TestIsConsoleModuleLoaded()
 		outputString += " is not loaded\n";
 	}
 
-	OutputDebugString(outputString.c_str());
+	Log(outputString.c_str());
 }
 
 void TestIsIniModuleLoaded()
@@ -77,14 +77,14 @@ void TestIsIniModuleLoaded()
 		outputString += " is not loaded\n";
 	}
 
-	OutputDebugString(outputString.c_str());
+	Log(outputString.c_str());
 }
 
 void TestGetLoadedModuleNames()
 {
 	const std::size_t moduleCount = GetLoadedModuleCount();
 	std::string outputString = "The following " + std::to_string(moduleCount) + " modules are loaded (ini and console combined):\n";
-	OutputDebugString(outputString.c_str());
+	Log(outputString.c_str());
 
 	std::vector<std::string> moduleNames;
 	char emptyBuffer[1];
@@ -104,6 +104,6 @@ void TestGetLoadedModuleNames()
 
 	for (const auto& moduleName : moduleNames) {
 		const std::string moduleNameOutput = "   " + moduleName + "\n";
-		OutputDebugString(moduleNameOutput.c_str());
+		Log(moduleNameOutput.c_str());
 	}
 }
