@@ -1,13 +1,13 @@
-// An Outpost 2 module designed to test the majority of provided public op2ext features.
+// An Outpost 2 module designed to test the public op2ext features.
 // After making changes to op2ext, run this module to check for breaking API changes.
 // This can test both console switch and .ini module interface.
-// Consider testing the console switch loader separate from the .ini loader.
 
 // To fully test .ini module loader, add the following code to the Outpost2.ini file.
 
 /*
 ...
-LoadAddons = "..., TestModule"
+[ExternalModules]
+TestModule = yes
 ...
 
 [TestModule]
@@ -27,7 +27,6 @@ Initialized = "True"
 #define EXPORT extern "C" __declspec(dllexport)
 
 std::string GetOP2IniPath();
-void TestPublicInterface();
 
 
 // Console Switch Mod Function Hooks
@@ -36,10 +35,6 @@ void TestPublicInterface();
 EXPORT void mod_init()
 {
 	OutputDebugString("Test Module mod_init called.\n");
-
-	TestPublicInterface();
-
-	TestGetConsoleModDir_s();
 }
 
 EXPORT void mod_run()
@@ -65,27 +60,10 @@ EXPORT void InitMod(char* sectionName)
 {
 	OutputDebugString("Test Module InitMod called.\n");
 
-	TestPublicInterface();
-
 	TestIniSectionName(sectionName);
 }
 
 EXPORT void DestroyMod()
 {
 	OutputDebugString("Test Module DestroyMod called.\n");
-}
-
-
-void TestPublicInterface()
-{
-	TestLoggingMessage();
-
-	TestGetGameDir_s();
-	TestGetGameDir();
-
-	TestLoadingVolumes();
-
-	// Test SetSerialNumber by attempting to start a multiplayer match.
-	// One copy of Outpost 2 stock, and one with the serial number modified.
-	SetSerialNumber(9, 8, 7);
 }
