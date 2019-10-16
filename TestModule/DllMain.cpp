@@ -26,8 +26,6 @@ Initialized = "True"
 
 #define EXPORT extern "C" __declspec(dllexport)
 
-std::string GetOP2IniPath();
-
 
 // Console Switch Mod Function Hooks
 // ---------------------------------
