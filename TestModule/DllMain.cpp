@@ -18,8 +18,6 @@ Initialized = "True"
 #include "TestFunctions.h"
 #include "op2ext.h"
 
-//Test external interface is compatible with C compiler.
-#include "CompatibilityTest.c"
 
 #define EXPORT extern "C" __declspec(dllexport)
 
