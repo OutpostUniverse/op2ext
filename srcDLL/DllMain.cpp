@@ -143,6 +143,11 @@ void OnInit()
 	volList->LoadVolFiles();
 }
 
+void OnShutdown()
+{
+	moduleLoader->UnloadModules();
+}
+
 int TApp::Init()
 {
 	// Trigger event
@@ -157,7 +162,8 @@ void TApp::ShutDown()
 	// Call original function
 	(this->*GetMethodPointer<decltype(&TApp::ShutDown)>(0x004866E0))();
 
-	moduleLoader->UnloadModules();
+	// Trigger event
+	OnShutdown();
 }
 
 /**
