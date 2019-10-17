@@ -16,7 +16,7 @@ void LocateVolFiles(const std::string& relativeDirectory = "");
 bool InstallDepPatch();
 
 
-// Brett208 12Dec17: Following code allows adding multiple language support to Outpost 2 menus.
+// Following code allows adding multiple language support to Outpost 2 menus.
 // Code is incomplete.
 // NLS for OP2
 //void LocalizeStrings();
