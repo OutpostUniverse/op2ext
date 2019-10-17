@@ -148,6 +148,15 @@ void OnShutdown()
 	moduleLoader->UnloadModules();
 }
 
+void OnLoadShell()
+{
+	// Language support disabled. Was experimental before, but had version problems.
+	//LocalizeStrings();
+
+	modulesRunning = true;
+	moduleLoader->RunModules();
+}
+
 int TApp::Init()
 {
 	// Trigger event
@@ -208,13 +217,4 @@ HINSTANCE __stdcall LoadShell(LPCSTR lpLibFileName)
 	}
 
 	return hInstance;
-}
-
-void OnLoadShell()
-{
-	// Language support disabled. Was experimental before, but had version problems.
-	//LocalizeStrings();
-
-	modulesRunning = true;
-	moduleLoader->RunModules();
 }
