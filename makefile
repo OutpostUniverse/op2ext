@@ -45,12 +45,13 @@ run: install
 
 testModuleName := testModule
 testModulePath := $(Outpost2Path)$(testModuleName)/
+testModulePathFilename := $(testModulePath)op2mod.dll
 
-install-testModule: $(testModulePath)testModule.dll
+install-testModule: $(testModulePathFilename)
 
-$(testModulePath)testModule.dll: testModule.dll
+$(testModulePathFilename): testModule.dll
 	mkdir -p "$(testModulePath)"
-	cp testModule.dll "$(testModulePath)"
+	cp testModule.dll "$(testModulePathFilename)"
 
 run-testModule: install-testModule
 	wine "$(Outpost2Path)Outpost2.exe" /loadmod "$(testModuleName)"
