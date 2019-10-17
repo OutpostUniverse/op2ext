@@ -56,4 +56,14 @@ $(testModulePathFilename): testModule.dll
 run-testModule: install-testModule
 	wine "$(Outpost2Path)Outpost2.exe" /loadmod "$(testModuleName)"
 
+
+.PHONY: viewLog cleanLog
+LogFilename := $(Outpost2Path)Outpost2Log.txt
+
+viewLog:
+	cat "$(LogFilename)"
+
+cleanLog:
+	rm "$(LogFilename)"
+
 endif
