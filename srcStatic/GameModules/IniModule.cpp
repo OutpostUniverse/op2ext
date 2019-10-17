@@ -10,7 +10,7 @@ IniModule::IniModule(IniSection iniSection)
 {
 	try {
 		// Get the DLL name from the corresponding section
-		LoadModuleDll(iniSection["Dll"]);
+		LoadModuleDll(DllName());
 	}
 	catch (const std::exception& error) {
 		throw std::runtime_error("Unable to load dll for module " + Name() + ". " + std::string(error.what()));
@@ -44,6 +44,11 @@ bool IniModule::Unload()
 
 std::string IniModule::Directory()
 {
-	auto dllSetting = iniSection["Dll"];
+	auto dllSetting = DllName();
 	return fs::path(dllSetting).remove_filename().string();
+}
+
+std::string IniModule::DllName()
+{
+	return iniSection["Dll"];
 }
