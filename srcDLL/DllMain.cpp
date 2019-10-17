@@ -163,7 +163,7 @@ public:
 };
 
 // Declaration for patch to LoadLibrary, where it loads OP2Shell.dll
-HINSTANCE __stdcall LoadShell(LPCSTR lpLibFileName);
+HINSTANCE LoadShell(LPCSTR lpLibFileName);
 
 DWORD* loadLibraryDataAddr = (DWORD*)0x00486E0A;
 DWORD loadLibraryNewAddr = (DWORD)LoadShell;
