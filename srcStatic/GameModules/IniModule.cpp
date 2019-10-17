@@ -1,5 +1,6 @@
 #include "IniModule.h"
 #include "../Log.h"
+#include "../FsInclude.h"
 #include <utility>
 #include <stdexcept>
 
@@ -39,4 +40,10 @@ bool IniModule::Unload()
 	FreeLibrary(moduleDllHandle);
 
 	return success;
+}
+
+std::string IniModule::Directory()
+{
+	auto dllSetting = iniSection["Dll"];
+	return fs::path(dllSetting).remove_filename().string();
 }
