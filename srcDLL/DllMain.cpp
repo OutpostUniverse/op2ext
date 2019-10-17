@@ -14,14 +14,6 @@
 
 void LocateVolFiles(const std::string& relativeDirectory = "");
 bool InstallDepPatch();
-
-
-// Following code allows adding multiple language support to Outpost 2 menus.
-// Code is incomplete.
-// NLS for OP2
-//void LocalizeStrings();
-void ConvLangStr(char *instr, char *outstr);
-
 bool InstallTAppEventHooks();
 void OnInit();
 void OnLoadShell();
@@ -119,9 +111,6 @@ void OnInit()
 
 void OnLoadShell()
 {
-	// Language support disabled. Was experimental before, but had version problems.
-	//LocalizeStrings();
-
 	modulesRunning = true;
 	moduleLoader->RunModules();
 }
