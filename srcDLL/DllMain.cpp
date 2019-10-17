@@ -211,7 +211,7 @@ void TApp::ShutDown()
 	OnShutdown();
 }
 
-HINSTANCE __stdcall LoadShell(LPCSTR lpLibFileName)
+HINSTANCE LoadShell(LPCSTR lpLibFileName)
 {
 	// First try to load it
 	HINSTANCE hInstance = LoadLibraryA(lpLibFileName);
