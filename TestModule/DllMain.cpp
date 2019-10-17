@@ -17,9 +17,6 @@ Initialized = "True"
 
 #include "TestFunctions.h"
 #include "op2ext.h"
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#include <string>
 
 //Test external interface is compatible with C compiler.
 #include "CompatibilityTest.c"
