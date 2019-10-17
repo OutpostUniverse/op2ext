@@ -37,7 +37,9 @@ DWORD* loadLibraryDataAddr = (DWORD*)0x00486E0A;
 DWORD loadLibraryNewAddr = (DWORD)LoadShell;
 
 bool InstallTAppEventHooks();
+void OnInit();
 void OnLoadShell();
+void OnShutdown();
 
 // Warning: globals requiring dynamic initialization
 // Dynamic initialization order between translation units is unsequenced
