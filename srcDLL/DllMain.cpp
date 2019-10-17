@@ -79,21 +79,6 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 	return TRUE;
 }
 
-bool InstallTAppEventHooks()
-{
-	// Replace call to gTApp.Init with custom routine
-	if (!Op2RelinkCall(0x004A8877, GetMethodVoidPointer(&TApp::Init))) {
-		return false;
-	}
-
-	// Replace call to gTApp.ShutDown with custom routine
-	Op2RelinkCall(0x004A88A5, GetMethodVoidPointer(&TApp::ShutDown));
-
-	// Replace call to LoadLibrary with custom routine (address is indirect)
-	Op2MemSetDword(loadLibraryDataAddr, &loadLibraryNewAddr);
-
-	return true;
-}
 
 // Patch to prevent crashes on newer versions of Windows.
 // DEP (Data Execution Prevention) was first released with Windows XP SP2.
@@ -118,6 +103,7 @@ bool InstallDepPatch()
 
 	return success;
 }
+
 
 void OnInit()
 {
@@ -157,23 +143,6 @@ void OnLoadShell()
 	moduleLoader->RunModules();
 }
 
-int TApp::Init()
-{
-	// Trigger event
-	OnInit();
-
-	// Call original function
-	return (this->*GetMethodPointer<decltype(&TApp::Init)>(0x00485B20))();
-}
-
-void TApp::ShutDown()
-{
-	// Call original function
-	(this->*GetMethodPointer<decltype(&TApp::ShutDown)>(0x004866E0))();
-
-	// Trigger event
-	OnShutdown();
-}
 
 /**
 Prepares all vol files found within the supplied relative directory from the Outpost 2 executable
@@ -204,6 +173,42 @@ void LocateVolFiles(const std::string& relativeDirectory)
 	catch (const fs::filesystem_error& e) {
 		Log(e.what());
 	}
+}
+
+
+bool InstallTAppEventHooks()
+{
+	// Replace call to gTApp.Init with custom routine
+	if (!Op2RelinkCall(0x004A8877, GetMethodVoidPointer(&TApp::Init))) {
+		return false;
+	}
+
+	// Replace call to gTApp.ShutDown with custom routine
+	Op2RelinkCall(0x004A88A5, GetMethodVoidPointer(&TApp::ShutDown));
+
+	// Replace call to LoadLibrary with custom routine (address is indirect)
+	Op2MemSetDword(loadLibraryDataAddr, &loadLibraryNewAddr);
+
+	return true;
+}
+
+
+int TApp::Init()
+{
+	// Trigger event
+	OnInit();
+
+	// Call original function
+	return (this->*GetMethodPointer<decltype(&TApp::Init)>(0x00485B20))();
+}
+
+void TApp::ShutDown()
+{
+	// Call original function
+	(this->*GetMethodPointer<decltype(&TApp::ShutDown)>(0x004866E0))();
+
+	// Trigger event
+	OnShutdown();
 }
 
 HINSTANCE __stdcall LoadShell(LPCSTR lpLibFileName)
