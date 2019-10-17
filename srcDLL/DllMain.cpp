@@ -15,26 +15,12 @@
 void LocateVolFiles(const std::string& relativeDirectory = "");
 bool InstallDepPatch();
 
-// Declaration for patch to LoadLibrary, where it loads OP2Shell.dll
-HINSTANCE __stdcall LoadShell(LPCSTR lpLibFileName);
 
 // Brett208 12Dec17: Following code allows adding multiple language support to Outpost 2 menus.
 // Code is incomplete.
 // NLS for OP2
 //void LocalizeStrings();
 void ConvLangStr(char *instr, char *outstr);
-
-// TApp is an exported class from Outpost2.exe.
-// We need to replace some of its methods with a compatible signature
-class TApp
-{
-public:
-	int Init();
-	void ShutDown();
-};
-
-DWORD* loadLibraryDataAddr = (DWORD*)0x00486E0A;
-DWORD loadLibraryNewAddr = (DWORD)LoadShell;
 
 bool InstallTAppEventHooks();
 void OnInit();
@@ -176,6 +162,22 @@ void LocateVolFiles(const std::string& relativeDirectory)
 		Log(e.what());
 	}
 }
+
+
+// TApp is an exported class from Outpost2.exe.
+// We need to replace some of its methods with a compatible signature
+class TApp
+{
+public:
+	int Init();
+	void ShutDown();
+};
+
+// Declaration for patch to LoadLibrary, where it loads OP2Shell.dll
+HINSTANCE __stdcall LoadShell(LPCSTR lpLibFileName);
+
+DWORD* loadLibraryDataAddr = (DWORD*)0x00486E0A;
+DWORD loadLibraryNewAddr = (DWORD)LoadShell;
 
 
 bool InstallTAppEventHooks()
