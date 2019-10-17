@@ -119,7 +119,7 @@ bool InstallDepPatch()
 	return success;
 }
 
-int TApp::Init()
+void OnInit()
 {
 	// Install DEP patch so newer versions of Windows don't terminate the game
 	InstallDepPatch();
@@ -141,6 +141,12 @@ int TApp::Init()
 	LocateVolFiles(); //Searches root directory
 
 	volList->LoadVolFiles();
+}
+
+int TApp::Init()
+{
+	// Trigger event
+	OnInit();
 
 	// Call original function
 	return (this->*GetMethodPointer<decltype(&TApp::Init)>(0x00485B20))();
