@@ -129,11 +129,6 @@ void OnInit()
 	volList->LoadVolFiles();
 }
 
-void OnShutdown()
-{
-	moduleLoader->UnloadModules();
-}
-
 void OnLoadShell()
 {
 	// Language support disabled. Was experimental before, but had version problems.
@@ -141,6 +136,11 @@ void OnLoadShell()
 
 	modulesRunning = true;
 	moduleLoader->RunModules();
+}
+
+void OnShutdown()
+{
+	moduleLoader->UnloadModules();
 }
 
 
