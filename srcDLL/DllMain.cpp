@@ -206,7 +206,7 @@ void TApp::ShutDown()
 	OnShutdown();
 }
 
-HINSTANCE LoadShell(LPCSTR lpLibFileName)
+HINSTANCE WINAPI LoadShell(LPCSTR lpLibFileName)
 {
 	// First try to load it
 	HINSTANCE hInstance = LoadLibraryA(lpLibFileName);
