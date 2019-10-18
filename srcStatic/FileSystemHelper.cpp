@@ -21,7 +21,7 @@ std::string GetOutpost2IniPath()
 
 std::string GetOutpost2IniSetting(const std::string& sectionName, const std::string& key)
 {
-	return IniFile::GetValue(GetOutpost2IniPath(), sectionName, key);
+	return IniFile::GetValue(GetOutpost2IniPath(), sectionName, key, "");
 }
 
 
