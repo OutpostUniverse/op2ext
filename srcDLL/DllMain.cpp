@@ -163,7 +163,9 @@ public:
 };
 
 // Declaration for patch to LoadLibrary, where it loads OP2Shell.dll
-HINSTANCE LoadShell(LPCSTR lpLibFileName);
+// Must use WINAPI macro (__stdcall specifier) to ensure callee cleans the stack
+// By default, for plain functions, the caller cleans the stack, rather than the callee
+HINSTANCE WINAPI LoadShell(LPCSTR lpLibFileName);
 
 DWORD* loadLibraryDataAddr = (DWORD*)0x00486E0A;
 DWORD loadLibraryNewAddr = (DWORD)LoadShell;
