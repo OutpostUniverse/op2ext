@@ -50,5 +50,6 @@ std::string IniModule::Directory()
 
 std::string IniModule::DllName()
 {
-	return iniSection["Dll"];
+	auto defaultDllName = (fs::path(Name()) / "op2mod.dll").string();
+	return iniSection.GetValue("Dll", defaultDllName);
 }
