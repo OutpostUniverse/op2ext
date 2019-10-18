@@ -14,30 +14,10 @@
 
 void LocateVolFiles(const std::string& relativeDirectory = "");
 bool InstallDepPatch();
-
-// Declaration for patch to LoadLibrary, where it loads OP2Shell.dll
-HINSTANCE __stdcall LoadShell(LPCSTR lpLibFileName);
-
-// Brett208 12Dec17: Following code allows adding multiple language support to Outpost 2 menus.
-// Code is incomplete.
-// NLS for OP2
-//void LocalizeStrings();
-void ConvLangStr(char *instr, char *outstr);
-
-// TApp is an exported class from Outpost2.exe.
-// We need to replace some of its methods with a compatible signature
-class TApp
-{
-public:
-	int Init();
-	void ShutDown();
-};
-
-DWORD* loadLibraryDataAddr = (DWORD*)0x00486E0A;
-DWORD loadLibraryNewAddr = (DWORD)LoadShell;
-
 bool InstallTAppEventHooks();
+void OnInit();
 void OnLoadShell();
+void OnShutdown();
 
 // Warning: globals requiring dynamic initialization
 // Dynamic initialization order between translation units is unsequenced
@@ -79,21 +59,6 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 	return TRUE;
 }
 
-bool InstallTAppEventHooks()
-{
-	// Replace call to gTApp.Init with custom routine
-	if (!Op2RelinkCall(0x004A8877, GetMethodVoidPointer(&TApp::Init))) {
-		return false;
-	}
-
-	// Replace call to gTApp.ShutDown with custom routine
-	Op2RelinkCall(0x004A88A5, GetMethodVoidPointer(&TApp::ShutDown));
-
-	// Replace call to LoadLibrary with custom routine (address is indirect)
-	Op2MemSetDword(loadLibraryDataAddr, &loadLibraryNewAddr);
-
-	return true;
-}
 
 // Patch to prevent crashes on newer versions of Windows.
 // DEP (Data Execution Prevention) was first released with Windows XP SP2.
@@ -119,7 +84,8 @@ bool InstallDepPatch()
 	return success;
 }
 
-int TApp::Init()
+
+void OnInit()
 {
 	// Install DEP patch so newer versions of Windows don't terminate the game
 	InstallDepPatch();
@@ -141,18 +107,19 @@ int TApp::Init()
 	LocateVolFiles(); //Searches root directory
 
 	volList->LoadVolFiles();
-
-	// Call original function
-	return (this->*GetMethodPointer<decltype(&TApp::Init)>(0x00485B20))();
 }
 
-void TApp::ShutDown()
+void OnLoadShell()
 {
-	// Call original function
-	(this->*GetMethodPointer<decltype(&TApp::ShutDown)>(0x004866E0))();
+	modulesRunning = true;
+	moduleLoader->RunModules();
+}
 
+void OnShutdown()
+{
 	moduleLoader->UnloadModules();
 }
+
 
 /**
 Prepares all vol files found within the supplied relative directory from the Outpost 2 executable
@@ -185,7 +152,61 @@ void LocateVolFiles(const std::string& relativeDirectory)
 	}
 }
 
-HINSTANCE __stdcall LoadShell(LPCSTR lpLibFileName)
+
+// TApp is an exported class from Outpost2.exe.
+// We need to replace some of its methods with a compatible signature
+class TApp
+{
+public:
+	int Init();
+	void ShutDown();
+};
+
+// Declaration for patch to LoadLibrary, where it loads OP2Shell.dll
+// Must use WINAPI macro (__stdcall specifier) to ensure callee cleans the stack
+// By default, for plain functions, the caller cleans the stack, rather than the callee
+HINSTANCE WINAPI LoadShell(LPCSTR lpLibFileName);
+
+DWORD* loadLibraryDataAddr = (DWORD*)0x00486E0A;
+DWORD loadLibraryNewAddr = (DWORD)LoadShell;
+
+
+bool InstallTAppEventHooks()
+{
+	// Replace call to gTApp.Init with custom routine
+	if (!Op2RelinkCall(0x004A8877, GetMethodVoidPointer(&TApp::Init))) {
+		return false;
+	}
+
+	// Replace call to gTApp.ShutDown with custom routine
+	Op2RelinkCall(0x004A88A5, GetMethodVoidPointer(&TApp::ShutDown));
+
+	// Replace call to LoadLibrary with custom routine (address is indirect)
+	Op2MemSetDword(loadLibraryDataAddr, &loadLibraryNewAddr);
+
+	return true;
+}
+
+
+int TApp::Init()
+{
+	// Trigger event
+	OnInit();
+
+	// Call original function
+	return (this->*GetMethodPointer<decltype(&TApp::Init)>(0x00485B20))();
+}
+
+void TApp::ShutDown()
+{
+	// Call original function
+	(this->*GetMethodPointer<decltype(&TApp::ShutDown)>(0x004866E0))();
+
+	// Trigger event
+	OnShutdown();
+}
+
+HINSTANCE WINAPI LoadShell(LPCSTR lpLibFileName)
 {
 	// First try to load it
 	HINSTANCE hInstance = LoadLibraryA(lpLibFileName);
@@ -196,13 +217,4 @@ HINSTANCE __stdcall LoadShell(LPCSTR lpLibFileName)
 	}
 
 	return hInstance;
-}
-
-void OnLoadShell()
-{
-	// Language support disabled. Was experimental before, but had version problems.
-	//LocalizeStrings();
-
-	modulesRunning = true;
-	moduleLoader->RunModules();
 }
