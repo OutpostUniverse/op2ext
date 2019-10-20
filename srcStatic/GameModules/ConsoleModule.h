@@ -20,7 +20,7 @@ private:
 	typedef bool(*UnloadModuleFunction)();
 	typedef void(*RunModuleFunction)();
 
-	std::string moduleDirectory;
+	const std::string moduleDirectory;
 
 	LoadModuleFunction loadModuleFunction = nullptr;
 	UnloadModuleFunction unloadModuleFunction = nullptr;
