@@ -12,7 +12,6 @@
 #include <string>
 
 
-void LocateVolFiles(const std::string& relativeDirectory = "");
 bool InstallDepPatch();
 bool InstallTAppEventHooks();
 void OnInit();
@@ -100,13 +99,13 @@ void OnInit()
 	for (std::size_t i = 0; i < moduleLoader->Count(); ++i) {
 		const auto moduleDirectory = moduleLoader->GetModuleDirectory(i);
 		if (!moduleDirectory.empty()) {
-			LocateVolFiles(moduleDirectory);
+			volList->AddVolFilesFromDirectory(moduleDirectory);
 		}
 	}
 
 	const auto exeDirectory = fs::path(GetExeDirectory());
-	LocateVolFiles((exeDirectory / fs::path("Addon")).string());
-	LocateVolFiles(exeDirectory.string());
+	volList->AddVolFilesFromDirectory((exeDirectory / fs::path("Addon")).string());
+	volList->AddVolFilesFromDirectory(exeDirectory.string());
 
 	volList->LoadVolFiles();
 }
@@ -120,26 +119,6 @@ void OnLoadShell()
 void OnShutdown()
 {
 	moduleLoader->UnloadModules();
-}
-
-
-/**
-Prepares all vol files found within the supplied relative directory from the Outpost 2 executable
-for inclusion in Outpost 2. Does not recursively search subdirectories.
-*/
-void LocateVolFiles(const std::string& absoluteDirectory)
-{
-	try {
-		const auto volPaths = LocateFilesWithExtension(absoluteDirectory, ".vol");
-
-		for (const auto& volPath : volPaths) {
-			auto relativePath = fs::relative(volPath, GetExeDirectory());
-			volList->AddVolFile(relativePath.string());
-		}
-	}
-	catch (const std::exception& e) {
-		Log("Error attempting to locate vol files in provided directory " + absoluteDirectory + ". " + std::string(e.what()));
-	}
 }
 
 
