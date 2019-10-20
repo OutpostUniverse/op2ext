@@ -129,25 +129,16 @@ for inclusion in Outpost 2. Does not recursively search subdirectories.
 */
 void LocateVolFiles(const std::string& absoluteDirectory)
 {
-	if (!IsDirectory(absoluteDirectory)) {
-		return;
-	}
+	try {
+		const auto volPaths = LocateFilesWithExtension(absoluteDirectory, ".vol");
 
-	try
-	{
-		for (const auto& dirEntry : fs::directory_iterator(absoluteDirectory))
-		{
-			const auto& filePath = dirEntry.path();
-			const auto extension = ToLower(filePath.extension().string());
-
-			if (extension == ".vol") {
-				auto relativePath = fs::relative(absoluteDirectory, GetExeDirectory()) / filePath.filename();
-				volList->AddVolFile(relativePath.string());
-			}
+		for (const auto& volPath : volPaths) {
+			auto relativePath = fs::relative(volPath, GetExeDirectory());
+			volList->AddVolFile(relativePath.string());
 		}
 	}
-	catch (const fs::filesystem_error& e) {
-		Log("Unable to locate vol files in provided directory " + absoluteDirectory + ". " + std::string(e.what()));
+	catch (const std::exception& e) {
+		Log("Error attempting to locate vol files in provided directory " + absoluteDirectory + ". " + std::string(e.what()));
 	}
 }
 
