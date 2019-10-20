@@ -147,7 +147,7 @@ void LocateVolFiles(const std::string& absoluteDirectory)
 		}
 	}
 	catch (const fs::filesystem_error& e) {
-		Log(e.what());
+		Log("Unable to locate vol files in provided directory " + absoluteDirectory + ". " + std::string(e.what()));
 	}
 }
 
