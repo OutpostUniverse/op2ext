@@ -37,7 +37,7 @@ public:
 
 	// Returns the directory associated with this module
 	// Can be used to access additional resources packaged with the module
-	// By default return the empty string (implying no additional resources)
+	// By default returns an empty string (implying no additional resources)
 	virtual std::string Directory() { return std::string(); }
 
 private:
