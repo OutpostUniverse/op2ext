@@ -103,9 +103,8 @@ void OnInit()
 		}
 	}
 
-	const auto exeDirectory = fs::path(GetExeDirectory());
-	volList->AddVolFilesFromDirectory((exeDirectory / fs::path("Addon")).string());
-	volList->AddVolFilesFromDirectory(exeDirectory.string());
+	volList->AddVolFilesFromDirectory("Addon");
+	volList->AddVolFilesFromDirectory("");
 
 	volList->LoadVolFiles();
 }
