@@ -7,9 +7,8 @@
 #include <stdexcept>
 
 ConsoleModule::ConsoleModule(const std::string& moduleName) : DllModule(moduleName), 
-	moduleDirectory((fs::path(GetExeDirectory()) / moduleName).string() + "\\")
+	moduleDirectory(moduleName + "\\")
 {
-	moduleDirectory = moduleName + "\\";
 	auto absoluteModuleDirectory = fs::path(GetExeDirectory()) / moduleDirectory;
 
 	if (!IsDirectory(absoluteModuleDirectory.string())) {
