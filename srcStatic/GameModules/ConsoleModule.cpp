@@ -6,7 +6,8 @@
 #include <windows.h>
 #include <stdexcept>
 
-ConsoleModule::ConsoleModule(const std::string& moduleName) : DllModule(moduleName)
+ConsoleModule::ConsoleModule(const std::string& moduleName) : DllModule(moduleName), 
+	moduleDirectory((fs::path(GetExeDirectory()) / moduleName).string() + "\\")
 {
 	moduleDirectory = moduleName + "\\";
 	auto absoluteModuleDirectory = fs::path(GetExeDirectory()) / moduleDirectory;
