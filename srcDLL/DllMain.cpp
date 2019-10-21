@@ -97,7 +97,7 @@ void OnInit()
 
 	// Find VOL files from additional folders
 	for (std::size_t i = 0; i < moduleLoader->Count(); ++i) {
-		const auto moduleDirectory = moduleLoader->GetModuleDirectory(i);
+		const auto& moduleDirectory = moduleLoader->GetModuleDirectory(i);
 		if (!moduleDirectory.empty()) {
 			volList->AddVolFilesFromDirectory(moduleDirectory);
 		}
