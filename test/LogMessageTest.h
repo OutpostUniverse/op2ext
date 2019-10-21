@@ -18,4 +18,5 @@ protected:
 	void TearDown() override;
 
 	LoggerMock logger;
+	LoggerMock loggerError;
 };
