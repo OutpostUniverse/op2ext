@@ -2,6 +2,7 @@
 #include "../WindowsErrorCode.h"
 #include <stdexcept>
 
+
 DllModule::DllModule(const std::string& moduleName)
 	: GameModule(moduleName) { }
 
@@ -18,4 +19,56 @@ void DllModule::LoadModuleDll(const std::string& dllPath)
 	}
 
 	this->moduleDllHandle = dllHandle;
+
+	DetectExportedModuleFunctions();
+}
+
+void DllModule::DetectExportedModuleFunctions()
+{
+	loadModuleFunctionIni = (LoadModuleFunctionIni)GetProcAddress(moduleDllHandle, "InitMod");
+	if (loadModuleFunctionIni == nullptr) {
+		loadModuleFunctionConsole = (LoadModuleFunctionConsole)GetProcAddress(moduleDllHandle, "mod_init");
+	}
+
+	unloadModuleFunction = (UnloadModuleFunction)GetProcAddress(moduleDllHandle, "DestroyMod");
+	if (unloadModuleFunction == nullptr) {
+		unloadModuleFunction = (UnloadModuleFunction)GetProcAddress(moduleDllHandle, "mod_destroy");
+	}
+
+	runModuleFunction = (RunModuleFunction)GetProcAddress(moduleDllHandle, "RunMod");
+	if (runModuleFunction == nullptr) {
+		runModuleFunction = (RunModuleFunction)GetProcAddress(moduleDllHandle, "mod_run");
+	}
+}
+
+void DllModule::Load()
+{
+	if (loadModuleFunctionIni != nullptr) {
+		loadModuleFunctionIni(Name().c_str());
+	}
+	else if (loadModuleFunctionConsole != nullptr) {
+		loadModuleFunctionConsole();
+	}
+}
+
+bool DllModule::Unload()
+{
+	bool success = true;
+
+	if (unloadModuleFunction != nullptr) {
+		success = unloadModuleFunction();
+	}
+
+	if (moduleDllHandle != nullptr) {
+		FreeLibrary(moduleDllHandle);
+	}
+
+	return success;
+}
+
+void DllModule::Run()
+{
+	if (runModuleFunction != nullptr) {
+		runModuleFunction();
+	}
 }
