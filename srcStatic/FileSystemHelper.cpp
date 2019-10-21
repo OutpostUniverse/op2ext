@@ -48,10 +48,6 @@ std::vector<std::string> LocateFilesWithExtension(const std::string& directory, 
 		return {};
 	}
 
-	if (extension.empty()) {
-		throw std::runtime_error("provided extension cannot be empty");
-	}
-
 	ToLowerInPlace(extension);
 	std::vector<std::string> filesWithExtension;
 
