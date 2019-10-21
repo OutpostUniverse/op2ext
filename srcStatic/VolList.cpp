@@ -15,7 +15,7 @@ void VolList::AddVolFile(std::string volPath)
 void VolList::AddVolFilesFromDirectory(const std::string& absoluteDirectory)
 {
 	try {
-		const auto volPaths = LocateFilesWithExtension(absoluteDirectory, ".vol");
+		const auto volPaths = FindFilesWithExtension(absoluteDirectory, ".vol");
 
 		for (const auto& volPath : volPaths) {
 			auto relativePath = fs::relative(volPath, GetExeDirectory());

@@ -42,7 +42,7 @@ bool Exists(const std::string& path)
 	return fs::exists(modifiedPath);
 }
 
-std::vector<std::string> LocateFilesWithExtension(const std::string& directory, std::string extension)
+std::vector<std::string> FindFilesWithExtension(const std::string& directory, std::string extension)
 {
 	if (!IsDirectory(directory)) {
 		return {};
