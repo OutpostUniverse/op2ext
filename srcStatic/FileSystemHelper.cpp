@@ -42,14 +42,12 @@ bool Exists(const std::string& path)
 	return fs::exists(modifiedPath);
 }
 
-std::vector<std::string> LocateFilesWithExtension(const std::string& directory, std::string extension)
+std::vector<std::string> FindFilesWithExtension(const std::string& basePath, const std::string& relativeSearchPath, std::string extension)
 {
-	if (!IsDirectory(directory)) {
-		return {};
-	}
+	auto directory = fs::path(basePath) / relativeSearchPath;
 
-	if (extension.empty()) {
-		throw std::runtime_error("provided extension cannot be empty");
+	if (!IsDirectory(directory.string())) {
+		return {};
 	}
 
 	ToLowerInPlace(extension);
@@ -61,7 +59,7 @@ std::vector<std::string> LocateFilesWithExtension(const std::string& directory, 
 		const auto extensionToCheck = ToLower(filePath.extension().string());
 
 		if (extensionToCheck == extension) {
-			filesWithExtension.push_back(filePath.string());
+			filesWithExtension.push_back(filePath.string().substr(basePath.size()));
 		}
 	}
 

@@ -12,18 +12,17 @@ void VolList::AddVolFile(std::string volPath)
 	volPaths.push_back(std::move(volPath));
 }
 
-void VolList::AddVolFilesFromDirectory(const std::string& absoluteDirectory)
+void VolList::AddVolFilesFromDirectory(const std::string& relativeDirectory)
 {
 	try {
-		const auto volPaths = LocateFilesWithExtension(absoluteDirectory, ".vol");
+		const auto volPaths = FindFilesWithExtension(GetExeDirectory(), relativeDirectory, ".vol");
 
 		for (const auto& volPath : volPaths) {
-			auto relativePath = fs::relative(volPath, GetExeDirectory());
-			AddVolFile(relativePath.string());
+			AddVolFile(volPath);
 		}
 	}
 	catch (const std::exception& e) {
-		Log("Error attempting to locate vol files in provided directory " + absoluteDirectory + ". " + std::string(e.what()));
+		Log("Error attempting to locate vol files in provided directory " + relativeDirectory + ". " + std::string(e.what()));
 	}
 }
 
