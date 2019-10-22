@@ -19,4 +19,22 @@ protected:
 
 	LoggerMock logger;
 	LoggerMock loggerError;
+
+	void ExpectNoLogCall()
+	{
+		EXPECT_CALL(logger, Log(::testing::_, ::testing::_)).Times(0);
+		EXPECT_CALL(loggerError, Log(::testing::_, ::testing::_)).Times(0);
+	}
+
+	void ExpectLogCall(const std::string& substring, int times)
+	{
+		EXPECT_CALL(logger, Log(::testing::HasSubstr(substring), "op2ext.dll")).Times(1);
+		EXPECT_CALL(loggerError, Log(::testing::_, ::testing::_)).Times(0);
+	}
+
+	void ExpectErrorLogCall(const std::string& substring, int times)
+	{
+		EXPECT_CALL(logger, Log(::testing::HasSubstr(substring), "op2ext.dll")).Times(1);
+		EXPECT_CALL(loggerError, Log(::testing::HasSubstr(substring), "op2ext.dll")).Times(1);
+	}
 };
