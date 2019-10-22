@@ -36,11 +36,6 @@ void ModuleLoader::RegisterConsoleModules()
 		return; // No console modules to load
 	}
 
-	// Temporary check. This will eventually become an error.
-	if (consoleModuleNames.size() == 1 && consoleModuleNames[0].empty()) {
-		return; // No console modules to load
-	}
-
 	if (std::any_of(consoleModuleNames.begin(), consoleModuleNames.end(), [](const std::string& consoleModuleName) { return consoleModuleName.empty(); })) {
 		PostError("All console module names must be non-empty.");
 		return;
