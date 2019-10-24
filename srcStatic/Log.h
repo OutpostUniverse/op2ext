@@ -20,7 +20,7 @@ void LogDebug(const std::string& message);
 void LogError(const std::string& message);
 
 
-std::string FormatLogMessage(const std::string& message, const std::string& moduleName);
+std::string FormatLogMessage(const std::string& message, const std::string& moduleName = "op2ext.dll");
 std::string FormatLogMessage(const std::string& message, const std::string& sourcePathFilename, long lineInSourceCode);
 
 
