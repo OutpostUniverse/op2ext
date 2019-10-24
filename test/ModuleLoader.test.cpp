@@ -71,13 +71,11 @@ TEST_F(ModuleLoaderTest, RejectCaseInsensitiveDuplicateNames)
 {
 	ModuleLoader moduleLoader;
 
-	EXPECT_CALL(logger, Log(::testing::_, ::testing::_)).Times(0);
 	EXPECT_CALL(loggerError, Log(::testing::_, ::testing::_)).Times(0);
 	EXPECT_NO_THROW(moduleLoader.RegisterModule(std::make_unique<DifferentCasedNameModule>("TestModule")));
 	EXPECT_EQ(1u, moduleLoader.Count());
 
 	// Ensure ModuleManager does not allow multiple modules with same name but different casing
-	EXPECT_CALL(logger, Log(::testing::_, ::testing::_)).Times(1);
 	EXPECT_CALL(loggerError, Log(::testing::HasSubstr("You may not add a module with an existing name"), "op2ext.dll")).Times(1);
 	EXPECT_NO_THROW(moduleLoader.RegisterModule(std::make_unique<DifferentCasedNameModule>("testmodule")));
 	EXPECT_EQ(1u, moduleLoader.Count());
