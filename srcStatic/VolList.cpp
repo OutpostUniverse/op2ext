@@ -1,6 +1,8 @@
 #include "VolList.h"
 #include "OP2Memory.h"
 #include "Log.h"
+#include "FileSystemHelper.h"
+#include "FsInclude.h"
 #include <utility>
 
 
@@ -8,6 +10,20 @@ void VolList::AddVolFile(std::string volPath)
 {
 	LogDebug("Add file to VolList: " + volPath + "\n");
 	volPaths.push_back(std::move(volPath));
+}
+
+void VolList::AddVolFilesFromDirectory(const std::string& relativeDirectory)
+{
+	try {
+		const auto volPaths = FindFilesWithExtension(GetExeDirectory(), relativeDirectory, ".vol");
+
+		for (const auto& volPath : volPaths) {
+			AddVolFile(volPath);
+		}
+	}
+	catch (const std::exception& e) {
+		Log("Error attempting to locate vol files in provided directory " + relativeDirectory + ". " + std::string(e.what()));
+	}
 }
 
 // Patch reference to the original VolSearchEntry[] in Outpost2.exe to point to a replacement
