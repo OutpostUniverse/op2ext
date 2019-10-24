@@ -7,6 +7,7 @@
     <ClCompile Include="ModuleLoader.cpp" />
     <ClCompile Include="IniFile.cpp" />
     <ClCompile Include="Log.cpp" />
+    <ClCompile Include="LoggerDebug.cpp" />
     <ClCompile Include="LoggerFile.cpp" />
     <ClCompile Include="LoggerMessageBox.cpp" />
     <ClCompile Include="OP2Memory.cpp" />
@@ -38,6 +39,7 @@
     <ClInclude Include="IniFile.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="Logger.h" />
+    <ClInclude Include="LoggerDebug.h" />
     <ClInclude Include="LoggerFile.h" />
     <ClInclude Include="LoggerMessageBox.h" />
     <ClInclude Include="OP2Memory.h" />
