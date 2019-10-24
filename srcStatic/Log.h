@@ -20,6 +20,9 @@ void LogDebug(const std::string& message);
 void PostErrorMessage(const std::string& errorMessage, const std::string& sourcePathFilename, long lineInSourceCode);
 
 
+std::string FormatLogMessage(const std::string& message, const std::string& moduleName);
+
+
 // Allow defaulting of the __FILE__ and __LINE__ macros at the point of call
 // Macro name must be different from original function name
 // Using the same name will cause an error when the compiler sees the underlying function definition

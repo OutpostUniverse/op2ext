@@ -63,3 +63,9 @@ void PostErrorMessage(const std::string& errorMessage, const std::string& source
 		loggerError->Log(formattedMessage);
 	}
 }
+
+
+std::string FormatLogMessage(const std::string& message, const std::string& moduleName)
+{
+	return "[" + moduleName + "] " + message;
+}
