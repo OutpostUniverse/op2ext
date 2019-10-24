@@ -53,14 +53,10 @@ void LogDebug(const std::string& message)
 
 // Output log message at Error logging level
 // Currently this is designed to produce a pop-up error message box
-void PostErrorMessage(const std::string& errorMessage, const std::string& sourcePathFilename, long lineInSourceCode)
+void LogError(const std::string& message)
 {
-	// __FILE__ returns absolute filename. Strip the absolute path to reduce clutter in log output
-	auto sourceFilename = fs::path(sourcePathFilename).filename().string();
-
-	const std::string formattedMessage = sourceFilename + ", Line: " + std::to_string(lineInSourceCode) + ": " + errorMessage;
 	if (loggerError) {
-		loggerError->Log(formattedMessage);
+		loggerError->Log(message);
 	}
 }
 
