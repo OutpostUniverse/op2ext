@@ -14,6 +14,7 @@ namespace {
 	// This pointer is safely set to null before other globals are initialized
 	Logger* logger = nullptr;
 	Logger* loggerError = nullptr;
+	Logger* loggerDebug = nullptr;
 }
 
 
@@ -31,6 +32,11 @@ void SetLoggerError(Logger* newLogger) {
 	loggerError = newLogger;
 }
 
+// Set logger for debug logging level
+void SetLoggerDebug(Logger* newLogger) {
+	loggerDebug = newLogger;
+}
+
 
 // Output log message at standard logging level
 void Log(const std::string& message, const std::string& moduleName) {
@@ -46,9 +52,9 @@ void Log(const std::string& message, const std::string& moduleName) {
 // Currently this code doesn't support redirection of logging output
 void LogDebug(const std::string& message)
 {
-#ifdef DEBUG
-	OutputDebugString(message.c_str());
-#endif
+	if (loggerDebug) {
+		loggerDebug->Log(message);
+	}
 }
 
 // Output log message at Error logging level
