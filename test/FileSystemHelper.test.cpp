@@ -57,3 +57,10 @@ TEST(FileSystemHelper, Exists)
 	EXPECT_FALSE(Exists("NonExistentPath"));
 	EXPECT_FALSE(Exists("NonExistentPath/"));
 }
+
+
+TEST(FileSystemHelper, FindFilesWithExtension)
+{
+	const auto exePath = GetExeDirectory();
+	EXPECT_EQ(std::vector<std::string>({}), FindFilesWithExtension(exePath, "", ".NonExistentExtension"));
+}
