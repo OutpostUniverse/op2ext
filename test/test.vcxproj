@@ -37,6 +37,7 @@
     <ClCompile Include="LogMessageTest.cpp" />
     <ClCompile Include="OP2Memory.test.cpp" />
     <ClCompile Include="StringConversion.test.cpp" />
+    <ClCompile Include="VolList.test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\srcStatic\op2extStatic.vcxproj">

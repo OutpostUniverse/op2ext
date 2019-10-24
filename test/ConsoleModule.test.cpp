@@ -25,7 +25,7 @@ TEST(ConsoleModuleLoader, ModuleWithoutDLL)
 	EXPECT_NO_THROW(moduleLoader.LoadModules());
 	EXPECT_NO_THROW(moduleLoader.RunModules());
 
-	EXPECT_EQ(moduleDirectory.string() + "\\", moduleLoader.GetModuleDirectory(0));
+	EXPECT_EQ(moduleName + "\\", moduleLoader.GetModuleDirectory(0));
 	EXPECT_EQ(moduleName, moduleLoader.GetModuleName(0));
 
 	EXPECT_TRUE(moduleLoader.IsModuleLoaded(moduleName));
