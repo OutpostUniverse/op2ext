@@ -21,6 +21,7 @@ void PostErrorMessage(const std::string& errorMessage, const std::string& source
 
 
 std::string FormatLogMessage(const std::string& message, const std::string& moduleName);
+std::string FormatLogMessage(const std::string& message, const std::string& sourcePathFilename, long lineInSourceCode);
 
 
 // Allow defaulting of the __FILE__ and __LINE__ macros at the point of call
