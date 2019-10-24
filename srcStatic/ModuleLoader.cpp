@@ -4,6 +4,7 @@
 #include "GameModules/IniModule.h"
 #include "StringConversion.h"
 #include "FileSystemHelper.h"
+#include "FsInclude.h"
 #include "ResourceSearchPath.h"
 #include "Log.h"
 #include "ConsoleArgumentParser.h"
@@ -53,7 +54,7 @@ void ModuleLoader::RegisterConsoleModules()
 	{
 		try {
 			auto consoleModule = std::make_unique<ConsoleModule>(moduleName);
-			moduleDirectories.push_back(consoleModule->Directory());
+			moduleDirectories.push_back((fs::path(GetExeDirectory()) / consoleModule->Directory()).string());
 
 			RegisterModule(std::move(consoleModule));
 		}

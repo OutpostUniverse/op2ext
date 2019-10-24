@@ -12,7 +12,7 @@ public:
 	bool GetFilePath(const char* resourceName, /* [out] */ char* filePath) const;
 };
 
-
+// All paths must be an absolute directory
 void ResourceSearchPath::Set(std::vector<std::string> paths)
 {
 	ModuleDirectories() = std::move(paths);
