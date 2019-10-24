@@ -7,6 +7,7 @@
 #include "Log.h"
 #include "LoggerFile.h"
 #include "LoggerMessageBox.h"
+#include "LoggerDistributor.h"
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <string>
@@ -26,6 +27,7 @@ void OnShutdown();
 // Pay careful attention to anything passed to a constructor, or called by a constructor
 LoggerFile loggerFile; // Logging to file in Outpost 2 folder
 LoggerMessageBox loggerMessageBox; // Logging to pop-up message box
+LoggerDistributor loggerDistributor({&loggerFile, &loggerMessageBox});
 
 
 BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
@@ -34,7 +36,7 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 	if (dwReason == DLL_PROCESS_ATTACH) {
 		// Setup logging
 		SetLogger(&loggerFile);
-		SetLoggerError(&loggerMessageBox);
+		SetLoggerError(&loggerDistributor);
 
 		// Construct global objects
 		volList = std::make_unique<VolList>();
