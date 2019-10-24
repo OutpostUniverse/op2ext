@@ -6,10 +6,9 @@
 #include <windows.h>
 #include <stdexcept>
 
-ConsoleModule::ConsoleModule(const std::string& moduleName) : DllModule(moduleName)
+ConsoleModule::ConsoleModule(const std::string& moduleName) : DllModule(moduleName), 
+	moduleDirectory((fs::path(GetExeDirectory()) / moduleName).string() + "\\")
 {
-	moduleDirectory = (fs::path(GetExeDirectory()) / moduleName).string() + "\\";
-
 	if (!IsDirectory(moduleDirectory)) {
 		throw std::runtime_error("Unable to access the provided module directory: " + 
 			moduleDirectory + " : " + GetLastErrorString());

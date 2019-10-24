@@ -16,8 +16,8 @@ const std::string& IniFile::FileName() const {
 }
 
 // Get the value of a key within a section
-std::string IniFile::GetValue(const std::string& sectionName, const std::string& keyName) const {
-	return IniFile::GetValue(fileName, sectionName, keyName);
+std::string IniFile::GetValue(const std::string& sectionName, const std::string& keyName, const std::string& defaultValue) const {
+	return IniFile::GetValue(fileName, sectionName, keyName, defaultValue);
 }
 
 // Get the named section as a whole
@@ -55,8 +55,8 @@ void IniFile::SetValue(const std::string& sectionName, const std::string& keyNam
 // Allow fetching values without explicitly creating an object
 // This can be used for convenient one-off use
 // This may be less efficienct for repeated use to fetch multiple values
-std::string IniFile::GetValue(const std::string& fileName, const std::string& sectionName, const std::string& keyName) {
-	return IniFile::GetIniString(fileName.c_str(), sectionName.c_str(), keyName.c_str());
+std::string IniFile::GetValue(const std::string& fileName, const std::string& sectionName, const std::string& keyName, const std::string& defaultValue) {
+	return IniFile::GetIniString(fileName.c_str(), sectionName.c_str(), keyName.c_str(), defaultValue.c_str());
 }
 
 std::vector<std::string> IniFile::GetSectionNames(const std::string& fileName) {
@@ -86,7 +86,7 @@ void IniFile::SetValue(const std::string& fileName, const std::string& sectionNa
 
 // Delegate to Windows API to read INI file
 // Wrap result in std::string
-std::string IniFile::GetIniString(const char* fileName, const char* sectionName, const char* keyName) {
+std::string IniFile::GetIniString(const char* fileName, const char* sectionName, const char* keyName, const char* defaultValue) {
 	// Allocate buffer space
 	// The Win API GetPrivateProfileString has a maximum limit of 2^16 characters
 	// Trying to retrieve a longer string from the Win API will fail in unusual ways
@@ -94,7 +94,7 @@ std::string IniFile::GetIniString(const char* fileName, const char* sectionName,
 	resultString.resize(65536);
 
 	// Read result from INI file
-	DWORD returnSize = GetPrivateProfileStringA(sectionName, keyName, "", resultString.data(), resultString.size(), fileName);
+	DWORD returnSize = GetPrivateProfileStringA(sectionName, keyName, defaultValue, resultString.data(), resultString.size(), fileName);
 	// Resize to returned data size (which doesn't include null terminator)
 	resultString.resize(returnSize);
 
@@ -135,14 +135,14 @@ const std::string& IniSection::SectionName() const {
 }
 
 // Get the value of a key within a section
-std::string IniSection::GetValue(const std::string& keyName) const {
-	return IniFile::GetValue(fileName, sectionName, keyName);
+std::string IniSection::GetValue(const std::string& keyName, const std::string& defaultValue) const {
+	return IniFile::GetValue(fileName, sectionName, keyName, defaultValue);
 }
 
 // Get the value of a key within a section
 // Alternate syntax for GetValue
 std::string IniSection::operator[](std::string keyName) const {
-	return IniFile::GetValue(fileName, sectionName, keyName);
+	return IniFile::GetValue(fileName, sectionName, keyName, "");
 }
 
 // Get list of all Key names within a section

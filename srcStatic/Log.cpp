@@ -59,7 +59,6 @@ void PostErrorMessage(const std::string& errorMessage, const std::string& source
 	auto sourceFilename = fs::path(sourcePathFilename).filename().string();
 
 	const std::string formattedMessage = sourceFilename + ", Line: " + std::to_string(lineInSourceCode) + ": " + errorMessage;
-	Log(formattedMessage);
 	if (loggerError) {
 		loggerError->Log(formattedMessage);
 	}

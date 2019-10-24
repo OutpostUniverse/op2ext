@@ -100,10 +100,8 @@
     <ClCompile Include="CompatibilityTest.c" />
     <ClCompile Include="DllMain.cpp" />
     <ClCompile Include="TestFunctions.cpp" />
-    <ClCompile Include="CountFilesByTypeInDirectory.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CountFilesByTypeInDirectory.h" />
     <ClInclude Include="TestFunctions.h" />
   </ItemGroup>
   <ItemGroup>
