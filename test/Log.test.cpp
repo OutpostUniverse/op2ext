@@ -12,6 +12,6 @@ TEST(Log, UnsetLoggerIsSafe) {
 
 TEST_F(LogMessageTest, ActiveLoggerReceivesMessages) {
 	const auto message = std::string("Logger should receive this");
-	EXPECT_CALL(logger, Log(message, "op2ext.dll"));
+	EXPECT_CALL(logger, Log(message));
 	EXPECT_NO_THROW(Log(message));
 }
