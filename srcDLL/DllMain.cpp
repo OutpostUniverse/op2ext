@@ -7,12 +7,12 @@
 #include "Log.h"
 #include "LoggerFile.h"
 #include "LoggerMessageBox.h"
+#include "LoggerDistributor.h"
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <string>
 
 
-void LocateVolFiles(const std::string& relativeDirectory = "");
 bool InstallDepPatch();
 bool InstallTAppEventHooks();
 void OnInit();
@@ -26,6 +26,7 @@ void OnShutdown();
 // Pay careful attention to anything passed to a constructor, or called by a constructor
 LoggerFile loggerFile; // Logging to file in Outpost 2 folder
 LoggerMessageBox loggerMessageBox; // Logging to pop-up message box
+LoggerDistributor loggerDistributor({&loggerFile, &loggerMessageBox});
 
 
 BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
@@ -34,7 +35,7 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 	if (dwReason == DLL_PROCESS_ATTACH) {
 		// Setup logging
 		SetLogger(&loggerFile);
-		SetLoggerError(&loggerMessageBox);
+		SetLoggerError(&loggerDistributor);
 
 		// Construct global objects
 		volList = std::make_unique<VolList>();
@@ -98,13 +99,14 @@ void OnInit()
 
 	// Find VOL files from additional folders
 	for (std::size_t i = 0; i < moduleLoader->Count(); ++i) {
-		std::string moduleDirectory = moduleLoader->GetModuleDirectory(i);
+		const auto& moduleDirectory = moduleLoader->GetModuleDirectory(i);
 		if (!moduleDirectory.empty()) {
-			LocateVolFiles(moduleLoader->GetModuleName(i));
+			volList->AddVolFilesFromDirectory(moduleDirectory);
 		}
 	}
-	LocateVolFiles("Addon");
-	LocateVolFiles(); //Searches root directory
+
+	volList->AddVolFilesFromDirectory("Addon");
+	volList->AddVolFilesFromDirectory("");
 
 	volList->LoadVolFiles();
 }
@@ -118,38 +120,6 @@ void OnLoadShell()
 void OnShutdown()
 {
 	moduleLoader->UnloadModules();
-}
-
-
-/**
-Prepares all vol files found within the supplied relative directory from the Outpost 2 executable
-for inclusion in Outpost 2. Does not recursively search subdirectories.
-
-@param relativeDirectory A directory relative to the Outpost 2 exectuable. Default value is an empty string.
-*/
-void LocateVolFiles(const std::string& relativeDirectory)
-{
-	const auto absoluteDirectory = (fs::path(GetExeDirectory()) / relativeDirectory).string();
-
-	if (!IsDirectory(absoluteDirectory)) {
-		return;
-	}
-
-	try
-	{
-		for (const auto& dirEntry : fs::directory_iterator(absoluteDirectory))
-		{
-			const auto& filePath = dirEntry.path();
-			const auto extension = ToLower(filePath.extension().string());
-
-			if (extension == ".vol") {
-				volList->AddVolFile((fs::path(relativeDirectory) / filePath.filename()).string());
-			}
-		}
-	}
-	catch (const fs::filesystem_error& e) {
-		Log(e.what());
-	}
 }
 
 

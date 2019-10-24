@@ -12,7 +12,9 @@ public:
 	bool GetFilePath(const char* resourceName, /* [out] */ char* filePath) const;
 };
 
-
+// Relative paths will be relative to the current working directory
+// Depending on how the game was started, that may not be the executable folder
+// For robust operation, absolute paths may be preferred
 void ResourceSearchPath::Set(std::vector<std::string> paths)
 {
 	ModuleDirectories() = std::move(paths);

@@ -9,6 +9,9 @@ class VolList
 public:
 	void AddVolFile(std::string volPath);
 
+	// Does not recursively search subdirectories.
+	void AddVolFilesFromDirectory(const std::string& relativeDirectory);
+
 	// Load all identified vol files into Outpost 2's memory.
 	void LoadVolFiles();
 

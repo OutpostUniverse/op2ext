@@ -6,16 +6,17 @@
 #include <windows.h>
 #include <stdexcept>
 
-ConsoleModule::ConsoleModule(const std::string& moduleName) : DllModule(moduleName)
+ConsoleModule::ConsoleModule(const std::string& moduleName) : DllModule(moduleName), 
+	moduleDirectory(moduleName + "\\")
 {
-	moduleDirectory = (fs::path(GetExeDirectory()) / moduleName).string() + "\\";
+	auto absoluteModuleDirectory = fs::path(GetExeDirectory()) / moduleDirectory;
 
-	if (!IsDirectory(moduleDirectory)) {
+	if (!IsDirectory(absoluteModuleDirectory.string())) {
 		throw std::runtime_error("Unable to access the provided module directory: " + 
 			moduleDirectory + " : " + GetLastErrorString());
 	}
 
-	const auto dllPath = fs::path(moduleDirectory).append("op2mod.dll").string();
+	const auto dllPath = (absoluteModuleDirectory / "op2mod.dll").string();
 	if (!Exists(dllPath)) {
 		return; // Some console modules do not contain dlls
 	}
