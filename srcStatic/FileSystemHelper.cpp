@@ -55,6 +55,10 @@ std::vector<std::string> FindFilesWithExtension(const std::string& basePath, con
 
 	for (const auto& dirEntry : fs::directory_iterator(directory))
 	{
+		if (!fs::is_regular_file(dirEntry)) {
+			continue;
+		}
+
 		const auto& filePath = dirEntry.path();
 		const auto extensionToCheck = ToLower(filePath.extension().string());
 
