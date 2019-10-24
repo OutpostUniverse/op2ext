@@ -110,7 +110,7 @@ OP2EXT_API void Log(const char* message)
 	// These optimizations are however extremely unlikely when making
 	// calls across a module boundary (such as to exported methods).
 
-	Log(message, FindModuleName(_ReturnAddress()));
+	Log(FormatLogMessage(message, FindModuleName(_ReturnAddress())));
 }
 
 

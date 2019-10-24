@@ -11,7 +11,7 @@ void SetLogger(Logger* newLogger);
 void SetLoggerError(Logger* newLogger);
 void SetLoggerDebug(Logger* newLogger);
 
-void Log(const std::string& message, const std::string& moduleName = "op2ext.dll");
+void Log(const std::string& message);
 
 
 // Outputs a debug string. Output is not logged by the logger.
