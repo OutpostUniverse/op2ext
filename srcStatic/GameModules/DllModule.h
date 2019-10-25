@@ -24,11 +24,11 @@ protected:
 private:
 	// ALl exported dll functions have the same signature except for Load (Init). 
 	// The exported naming schema is different between console and ini functions
-	typedef void(*LoadModuleFunctionIni)(const char* iniSectionName);
-	typedef void(*LoadModuleFunctionConsole)();
-	typedef void(*UnloadModuleFunctionIni)();
-	typedef bool(*UnloadModuleFunctionConsole)();
-	typedef void(*RunModuleFunction)();
+	using LoadModuleFunctionIni = void(*)(const char* iniSectionName);
+	using LoadModuleFunctionConsole = void(*)();
+	using UnloadModuleFunctionIni = void(*)();
+	using UnloadModuleFunctionConsole = bool(*)();
+	using RunModuleFunction = void(*)();
 
 	// Search for dll's initialization, run & destroy functions
 	void DetectExportedModuleFunctions();
