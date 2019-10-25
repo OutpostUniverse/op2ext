@@ -26,8 +26,8 @@ private:
 	// The exported naming schema is different between console and ini functions
 	typedef void(*LoadModuleFunctionIni)(const char* iniSectionName);
 	typedef void(*LoadModuleFunctionConsole)();
-	typedef bool(*UnloadModuleFunctionIni)();
-	typedef void(*UnloadModuleFunctionConsole)();
+	typedef void(*UnloadModuleFunctionIni)();
+	typedef bool(*UnloadModuleFunctionConsole)();
 	typedef void(*RunModuleFunction)();
 
 	// Search for dll's initialization, run & destroy functions

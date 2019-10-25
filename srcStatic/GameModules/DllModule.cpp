@@ -56,10 +56,10 @@ bool DllModule::Unload()
 	bool success = true;
 
 	if (unloadModuleFunctionIni != nullptr) {
-		success = unloadModuleFunctionIni();
+		unloadModuleFunctionIni();
 	}
 	else if (unloadModuleFunctionConsole != nullptr) {
-		unloadModuleFunctionConsole();
+		success = unloadModuleFunctionConsole();
 	}
 
 	if (moduleDllHandle != nullptr) {
