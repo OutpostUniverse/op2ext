@@ -31,14 +31,12 @@
     <ClCompile Include="IniFile.test.cpp" />
     <ClCompile Include="IniModule.test.cpp" />
     <ClCompile Include="Log.test.cpp" />
-    <ClCompile Include="TestLog.cpp" />
     <ClCompile Include="ModuleLoader.test.cpp" />
     <ClCompile Include="LoggerDistributor.test.cpp" />
     <ClCompile Include="LoggerFile.test.cpp" />
     <ClCompile Include="LogMessageTest.cpp" />
     <ClCompile Include="OP2Memory.test.cpp" />
     <ClCompile Include="StringConversion.test.cpp" />
-    <ClCompile Include="TestLogger.cpp" />
     <ClCompile Include="VolList.test.cpp" />
   </ItemGroup>
   <ItemGroup>
