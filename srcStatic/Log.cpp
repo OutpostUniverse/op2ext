@@ -14,6 +14,7 @@ namespace {
 	// This pointer is safely set to null before other globals are initialized
 	Logger* logger = nullptr;
 	Logger* loggerError = nullptr;
+	Logger* loggerDebug = nullptr;
 }
 
 
@@ -31,6 +32,11 @@ void SetLoggerError(Logger* newLogger) {
 	loggerError = newLogger;
 }
 
+// Set logger for debug logging level
+void SetLoggerDebug(Logger* newLogger) {
+	loggerDebug = newLogger;
+}
+
 
 // Output log message at standard logging level
 void Log(const std::string& message, const std::string& moduleName) {
@@ -46,20 +52,30 @@ void Log(const std::string& message, const std::string& moduleName) {
 // Currently this code doesn't support redirection of logging output
 void LogDebug(const std::string& message)
 {
-#ifdef DEBUG
-	OutputDebugString(message.c_str());
-#endif
+	if (loggerDebug) {
+		loggerDebug->Log(message);
+	}
 }
 
 // Output log message at Error logging level
 // Currently this is designed to produce a pop-up error message box
-void PostErrorMessage(const std::string& errorMessage, const std::string& sourcePathFilename, long lineInSourceCode)
+void LogError(const std::string& message)
+{
+	if (loggerError) {
+		loggerError->Log(message);
+	}
+}
+
+
+std::string FormatLogMessage(const std::string& message, const std::string& moduleName)
+{
+	return "[" + moduleName + "] " + message;
+}
+
+std::string FormatLogMessage(const std::string& message, const std::string& sourcePathFilename, long lineInSourceCode)
 {
 	// __FILE__ returns absolute filename. Strip the absolute path to reduce clutter in log output
 	auto sourceFilename = fs::path(sourcePathFilename).filename().string();
-
-	const std::string formattedMessage = sourceFilename + ", Line: " + std::to_string(lineInSourceCode) + ": " + errorMessage;
-	if (loggerError) {
-		loggerError->Log(formattedMessage);
-	}
+	const std::string formattedMessage = sourceFilename + ", Line: " + std::to_string(lineInSourceCode) + ": " + message;
+	return formattedMessage;
 }

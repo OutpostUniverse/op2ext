@@ -139,6 +139,7 @@
     <ClCompile Include="GameModules\IpDropDown.cpp" />
     <ClCompile Include="IniFile.cpp" />
     <ClCompile Include="Log.cpp" />
+    <ClCompile Include="LoggerDebug.cpp" />
     <ClCompile Include="LoggerDistributor.cpp" />
     <ClCompile Include="LoggerFile.cpp" />
     <ClCompile Include="LoggerMessageBox.cpp" />
@@ -163,6 +164,7 @@
     <ClInclude Include="IniFile.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="Logger.h" />
+    <ClInclude Include="LoggerDebug.h" />
     <ClInclude Include="LoggerDistributor.h" />
     <ClInclude Include="LoggerFile.h" />
     <ClInclude Include="LoggerMessageBox.h" />

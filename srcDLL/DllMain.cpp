@@ -8,6 +8,7 @@
 #include "LoggerFile.h"
 #include "LoggerMessageBox.h"
 #include "LoggerDistributor.h"
+#include "LoggerDebug.h"
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <string>
@@ -27,6 +28,7 @@ void OnShutdown();
 LoggerFile loggerFile; // Logging to file in Outpost 2 folder
 LoggerMessageBox loggerMessageBox; // Logging to pop-up message box
 LoggerDistributor loggerDistributor({&loggerFile, &loggerMessageBox});
+LoggerDebug loggerDebug;
 
 
 BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
@@ -36,6 +38,7 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 		// Setup logging
 		SetLogger(&loggerFile);
 		SetLoggerError(&loggerDistributor);
+		SetLoggerDebug(&loggerDebug);
 
 		// Construct global objects
 		volList = std::make_unique<VolList>();

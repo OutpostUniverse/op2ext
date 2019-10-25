@@ -9,6 +9,7 @@ class Logger;
 // Set logger for each of the logging levels
 void SetLogger(Logger* newLogger);
 void SetLoggerError(Logger* newLogger);
+void SetLoggerDebug(Logger* newLogger);
 
 void Log(const std::string& message, const std::string& moduleName = "op2ext.dll");
 
@@ -17,10 +18,14 @@ void Log(const std::string& message, const std::string& moduleName = "op2ext.dll
 void LogDebug(const std::string& message);
 
 // Logs an error message with the logger and then posts it to user in a modal dialog box.
-void PostErrorMessage(const std::string& errorMessage, const std::string& sourcePathFilename, long lineInSourceCode);
+void LogError(const std::string& message);
+
+
+std::string FormatLogMessage(const std::string& message, const std::string& moduleName = "op2ext.dll");
+std::string FormatLogMessage(const std::string& message, const std::string& sourcePathFilename, long lineInSourceCode);
 
 
 // Allow defaulting of the __FILE__ and __LINE__ macros at the point of call
 // Macro name must be different from original function name
 // Using the same name will cause an error when the compiler sees the underlying function definition
-#define PostError(errorMessage) PostErrorMessage(errorMessage, __FILE__, __LINE__)
+#define PostError(message) LogError(FormatLogMessage(message, __FILE__, __LINE__))
