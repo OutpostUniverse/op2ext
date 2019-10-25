@@ -15,4 +15,3 @@ TEST_F(LogMessageTest, ActiveLoggerReceivesMessages) {
 	EXPECT_CALL(logger, Log(message, "op2ext.dll"));
 	EXPECT_NO_THROW(Log(message));
 }
-
