@@ -61,6 +61,24 @@ TEST(FileSystemHelper, Exists)
 
 TEST(FileSystemHelper, FindFilesWithExtension)
 {
-	const auto exePath = GetExeDirectory();
-	EXPECT_EQ(std::vector<std::string>({}), FindFilesWithExtension(exePath, "", ".NonExistentExtension"));
+	const auto exeFolder = GetExeDirectory();
+	const auto testFolder = std::string("FindFilesTest/");
+	const auto testPath = fs::path(exeFolder) / testFolder;
+
+	// Create test folder, and fill it with test subfolders and files
+	fs::create_directories(testPath);
+	fs::create_directories(testPath / "FakeVolDir.vol/");
+	std::ofstream((testPath / "Empty.vol").string());
+	std::ofstream((testPath / "FilenameWithNoExtension").string());
+
+	// No unexpected files
+	EXPECT_EQ(std::vector<std::string>({}), FindFilesWithExtension(exeFolder, testFolder, ".NonExistentExtension"));
+	// No directories
+	EXPECT_EQ(std::vector<std::string>({}), FindFilesWithExtension(exeFolder, testFolder, "./"));
+	// Files with no extension
+	EXPECT_EQ(std::vector<std::string>({testFolder + "FilenameWithNoExtension"}), FindFilesWithExtension(exeFolder, testFolder, ""));
+	// Files with given extension (but not directories)
+	EXPECT_EQ(std::vector<std::string>({testFolder + "Empty.vol"}), FindFilesWithExtension(exeFolder, testFolder, ".vol"));
+
+	fs::remove_all(testPath);
 }
