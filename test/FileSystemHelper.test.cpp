@@ -2,6 +2,8 @@
 #include "FsInclude.h"
 #include <gtest/gtest.h>
 #include <fstream>
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
 
 
 TEST(FileSystemHelper, GetExeDirectory) {
@@ -80,5 +82,9 @@ TEST(FileSystemHelper, FindFilesWithExtension)
 	// Files with given extension (but not directories)
 	EXPECT_EQ(std::vector<std::string>({testFolder + "Empty.vol"}), FindFilesWithExtension(exeFolder, testFolder, ".vol"));
 
-	fs::remove_all(testPath);
+	// Cleanup (Mingw filesystem library has trouble removing directories)
+	fs::remove(testPath / "Empty.vol");
+	fs::remove(testPath / "FilenameWithNoExtension");
+	RemoveDirectoryW((testPath / "FakeVolDir.vol").wstring().c_str());
+	RemoveDirectoryW((testPath).wstring().c_str());
 }
