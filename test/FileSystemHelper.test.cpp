@@ -68,8 +68,8 @@ TEST(FileSystemHelper, FindFilesWithExtension)
 	const auto testPath = fs::path(exeFolder) / testFolder;
 
 	// Create test folder, and fill it with test subfolders and files
-	fs::create_directories(testPath);
-	fs::create_directories(testPath / "FakeVolDir.vol/");
+	fs::create_directory(testPath);
+	fs::create_directory(testPath / "FakeVolDir.vol/");
 	std::ofstream((testPath / "Empty.vol").string());
 	std::ofstream((testPath / "FilenameWithNoExtension").string());
 
