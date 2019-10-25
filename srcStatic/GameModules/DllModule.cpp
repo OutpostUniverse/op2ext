@@ -1,4 +1,5 @@
 #include "DllModule.h"
+#include "../Log.h"
 #include "../WindowsErrorCode.h"
 #include <stdexcept>
 
@@ -60,6 +61,9 @@ bool DllModule::Unload()
 	}
 	else if (unloadModuleFunctionConsole != nullptr) {
 		success = unloadModuleFunctionConsole();
+		if (!success) {
+			Log("Module reports error during unload: " + Name());
+		}
 	}
 
 	if (moduleDllHandle != nullptr) {
