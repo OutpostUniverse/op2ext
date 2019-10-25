@@ -30,9 +30,9 @@ void DllModule::DetectExportedModuleFunctions()
 		loadModuleFunctionConsole = (LoadModuleFunctionConsole)GetProcAddress(moduleDllHandle, "mod_init");
 	}
 
-	unloadModuleFunction = (UnloadModuleFunction)GetProcAddress(moduleDllHandle, "DestroyMod");
-	if (unloadModuleFunction == nullptr) {
-		unloadModuleFunction = (UnloadModuleFunction)GetProcAddress(moduleDllHandle, "mod_destroy");
+	unloadModuleFunctionIni = (UnloadModuleFunctionIni)GetProcAddress(moduleDllHandle, "DestroyMod");
+	if (unloadModuleFunctionIni == nullptr) {
+		unloadModuleFunctionConsole = (UnloadModuleFunctionConsole)GetProcAddress(moduleDllHandle, "mod_destroy");
 	}
 
 	runModuleFunction = (RunModuleFunction)GetProcAddress(moduleDllHandle, "RunMod");
@@ -55,8 +55,11 @@ bool DllModule::Unload()
 {
 	bool success = true;
 
-	if (unloadModuleFunction != nullptr) {
-		success = unloadModuleFunction();
+	if (unloadModuleFunctionIni != nullptr) {
+		success = unloadModuleFunctionIni();
+	}
+	else if (unloadModuleFunctionConsole != nullptr) {
+		unloadModuleFunctionConsole();
 	}
 
 	if (moduleDllHandle != nullptr) {
