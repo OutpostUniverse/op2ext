@@ -4,6 +4,7 @@
 #include "GameModules/IniModule.h"
 #include "StringConversion.h"
 #include "FileSystemHelper.h"
+#include "FsInclude.h"
 #include "ResourceSearchPath.h"
 #include "Log.h"
 #include "ConsoleArgumentParser.h"
@@ -36,11 +37,6 @@ void ModuleLoader::RegisterConsoleModules()
 		return; // No console modules to load
 	}
 
-	// Temporary check. This will eventually become an error.
-	if (consoleModuleNames.size() == 1 && consoleModuleNames[0].empty()) {
-		return; // No console modules to load
-	}
-
 	if (std::any_of(consoleModuleNames.begin(), consoleModuleNames.end(), [](const std::string& consoleModuleName) { return consoleModuleName.empty(); })) {
 		PostError("All console module names must be non-empty.");
 		return;
@@ -53,7 +49,7 @@ void ModuleLoader::RegisterConsoleModules()
 	{
 		try {
 			auto consoleModule = std::make_unique<ConsoleModule>(moduleName);
-			moduleDirectories.push_back(consoleModule->Directory());
+			moduleDirectories.push_back((fs::path(GetExeDirectory()) / consoleModule->Directory()).string());
 
 			RegisterModule(std::move(consoleModule));
 		}
