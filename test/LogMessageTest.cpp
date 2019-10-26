@@ -13,9 +13,11 @@ LoggerMock::~LoggerMock() {}
 void LogMessageTest::SetUp() {
 	// Install test logger
 	EXPECT_NO_THROW(SetLogger(&logger));
+	EXPECT_NO_THROW(SetLoggerError(&loggerError));
 }
 
 void LogMessageTest::TearDown() {
 	// Remove test logger
 	EXPECT_NO_THROW(SetLogger(nullptr));
+	EXPECT_NO_THROW(SetLoggerError(nullptr));
 }
