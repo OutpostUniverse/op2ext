@@ -22,7 +22,6 @@ protected:
 	void LoadModuleDll(const std::string& dllPath);
 
 private:
-	// ALl exported dll functions have the same signature except for Load (Init). 
 	// The exported naming schema is different between console and ini functions
 	using LoadModuleFunctionIni = void(*)(const char* iniSectionName);
 	using LoadModuleFunctionConsole = void(*)();
