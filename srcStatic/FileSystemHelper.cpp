@@ -42,6 +42,7 @@ bool Exists(const std::string& path)
 	return fs::exists(modifiedPath);
 }
 
+
 std::vector<std::string> FindFilesWithExtension(const std::string& basePath, const std::string& relativeSearchPath, std::string extension)
 {
 	auto directory = fs::path(basePath) / relativeSearchPath;

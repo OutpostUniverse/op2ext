@@ -2,6 +2,8 @@
 #include "FsInclude.h"
 #include <gtest/gtest.h>
 #include <fstream>
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
 
 
 TEST(FileSystemHelper, GetExeDirectory) {
@@ -56,4 +58,33 @@ TEST(FileSystemHelper, Exists)
 
 	EXPECT_FALSE(Exists("NonExistentPath"));
 	EXPECT_FALSE(Exists("NonExistentPath/"));
+}
+
+
+TEST(FileSystemHelper, FindFilesWithExtension)
+{
+	const auto exeFolder = GetExeDirectory();
+	const auto testFolder = std::string("FindFilesTest/");
+	const auto testPath = fs::path(exeFolder) / testFolder;
+
+	// Create test folder, and fill it with test subfolders and files
+	fs::create_directory(testPath);
+	fs::create_directory(testPath / "FakeVolDir.vol/");
+	std::ofstream((testPath / "Empty.vol").string());
+	std::ofstream((testPath / "FilenameWithNoExtension").string());
+
+	// No unexpected files
+	EXPECT_EQ(std::vector<std::string>({}), FindFilesWithExtension(exeFolder, testFolder, ".NonExistentExtension"));
+	// No directories
+	EXPECT_EQ(std::vector<std::string>({}), FindFilesWithExtension(exeFolder, testFolder, "./"));
+	// Files with no extension
+	EXPECT_EQ(std::vector<std::string>({testFolder + "FilenameWithNoExtension"}), FindFilesWithExtension(exeFolder, testFolder, ""));
+	// Files with given extension (but not directories)
+	EXPECT_EQ(std::vector<std::string>({testFolder + "Empty.vol"}), FindFilesWithExtension(exeFolder, testFolder, ".vol"));
+
+	// Cleanup (Mingw filesystem library has trouble removing directories)
+	fs::remove(testPath / "Empty.vol");
+	fs::remove(testPath / "FilenameWithNoExtension");
+	RemoveDirectoryW((testPath / "FakeVolDir.vol").wstring().c_str());
+	RemoveDirectoryW((testPath).wstring().c_str());
 }
