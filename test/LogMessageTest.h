@@ -19,4 +19,5 @@ protected:
 
 	LoggerMock logger;
 	LoggerMock loggerError;
+	LoggerMock loggerDebug;
 };
