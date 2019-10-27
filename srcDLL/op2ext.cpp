@@ -81,7 +81,6 @@ OP2EXT_API void AddVolToList(const char* volFilename)
 	}
 }
 
-char* multiplayerVersionStringAddress = (char*)0x004E973C;
 OP2EXT_API void SetSerialNumber(char major, char minor, char patch)
 {
 	if (modulesRunning || major < 0 || major > 9 || minor < 0 || minor > 9 || patch < 0 || patch > 9) {
@@ -90,6 +89,7 @@ OP2EXT_API void SetSerialNumber(char major, char minor, char patch)
 	else {
 		char buffer[8];
 		_snprintf_s(buffer, sizeof(buffer), "%i.%i.%i.%i", major, minor, 0, patch);
+		char* multiplayerVersionStringAddress = (char*)0x004E973C;
 		Op2MemCopy(multiplayerVersionStringAddress, buffer, sizeof(buffer));
 	}
 }
