@@ -38,7 +38,7 @@ void ModuleLoader::RegisterConsoleModules()
 	}
 
 	if (std::any_of(consoleModuleNames.begin(), consoleModuleNames.end(), [](const std::string& consoleModuleName) { return consoleModuleName.empty(); })) {
-		PostError("All console module names must be non-empty.");
+		LogError("All console module names must be non-empty.");
 		return;
 	}
 
@@ -54,7 +54,7 @@ void ModuleLoader::RegisterConsoleModules()
 			RegisterModule(std::move(consoleModule));
 		}
 		catch (const std::exception& e) {
-			PostError("Unable to load console module " + moduleName + ". " + e.what());
+			LogError("Unable to load console module " + moduleName + ". " + e.what());
 		}
 	}
 
@@ -71,7 +71,7 @@ void ModuleLoader::RegisterIniModules()
 				RegisterModule(std::make_unique<IniModule>(iniFile[moduleName]));
 			}
 			catch (const std::exception& e) {
-				PostError("Unable to load ini module " + moduleName + ". " + e.what());
+				LogError("Unable to load ini module " + moduleName + ". " + e.what());
 			}
 		}
 	}
@@ -88,7 +88,7 @@ bool ModuleLoader::IsModuleRequested(const std::string& sectionName, const std::
 		return false;
 	}
 
-	PostError("Module named " + moduleName + " contains an innapropriate setting of " + isModuleRequested + ". It must be set to Yes or No");
+	LogError("Module named " + moduleName + " contains an innapropriate setting of " + isModuleRequested + ". It must be set to Yes or No");
 	return false;
 }
 
@@ -133,7 +133,7 @@ void ModuleLoader::RegisterModule(std::unique_ptr<GameModule> newGameModule)
 	}
 
 	if (IsModuleLoaded(newGameModule->Name())) {
-		PostError("You may not add a module with an existing name. Duplicate copies of module name " + newGameModule->Name() + " found.");
+		LogError("You may not add a module with an existing name. Duplicate copies of module name " + newGameModule->Name() + " found.");
 		return;
 	}
 
@@ -162,7 +162,7 @@ void ModuleLoader::LoadModules()
 			gameModule->Load();
 		}
 		catch (const std::exception& e) {
-			PostError("Error loading module " + gameModule->Name() + ". " + std::string(e.what()));
+			LogError("Error loading module " + gameModule->Name() + ". " + std::string(e.what()));
 		}
 	}
 }
@@ -181,7 +181,7 @@ bool ModuleLoader::UnloadModules()
 			}
 		}
 		catch (const std::exception& e) {
-			PostError("Error unloading module " + gameModule->Name() + ". " + std::string(e.what()));
+			LogError("Error unloading module " + gameModule->Name() + ". " + std::string(e.what()));
 			areAllModulesProperlyDestroyed = false;
 		}
 	}
@@ -199,7 +199,7 @@ void ModuleLoader::RunModules()
 			gameModule->Run();
 		}
 		catch (const std::exception& e) {
-			PostError("Error running module " + gameModule->Name() + ". " + std::string(e.what()));
+			LogError("Error running module " + gameModule->Name() + ". " + std::string(e.what()));
 		}
 	}
 }

@@ -9,7 +9,7 @@ LoggerFile::LoggerFile() :
 	logFile(GetExeDirectory() + "\\Outpost2Log.txt", std::ios::app | std::ios::out | std::ios::binary)
 {
 	if (!logFile.is_open()) {
-		PostError("Unable to create or open Outpost2Log.txt");
+		LogError("Unable to create or open Outpost2Log.txt");
 	}
 }
 

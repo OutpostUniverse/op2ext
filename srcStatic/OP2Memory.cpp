@@ -45,7 +45,7 @@ bool Op2MemEdit(void* destBaseAddr, std::size_t size, Function memoryEditFunctio
 	DWORD oldAttr;
 	BOOL bSuccess = VirtualProtect(destAddr, size, PAGE_EXECUTE_READWRITE, &oldAttr);
 	if (!bSuccess) {
-		PostError("Error unprotecting memory at: 0x" + AddrToHexString(reinterpret_cast<std::size_t>(destAddr)) + ".");
+		LogError("Error unprotecting memory at: 0x" + AddrToHexString(reinterpret_cast<std::size_t>(destAddr)) + ".");
 		return false;
 	}
 
@@ -101,7 +101,7 @@ bool Op2RelinkCall(std::size_t callOffset, void* newFunctionAddress)
 
 	// Verify this is being run on a CALL instruction
 	if (*reinterpret_cast<unsigned char*>(callOffset + loadOffset) != 0xE8) {
-		PostError("Op2RelinkCall error: No CALL instruction found at given address: " + AddrToHexString(callOffset));
+		LogError("Op2RelinkCall error: No CALL instruction found at given address: " + AddrToHexString(callOffset));
 		return false;
 	}
 

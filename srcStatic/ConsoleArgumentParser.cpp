@@ -16,7 +16,7 @@ std::vector<std::string> FindModuleDirectories()
 		const auto arguments = GetCommandLineArguments();
 		return FindModuleDirectories(arguments);
 	} catch(const std::exception& e) {
-		PostError("Error parsing command line arguments: " + std::string(e.what()));
+		LogError("Error parsing command line arguments: " + std::string(e.what()));
 		return {};
 	}
 }
