@@ -39,7 +39,7 @@ void SetLoggerDebug(Logger* newLogger) {
 
 
 // Output log message at Error logging level
-// Currently this is designed to produce a pop-up error message box
+// This is likely to produce some kind of pop-up to immediately inform the user
 void LogError(const std::string& message)
 {
 	if (loggerError) {
@@ -47,17 +47,16 @@ void LogError(const std::string& message)
 	}
 }
 
-// Output log message at standard logging level
+// Output log message at Message logging level
+// This is likely to appear in some kind of log file
 void LogMessage(const std::string& message) {
-	// Make sure a logger has been set first
 	if (loggerMessage) {
-		// Delegate to internal logger
 		loggerMessage->Log(message);
 	}
 }
 
 // Output log message at Debug logging level
-// Currently this code doesn't support redirection of logging output
+// This is likely to show only with the help of special debugging tools
 void LogDebug(const std::string& message)
 {
 	if (loggerDebug) {
