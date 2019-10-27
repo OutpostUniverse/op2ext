@@ -84,7 +84,7 @@ bool ResManager::GetFilePath(const char* resourceName, /* [out] */ char* filePat
 			if (0 == CopyStringViewIntoCharBuffer(path, filePath, MAX_PATH)) {
 				return true; // Resource found
 			} else {
-				Log("MAX_PATH exceeded while trying to return path to resource: " + std::string(resourceName));
+				Log(FormatLogMessage("MAX_PATH exceeded while trying to return path to resource: " + std::string(resourceName)));
 			}
 		}
 	}

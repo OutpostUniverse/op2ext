@@ -12,7 +12,7 @@ public:
 	// All loggers must be non-null pointers
 	LoggerDistributor(std::vector<Logger*> loggers);
 
-	void Log(const std::string& message, const std::string& moduleName = "op2ext.dll") override;
+	void Log(const std::string& message) override;
 
 protected:
 	const std::vector<Logger*> loggers;

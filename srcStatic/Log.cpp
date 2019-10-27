@@ -39,11 +39,11 @@ void SetLoggerDebug(Logger* newLogger) {
 
 
 // Output log message at standard logging level
-void Log(const std::string& message, const std::string& moduleName) {
+void Log(const std::string& message) {
 	// Make sure a logger has been set first
 	if (logger) {
 		// Delegate to internal logger
-		logger->Log(message, moduleName);
+		logger->Log(message);
 	}
 }
 

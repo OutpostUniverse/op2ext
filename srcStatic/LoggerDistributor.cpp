@@ -7,8 +7,8 @@ LoggerDistributor::LoggerDistributor(std::vector<Logger*> loggers) :
 {
 }
 
-void LoggerDistributor::Log(const std::string& message, const std::string& moduleName) {
+void LoggerDistributor::Log(const std::string& message) {
 	for (const auto logger: loggers) {
-		logger->Log(message, moduleName);
+		logger->Log(message);
 	}
 }

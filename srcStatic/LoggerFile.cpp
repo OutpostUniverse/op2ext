@@ -13,7 +13,7 @@ LoggerFile::LoggerFile() :
 	}
 }
 
-void LoggerFile::Log(const std::string& message, const std::string& moduleName)
+void LoggerFile::Log(const std::string& message)
 {
-	logFile << GetDateTime() << " [" << moduleName << "] " << message << std::endl;
+	logFile << GetDateTime() << " " << message << std::endl;
 }
