@@ -17,7 +17,7 @@ protected:
 	void SetUp() override;
 	void TearDown() override;
 
-	LoggerMock loggerMessage;
 	LoggerMock loggerError;
+	LoggerMock loggerMessage;
 	LoggerMock loggerDebug;
 };
