@@ -19,4 +19,3 @@ void LogError(const std::string& message);
 
 // Helpers to format log messages in standard ways
 std::string FormatLogMessage(const std::string& message, const std::string& moduleName = "op2ext.dll");
-std::string FormatLogMessage(const std::string& message, const std::string& sourcePathFilename, long lineInSourceCode);

@@ -71,11 +71,3 @@ std::string FormatLogMessage(const std::string& message, const std::string& modu
 {
 	return "[" + moduleName + "] " + message;
 }
-
-std::string FormatLogMessage(const std::string& message, const std::string& sourcePathFilename, long lineInSourceCode)
-{
-	// __FILE__ returns absolute filename. Strip the absolute path to reduce clutter in log output
-	auto sourceFilename = fs::path(sourcePathFilename).filename().string();
-	const std::string formattedMessage = sourceFilename + ", Line: " + std::to_string(lineInSourceCode) + ": " + message;
-	return formattedMessage;
-}
