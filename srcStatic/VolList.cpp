@@ -22,7 +22,7 @@ void VolList::AddVolFilesFromDirectory(const std::string& relativeDirectory)
 		}
 	}
 	catch (const std::exception& e) {
-		Log(FormatLogMessage("Error attempting to locate vol files in provided directory " + relativeDirectory + ". " + std::string(e.what())));
+		Log("Error attempting to locate vol files in provided directory " + relativeDirectory + ". " + std::string(e.what()));
 	}
 }
 
