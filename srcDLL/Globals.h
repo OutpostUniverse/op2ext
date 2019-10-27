@@ -5,6 +5,6 @@
 #include <memory>
 
 
-extern bool modulesRunning;
+extern bool appInitialized;
 extern std::unique_ptr<VolList> volList;
 extern std::unique_ptr<ModuleLoader> moduleLoader;
