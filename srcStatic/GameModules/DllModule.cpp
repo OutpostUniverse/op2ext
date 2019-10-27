@@ -62,7 +62,7 @@ bool DllModule::Unload()
 	else if (unloadModuleFunctionConsole != nullptr) {
 		success = unloadModuleFunctionConsole();
 		if (!success) {
-			Log("Module reports error during unload: " + Name());
+			LogMessage("Module reports error during unload: " + Name());
 		}
 	}
 
