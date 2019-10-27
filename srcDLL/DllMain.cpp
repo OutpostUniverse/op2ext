@@ -44,7 +44,6 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 
 		// Construct global objects
 		vols = std::make_unique<std::vector<std::string>>();
-		volList = std::make_unique<VolList>();
 		moduleLoader = std::make_unique<ModuleLoader>();
 
 		// Set load offset for Outpost2.exe module, used during memory patching
@@ -102,6 +101,10 @@ void OnInit()
 
 	// Load all active modules from the .ini file
 	moduleLoader->LoadModules();
+
+	// Load VOL files
+
+	volList = std::make_unique<VolList>();
 
 	for (const auto& volFilename : *vols) {
 		volList->AddVolFile(volFilename);
