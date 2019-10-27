@@ -73,7 +73,7 @@ OP2EXT_API char* GetCurrentModDir()
 
 OP2EXT_API void AddVolToList(const char* volFilename)
 {
-	if (modulesRunning) {
+	if (appInitialized) {
 		PostError("VOLs may not be added to the list after game startup.");
 	}
 	else {
@@ -83,7 +83,7 @@ OP2EXT_API void AddVolToList(const char* volFilename)
 
 OP2EXT_API void SetSerialNumber(char major, char minor, char patch)
 {
-	if (modulesRunning || major < 0 || major > 9 || minor < 0 || minor > 9 || patch < 0 || patch > 9) {
+	if (appInitialized || major < 0 || major > 9 || minor < 0 || minor > 9 || patch < 0 || patch > 9) {
 		PostError("SetSerialNumber failed. Invalid mod serial number or was called after game startup.");
 	}
 	else {

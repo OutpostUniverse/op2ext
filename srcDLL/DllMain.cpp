@@ -112,11 +112,11 @@ void OnInit()
 	volList->AddVolFilesFromDirectory("");
 
 	volList->LoadVolFiles();
+	appInitialized = true;
 }
 
 void OnLoadShell()
 {
-	modulesRunning = true;
 	moduleLoader->RunModules();
 }
 
