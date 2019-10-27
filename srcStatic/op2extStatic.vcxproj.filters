@@ -38,6 +38,7 @@
     <ClInclude Include="GameModule.h" />
     <ClInclude Include="ModuleLoader.h" />
     <ClInclude Include="IniFile.h" />
+    <ClInclude Include="LocalResource.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="LoggerDebug.h" />
