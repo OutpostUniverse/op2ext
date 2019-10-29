@@ -51,7 +51,7 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 		if (EnableOp2MemoryPatching()) {
 			// These hooks are needed to further bootstrap the rest of module loading
 			if (!InstallTAppEventHooks()) {
-				PostError("Failed to install initial TApp event hooks. Module loading and patching disabled.");
+				LogError("Failed to install initial TApp event hooks. Module loading and patching disabled.");
 				return FALSE;
 			}
 		}
@@ -82,7 +82,7 @@ bool InstallDepPatch()
 	bool success = Op2UnprotectMemory(destinationBaseAddress, 0x00587000 - 0x00585000);
 
 	if (!success) {
-		PostError("Error unprotecting memory at: 0x" + AddrToHexString(destinationBaseAddress));
+		LogError("Error unprotecting memory at: 0x" + AddrToHexString(destinationBaseAddress));
 	}
 
 	return success;
