@@ -77,7 +77,7 @@ OP2EXT_API void AddVolToList(const char* volFilename)
 		LogError("VOLs may not be added to the list after game startup.");
 	}
 	else {
-		volList->AddVolFile(volFilename);
+		vols->push_back(volFilename);
 	}
 }
 

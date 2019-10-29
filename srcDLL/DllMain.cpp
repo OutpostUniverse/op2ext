@@ -1,5 +1,6 @@
 #include "Globals.h"
 #include "ModuleLoader.h"
+#include "VolList.h"
 #include "StringConversion.h"
 #include "OP2Memory.h"
 #include "FileSystemHelper.h"
@@ -29,6 +30,7 @@ LoggerFile loggerFile; // Logging to file in Outpost 2 folder
 LoggerMessageBox loggerMessageBox; // Logging to pop-up message box
 LoggerDistributor loggerDistributor({&loggerFile, &loggerMessageBox});
 LoggerDebug loggerDebug;
+std::unique_ptr<VolList> volList;
 
 
 BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
@@ -41,7 +43,7 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 		SetLoggerDebug(&loggerDebug);
 
 		// Construct global objects
-		volList = std::make_unique<VolList>();
+		vols = std::make_unique<std::vector<std::string>>();
 		moduleLoader = std::make_unique<ModuleLoader>();
 
 		// Set load offset for Outpost2.exe module, used during memory patching
@@ -99,6 +101,14 @@ void OnInit()
 
 	// Load all active modules from the .ini file
 	moduleLoader->LoadModules();
+
+	// Load VOL files
+
+	volList = std::make_unique<VolList>();
+
+	for (const auto& volFilename : *vols) {
+		volList->AddVolFile(volFilename);
+	}
 
 	// Find VOL files from additional folders
 	for (std::size_t i = 0; i < moduleLoader->Count(); ++i) {
