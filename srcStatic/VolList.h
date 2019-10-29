@@ -4,6 +4,8 @@
 #include <vector>
 
 
+std::vector<std::string> operator+(std::vector<std::string> lhs, const std::vector<std::string>& rhs);
+
 std::vector<std::string> FindVolFilesInDirectory(const std::string& relativeDirectory);
 
 

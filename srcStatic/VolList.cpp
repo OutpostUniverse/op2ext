@@ -6,6 +6,12 @@
 #include <utility>
 
 
+std::vector<std::string> operator+(std::vector<std::string> lhs, const std::vector<std::string>& rhs)
+{
+	lhs.insert(lhs.end(), rhs.begin(), rhs.end());
+	return lhs;
+}
+
 std::vector<std::string> FindVolFilesInDirectory(const std::string& relativeDirectory)
 {
 	try {

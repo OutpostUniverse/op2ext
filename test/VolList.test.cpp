@@ -5,6 +5,18 @@
 #include <fstream>
 
 
+TEST(VolList, VectorConcat)
+{
+	using Vec = std::vector<std::string>;
+
+	EXPECT_EQ((Vec{}), (Vec{} + Vec{}));
+	EXPECT_EQ((Vec{"a"}), (Vec{} + Vec{"a"}));
+	EXPECT_EQ((Vec{"a"}), (Vec{"a"} + Vec{}));
+	EXPECT_EQ((Vec{"a", "b"}), (Vec{"a"} + Vec{"b"}));
+	EXPECT_EQ((Vec{"a", "b", "c", "d"}), (Vec{"a", "b"} + Vec{"c", "d"}));
+}
+
+
 TEST(VolList, FindVolFilesInDirectory)
 {
 	using Vec = std::vector<std::string>;
