@@ -4,6 +4,9 @@
 #include <vector>
 
 
+std::vector<std::string> FindVolFilesInDirectory(const std::string& relativeDirectory);
+
+
 class VolList
 {
 public:

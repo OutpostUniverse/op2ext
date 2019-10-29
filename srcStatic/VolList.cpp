@@ -6,6 +6,18 @@
 #include <utility>
 
 
+std::vector<std::string> FindVolFilesInDirectory(const std::string& relativeDirectory)
+{
+	try {
+		return FindFilesWithExtension(GetExeDirectory(), relativeDirectory, ".vol");
+	}
+	catch (const std::exception& e) {
+		LogMessage("Error finding VOL files in directory: " + relativeDirectory + " : " + std::string(e.what()));
+		return {};
+	}
+}
+
+
 void VolList::AddVolFile(std::string volPath)
 {
 	LogDebug("Add file to VolList: " + volPath + "\n");
