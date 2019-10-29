@@ -5,13 +5,13 @@
 
 
 TEST(Log, UnsetLoggerIsSafe) {
-	EXPECT_NO_THROW(SetLogger(nullptr));
-	EXPECT_NO_THROW(Log("This goes nowhere"));
+	EXPECT_NO_THROW(SetLoggerMessage(nullptr));
+	EXPECT_NO_THROW(LogMessage("This goes nowhere"));
 }
 
 
 TEST_F(LogMessageTest, ActiveLoggerReceivesMessages) {
 	const auto message = std::string("Logger should receive this");
-	EXPECT_CALL(logger, Log(message));
-	EXPECT_NO_THROW(Log(message));
+	EXPECT_CALL(loggerMessage, Log(message));
+	EXPECT_NO_THROW(LogMessage(message));
 }

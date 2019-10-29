@@ -12,8 +12,8 @@ namespace {
 	// Static (constant and zero) initialization happens before dynamic initialization
 	// Such values are well defined if accessed by a global object constructor before Main/DllMain starts
 	// This pointer is safely set to null before other globals are initialized
-	Logger* logger = nullptr;
 	Logger* loggerError = nullptr;
+	Logger* loggerMessage = nullptr;
 	Logger* loggerDebug = nullptr;
 }
 
@@ -22,14 +22,14 @@ namespace {
 // Caller owns the logger and is responsible for cleanup when logger is no longer required
 // Use `SetLoggerX(nullptr);` to unset a logger
 
-// Set logger for standard logging level
-void SetLogger(Logger* newLogger) {
-	logger = newLogger;
-}
-
 // Set logger for error logging level
 void SetLoggerError(Logger* newLogger) {
 	loggerError = newLogger;
+}
+
+// Set logger for standard logging level
+void SetLoggerMessage(Logger* newLogger) {
+	loggerMessage = newLogger;
 }
 
 // Set logger for debug logging level
@@ -38,31 +38,29 @@ void SetLoggerDebug(Logger* newLogger) {
 }
 
 
-// Output log message at standard logging level
-void Log(const std::string& message) {
-	// Make sure a logger has been set first
-	if (logger) {
-		// Delegate to internal logger
-		logger->Log(message);
-	}
-}
-
-
-// Output log message at Debug logging level
-// Currently this code doesn't support redirection of logging output
-void LogDebug(const std::string& message)
-{
-	if (loggerDebug) {
-		loggerDebug->Log(message);
-	}
-}
-
 // Output log message at Error logging level
-// Currently this is designed to produce a pop-up error message box
+// This is likely to produce some kind of pop-up to immediately inform the user
 void LogError(const std::string& message)
 {
 	if (loggerError) {
 		loggerError->Log(message);
+	}
+}
+
+// Output log message at Message logging level
+// This is likely to appear in some kind of log file
+void LogMessage(const std::string& message) {
+	if (loggerMessage) {
+		loggerMessage->Log(message);
+	}
+}
+
+// Output log message at Debug logging level
+// This is likely to show only with the help of special debugging tools
+void LogDebug(const std::string& message)
+{
+	if (loggerDebug) {
+		loggerDebug->Log(message);
 	}
 }
 
