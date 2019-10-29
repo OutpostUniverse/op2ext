@@ -14,6 +14,17 @@ TEST(VolList, VectorConcat)
 	EXPECT_EQ((Vec{"a"}), (Vec{"a"} + Vec{}));
 	EXPECT_EQ((Vec{"a", "b"}), (Vec{"a"} + Vec{"b"}));
 	EXPECT_EQ((Vec{"a", "b", "c", "d"}), (Vec{"a", "b"} + Vec{"c", "d"}));
+
+	// Temporary must be named to bind to non-const reference in operator overload
+	Vec namedTemp{"a", "b"};
+	EXPECT_EQ((Vec{"a", "b", "c", "d"}), (namedTemp += Vec{"c", "d"}));
+
+	// Ensure reference semantics are preserved (return type has &)
+	// Result of operator += is assignable and modifies the same value, not a copy
+	// Built in types such as int behave similarly
+	// (Example: int a = 0; (a += 10) = 100; assert(a == 100);)
+	EXPECT_EQ((Vec{"assigned value"}), (namedTemp += Vec{"overwritten"}) = Vec{"assigned value"});
+	EXPECT_EQ((Vec{"assigned value"}), namedTemp);
 }
 
 
