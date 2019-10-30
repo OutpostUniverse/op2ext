@@ -34,7 +34,7 @@ private:
 	};
 
 	const std::vector<std::string> volPaths;
-	std::vector<VolSearchEntry> volSearchEntryList;
+	const std::vector<VolSearchEntry> volSearchEntryList;
 
 	static std::vector<VolSearchEntry> CreateVolSearchEntryList(const std::vector<std::string>& volPaths);
 };
