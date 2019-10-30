@@ -49,9 +49,8 @@ TEST(VolList, FindVolFilesInDirectory)
 }
 
 
-TEST(VolList, EmptyAdd)
+TEST(VolList, EmptyList)
 {
+	// Ensure we can default construct an empty list
 	VolList volList;
-
-	EXPECT_NO_THROW(volList.AddVolFile(""));
 }

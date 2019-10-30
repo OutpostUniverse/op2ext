@@ -38,12 +38,6 @@ VolList::VolList(std::vector<std::string> volPaths) :
 	}
 }
 
-void VolList::AddVolFile(std::string volPath)
-{
-	LogDebug("Add file to VolList: " + volPath + "\n");
-	volPaths.push_back(std::move(volPath));
-}
-
 // Patch reference to the original VolSearchEntry[] in Outpost2.exe to point to a replacement
 // Note: Addresses of the original array (at various offsets) are hardcoded into several instructions
 void VolList::LoadVolFiles()
