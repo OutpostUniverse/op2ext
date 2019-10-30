@@ -13,6 +13,8 @@ std::vector<std::string> FindVolFilesInDirectory(const std::string& relativeDire
 class VolList
 {
 public:
+	VolList() = default;
+	VolList(std::vector<std::string> volPaths);
 	void AddVolFile(std::string volPath);
 
 	// Load all identified vol files into Outpost 2's memory.

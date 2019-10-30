@@ -30,6 +30,14 @@ std::vector<std::string> FindVolFilesInDirectory(const std::string& relativeDire
 }
 
 
+VolList::VolList(std::vector<std::string> volPaths) :
+	volPaths(std::move(volPaths))
+{
+	for (const auto& volPath : volPaths) {
+		LogDebug("Add file to VolList: " + volPath + "\n");
+	}
+}
+
 void VolList::AddVolFile(std::string volPath)
 {
 	LogDebug("Add file to VolList: " + volPath + "\n");
