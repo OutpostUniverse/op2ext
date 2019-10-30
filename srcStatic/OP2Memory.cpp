@@ -68,7 +68,7 @@ bool Op2MemSet(void* destBaseAddr, unsigned char value, int size)
 	);
 }
 
-bool Op2MemCopy(void* destBaseAddr, void* sourceAddr, int size)
+bool Op2MemCopy(void* destBaseAddr, const void* sourceAddr, int size)
 {
 	return Op2MemEdit(
 		destBaseAddr,
@@ -82,7 +82,7 @@ bool Op2MemSetDword(void* destBaseAddr, int dword)
 	return Op2MemCopy(destBaseAddr, &dword, sizeof(dword));
 }
 
-bool Op2MemSetDword(void* destBaseAddr, void* dword)
+bool Op2MemSetDword(void* destBaseAddr, const void* dword)
 {
 	return Op2MemCopy(destBaseAddr, &dword, sizeof(dword));
 }
@@ -93,7 +93,7 @@ bool Op2MemSetDword(void* destBaseAddr, void* dword)
 //   CALL someMethod  ; Encoded as E8 00040000
 //   postCallInstruction:
 // The `callOffset` parameter is the address of the encoded DWORD
-bool Op2RelinkCall(std::size_t callOffset, void* newFunctionAddress)
+bool Op2RelinkCall(std::size_t callOffset, const void* newFunctionAddress)
 {
 	if (!memoryPatchingEnabled) {
 		return false;
