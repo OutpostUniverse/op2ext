@@ -42,7 +42,7 @@ VolList::VolList(std::vector<std::string> volPaths) :
 // Note: Addresses of the original array (at various offsets) are hardcoded into several instructions
 void VolList::LoadVolFiles()
 {
-	CreateVolSearchEntryList();
+	volSearchEntryList = CreateVolSearchEntryList(volPaths);
 
 	// Addresses at the start of the array are used for loop initial conditions
 	auto* arrayStart1 = &volSearchEntryList[0].pFilename;
@@ -83,9 +83,9 @@ void VolList::LoadVolFiles()
 // Changes to strings (such as by a vector re-allocation which moves strings), will invalidate cached c_str() pointers.
 // In particular, MSVC and other compilers implement the Small String Optimization (SSO).
 // SSO will exhibit problems for small strings when improperly cached c_str() pointers are invalidated by a move.
-void VolList::CreateVolSearchEntryList()
+std::vector<VolList::VolSearchEntry> VolList::CreateVolSearchEntryList(const std::vector<std::string>& volPaths)
 {
-	volSearchEntryList.clear();
+	std::vector<VolSearchEntry> volSearchEntryList;
 
 	for (const auto& volPath : volPaths) {
 		volSearchEntryList.push_back(VolSearchEntry::Init(volPath.c_str()));
@@ -93,4 +93,6 @@ void VolList::CreateVolSearchEntryList()
 
 	// Add end of volFileEntries search item (terminator entry)
 	volSearchEntryList.push_back(VolSearchEntry::Init(nullptr));
+
+	return volSearchEntryList;
 }
