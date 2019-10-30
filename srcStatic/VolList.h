@@ -33,7 +33,7 @@ private:
 		}
 	};
 
-	std::vector<std::string> volPaths;
+	const std::vector<std::string> volPaths;
 	std::vector<VolSearchEntry> volSearchEntryList;
 
 	// Return size of VolSearchEntryList
