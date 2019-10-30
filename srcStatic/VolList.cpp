@@ -46,7 +46,7 @@ VolList::VolList(std::vector<std::string> volPaths) :
 
 // Patch reference to the original VolSearchEntry[] in Outpost2.exe to point to a replacement
 // Note: Addresses of the original array (at various offsets) are hardcoded into several instructions
-void VolList::LoadVolFiles()
+void VolList::Activate()
 {
 	// Addresses at the start of the array are used for loop initial conditions
 	auto* arrayStart1 = &volSearchEntryList[0].pFilename;

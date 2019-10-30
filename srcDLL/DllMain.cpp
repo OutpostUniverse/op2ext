@@ -112,9 +112,10 @@ void OnInit()
 	*vols += FindVolFilesInDirectory("Addon");
 	*vols += FindVolFilesInDirectory("");
 
-	// Load VOL files
+	// Set Outpost2.exe's VOL list
+	// The game will load the files in this list shortly
 	volList = std::make_unique<VolList>(*vols);
-	volList->LoadVolFiles();
+	volList->Activate();
 
 	appInitialized = true;
 }

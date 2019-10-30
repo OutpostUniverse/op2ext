@@ -16,8 +16,7 @@ public:
 	VolList();
 	VolList(std::vector<std::string> volPaths);
 
-	// Load all identified vol files into Outpost 2's memory.
-	void LoadVolFiles();
+	void Activate();
 
 private:
 	struct VolSearchEntry {
