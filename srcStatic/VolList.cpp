@@ -30,8 +30,14 @@ std::vector<std::string> FindVolFilesInDirectory(const std::string& relativeDire
 }
 
 
+VolList::VolList() :
+	volSearchEntryList(CreateVolSearchEntryList(this->volPaths))
+{
+}
+
 VolList::VolList(std::vector<std::string> volPaths) :
-	volPaths(std::move(volPaths))
+	volPaths(std::move(volPaths)),
+	volSearchEntryList(CreateVolSearchEntryList(this->volPaths))
 {
 	for (const auto& volPath : volPaths) {
 		LogDebug("Add file to VolList: " + volPath + "\n");
@@ -42,8 +48,6 @@ VolList::VolList(std::vector<std::string> volPaths) :
 // Note: Addresses of the original array (at various offsets) are hardcoded into several instructions
 void VolList::LoadVolFiles()
 {
-	volSearchEntryList = CreateVolSearchEntryList(volPaths);
-
 	// Addresses at the start of the array are used for loop initial conditions
 	auto* arrayStart1 = &volSearchEntryList[0].pFilename;
 	auto* arrayStart2 = &volSearchEntryList[0].volFileRStream;
