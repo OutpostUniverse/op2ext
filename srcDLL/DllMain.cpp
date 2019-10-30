@@ -113,10 +113,7 @@ void OnInit()
 	*vols += FindVolFilesInDirectory("");
 
 	// Load VOL files
-	volList = std::make_unique<VolList>();
-	for (const auto& volFilename : *vols) {
-		volList->AddVolFile(volFilename);
-	}
+	volList = std::make_unique<VolList>(*vols);
 	volList->LoadVolFiles();
 
 	appInitialized = true;
