@@ -52,7 +52,9 @@ bool InstallTAppEventHooks()
 int TApp::Init()
 {
 	// Trigger event
-	activeAppEvents->onInit.Raise();
+	if (activeAppEvents) {
+		activeAppEvents->onInit.Raise();
+	}
 
 	// Call original function
 	return (this->*GetMethodPointer<decltype(&TApp::Init)>(0x00485B20))();
@@ -64,7 +66,9 @@ void TApp::ShutDown()
 	(this->*GetMethodPointer<decltype(&TApp::ShutDown)>(0x004866E0))();
 
 	// Trigger event
-	activeAppEvents->onShutDown.Raise();
+	if (activeAppEvents) {
+		activeAppEvents->onShutDown.Raise();
+	}
 }
 
 HINSTANCE WINAPI LoadShell(LPCSTR lpLibFileName)
@@ -74,7 +78,10 @@ HINSTANCE WINAPI LoadShell(LPCSTR lpLibFileName)
 
 	if (hInstance)
 	{
-		activeAppEvents->onLoadShell.Raise();
+		// Trigger event
+		if (activeAppEvents) {
+			activeAppEvents->onLoadShell.Raise();
+		}
 	}
 
 	return hInstance;
