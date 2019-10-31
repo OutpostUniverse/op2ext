@@ -20,7 +20,7 @@ DWORD newEnableWindowAddr = (DWORD)EnableWindowNew;
 DWORD newInetAddr = (DWORD)inet_addrNew;
 std::size_t populateComboBoxAddr = 0x004197C1;
 std::size_t saveIpTextAddr = 0x004C0E36;
-void* nopDataAddr = (void*)0x0041988F;
+std::size_t nopDataAddr = 0x0041988F;
 
 
 IPDropDown::IPDropDown()

@@ -33,13 +33,13 @@ bool EnableOp2MemoryPatching()
 
 
 template <typename Function>
-bool Op2MemEdit(void* destBaseAddr, std::size_t size, Function memoryEditFunction)
+bool Op2MemEdit(std::size_t destBaseAddr, std::size_t size, Function memoryEditFunction)
 {
 	if (!memoryPatchingEnabled) {
 		return false;
 	}
 
-	void* destAddr = reinterpret_cast<void*>(reinterpret_cast<std::size_t>(destBaseAddr) + loadOffset);
+	void* destAddr = reinterpret_cast<void*>(destBaseAddr + loadOffset);
 
 	// Try to unprotect memory
 	DWORD oldAttr;
@@ -59,7 +59,7 @@ bool Op2MemEdit(void* destBaseAddr, std::size_t size, Function memoryEditFunctio
 }
 
 
-bool Op2MemSet(void* destBaseAddr, unsigned char value, std::size_t size)
+bool Op2MemSet(std::size_t destBaseAddr, unsigned char value, std::size_t size)
 {
 	return Op2MemEdit(
 		destBaseAddr,
@@ -68,7 +68,7 @@ bool Op2MemSet(void* destBaseAddr, unsigned char value, std::size_t size)
 	);
 }
 
-bool Op2MemCopy(void* destBaseAddr, const void* sourceAddr, std::size_t size)
+bool Op2MemCopy(std::size_t destBaseAddr, const void* sourceAddr, std::size_t size)
 {
 	return Op2MemEdit(
 		destBaseAddr,
@@ -79,12 +79,12 @@ bool Op2MemCopy(void* destBaseAddr, const void* sourceAddr, std::size_t size)
 
 bool Op2MemSetDword(std::size_t destBaseAddr, std::size_t dword)
 {
-	return Op2MemCopy(reinterpret_cast<void*>(destBaseAddr), &dword, sizeof(dword));
+	return Op2MemCopy(destBaseAddr, &dword, sizeof(dword));
 }
 
 bool Op2MemSetDword(std::size_t destBaseAddr, const void* dword)
 {
-	return Op2MemCopy(reinterpret_cast<void*>(destBaseAddr), &dword, sizeof(dword));
+	return Op2MemCopy(destBaseAddr, &dword, sizeof(dword));
 }
 
 // This is used to patch up CALL instructions to intra-module non-virtual functions
