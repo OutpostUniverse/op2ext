@@ -33,6 +33,7 @@
   <ItemGroup>
     <ClInclude Include="GetCommandLineArguments.h" />
     <ClInclude Include="ConsoleArgumentParser.h" />
+    <ClInclude Include="EventListener.h" />
     <ClInclude Include="FileSystemHelper.h" />
     <ClInclude Include="FsInclude.h" />
     <ClInclude Include="GameModule.h" />

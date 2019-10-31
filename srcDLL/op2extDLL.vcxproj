@@ -131,11 +131,13 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AppEvents.cpp" />
     <ClCompile Include="DllMain.cpp" />
     <ClCompile Include="op2ext.cpp" />
     <ClCompile Include="Globals.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AppEvents.h" />
     <ClInclude Include="op2ext.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Globals.h" />

@@ -1,11 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <ClCompile Include="AppEvents.cpp"/>
     <ClCompile Include="op2ext.cpp"/>
     <ClCompile Include="DllMain.cpp"/>
     <ClCompile Include="Globals.cpp"/>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AppEvents.h"/>
     <ClInclude Include="op2ext.h"/>
     <ClInclude Include="resource.h"/>
     <ClInclude Include="Globals.h"/>
