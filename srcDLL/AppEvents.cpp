@@ -23,12 +23,10 @@ public:
 	void ShutDown();
 };
 
-// Declaration for patch to LoadLibrary, where it loads OP2Shell.dll
-// Must use WINAPI macro (__stdcall specifier) to ensure callee cleans the stack
-// By default, for plain functions, the caller cleans the stack, rather than the callee
 HINSTANCE WINAPI LoadShell(LPCSTR lpLibFileName);
 
 
+// Replacement method for TApp:Init(), originally in Outpost2.exe
 int TApp::Init()
 {
 	// Trigger event
@@ -40,6 +38,7 @@ int TApp::Init()
 	return (this->*GetMethodPointer<decltype(&TApp::Init)>(0x00485B20))();
 }
 
+// Replacement method for TApp:ShutDown(), originally in Outpost2.exe
 void TApp::ShutDown()
 {
 	// Call original function
@@ -51,6 +50,9 @@ void TApp::ShutDown()
 	}
 }
 
+// Replacement method for call to LoadLibrary, which the game calls to load OP2Shell.dll
+// Must use WINAPI macro (__stdcall specifier) to ensure callee cleans the stack
+// By default, for plain functions, the caller cleans the stack, rather than the callee
 HINSTANCE WINAPI LoadShell(LPCSTR lpLibFileName)
 {
 	// First try to load it
