@@ -21,9 +21,10 @@ class TApp
 public:
 	int Init();
 	void ShutDown();
+
+	static HINSTANCE WINAPI LoadShell(LPCSTR lpLibFileName);
 };
 
-HINSTANCE WINAPI LoadShell(LPCSTR lpLibFileName);
 
 
 // Replacement method for TApp:Init(), originally in Outpost2.exe
@@ -53,7 +54,7 @@ void TApp::ShutDown()
 // Replacement method for call to LoadLibrary, which the game calls to load OP2Shell.dll
 // Must use WINAPI macro (__stdcall specifier) to ensure callee cleans the stack
 // By default, for plain functions, the caller cleans the stack, rather than the callee
-HINSTANCE WINAPI LoadShell(LPCSTR lpLibFileName)
+HINSTANCE WINAPI TApp::LoadShell(LPCSTR lpLibFileName)
 {
 	// First try to load it
 	HINSTANCE hInstance = LoadLibraryA(lpLibFileName);
@@ -71,7 +72,7 @@ HINSTANCE WINAPI LoadShell(LPCSTR lpLibFileName)
 
 
 const std::size_t loadLibraryDataAddr = 0x00486E0A;
-const auto loadLibraryNewAddr = &LoadShell;
+const auto loadLibraryNewAddr = &TApp::LoadShell;
 
 bool InstallTAppEventHooks()
 {
