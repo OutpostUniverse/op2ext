@@ -29,7 +29,7 @@ public:
 HINSTANCE WINAPI LoadShell(LPCSTR lpLibFileName);
 
 const std::size_t loadLibraryDataAddr = 0x00486E0A;
-const auto loadLibraryNewAddr = reinterpret_cast<DWORD>(LoadShell);
+const auto loadLibraryNewAddr = &LoadShell;
 
 
 bool InstallTAppEventHooks()
