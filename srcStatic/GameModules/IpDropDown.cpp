@@ -16,8 +16,8 @@ char ipStrings[10][47];
 int numIpStrings = 0;
 
 // Data constants for InstallIpDropDown
-DWORD newEnableWindowAddr = (DWORD)EnableWindowNew;
-DWORD newInetAddr = (DWORD)inet_addrNew;
+const auto newEnableWindowAddr = &EnableWindowNew;
+const auto newInetAddr = &inet_addrNew;
 std::size_t populateComboBoxAddr = 0x004197C1;
 std::size_t saveIpTextAddr = 0x004C0E36;
 std::size_t nopDataAddr = 0x0041988F;
