@@ -77,14 +77,14 @@ bool Op2MemCopy(void* destBaseAddr, const void* sourceAddr, std::size_t size)
 	);
 }
 
-bool Op2MemSetDword(void* destBaseAddr, std::size_t dword)
+bool Op2MemSetDword(std::size_t destBaseAddr, std::size_t dword)
 {
-	return Op2MemCopy(destBaseAddr, &dword, sizeof(dword));
+	return Op2MemCopy(reinterpret_cast<void*>(destBaseAddr), &dword, sizeof(dword));
 }
 
-bool Op2MemSetDword(void* destBaseAddr, const void* dword)
+bool Op2MemSetDword(std::size_t destBaseAddr, const void* dword)
 {
-	return Op2MemCopy(destBaseAddr, &dword, sizeof(dword));
+	return Op2MemCopy(reinterpret_cast<void*>(destBaseAddr), &dword, sizeof(dword));
 }
 
 // This is used to patch up CALL instructions to intra-module non-virtual functions
@@ -106,7 +106,7 @@ bool Op2RelinkCall(std::size_t callOffset, const void* newFunctionAddress)
 	}
 
 	const auto postCallInstructionAddress = callOffset + loadOffset + (1 + sizeof(void*));
-	return Op2MemSetDword(reinterpret_cast<void*>(callOffset + 1), reinterpret_cast<std::size_t>(newFunctionAddress) - postCallInstructionAddress);
+	return Op2MemSetDword(callOffset + 1, reinterpret_cast<std::size_t>(newFunctionAddress) - postCallInstructionAddress);
 }
 
 
