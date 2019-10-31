@@ -28,26 +28,6 @@ public:
 // By default, for plain functions, the caller cleans the stack, rather than the callee
 HINSTANCE WINAPI LoadShell(LPCSTR lpLibFileName);
 
-const std::size_t loadLibraryDataAddr = 0x00486E0A;
-const auto loadLibraryNewAddr = &LoadShell;
-
-
-bool InstallTAppEventHooks()
-{
-	// Replace call to gTApp.Init with custom routine
-	if (!Op2RelinkCall(0x004A8877, GetMethodVoidPointer(&TApp::Init))) {
-		return false;
-	}
-
-	// Replace call to gTApp.ShutDown with custom routine
-	Op2RelinkCall(0x004A88A5, GetMethodVoidPointer(&TApp::ShutDown));
-
-	// Replace call to LoadLibrary with custom routine (address is indirect)
-	Op2MemSetDword(loadLibraryDataAddr, &loadLibraryNewAddr);
-
-	return true;
-}
-
 
 int TApp::Init()
 {
@@ -85,4 +65,24 @@ HINSTANCE WINAPI LoadShell(LPCSTR lpLibFileName)
 	}
 
 	return hInstance;
+}
+
+
+const std::size_t loadLibraryDataAddr = 0x00486E0A;
+const auto loadLibraryNewAddr = &LoadShell;
+
+bool InstallTAppEventHooks()
+{
+	// Replace call to gTApp.Init with custom routine
+	if (!Op2RelinkCall(0x004A8877, GetMethodVoidPointer(&TApp::Init))) {
+		return false;
+	}
+
+	// Replace call to gTApp.ShutDown with custom routine
+	Op2RelinkCall(0x004A88A5, GetMethodVoidPointer(&TApp::ShutDown));
+
+	// Replace call to LoadLibrary with custom routine (address is indirect)
+	Op2MemSetDword(loadLibraryDataAddr, &loadLibraryNewAddr);
+
+	return true;
 }
