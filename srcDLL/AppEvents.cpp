@@ -28,8 +28,8 @@ public:
 // By default, for plain functions, the caller cleans the stack, rather than the callee
 HINSTANCE WINAPI LoadShell(LPCSTR lpLibFileName);
 
-DWORD* loadLibraryDataAddr = reinterpret_cast<DWORD*>(0x00486E0A);
-DWORD loadLibraryNewAddr = reinterpret_cast<DWORD>(LoadShell);
+const auto loadLibraryDataAddr = reinterpret_cast<DWORD*>(0x00486E0A);
+const auto loadLibraryNewAddr = reinterpret_cast<DWORD>(LoadShell);
 
 
 bool InstallTAppEventHooks()
