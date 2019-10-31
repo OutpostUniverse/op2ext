@@ -4,16 +4,19 @@
 #include <vector>
 
 
+std::vector<std::string>& operator+=(std::vector<std::string>& lhs, const std::vector<std::string>& rhs);
+std::vector<std::string> operator+(std::vector<std::string> lhs, const std::vector<std::string>& rhs);
+
+std::vector<std::string> FindVolFilesInDirectory(const std::string& relativeDirectory);
+
+
 class VolList
 {
 public:
-	void AddVolFile(std::string volPath);
+	VolList();
+	VolList(std::vector<std::string> volPaths);
 
-	// Does not recursively search subdirectories.
-	void AddVolFilesFromDirectory(const std::string& relativeDirectory);
-
-	// Load all identified vol files into Outpost 2's memory.
-	void LoadVolFiles();
+	void Activate();
 
 private:
 	struct VolSearchEntry {
@@ -29,9 +32,8 @@ private:
 		}
 	};
 
-	std::vector<std::string> volPaths;
-	std::vector<VolSearchEntry> volSearchEntryList;
+	const std::vector<std::string> volPaths;
+	const std::vector<VolSearchEntry> volSearchEntryList;
 
-	// Return size of VolSearchEntryList
-	void CreateVolSearchEntryList();
+	static std::vector<VolSearchEntry> CreateVolSearchEntryList(const std::vector<std::string>& volPaths);
 };

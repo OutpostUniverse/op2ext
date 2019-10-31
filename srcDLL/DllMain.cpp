@@ -102,26 +102,21 @@ void OnInit()
 	// Load all active modules from the .ini file
 	moduleLoader->LoadModules();
 
-	// Load VOL files
-
-	volList = std::make_unique<VolList>();
-
-	for (const auto& volFilename : *vols) {
-		volList->AddVolFile(volFilename);
-	}
-
 	// Find VOL files from additional folders
 	for (std::size_t i = 0; i < moduleLoader->Count(); ++i) {
 		const auto& moduleDirectory = moduleLoader->GetModuleDirectory(i);
 		if (!moduleDirectory.empty()) {
-			volList->AddVolFilesFromDirectory(moduleDirectory);
+			*vols += FindVolFilesInDirectory(moduleDirectory);
 		}
 	}
+	*vols += FindVolFilesInDirectory("Addon");
+	*vols += FindVolFilesInDirectory("");
 
-	volList->AddVolFilesFromDirectory("Addon");
-	volList->AddVolFilesFromDirectory("");
+	// Set Outpost2.exe's VOL list
+	// The game will load the files in this list shortly
+	volList = std::make_unique<VolList>(*vols);
+	volList->Activate();
 
-	volList->LoadVolFiles();
 	appInitialized = true;
 }
 

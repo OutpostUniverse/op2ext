@@ -6,32 +6,48 @@
 #include <utility>
 
 
-void VolList::AddVolFile(std::string volPath)
+std::vector<std::string>& operator+=(std::vector<std::string>& lhs, const std::vector<std::string>& rhs)
 {
-	LogDebug("Add file to VolList: " + volPath + "\n");
-	volPaths.push_back(std::move(volPath));
+	lhs.insert(lhs.end(), rhs.begin(), rhs.end());
+	return lhs;
 }
 
-void VolList::AddVolFilesFromDirectory(const std::string& relativeDirectory)
+std::vector<std::string> operator+(std::vector<std::string> lhs, const std::vector<std::string>& rhs)
+{
+	lhs += rhs;
+	return lhs;
+}
+
+std::vector<std::string> FindVolFilesInDirectory(const std::string& relativeDirectory)
 {
 	try {
-		const auto volPaths = FindFilesWithExtension(GetExeDirectory(), relativeDirectory, ".vol");
-
-		for (const auto& volPath : volPaths) {
-			AddVolFile(volPath);
-		}
+		return FindFilesWithExtension(GetExeDirectory(), relativeDirectory, ".vol");
 	}
 	catch (const std::exception& e) {
-		LogMessage("Error attempting to locate vol files in provided directory " + relativeDirectory + ". " + std::string(e.what()));
+		LogMessage("Error finding VOL files in directory: " + relativeDirectory + " : " + std::string(e.what()));
+		return {};
+	}
+}
+
+
+VolList::VolList() :
+	volSearchEntryList(CreateVolSearchEntryList(this->volPaths))
+{
+}
+
+VolList::VolList(std::vector<std::string> volPaths) :
+	volPaths(std::move(volPaths)),
+	volSearchEntryList(CreateVolSearchEntryList(this->volPaths))
+{
+	for (const auto& volPath : volPaths) {
+		LogDebug("Add file to VolList: " + volPath + "\n");
 	}
 }
 
 // Patch reference to the original VolSearchEntry[] in Outpost2.exe to point to a replacement
 // Note: Addresses of the original array (at various offsets) are hardcoded into several instructions
-void VolList::LoadVolFiles()
+void VolList::Activate()
 {
-	CreateVolSearchEntryList();
-
 	// Addresses at the start of the array are used for loop initial conditions
 	auto* arrayStart1 = &volSearchEntryList[0].pFilename;
 	auto* arrayStart2 = &volSearchEntryList[0].volFileRStream;
@@ -71,9 +87,9 @@ void VolList::LoadVolFiles()
 // Changes to strings (such as by a vector re-allocation which moves strings), will invalidate cached c_str() pointers.
 // In particular, MSVC and other compilers implement the Small String Optimization (SSO).
 // SSO will exhibit problems for small strings when improperly cached c_str() pointers are invalidated by a move.
-void VolList::CreateVolSearchEntryList()
+std::vector<VolList::VolSearchEntry> VolList::CreateVolSearchEntryList(const std::vector<std::string>& volPaths)
 {
-	volSearchEntryList.clear();
+	std::vector<VolSearchEntry> volSearchEntryList;
 
 	for (const auto& volPath : volPaths) {
 		volSearchEntryList.push_back(VolSearchEntry::Init(volPath.c_str()));
@@ -81,4 +97,6 @@ void VolList::CreateVolSearchEntryList()
 
 	// Add end of volFileEntries search item (terminator entry)
 	volSearchEntryList.push_back(VolSearchEntry::Init(nullptr));
+
+	return volSearchEntryList;
 }
