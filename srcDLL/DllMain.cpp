@@ -90,7 +90,7 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 bool InstallDepPatch()
 {
 	// Set the execute flag on the DSEG section so DEP doesn't terminate the game
-	const std::size_t destinationBaseAddress = 0x00585000;
+	constexpr std::size_t destinationBaseAddress = 0x00585000;
 	bool success = Op2UnprotectMemory(destinationBaseAddress, 0x00587000 - 0x00585000);
 
 	if (!success) {
