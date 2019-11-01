@@ -59,7 +59,7 @@ bool Op2MemEdit(void* destBaseAddr, std::size_t size, Function memoryEditFunctio
 }
 
 
-bool Op2MemSet(void* destBaseAddr, unsigned char value, int size)
+bool Op2MemSet(void* destBaseAddr, unsigned char value, std::size_t size)
 {
 	return Op2MemEdit(
 		destBaseAddr,
@@ -68,7 +68,7 @@ bool Op2MemSet(void* destBaseAddr, unsigned char value, int size)
 	);
 }
 
-bool Op2MemCopy(void* destBaseAddr, const void* sourceAddr, int size)
+bool Op2MemCopy(void* destBaseAddr, const void* sourceAddr, std::size_t size)
 {
 	return Op2MemEdit(
 		destBaseAddr,
@@ -77,7 +77,7 @@ bool Op2MemCopy(void* destBaseAddr, const void* sourceAddr, int size)
 	);
 }
 
-bool Op2MemSetDword(void* destBaseAddr, int dword)
+bool Op2MemSetDword(void* destBaseAddr, std::size_t dword)
 {
 	return Op2MemCopy(destBaseAddr, &dword, sizeof(dword));
 }
