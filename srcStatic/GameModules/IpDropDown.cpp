@@ -52,7 +52,7 @@ BOOL __stdcall EnableWindowNew(HWND hWnd, BOOL bEnable)
 
 		if (strlen(ipStrings[i]) > 0)
 		{
-			SendMessage(hWnd, CB_ADDSTRING, 0, (LPARAM)ipStrings[i]);
+			SendMessage(hWnd, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(ipStrings[i]));
 			numIpStrings++;
 		}
 	}
