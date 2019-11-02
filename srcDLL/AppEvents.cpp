@@ -75,7 +75,7 @@ HINSTANCE WINAPI TApp::LoadShell(LPCSTR lpLibFileName)
 // By redirecting the call instruction to use this entry, we can hook
 // the call to LoadLibrary and insert custom event code
 // The jump table entry needs a long term fixed address (global variable)
-const auto replacementLoadLibrary = &TApp::LoadShell;
+constexpr auto replacementLoadLibrary = &TApp::LoadShell;
 
 bool InstallTAppEventHooks()
 {
