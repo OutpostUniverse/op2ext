@@ -71,6 +71,10 @@ HINSTANCE WINAPI TApp::LoadShell(LPCSTR lpLibFileName)
 }
 
 
+// This is a new jump table entry used to load OP2Shell.dll
+// By redirecting the call instruction to use this entry, we can hook
+// the call to LoadLibrary and insert custom event code
+// The jump table entry needs a long term fixed address (global variable)
 const auto replacementLoadLibrary = &TApp::LoadShell;
 
 bool InstallTAppEventHooks()
