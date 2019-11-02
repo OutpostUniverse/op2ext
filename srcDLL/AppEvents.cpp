@@ -71,7 +71,6 @@ HINSTANCE WINAPI TApp::LoadShell(LPCSTR lpLibFileName)
 }
 
 
-const std::size_t loadLibraryDataAddr = 0x00486E0A;
 const auto loadLibraryNewAddr = &TApp::LoadShell;
 
 bool InstallTAppEventHooks()
@@ -85,7 +84,7 @@ bool InstallTAppEventHooks()
 	Op2RelinkCall(0x004A88A5, GetMethodVoidPointer(&TApp::ShutDown));
 
 	// Replace call to LoadLibrary with custom routine (address is indirect)
-	Op2MemSetDword(loadLibraryDataAddr, &loadLibraryNewAddr);
+	Op2MemSetDword(0x00486E0A, &loadLibraryNewAddr);
 
 	return true;
 }
