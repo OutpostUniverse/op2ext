@@ -16,11 +16,11 @@ char ipStrings[10][47];
 int numIpStrings = 0;
 
 // Data constants for InstallIpDropDown
-DWORD newEnableWindowAddr = (DWORD)EnableWindowNew;
-DWORD newInetAddr = (DWORD)inet_addrNew;
-DWORD* populateComboBoxAddr = (DWORD*)0x004197C1;
-DWORD* saveIpTextAddr = (DWORD*)0x004C0E36;
-void* nopDataAddr = (void*)0x0041988F;
+const auto newEnableWindowAddr = &EnableWindowNew;
+const auto newInetAddr = &inet_addrNew;
+const std::size_t populateComboBoxAddr = 0x004197C1;
+const std::size_t saveIpTextAddr = 0x004C0E36;
+const std::size_t nopDataAddr = 0x0041988F;
 
 
 IPDropDown::IPDropDown()
@@ -31,8 +31,8 @@ IPDropDown::IPDropDown()
 void IPDropDown::Load()
 {
 	// patch the call to EnableWindow so we can add strings.
-	Op2MemSetDword(populateComboBoxAddr, (int)&newEnableWindowAddr);
-	Op2MemSetDword(saveIpTextAddr, (int)&newInetAddr);
+	Op2MemSetDword(populateComboBoxAddr, &newEnableWindowAddr);
+	Op2MemSetDword(saveIpTextAddr, &newInetAddr);
 	Op2MemSet(nopDataAddr, 0x90, 14);
 }
 

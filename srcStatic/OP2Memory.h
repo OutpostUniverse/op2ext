@@ -8,10 +8,10 @@
 
 bool EnableOp2MemoryPatching();
 
-bool Op2MemCopy(void* destBaseAddr, const void* sourceAddr, std::size_t size);
-bool Op2MemSet(void* destBaseAddr, unsigned char value, std::size_t size);
-bool Op2MemSetDword(void* destBaseAddr, std::size_t dword);
-bool Op2MemSetDword(void* destBaseAddr, const void* dword);
+bool Op2MemCopy(std::size_t destBaseAddr, const void* sourceAddr, std::size_t size);
+bool Op2MemSet(std::size_t destBaseAddr, unsigned char value, std::size_t size);
+bool Op2MemSetDword(std::size_t destBaseAddr, std::size_t dword);
+bool Op2MemSetDword(std::size_t destBaseAddr, const void* dword);
 bool Op2RelinkCall(std::size_t callOffset, const void* newFunctionAddress);
 bool Op2UnprotectMemory(std::size_t destBaseAddr, std::size_t size);
 
