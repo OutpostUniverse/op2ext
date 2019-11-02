@@ -94,9 +94,7 @@ TEST_F(MethodPointerTest, AddressPointerAddressRoundTrip) {
 
 TEST_F(MethodPointerTest, PointerAddressPointerRoundTrip) {
 	EXPECT_EQ(nullptr, GetMethodPointer<MemberPointerType>(GetMethodAddress<MemberPointerType>(nullptr)));
-	// Mingw does not produce as optimized of a member function pointer representation as MSVC
-	// As such, the extra hidden fields of the larger pointer representation can cause this check to fail
-	// EXPECT_EQ(&ExampleClass::ExampleMethod, GetMethodPointer<MemberPointerType>(GetMethodAddress(&ExampleClass::ExampleMethod)));
+	EXPECT_EQ(&ExampleClass::ExampleMethod, GetMethodPointer<MemberPointerType>(GetMethodAddress(&ExampleClass::ExampleMethod)));
 }
 
 TEST_F(MethodPointerTest, GetMethodPointerUse) {
