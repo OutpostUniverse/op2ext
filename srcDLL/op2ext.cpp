@@ -10,6 +10,7 @@
 #include <intrin.h> // _ReturnAddress
 #include <exception>
 #include <string>
+#include <cstddef>
 
 #pragma intrinsic(_ReturnAddress)
 #ifdef __MINGW32__
