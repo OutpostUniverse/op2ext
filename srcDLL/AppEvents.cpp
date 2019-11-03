@@ -21,34 +21,13 @@ class TApp
 public:
 	int Init();
 	void ShutDown();
+
+	static HINSTANCE WINAPI LoadShell(LPCSTR lpLibFileName);
 };
 
-// Declaration for patch to LoadLibrary, where it loads OP2Shell.dll
-// Must use WINAPI macro (__stdcall specifier) to ensure callee cleans the stack
-// By default, for plain functions, the caller cleans the stack, rather than the callee
-HINSTANCE WINAPI LoadShell(LPCSTR lpLibFileName);
-
-const std::size_t loadLibraryDataAddr = 0x00486E0A;
-const auto loadLibraryNewAddr = reinterpret_cast<DWORD>(LoadShell);
 
 
-bool InstallTAppEventHooks()
-{
-	// Replace call to gTApp.Init with custom routine
-	if (!Op2RelinkCall(0x004A8877, GetMethodVoidPointer(&TApp::Init))) {
-		return false;
-	}
-
-	// Replace call to gTApp.ShutDown with custom routine
-	Op2RelinkCall(0x004A88A5, GetMethodVoidPointer(&TApp::ShutDown));
-
-	// Replace call to LoadLibrary with custom routine (address is indirect)
-	Op2MemSetDword(loadLibraryDataAddr, &loadLibraryNewAddr);
-
-	return true;
-}
-
-
+// Replacement method for TApp:Init(), originally in Outpost2.exe
 int TApp::Init()
 {
 	// Trigger event
@@ -60,6 +39,7 @@ int TApp::Init()
 	return (this->*GetMethodPointer<decltype(&TApp::Init)>(0x00485B20))();
 }
 
+// Replacement method for TApp:ShutDown(), originally in Outpost2.exe
 void TApp::ShutDown()
 {
 	// Call original function
@@ -71,7 +51,10 @@ void TApp::ShutDown()
 	}
 }
 
-HINSTANCE WINAPI LoadShell(LPCSTR lpLibFileName)
+// Replacement method for call to LoadLibrary, which the game calls to load OP2Shell.dll
+// Must use WINAPI macro (__stdcall specifier) to ensure callee cleans the stack
+// By default, for plain functions, the caller cleans the stack, rather than the callee
+HINSTANCE WINAPI TApp::LoadShell(LPCSTR lpLibFileName)
 {
 	// First try to load it
 	HINSTANCE hInstance = LoadLibraryA(lpLibFileName);
@@ -85,4 +68,27 @@ HINSTANCE WINAPI LoadShell(LPCSTR lpLibFileName)
 	}
 
 	return hInstance;
+}
+
+
+// This is a new jump table entry used to load OP2Shell.dll
+// By redirecting the call instruction to use this entry, we can hook
+// the call to LoadLibrary and insert custom event code
+// The jump table entry needs a long term fixed address (global variable)
+constexpr auto replacementLoadLibrary = &TApp::LoadShell;
+
+bool InstallTAppEventHooks()
+{
+	// Replace call to gTApp.Init with custom routine
+	if (!Op2RelinkCall(0x004A8877, GetMethodVoidPointer(&TApp::Init))) {
+		return false;
+	}
+
+	// Replace call to gTApp.ShutDown with custom routine
+	Op2RelinkCall(0x004A88A5, GetMethodVoidPointer(&TApp::ShutDown));
+
+	// Replace call to LoadLibrary with custom routine (address is indirect)
+	Op2MemSetDword(0x00486E0A, &replacementLoadLibrary);
+
+	return true;
 }
