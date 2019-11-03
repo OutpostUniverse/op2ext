@@ -56,7 +56,7 @@ void ResourceSearchPath::HookFileSearchPath()
 	};
 	// Convert a pointer to member function to a regular `void*` value
 	auto getFilePath = &ResManager::GetFilePath;
-	const auto getFilePathAddr = reinterpret_cast<void*&>(getFilePath);  // MSVC specific cast
+	const auto getFilePathAddr = GetMethodVoidPointer(getFilePath);
 
 	for (const auto callAddr : callsToGetFilePath) {
 		Op2RelinkCall(callAddr, getFilePathAddr);
