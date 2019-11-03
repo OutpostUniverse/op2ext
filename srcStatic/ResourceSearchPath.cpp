@@ -67,7 +67,7 @@ bool ResourceSearchPath::CallOriginalGetFilePath(const char* resourceName, /* [o
 {
 	// Use Outpost2.exe's built in ResManager object, and its associated member function
 	ResManager& resManager = *reinterpret_cast<ResManager*>(0x56C028);
-	auto originalGetFilePath = GetMethodPointer<decltype(&ResManager::GetFilePath)>(0x00471590);
+	const auto originalGetFilePath = GetMethodPointer<decltype(&ResManager::GetFilePath)>(0x00471590);
 	return (resManager.*originalGetFilePath)(resourceName, filePath);
 }
 
