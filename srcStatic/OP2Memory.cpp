@@ -7,7 +7,7 @@
 
 bool memoryPatchingEnabled = false;
 std::size_t loadOffset = 0;
-const std::size_t ExpectedOutpost2Addr = 0x00400000;
+constexpr std::size_t ExpectedOutpost2Addr = 0x00400000;
 
 
 // Enabled patching of Outpost2.exe memory

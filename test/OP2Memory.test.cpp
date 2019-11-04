@@ -24,7 +24,7 @@ protected:
 	static_assert(5 == sizeof(CallInstruction));
 
 	CallInstruction callInstruction = {CallOpcode, 0x00000000};
-	std::size_t callInstructionAddr = reinterpret_cast<std::size_t>(&callInstruction);
+	const std::size_t callInstructionAddr = reinterpret_cast<std::size_t>(&callInstruction);
 };
 
 
@@ -99,10 +99,10 @@ TEST_F(MethodPointerTest, PointerAddressPointerRoundTrip) {
 
 TEST_F(MethodPointerTest, GetMethodPointerUse) {
 	// Get fixed size_t address of member method (perhaps deduced by disassembler)
-	auto methodAddress = GetMethodAddress(&ExampleClass::ExampleMethod);
+	const auto methodAddress = GetMethodAddress(&ExampleClass::ExampleMethod);
 
 	// Cast the raw address back to a usable pointer
-	auto methodPointer = GetMethodPointer<MemberPointerType>(methodAddress);
+	const auto methodPointer = GetMethodPointer<MemberPointerType>(methodAddress);
 	// Make sure method pointer is usable on target object
 	EXPECT_EQ(2, (exampleObject.*methodPointer)(1));
 }
