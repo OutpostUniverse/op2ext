@@ -127,8 +127,6 @@ OP2EXT_API size_t GetLoadedModuleCount()
 
 OP2EXT_API size_t GetLoadedModuleName(size_t moduleIndex, char* buffer, size_t bufferSize)
 {
-	// Ini modules are indexed first and console module is last
-
 	std::string moduleName;
 
 	try {
