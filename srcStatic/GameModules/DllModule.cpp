@@ -26,19 +26,19 @@ void DllModule::LoadModuleDll(const std::string& dllPath)
 
 void DllModule::DetectExportedModuleFunctions()
 {
-	loadModuleFunctionIni = reinterpret_cast<LoadModuleFunctionIni>(GetProcAddress(moduleDllHandle, "InitMod"));
+	loadModuleFunctionIni = GetExportAddress<LoadModuleFunctionIni>("InitMod");
 	if (loadModuleFunctionIni == nullptr) {
-		loadModuleFunctionConsole = reinterpret_cast<LoadModuleFunctionConsole>(GetProcAddress(moduleDllHandle, "mod_init"));
+		loadModuleFunctionConsole = GetExportAddress<LoadModuleFunctionConsole>("mod_init");
 	}
 
-	unloadModuleFunctionIni = reinterpret_cast<UnloadModuleFunctionIni>(GetProcAddress(moduleDllHandle, "DestroyMod"));
+	unloadModuleFunctionIni = GetExportAddress<UnloadModuleFunctionIni>("DestroyMod");
 	if (unloadModuleFunctionIni == nullptr) {
-		unloadModuleFunctionConsole = reinterpret_cast<UnloadModuleFunctionConsole>(GetProcAddress(moduleDllHandle, "mod_destroy"));
+		unloadModuleFunctionConsole = GetExportAddress<UnloadModuleFunctionConsole>("mod_destroy");
 	}
 
-	runModuleFunction = reinterpret_cast<RunModuleFunction>(GetProcAddress(moduleDllHandle, "RunMod"));
+	runModuleFunction = GetExportAddress<RunModuleFunction>("RunMod");
 	if (runModuleFunction == nullptr) {
-		runModuleFunction = reinterpret_cast<RunModuleFunction>(GetProcAddress(moduleDllHandle, "mod_run"));
+		runModuleFunction = GetExportAddress<RunModuleFunction>("mod_run");
 	}
 }
 
