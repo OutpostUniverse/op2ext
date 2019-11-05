@@ -69,7 +69,6 @@ OP2EXT_API bool IsModuleLoaded(const char* moduleName);
 OP2EXT_API size_t GetLoadedModuleCount();
 
 // Retrieves the module name at the specified index. 
-// Ini modules are indexed first and console module is last.
 // Use function GetLoadedModuleCount to determine how many module names to check. 
 // A console module's name is the directory name parameter passed in via the /loadmod command. 
 // The directory name is relative to the executable's folder, with no trailing slash
