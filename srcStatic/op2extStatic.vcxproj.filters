@@ -64,6 +64,7 @@
     <ClInclude Include="GameModules\ConsoleModule.h">
       <Filter>GameModules</Filter>
     </ClInclude>
+    <ClInclude Include="WindowsUniqueHandle.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="GameModules">
