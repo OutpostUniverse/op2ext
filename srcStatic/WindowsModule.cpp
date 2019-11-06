@@ -8,6 +8,8 @@
 #undef _UNICODE
 #include <windows.h>
 #include <tlhelp32.h> // CreateToolhelp32Snapshot, Module32First, Module32Next
+#include "WindowsUniqueHandle.h"
+
 
 std::string FindModuleName(HANDLE hModuleSnap, const void* address);
 bool containsAddress(MODULEENTRY32 const& moduleEntry, const void* address);
@@ -15,13 +17,11 @@ bool containsAddress(MODULEENTRY32 const& moduleEntry, const void* address);
 
 std::string FindModuleName(const void* address) {
 	// Get all modules for current process (processId can be 0)
-	auto hModuleSnap = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, 0);
-	if (hModuleSnap == INVALID_HANDLE_VALUE) {
+	UniqueHandleOrInvalid hModuleSnap{CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, 0)};
+	if (!hModuleSnap) {
 		return std::string("<Unable to create module snapshot>");
 	}
-	auto moduleName = FindModuleName(hModuleSnap, address);
-	CloseHandle(hModuleSnap);
-	return moduleName;
+	return FindModuleName(hModuleSnap.get(), address);
 }
 
 std::string FindModuleName(HANDLE hModuleSnap, const void* address) {
