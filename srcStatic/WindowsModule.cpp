@@ -21,8 +21,7 @@ std::string FindModuleName(const void* address) {
 	if (!hModuleSnap) {
 		return std::string("<Unable to create module snapshot>");
 	}
-	auto moduleName = FindModuleName(hModuleSnap.get(), address);
-	return moduleName;
+	return FindModuleName(hModuleSnap.get(), address);
 }
 
 std::string FindModuleName(HANDLE hModuleSnap, const void* address) {
