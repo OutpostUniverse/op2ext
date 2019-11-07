@@ -12,7 +12,7 @@ void DllModule::LoadModuleDll(const std::string& dllPath)
 	// Try to load a DLL with the given name (possibly an empty string)
 	HINSTANCE dllHandle = LoadLibraryA(dllPath.c_str());
 
-	if (dllHandle == nullptr) {
+	if (!dllHandle) {
 		throw std::runtime_error(
 			"Unable to load DLL path: " + dllPath +
 			" LoadLibrary " + GetLastErrorString()
@@ -26,28 +26,28 @@ void DllModule::LoadModuleDll(const std::string& dllPath)
 
 void DllModule::DetectExportedModuleFunctions()
 {
-	loadModuleFunctionIni = reinterpret_cast<LoadModuleFunctionIni>(GetProcAddress(moduleDllHandle, "InitMod"));
-	if (loadModuleFunctionIni == nullptr) {
-		loadModuleFunctionConsole = reinterpret_cast<LoadModuleFunctionConsole>(GetProcAddress(moduleDllHandle, "mod_init"));
+	loadModuleFunctionIni = GetExportAddress<LoadModuleFunctionIni>("InitMod");
+	if (!loadModuleFunctionIni) {
+		loadModuleFunctionConsole = GetExportAddress<LoadModuleFunctionConsole>("mod_init");
 	}
 
-	unloadModuleFunctionIni = reinterpret_cast<UnloadModuleFunctionIni>(GetProcAddress(moduleDllHandle, "DestroyMod"));
-	if (unloadModuleFunctionIni == nullptr) {
-		unloadModuleFunctionConsole = reinterpret_cast<UnloadModuleFunctionConsole>(GetProcAddress(moduleDllHandle, "mod_destroy"));
+	unloadModuleFunctionIni = GetExportAddress<UnloadModuleFunctionIni>("DestroyMod");
+	if (!unloadModuleFunctionIni) {
+		unloadModuleFunctionConsole = GetExportAddress<UnloadModuleFunctionConsole>("mod_destroy");
 	}
 
-	runModuleFunction = reinterpret_cast<RunModuleFunction>(GetProcAddress(moduleDllHandle, "RunMod"));
-	if (runModuleFunction == nullptr) {
-		runModuleFunction = reinterpret_cast<RunModuleFunction>(GetProcAddress(moduleDllHandle, "mod_run"));
+	runModuleFunction = GetExportAddress<RunModuleFunction>("RunMod");
+	if (!runModuleFunction) {
+		runModuleFunction = GetExportAddress<RunModuleFunction>("mod_run");
 	}
 }
 
 void DllModule::Load()
 {
-	if (loadModuleFunctionIni != nullptr) {
+	if (loadModuleFunctionIni) {
 		loadModuleFunctionIni(Name().c_str());
 	}
-	else if (loadModuleFunctionConsole != nullptr) {
+	else if (loadModuleFunctionConsole) {
 		loadModuleFunctionConsole();
 	}
 }
@@ -56,17 +56,17 @@ bool DllModule::Unload()
 {
 	bool success = true;
 
-	if (unloadModuleFunctionIni != nullptr) {
+	if (unloadModuleFunctionIni) {
 		unloadModuleFunctionIni();
 	}
-	else if (unloadModuleFunctionConsole != nullptr) {
+	else if (unloadModuleFunctionConsole) {
 		success = unloadModuleFunctionConsole();
 		if (!success) {
 			LogMessage("Module reports error during unload: " + Name());
 		}
 	}
 
-	if (moduleDllHandle != nullptr) {
+	if (moduleDllHandle) {
 		FreeLibrary(moduleDllHandle);
 	}
 
@@ -75,7 +75,7 @@ bool DllModule::Unload()
 
 void DllModule::Run()
 {
-	if (runModuleFunction != nullptr) {
+	if (runModuleFunction) {
 		runModuleFunction();
 	}
 }
