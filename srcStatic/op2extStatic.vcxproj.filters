@@ -65,6 +65,7 @@
       <Filter>GameModules</Filter>
     </ClInclude>
     <ClInclude Include="WindowsUniqueHandle.h" />
+    <ClInclude Include="WindowsUniqueModule.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="GameModules">
