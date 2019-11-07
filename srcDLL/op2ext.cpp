@@ -7,15 +7,9 @@
 #include "WindowsModule.h"
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-#include <intrin.h> // _ReturnAddress
 #include <exception>
 #include <string>
 #include <cstddef>
-
-#pragma intrinsic(_ReturnAddress)
-#ifdef __MINGW32__
-#define _ReturnAddress() __builtin_return_address(0)
-#endif
 
 
 // Dummy export for linking requirements from Outpost2.exe and OP2Shell.dll.
