@@ -21,8 +21,9 @@ std::string FindModuleName(const void* address) {
 }
 
 
+// Find module that contains the given address
 MODULEENTRY32 FindModuleEntry(const void* address) {
-	// Get all modules for current process (processId can be 0)
+	// Get all modules for current process (processId of 0 means current process)
 	UniqueHandleOrInvalid hModuleSnap{CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, 0)};
 	if (!hModuleSnap) {
 		throw std::runtime_error("Unable to create module snapshot");
@@ -30,6 +31,7 @@ MODULEENTRY32 FindModuleEntry(const void* address) {
 	return FindModuleEntry(hModuleSnap.get(), address);
 }
 
+// Find module from snapshot that contains the given address
 MODULEENTRY32 FindModuleEntry(HANDLE hModuleSnap, const void* address) {
 	MODULEENTRY32 moduleEntry;
 	moduleEntry.dwSize = sizeof(moduleEntry);
@@ -44,6 +46,7 @@ MODULEENTRY32 FindModuleEntry(HANDLE hModuleSnap, const void* address) {
 	throw std::runtime_error("Module lookup failed");
 }
 
+// Check if module entry address bounds contains the given address
 bool containsAddress(const MODULEENTRY32& moduleEntry, const void* address) {
 	return
 		(moduleEntry.modBaseAddr <= address) &&
