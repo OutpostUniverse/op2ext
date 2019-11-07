@@ -19,7 +19,7 @@ void DllModule::LoadModuleDll(const std::string& dllPath)
 		);
 	}
 
-	this->moduleDllHandle = dllHandle;
+	this->moduleDllHandle.reset(dllHandle);
 
 	DetectExportedModuleFunctions();
 }
@@ -66,9 +66,7 @@ bool DllModule::Unload()
 		}
 	}
 
-	if (moduleDllHandle) {
-		FreeLibrary(moduleDllHandle);
-	}
+	moduleDllHandle.reset(nullptr);
 
 	return success;
 }

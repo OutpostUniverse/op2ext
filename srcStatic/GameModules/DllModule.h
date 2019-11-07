@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../GameModule.h"
+#include "../WindowsUniqueModule.h"
 #include <windows.h>
 #include <string>
 #include <type_traits>
@@ -17,7 +18,7 @@ public:
 	void Run() override;
 
 protected:
-	HINSTANCE moduleDllHandle = nullptr;
+	UniqueModule moduleDllHandle = nullptr;
 
 	// Call from constructor of derived class
 	void LoadModuleDll(const std::string& dllPath);
@@ -36,7 +37,7 @@ private:
 	template <typename ExportType>
 	ExportType GetExportAddress(const char* exportName) {
 		static_assert(std::is_pointer<ExportType>::value, "Type must be a pointer");
-		return reinterpret_cast<ExportType>(GetProcAddress(moduleDllHandle, exportName));
+		return reinterpret_cast<ExportType>(GetProcAddress(moduleDllHandle.get(), exportName));
 	}
 
 	LoadModuleFunctionIni loadModuleFunctionIni = nullptr;
