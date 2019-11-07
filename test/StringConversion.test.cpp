@@ -111,14 +111,23 @@ TEST(StringConversion, ToLowerInPlace)
 }
 
 
-TEST(StringConversion, AddrToHexString)
+TEST(StringConversion, AddrToHexStringInt)
 {
 	// Correctly pads with 0
-	EXPECT_EQ("00000000", AddrToHexString(0));
-	EXPECT_EQ("00000000", AddrToHexString(00000000));
+	EXPECT_EQ("00000000", AddrToHexString(0u));
+	EXPECT_EQ("00000000", AddrToHexString(00000000u));
 	// Note casing of hex values
 	EXPECT_EQ("deadbeef", AddrToHexString(0xDEADBEEF));
 }
+
+TEST(StringConversion, AddrToHexStringPtr)
+{
+	// Correctly pads with 0
+	EXPECT_EQ("00000000", AddrToHexString(nullptr));
+	// Note casing of hex values
+	EXPECT_EQ("deadbeef", AddrToHexString(reinterpret_cast<const void*>(0xDEADBEEF)));
+}
+
 
 TEST(StringConversion, GetDateTime)
 {

@@ -11,33 +11,42 @@
 #include "WindowsUniqueHandle.h"
 
 
-std::string FindModuleName(HANDLE hModuleSnap, const void* address);
+MODULEENTRY32 FindModuleEntry(const void* address);
+MODULEENTRY32 FindModuleEntry(HANDLE hModuleSnap, const void* address);
 bool containsAddress(MODULEENTRY32 const& moduleEntry, const void* address);
 
 
 std::string FindModuleName(const void* address) {
-	// Get all modules for current process (processId can be 0)
-	UniqueHandleOrInvalid hModuleSnap{CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, 0)};
-	if (!hModuleSnap) {
-		return std::string("<Unable to create module snapshot>");
-	}
-	return FindModuleName(hModuleSnap.get(), address);
+	return std::string(FindModuleEntry(address).szModule);
 }
 
-std::string FindModuleName(HANDLE hModuleSnap, const void* address) {
+
+// Find module that contains the given address
+MODULEENTRY32 FindModuleEntry(const void* address) {
+	// Get all modules for current process (processId of 0 means current process)
+	UniqueHandleOrInvalid hModuleSnap{CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, 0)};
+	if (!hModuleSnap) {
+		throw std::runtime_error("Unable to create module snapshot");
+	}
+	return FindModuleEntry(hModuleSnap.get(), address);
+}
+
+// Find module from snapshot that contains the given address
+MODULEENTRY32 FindModuleEntry(HANDLE hModuleSnap, const void* address) {
 	MODULEENTRY32 moduleEntry;
 	moduleEntry.dwSize = sizeof(moduleEntry);
 	if (Module32First(hModuleSnap, &moduleEntry)) {
 		do {
 			if (containsAddress(moduleEntry, address)) {
-				return std::string(moduleEntry.szModule);
+				return moduleEntry;
 			}
 		} while(Module32Next(hModuleSnap, &moduleEntry));
-		return std::string("<Module not found>");
+		throw std::runtime_error("Module not found");
 	}
-	return std::string("<Module lookup failed>");
+	throw std::runtime_error("Module lookup failed");
 }
 
+// Check if module entry address bounds contains the given address
 bool containsAddress(const MODULEENTRY32& moduleEntry, const void* address) {
 	return
 		(moduleEntry.modBaseAddr <= address) &&

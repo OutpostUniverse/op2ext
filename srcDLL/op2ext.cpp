@@ -7,15 +7,9 @@
 #include "WindowsModule.h"
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-#include <intrin.h> // _ReturnAddress
 #include <exception>
 #include <string>
 #include <cstddef>
-
-#pragma intrinsic(_ReturnAddress)
-#ifdef __MINGW32__
-#define _ReturnAddress() __builtin_return_address(0)
-#endif
 
 
 // Dummy export for linking requirements from Outpost2.exe and OP2Shell.dll.
@@ -111,7 +105,12 @@ OP2EXT_API void Log(const char* message)
 	// These optimizations are however extremely unlikely when making
 	// calls across a module boundary (such as to exported methods).
 
-	LogMessage(FormatLogMessage(message, FindModuleName(_ReturnAddress())));
+	try {
+		LogMessage(FormatLogMessage(message, FindModuleName(_ReturnAddress())));
+	} catch(const std::exception& e) {
+		LogMessage("Error attempting to Log message from module. Return address to module is: " + AddrToHexString(_ReturnAddress()) + "  Error: " + e.what());
+		LogMessage(FormatLogMessage(message, "<UnknownModule>"));
+	}
 }
 
 
