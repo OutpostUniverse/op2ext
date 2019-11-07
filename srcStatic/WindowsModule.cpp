@@ -19,7 +19,7 @@ std::string FindModuleName(const void* address) {
 	// Get all modules for current process (processId can be 0)
 	UniqueHandleOrInvalid hModuleSnap{CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, 0)};
 	if (!hModuleSnap) {
-		return std::string("<Unable to create module snapshot>");
+		throw std::runtime_error("Unable to create module snapshot");
 	}
 	return FindModuleName(hModuleSnap.get(), address);
 }
@@ -33,9 +33,9 @@ std::string FindModuleName(HANDLE hModuleSnap, const void* address) {
 				return std::string(moduleEntry.szModule);
 			}
 		} while(Module32Next(hModuleSnap, &moduleEntry));
-		return std::string("<Module not found>");
+		throw std::runtime_error("Module not found");
 	}
-	return std::string("<Module lookup failed>");
+	throw std::runtime_error("Module lookup failed");
 }
 
 bool containsAddress(const MODULEENTRY32& moduleEntry, const void* address) {
