@@ -11,17 +11,23 @@
 #include "WindowsUniqueHandle.h"
 
 
+MODULEENTRY32 FindModuleEntry(const void* address);
 MODULEENTRY32 FindModuleEntry(HANDLE hModuleSnap, const void* address);
 bool containsAddress(MODULEENTRY32 const& moduleEntry, const void* address);
 
 
 std::string FindModuleName(const void* address) {
+	return std::string(FindModuleEntry(address).szModule);
+}
+
+
+MODULEENTRY32 FindModuleEntry(const void* address) {
 	// Get all modules for current process (processId can be 0)
 	UniqueHandleOrInvalid hModuleSnap{CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, 0)};
 	if (!hModuleSnap) {
 		throw std::runtime_error("Unable to create module snapshot");
 	}
-	return std::string(FindModuleEntry(hModuleSnap.get(), address).szModule);
+	return FindModuleEntry(hModuleSnap.get(), address);
 }
 
 MODULEENTRY32 FindModuleEntry(HANDLE hModuleSnap, const void* address) {
