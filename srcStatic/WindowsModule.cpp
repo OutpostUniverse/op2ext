@@ -11,7 +11,7 @@
 #include "WindowsUniqueHandle.h"
 
 
-std::string FindModuleName(HANDLE hModuleSnap, const void* address);
+MODULEENTRY32 FindModuleEntry(HANDLE hModuleSnap, const void* address);
 bool containsAddress(MODULEENTRY32 const& moduleEntry, const void* address);
 
 
@@ -21,16 +21,16 @@ std::string FindModuleName(const void* address) {
 	if (!hModuleSnap) {
 		throw std::runtime_error("Unable to create module snapshot");
 	}
-	return FindModuleName(hModuleSnap.get(), address);
+	return std::string(FindModuleEntry(hModuleSnap.get(), address).szModule);
 }
 
-std::string FindModuleName(HANDLE hModuleSnap, const void* address) {
+MODULEENTRY32 FindModuleEntry(HANDLE hModuleSnap, const void* address) {
 	MODULEENTRY32 moduleEntry;
 	moduleEntry.dwSize = sizeof(moduleEntry);
 	if (Module32First(hModuleSnap, &moduleEntry)) {
 		do {
 			if (containsAddress(moduleEntry, address)) {
-				return std::string(moduleEntry.szModule);
+				return moduleEntry;
 			}
 		} while(Module32Next(hModuleSnap, &moduleEntry));
 		throw std::runtime_error("Module not found");
