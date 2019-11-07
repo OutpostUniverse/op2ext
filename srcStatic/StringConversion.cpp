@@ -72,6 +72,11 @@ std::string AddrToHexString(std::size_t addr)
 	return stringStream.str();
 }
 
+std::string AddrToHexString(const void* addr)
+{
+	return AddrToHexString(reinterpret_cast<std::size_t>(addr));
+}
+
 
 std::string GetDateTime()
 {
