@@ -105,7 +105,12 @@ OP2EXT_API void Log(const char* message)
 	// These optimizations are however extremely unlikely when making
 	// calls across a module boundary (such as to exported methods).
 
-	LogMessage(FormatLogMessage(message, FindModuleName(_ReturnAddress())));
+	try {
+		LogMessage(FormatLogMessage(message, FindModuleName(_ReturnAddress())));
+	} catch(const std::exception& e) {
+		LogMessage("Error attempting to Log message from module. Return address to module is: " + AddrToHexString(_ReturnAddress()) + "  Error: " + e.what());
+		LogMessage(FormatLogMessage(message, "<UnknownModule>"));
+	}
 }
 
 
