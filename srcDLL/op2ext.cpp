@@ -10,6 +10,7 @@
 #include <exception>
 #include <string>
 #include <cstddef>
+#include <cstdint>
 
 
 // Dummy export for linking requirements from Outpost2.exe and OP2Shell.dll.

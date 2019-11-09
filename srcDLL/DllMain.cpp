@@ -15,6 +15,7 @@
 #include <windows.h>
 #include <string>
 #include <cstddef>
+#include <cstdint>
 
 
 bool InstallDepPatch();

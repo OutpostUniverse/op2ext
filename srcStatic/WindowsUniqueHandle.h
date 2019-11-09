@@ -1,5 +1,6 @@
 #include <windows.h>
 #include <memory>
+#include <cstdint>
 
 
 // Sentinel value guarded HANDLE deleter

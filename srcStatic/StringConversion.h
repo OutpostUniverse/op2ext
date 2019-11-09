@@ -4,6 +4,7 @@
 #include <string_view>
 #include <vector>
 #include <cstddef>
+#include <cstdint>
 
 
 // Wraps either a narrow or wide raw string into either a std::string or std::wstring

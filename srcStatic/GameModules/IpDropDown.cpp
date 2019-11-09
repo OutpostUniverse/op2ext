@@ -7,6 +7,7 @@
 #include <windows.h>
 #include <string>
 #include <cstddef>
+#include <cstdint>
 
 
 BOOL __stdcall EnableWindowNew(HWND hWnd, BOOL bEnable);

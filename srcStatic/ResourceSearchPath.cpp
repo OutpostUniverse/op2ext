@@ -5,6 +5,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <cstddef>
+#include <cstdint>
 
 
 // For compatibility with Outpost2.exe's built in class
