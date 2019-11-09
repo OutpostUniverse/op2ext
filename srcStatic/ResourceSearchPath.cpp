@@ -38,7 +38,7 @@ std::vector<std::string>& ResourceSearchPath::ModuleDirectories()
 
 void ResourceSearchPath::HookFileSearchPath()
 {
-	const std::vector<std::size_t> callsToGetFilePath{
+	const std::vector<uintptr_t> callsToGetFilePath{
 		0x00402E4B,
 		0x004038A9,
 		0x0045003C,

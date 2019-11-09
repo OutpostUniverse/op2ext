@@ -24,7 +24,7 @@ protected:
 	static_assert(5 == sizeof(CallInstruction));
 
 	CallInstruction callInstruction = {CallOpcode, 0x00000000};
-	const std::size_t callInstructionAddr = reinterpret_cast<std::size_t>(&callInstruction);
+	const uintptr_t callInstructionAddr = reinterpret_cast<uintptr_t>(&callInstruction);
 };
 
 
