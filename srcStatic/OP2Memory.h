@@ -9,18 +9,18 @@
 
 bool EnableOp2MemoryPatching();
 
-bool Op2MemCopy(uintptr_t destBaseAddr, const void* sourceAddr, std::size_t size);
-bool Op2MemSet(uintptr_t destBaseAddr, unsigned char value, std::size_t size);
-bool Op2MemSetDword(uintptr_t destBaseAddr, std::size_t dword);
-bool Op2MemSetDword(uintptr_t destBaseAddr, const void* dword);
-bool Op2RelinkCall(uintptr_t callOffset, const void* newFunctionAddress);
-bool Op2UnprotectMemory(uintptr_t destBaseAddr, std::size_t size);
+bool Op2MemCopy(std::uintptr_t destBaseAddr, const void* sourceAddr, std::size_t size);
+bool Op2MemSet(std::uintptr_t destBaseAddr, unsigned char value, std::size_t size);
+bool Op2MemSetDword(std::uintptr_t destBaseAddr, std::size_t dword);
+bool Op2MemSetDword(std::uintptr_t destBaseAddr, const void* dword);
+bool Op2RelinkCall(std::uintptr_t callOffset, const void* newFunctionAddress);
+bool Op2UnprotectMemory(std::uintptr_t destBaseAddr, std::size_t size);
 
 
 template <typename MethodPointerType>
-constexpr uintptr_t GetMethodAddress(MethodPointerType methodPointer) {
+constexpr std::uintptr_t GetMethodAddress(MethodPointerType methodPointer) {
 	static_assert(std::is_member_function_pointer_v<MethodPointerType>, "Type must be member function pointer");
-	return reinterpret_cast<uintptr_t>(GetMethodVoidPointer(methodPointer));
+	return reinterpret_cast<std::uintptr_t>(GetMethodVoidPointer(methodPointer));
 }
 
 template <typename MethodPointerType>
@@ -30,7 +30,7 @@ constexpr void* GetMethodVoidPointer(MethodPointerType methodPointer) {
 }
 
 template <typename MethodPointerType>
-constexpr MethodPointerType GetMethodPointer(uintptr_t methodAddress) {
+constexpr MethodPointerType GetMethodPointer(std::uintptr_t methodAddress) {
 	static_assert(std::is_member_function_pointer_v<MethodPointerType>, "Type must be member function pointer");
 	auto methodVoidPointer = reinterpret_cast<void*>(methodAddress);
 
@@ -40,7 +40,7 @@ constexpr MethodPointerType GetMethodPointer(uintptr_t methodAddress) {
 	union MethodPointerUnion {
 		MethodPointerType pointer;
 		struct {
-			uintptr_t address;
+			std::uintptr_t address;
 			std::size_t thisOffset;
 		};
 

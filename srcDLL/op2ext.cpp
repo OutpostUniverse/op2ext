@@ -84,7 +84,7 @@ OP2EXT_API void SetSerialNumber(char major, char minor, char patch)
 	else {
 		char buffer[8];
 		_snprintf_s(buffer, sizeof(buffer), "%i.%i.%i.%i", major, minor, 0, patch);
-		constexpr uintptr_t multiplayerVersionStringAddress = 0x004E973C;
+		constexpr std::uintptr_t multiplayerVersionStringAddress = 0x004E973C;
 		Op2MemCopy(multiplayerVersionStringAddress, buffer, sizeof(buffer));
 	}
 }

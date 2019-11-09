@@ -7,8 +7,8 @@
 // Unfortunately INVALID_HANDLE_VALUE is a macro containing a cast
 // The cast is equivalent to a reinterpret_cast, which makes it non-constexpr
 // As such, INVALID_HANDLE_VALUE can't be used as a non-type template parameter
-// Instead of HANDLE, use uintptr_t and an internal cast as a workaround
-template <uintptr_t nullValue>
+// Instead of HANDLE, use std::uintptr_t and an internal cast as a workaround
+template <std::uintptr_t nullValue>
 struct HandleDeleter {
 	using pointer = HANDLE;
 
@@ -21,7 +21,7 @@ struct HandleDeleter {
 
 
 // Like unique_ptr, but with some overrides to account for custom nullValue
-template <uintptr_t nullValue>
+template <std::uintptr_t nullValue>
 class UniqueHandle : public std::unique_ptr<HANDLE, HandleDeleter<nullValue>> {
 	using base = std::unique_ptr<HANDLE, HandleDeleter<nullValue>>;
 public:
