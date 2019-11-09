@@ -45,7 +45,7 @@ bool Op2MemEdit(uintptr_t destBaseAddr, std::size_t size, Function memoryEditFun
 	DWORD oldAttr;
 	BOOL bSuccess = VirtualProtect(destAddr, size, PAGE_EXECUTE_READWRITE, &oldAttr);
 	if (!bSuccess) {
-		LogError("Error unprotecting memory at: 0x" + AddrToHexString(reinterpret_cast<uintptr_t>(destAddr)) + ".");
+		LogError("Error unprotecting memory at: 0x" + AddrToHexString(destAddr) + ".");
 		return false;
 	}
 
