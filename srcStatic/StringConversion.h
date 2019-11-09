@@ -32,7 +32,7 @@ std::string ToLower(std::string x);
 
 
 // Convert hex address value to string
-std::string AddrToHexString(std::size_t addr);
+std::string AddrToHexString(uintptr_t addr);
 
 
 // Gets UTC date/time string using the system clock
