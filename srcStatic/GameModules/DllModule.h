@@ -3,6 +3,7 @@
 #include "../GameModule.h"
 #include <windows.h>
 #include <string>
+#include <type_traits>
 
 
 // External module that may contain hooks for a DLL
@@ -31,6 +32,12 @@ private:
 
 	// Search for dll's initialization, run & destroy functions
 	void DetectExportedModuleFunctions();
+
+	template <typename ExportType>
+	ExportType GetExportAddress(const char* exportName) {
+		static_assert(std::is_pointer<ExportType>::value, "Type must be a pointer");
+		return reinterpret_cast<ExportType>(GetProcAddress(moduleDllHandle, exportName));
+	}
 
 	LoadModuleFunctionIni loadModuleFunctionIni = nullptr;
 	LoadModuleFunctionConsole loadModuleFunctionConsole = nullptr;
