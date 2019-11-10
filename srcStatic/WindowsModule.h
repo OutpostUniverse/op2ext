@@ -2,6 +2,7 @@
 
 #include <string>
 #include <intrin.h> // _ReturnAddress
+#include <windows.h>
 
 
 #pragma intrinsic(_ReturnAddress)
@@ -11,3 +12,4 @@
 
 
 std::string FindModuleName(const void* address);
+HMODULE FindModuleHandle(const void* address);

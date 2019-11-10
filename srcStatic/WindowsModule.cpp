@@ -7,7 +7,6 @@
 #undef _UNICODE
 #include "WindowsModule.h"
 #include "WindowsUniqueHandle.h"
-#include <windows.h>
 #include <tlhelp32.h> // CreateToolhelp32Snapshot, Module32First, Module32Next
 
 
