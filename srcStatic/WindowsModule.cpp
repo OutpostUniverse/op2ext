@@ -1,4 +1,3 @@
-#include "WindowsModule.h"
 // Unicode builds of this file are unsupported
 // We must use the non "W" variant of Module32First, Module32Next, MODULEENTRY32
 // The API (public function signature) must not depend on types affected by unicode settings
@@ -6,9 +5,10 @@
 // Force a non-unicode build of this translation unit
 #undef UNICODE
 #undef _UNICODE
+#include "WindowsModule.h"
+#include "WindowsUniqueHandle.h"
 #include <windows.h>
 #include <tlhelp32.h> // CreateToolhelp32Snapshot, Module32First, Module32Next
-#include "WindowsUniqueHandle.h"
 
 
 MODULEENTRY32 FindModuleEntry(const void* address);
