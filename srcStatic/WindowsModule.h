@@ -10,5 +10,4 @@
 #endif
 
 
-// Finds the module which contains the given address
 std::string FindModuleName(const void* address);

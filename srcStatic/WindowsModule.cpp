@@ -16,6 +16,7 @@ MODULEENTRY32 FindModuleEntry(HANDLE hModuleSnap, const void* address);
 bool containsAddress(MODULEENTRY32 const& moduleEntry, const void* address);
 
 
+// Find name of module that contains the given address
 std::string FindModuleName(const void* address) {
 	return std::string(FindModuleEntry(address).szModule);
 }
