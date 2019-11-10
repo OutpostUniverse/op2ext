@@ -21,6 +21,11 @@ std::string FindModuleName(const void* address) {
 	return std::string(FindModuleEntry(address).szModule);
 }
 
+// Find handle of module that contains the given address
+HMODULE FindModuleHandle(const void* address) {
+	return FindModuleEntry(address).hModule;
+}
+
 
 // Find module that contains the given address
 MODULEENTRY32 FindModuleEntry(const void* address) {
