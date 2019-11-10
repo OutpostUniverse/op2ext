@@ -5,6 +5,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <cstddef>
+#include <cstdint>
 
 
 // For compatibility with Outpost2.exe's built in class
@@ -38,7 +39,7 @@ std::vector<std::string>& ResourceSearchPath::ModuleDirectories()
 
 void ResourceSearchPath::HookFileSearchPath()
 {
-	const std::vector<std::size_t> callsToGetFilePath{
+	const std::vector<std::uintptr_t> callsToGetFilePath{
 		0x00402E4B,
 		0x004038A9,
 		0x0045003C,

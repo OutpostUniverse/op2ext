@@ -6,8 +6,8 @@
 
 
 bool memoryPatchingEnabled = false;
-std::size_t loadOffset = 0;
-constexpr std::size_t ExpectedOutpost2Addr = 0x00400000;
+std::uintptr_t loadOffset = 0;
+constexpr std::uintptr_t ExpectedOutpost2Addr = 0x00400000;
 
 
 // Enabled patching of Outpost2.exe memory
@@ -27,13 +27,13 @@ bool EnableOp2MemoryPatching()
 
 	// Enable memory patching for Outpost2.exe, and set relocation offset
 	memoryPatchingEnabled = true;
-	loadOffset = reinterpret_cast<std::size_t>(op2ModuleBase) - ExpectedOutpost2Addr;
+	loadOffset = reinterpret_cast<std::uintptr_t>(op2ModuleBase) - ExpectedOutpost2Addr;
 	return true;
 }
 
 
 template <typename Function>
-bool Op2MemEdit(std::size_t destBaseAddr, std::size_t size, Function memoryEditFunction)
+bool Op2MemEdit(std::uintptr_t destBaseAddr, std::size_t size, Function memoryEditFunction)
 {
 	if (!memoryPatchingEnabled) {
 		return false;
@@ -45,7 +45,7 @@ bool Op2MemEdit(std::size_t destBaseAddr, std::size_t size, Function memoryEditF
 	DWORD oldAttr;
 	BOOL bSuccess = VirtualProtect(destAddr, size, PAGE_EXECUTE_READWRITE, &oldAttr);
 	if (!bSuccess) {
-		LogError("Error unprotecting memory at: 0x" + AddrToHexString(reinterpret_cast<std::size_t>(destAddr)) + ".");
+		LogError("Error unprotecting memory at: 0x" + AddrToHexString(destAddr) + ".");
 		return false;
 	}
 
@@ -59,7 +59,7 @@ bool Op2MemEdit(std::size_t destBaseAddr, std::size_t size, Function memoryEditF
 }
 
 
-bool Op2MemSet(std::size_t destBaseAddr, unsigned char value, std::size_t size)
+bool Op2MemSet(std::uintptr_t destBaseAddr, unsigned char value, std::size_t size)
 {
 	return Op2MemEdit(
 		destBaseAddr,
@@ -68,7 +68,7 @@ bool Op2MemSet(std::size_t destBaseAddr, unsigned char value, std::size_t size)
 	);
 }
 
-bool Op2MemCopy(std::size_t destBaseAddr, const void* sourceAddr, std::size_t size)
+bool Op2MemCopy(std::uintptr_t destBaseAddr, const void* sourceAddr, std::size_t size)
 {
 	return Op2MemEdit(
 		destBaseAddr,
@@ -77,12 +77,12 @@ bool Op2MemCopy(std::size_t destBaseAddr, const void* sourceAddr, std::size_t si
 	);
 }
 
-bool Op2MemSetDword(std::size_t destBaseAddr, std::size_t dword)
+bool Op2MemSetDword(std::uintptr_t destBaseAddr, std::size_t dword)
 {
 	return Op2MemCopy(destBaseAddr, &dword, sizeof(dword));
 }
 
-bool Op2MemSetDword(std::size_t destBaseAddr, const void* dword)
+bool Op2MemSetDword(std::uintptr_t destBaseAddr, const void* dword)
 {
 	return Op2MemCopy(destBaseAddr, &dword, sizeof(dword));
 }
@@ -93,7 +93,7 @@ bool Op2MemSetDword(std::size_t destBaseAddr, const void* dword)
 //   CALL someMethod  ; Encoded as E8 00040000
 //   postCallInstruction:
 // The `callOffset` parameter is the address of the encoded DWORD
-bool Op2RelinkCall(std::size_t callOffset, const void* newFunctionAddress)
+bool Op2RelinkCall(std::uintptr_t callOffset, const void* newFunctionAddress)
 {
 	if (!memoryPatchingEnabled) {
 		return false;
@@ -110,7 +110,7 @@ bool Op2RelinkCall(std::size_t callOffset, const void* newFunctionAddress)
 }
 
 
-bool Op2UnprotectMemory(std::size_t destBaseAddr, std::size_t size)
+bool Op2UnprotectMemory(std::uintptr_t destBaseAddr, std::size_t size)
 {
 	if (!memoryPatchingEnabled) {
 		return false;

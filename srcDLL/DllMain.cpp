@@ -15,6 +15,7 @@
 #include <windows.h>
 #include <string>
 #include <cstddef>
+#include <cstdint>
 
 
 bool InstallDepPatch();
@@ -91,7 +92,7 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 bool InstallDepPatch()
 {
 	// Set the execute flag on the DSEG section so DEP doesn't terminate the game
-	constexpr std::size_t dsegSectionBaseAddress = 0x00585000;
+	constexpr std::uintptr_t dsegSectionBaseAddress = 0x00585000;
 	constexpr std::size_t dsegSectionSize = 0x00587000 - 0x00585000;
 	bool success = Op2UnprotectMemory(dsegSectionBaseAddress, dsegSectionSize);
 

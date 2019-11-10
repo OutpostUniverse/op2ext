@@ -7,6 +7,7 @@
 #include <windows.h>
 #include <string>
 #include <cstddef>
+#include <cstdint>
 
 
 BOOL __stdcall EnableWindowNew(HWND hWnd, BOOL bEnable);
@@ -31,9 +32,9 @@ IPDropDown::IPDropDown()
 void IPDropDown::Load()
 {
 	// IpDropDown patch locations
-	constexpr std::size_t populateComboBoxAddr = 0x004197C1;
-	constexpr std::size_t saveIpTextAddr = 0x004C0E36;
-	constexpr std::size_t nopDataAddr = 0x0041988F;
+	constexpr std::uintptr_t populateComboBoxAddr = 0x004197C1;
+	constexpr std::uintptr_t saveIpTextAddr = 0x004C0E36;
+	constexpr std::uintptr_t nopDataAddr = 0x0041988F;
 
 	// patch the call to EnableWindow so we can add strings.
 	Op2MemSetDword(populateComboBoxAddr, &newEnableWindowAddr);

@@ -65,7 +65,7 @@ std::string ToLower(std::string x) {
 }
 
 
-std::string AddrToHexString(std::size_t addr)
+std::string AddrToHexString(std::uintptr_t addr)
 {
 	std::ostringstream stringStream;
 	stringStream << std::setfill('0') << std::setw(8) << std::hex << addr;
@@ -74,7 +74,7 @@ std::string AddrToHexString(std::size_t addr)
 
 std::string AddrToHexString(const void* addr)
 {
-	return AddrToHexString(reinterpret_cast<std::size_t>(addr));
+	return AddrToHexString(reinterpret_cast<std::uintptr_t>(addr));
 }
 
 

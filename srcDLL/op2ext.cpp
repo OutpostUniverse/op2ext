@@ -10,6 +10,7 @@
 #include <exception>
 #include <string>
 #include <cstddef>
+#include <cstdint>
 
 
 // Dummy export for linking requirements from Outpost2.exe and OP2Shell.dll.
@@ -84,7 +85,7 @@ OP2EXT_API void SetSerialNumber(char major, char minor, char patch)
 	else {
 		char buffer[8];
 		_snprintf_s(buffer, sizeof(buffer), "%i.%i.%i.%i", major, minor, 0, patch);
-		constexpr std::size_t multiplayerVersionStringAddress = 0x004E973C;
+		constexpr std::uintptr_t multiplayerVersionStringAddress = 0x004E973C;
 		Op2MemCopy(multiplayerVersionStringAddress, buffer, sizeof(buffer));
 	}
 }

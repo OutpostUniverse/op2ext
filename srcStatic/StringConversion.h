@@ -4,6 +4,7 @@
 #include <string_view>
 #include <vector>
 #include <cstddef>
+#include <cstdint>
 
 
 // Wraps either a narrow or wide raw string into either a std::string or std::wstring
@@ -32,7 +33,7 @@ std::string ToLower(std::string x);
 
 
 // Convert hex address value to string
-std::string AddrToHexString(std::size_t addr);
+std::string AddrToHexString(std::uintptr_t addr);
 std::string AddrToHexString(const void* addr);
 
 
