@@ -10,6 +10,9 @@
 #include <tlhelp32.h> // CreateToolhelp32Snapshot, Module32First, Module32Next
 
 
+// The definition of MODULEENTRY32 is affected by the UNICODE setting
+// As such, we should keep the following methods private to the .cpp file
+// Any file that includes the .h file may have a different UNICODE setting
 MODULEENTRY32 FindModuleEntry(const void* address);
 MODULEENTRY32 FindModuleEntry(HANDLE hModuleSnap, const void* address);
 bool containsAddress(MODULEENTRY32 const& moduleEntry, const void* address);
