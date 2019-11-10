@@ -75,3 +75,8 @@ void DllModule::Run()
 		runModuleFunction();
 	}
 }
+
+bool DllModule::UsesModule(HMODULE dllModule)
+{
+	return moduleDllHandle.get() == dllModule;
+}

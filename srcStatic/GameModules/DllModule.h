@@ -17,6 +17,8 @@ public:
 	bool Unload() override;
 	void Run() override;
 
+	bool UsesModule(HMODULE dllModule);
+
 protected:
 	UniqueModule moduleDllHandle = nullptr;
 
