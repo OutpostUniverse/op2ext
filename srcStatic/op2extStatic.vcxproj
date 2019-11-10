@@ -177,6 +177,7 @@
     <ClInclude Include="WindowsErrorCode.h" />
     <ClInclude Include="WindowsModule.h" />
     <ClInclude Include="WindowsUniqueHandle.h" />
+    <ClInclude Include="WindowsUniqueModule.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

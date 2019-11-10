@@ -10,16 +10,14 @@ DllModule::DllModule(const std::string& moduleName)
 void DllModule::LoadModuleDll(const std::string& dllPath)
 {
 	// Try to load a DLL with the given name (possibly an empty string)
-	HINSTANCE dllHandle = LoadLibraryA(dllPath.c_str());
+	moduleDllHandle.reset(LoadLibraryA(dllPath.c_str()));
 
-	if (!dllHandle) {
+	if (!moduleDllHandle) {
 		throw std::runtime_error(
 			"Unable to load DLL path: " + dllPath +
 			" LoadLibrary " + GetLastErrorString()
 		);
 	}
-
-	this->moduleDllHandle = dllHandle;
 
 	DetectExportedModuleFunctions();
 }
@@ -66,9 +64,7 @@ bool DllModule::Unload()
 		}
 	}
 
-	if (moduleDllHandle) {
-		FreeLibrary(moduleDllHandle);
-	}
+	moduleDllHandle.reset(nullptr);
 
 	return success;
 }
