@@ -105,7 +105,7 @@ bool Op2MemSetDword(std::uintptr_t destBaseAddr, const void* dword)
 // Example:  E8 = CALL, 00040000 = relative offset = <DWORD(&someMethod - &postCallInstruction)>
 //   CALL someMethod  ; Encoded as E8 00040000
 //   postCallInstruction:
-// The `callOffset` parameter is the address of the encoded DWORD
+// Patch address is of the instruction opcode (E8), which is verified before patching
 bool Op2RelinkCall(std::uintptr_t callOffset, const void* newFunctionAddress)
 {
 	if (!memoryPatchingEnabled) {
