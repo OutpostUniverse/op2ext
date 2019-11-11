@@ -7,10 +7,10 @@
 #include "FileSystemHelper.h"
 #include "FsInclude.h"
 #include "Log.h"
-#include "LoggerFile.h"
-#include "LoggerMessageBox.h"
-#include "LoggerDistributor.h"
-#include "LoggerDebug.h"
+#include "Log/LoggerFile.h"
+#include "Log/LoggerMessageBox.h"
+#include "Log/LoggerDistributor.h"
+#include "Log/LoggerDebug.h"
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <string>
