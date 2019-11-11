@@ -1,4 +1,4 @@
-#include "LoggerDistributor.h"
+#include "Log/LoggerDistributor.h"
 #include "LogMessageTest.h"
 
 
