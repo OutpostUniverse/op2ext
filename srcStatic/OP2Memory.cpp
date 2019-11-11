@@ -106,18 +106,18 @@ bool Op2MemSetDword(std::uintptr_t destBaseAddr, const void* dword)
 //   CALL someMethod  ; Encoded as E8 00040000
 //   postCallInstruction:
 // Patch address is of the instruction opcode (E8), which is verified before patching
-bool Op2RelinkCall(std::uintptr_t callOffset, const void* newFunctionAddress)
+bool Op2RelinkCall(std::uintptr_t callInstructionAddr, const void* newFunctionAddress)
 {
 	if (!memoryPatchingEnabled) {
 		return false;
 	}
 
 	// Verify this is being run on a CALL instruction
-	if (*reinterpret_cast<unsigned char*>(callOffset + loadOffset) != 0xE8) {
-		LogError("Op2RelinkCall error: No CALL instruction found at given address: " + AddrToHexString(callOffset));
+	if (*reinterpret_cast<unsigned char*>(callInstructionAddr + loadOffset) != 0xE8) {
+		LogError("Op2RelinkCall error: No CALL instruction found at given address: " + AddrToHexString(callInstructionAddr));
 		return false;
 	}
 
-	const auto postCallInstructionAddress = callOffset + loadOffset + (1 + sizeof(void*));
-	return Op2MemSetDword(callOffset + 1, reinterpret_cast<std::size_t>(newFunctionAddress) - postCallInstructionAddress);
+	const auto postCallInstructionAddress = callInstructionAddr + loadOffset + (1 + sizeof(void*));
+	return Op2MemSetDword(callInstructionAddr + 1, reinterpret_cast<std::size_t>(newFunctionAddress) - postCallInstructionAddress);
 }

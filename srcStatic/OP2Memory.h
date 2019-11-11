@@ -14,7 +14,7 @@ bool Op2MemCopy(std::uintptr_t destBaseAddr, std::size_t size, const void* sourc
 bool Op2MemSet(std::uintptr_t destBaseAddr, std::size_t size, unsigned char value);
 bool Op2MemSetDword(std::uintptr_t destBaseAddr, std::size_t dword);
 bool Op2MemSetDword(std::uintptr_t destBaseAddr, const void* dword);
-bool Op2RelinkCall(std::uintptr_t callOffset, const void* newFunctionAddress);
+bool Op2RelinkCall(std::uintptr_t callInstructionAddr, const void* newFunctionAddress);
 
 
 template <typename MethodPointerType>
