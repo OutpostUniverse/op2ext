@@ -32,6 +32,19 @@ bool EnableOp2MemoryPatching()
 }
 
 
+bool Op2UnprotectMemory(std::uintptr_t destBaseAddr, std::size_t size)
+{
+	if (!memoryPatchingEnabled) {
+		return false;
+	}
+
+	void* destAddr = reinterpret_cast<void*>(destBaseAddr + loadOffset);
+	// Try to unprotect memory
+	DWORD oldAttr;
+	return VirtualProtect(destAddr, size, PAGE_EXECUTE_READWRITE, &oldAttr);
+}
+
+
 template <typename Function>
 bool Op2MemEdit(std::uintptr_t destBaseAddr, std::size_t size, Function memoryEditFunction)
 {
@@ -107,17 +120,4 @@ bool Op2RelinkCall(std::uintptr_t callOffset, const void* newFunctionAddress)
 
 	const auto postCallInstructionAddress = callOffset + loadOffset + (1 + sizeof(void*));
 	return Op2MemSetDword(callOffset + 1, reinterpret_cast<std::size_t>(newFunctionAddress) - postCallInstructionAddress);
-}
-
-
-bool Op2UnprotectMemory(std::uintptr_t destBaseAddr, std::size_t size)
-{
-	if (!memoryPatchingEnabled) {
-		return false;
-	}
-	
-	void* destAddr = reinterpret_cast<void*>(destBaseAddr + loadOffset);
-	// Try to unprotect memory
-	DWORD oldAttr;
-	return VirtualProtect(destAddr, size, PAGE_EXECUTE_READWRITE, &oldAttr);
 }
