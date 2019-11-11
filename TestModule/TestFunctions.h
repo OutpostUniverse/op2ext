@@ -8,3 +8,4 @@ void TestIsModuleLoaded();
 void TestIsConsoleModuleLoaded();
 void TestIsIniModuleLoaded();
 void TestGetLoadedModuleNames();
+void TestGetModuleDirectory();

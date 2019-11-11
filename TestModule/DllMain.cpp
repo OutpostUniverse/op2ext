@@ -37,6 +37,7 @@ EXPORT void mod_run()
 	TestIsConsoleModuleLoaded();
 	TestIsModuleLoaded();
 	TestGetLoadedModuleNames();
+	TestGetModuleDirectory();
 }
 
 EXPORT void mod_destroy()
