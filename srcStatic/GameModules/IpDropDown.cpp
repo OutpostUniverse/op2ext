@@ -39,7 +39,7 @@ void IPDropDown::Load()
 	// patch the call to EnableWindow so we can add strings.
 	Op2MemSetDword(populateComboBoxAddr, &newEnableWindowAddr);
 	Op2MemSetDword(saveIpTextAddr, &newInetAddr);
-	Op2MemSet(nopDataAddr, 0x90, 14);
+	Op2MemSet(nopDataAddr, 14, 0x90);
 }
 
 BOOL __stdcall EnableWindowNew(HWND hWnd, BOOL bEnable)

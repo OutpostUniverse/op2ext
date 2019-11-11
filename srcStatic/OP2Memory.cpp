@@ -59,7 +59,7 @@ bool Op2MemEdit(std::uintptr_t destBaseAddr, std::size_t size, Function memoryEd
 }
 
 
-bool Op2MemSet(std::uintptr_t destBaseAddr, unsigned char value, std::size_t size)
+bool Op2MemSet(std::uintptr_t destBaseAddr, std::size_t size, unsigned char value)
 {
 	return Op2MemEdit(
 		destBaseAddr,
@@ -68,7 +68,7 @@ bool Op2MemSet(std::uintptr_t destBaseAddr, unsigned char value, std::size_t siz
 	);
 }
 
-bool Op2MemCopy(std::uintptr_t destBaseAddr, const void* sourceAddr, std::size_t size)
+bool Op2MemCopy(std::uintptr_t destBaseAddr, std::size_t size, const void* sourceAddr)
 {
 	return Op2MemEdit(
 		destBaseAddr,
@@ -79,12 +79,12 @@ bool Op2MemCopy(std::uintptr_t destBaseAddr, const void* sourceAddr, std::size_t
 
 bool Op2MemSetDword(std::uintptr_t destBaseAddr, std::size_t dword)
 {
-	return Op2MemCopy(destBaseAddr, &dword, sizeof(dword));
+	return Op2MemCopy(destBaseAddr, sizeof(dword), &dword);
 }
 
 bool Op2MemSetDword(std::uintptr_t destBaseAddr, const void* dword)
 {
-	return Op2MemCopy(destBaseAddr, &dword, sizeof(dword));
+	return Op2MemCopy(destBaseAddr, sizeof(dword), &dword);
 }
 
 // This is used to patch up CALL instructions to intra-module non-virtual functions
