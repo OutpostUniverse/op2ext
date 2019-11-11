@@ -98,8 +98,8 @@ TEST(op2ext, GetConsoleModDir_s) {
 	ASSERT_TRUE(consoleModDirView.length() < MAX_PATH);
 	// Path is null terminated (this is outside the string_view window)
 	EXPECT_EQ(0, consoleModDir[consoleModDirView.length()]);
-	// Path ends with a trailing slash
-	EXPECT_EQ('\\', consoleModDirView.back());
+	// Calling from outside of a loaded module should return empty string
+	EXPECT_EQ("", consoleModDirView);
 }
 
 TEST(op2ext, AddVolToList) {

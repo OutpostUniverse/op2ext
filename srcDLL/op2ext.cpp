@@ -35,7 +35,7 @@ OP2EXT_API size_t GetConsoleModDir_s(char* buffer, size_t bufferSize)
 		consoleModuleDirectory = module->Directory();
 	}
 	// Copy module directory to supplied buffer
-	return CopyStringViewIntoCharBuffer(consoleModuleDirectory + "\\", buffer, bufferSize);
+	return CopyStringViewIntoCharBuffer(consoleModuleDirectory, buffer, bufferSize);
 }
 
 OP2EXT_API void GetGameDir(char* buffer)
