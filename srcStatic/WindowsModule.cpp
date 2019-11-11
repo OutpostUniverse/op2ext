@@ -1,4 +1,3 @@
-#include "WindowsModule.h"
 // Unicode builds of this file are unsupported
 // We must use the non "W" variant of Module32First, Module32Next, MODULEENTRY32
 // The API (public function signature) must not depend on types affected by unicode settings
@@ -6,18 +5,27 @@
 // Force a non-unicode build of this translation unit
 #undef UNICODE
 #undef _UNICODE
-#include <windows.h>
-#include <tlhelp32.h> // CreateToolhelp32Snapshot, Module32First, Module32Next
+#include "WindowsModule.h"
 #include "WindowsUniqueHandle.h"
+#include <tlhelp32.h> // CreateToolhelp32Snapshot, Module32First, Module32Next
 
 
+// The definition of MODULEENTRY32 is affected by the UNICODE setting
+// As such, we should keep the following methods private to the .cpp file
+// Any file that includes the .h file may have a different UNICODE setting
 MODULEENTRY32 FindModuleEntry(const void* address);
 MODULEENTRY32 FindModuleEntry(HANDLE hModuleSnap, const void* address);
 bool containsAddress(MODULEENTRY32 const& moduleEntry, const void* address);
 
 
+// Find name of module that contains the given address
 std::string FindModuleName(const void* address) {
 	return std::string(FindModuleEntry(address).szModule);
+}
+
+// Find handle of module that contains the given address
+HMODULE FindModuleHandle(const void* address) {
+	return FindModuleEntry(address).hModule;
 }
 
 

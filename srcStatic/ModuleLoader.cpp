@@ -203,3 +203,15 @@ void ModuleLoader::RunModules()
 		}
 	}
 }
+
+
+GameModule* ModuleLoader::FindModule(HMODULE dllModule)
+{
+	for (auto& uniqueModule : modules) {
+		DllModule* module = dynamic_cast<DllModule*>(uniqueModule.get());
+		if (module && module->UsesModule(dllModule)) {
+			return module;
+		}
+	}
+	return nullptr;
+}

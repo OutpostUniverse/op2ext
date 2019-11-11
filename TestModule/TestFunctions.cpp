@@ -4,6 +4,7 @@
 #include <windows.h>
 #include <cstddef>
 #include <vector>
+#include <string>
 #include <algorithm>
 
 
@@ -105,4 +106,16 @@ void TestGetLoadedModuleNames()
 		const std::string moduleNameOutput = "   " + moduleName;
 		Log(moduleNameOutput.c_str());
 	}
+}
+
+void TestGetModuleDirectory()
+{
+	char moduleDirectory[MAX_PATH];
+	auto length = GetConsoleModDir_s(moduleDirectory, sizeof(moduleDirectory));
+
+	if (length) {
+		Log(("Module directory buffer size exceeded for path of length: " + std::to_string(length)).c_str());
+	}
+
+	Log(("Module directory: " + std::string(moduleDirectory)).c_str());
 }

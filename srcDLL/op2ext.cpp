@@ -27,14 +27,15 @@ OP2EXT_API size_t GetGameDir_s(char* buffer, size_t bufferSize)
 
 OP2EXT_API size_t GetConsoleModDir_s(char* buffer, size_t bufferSize)
 {
-	// This is an older method that assumes only a single console module can be loaded
 	std::string consoleModuleDirectory;
-	if (moduleLoader->Count() > 0) {
-		// Assume they care about the first loaded console module
-		consoleModuleDirectory = moduleLoader->GetModuleDirectory(0);
+
+	// Try to determine calling module
+	auto module = moduleLoader->FindModule(FindModuleHandle(_ReturnAddress()));
+	if (module) {
+		consoleModuleDirectory = module->Directory();
 	}
 	// Copy module directory to supplied buffer
-	return CopyStringViewIntoCharBuffer(consoleModuleDirectory + "\\", buffer, bufferSize);
+	return CopyStringViewIntoCharBuffer(consoleModuleDirectory, buffer, bufferSize);
 }
 
 OP2EXT_API void GetGameDir(char* buffer)
@@ -50,11 +51,11 @@ OP2EXT_API void GetGameDir(char* buffer)
 
 OP2EXT_API char* GetCurrentModDir()
 {
-	// This is an older method that assumes only a single console module can be loaded
 	std::string moduleDirectory;
-	if (moduleLoader->Count() > 0) {
-		// Assume they care about the first loaded console module
-		moduleDirectory = moduleLoader->GetModuleDirectory(0);
+	// Try to determine calling module
+	auto module = moduleLoader->FindModule(FindModuleHandle(_ReturnAddress()));
+	if (module) {
+		moduleDirectory = module->Directory();
 	}
 
 	if (moduleDirectory.empty()) {

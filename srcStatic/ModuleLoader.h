@@ -6,6 +6,8 @@
 #include <vector>
 #include <memory>
 #include <cstddef>
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
 
 
 class ModuleLoader
@@ -25,6 +27,8 @@ public:
 	bool IsModuleLoaded(std::string moduleName);
 
 	void RegisterModule(std::unique_ptr<GameModule> newGameModule);
+
+	GameModule* FindModule(HMODULE dllModule);
 
 private:
 	IniFile iniFile;
