@@ -15,9 +15,9 @@ constexpr std::uintptr_t ExpectedOutpost2Address = 0x00400000;
 // Returns true on success, or false on failure
 bool EnableOp2MemoryPatching()
 {
-	void* op2ModuleBase = GetModuleHandle(TEXT("Outpost2.exe"));
+	void* op2ModuleBaseAddress = GetModuleHandle(TEXT("Outpost2.exe"));
 
-	if (op2ModuleBase == nullptr) {
+	if (op2ModuleBaseAddress == nullptr) {
 		// Could not find Outpost2.exe module base address
 		// This can never happen if Outpost2.exe was the one that loaded op2ext.dll
 		// Failure likely means op2ext.dll was loaded elsewhere, such as a unit test
@@ -27,7 +27,7 @@ bool EnableOp2MemoryPatching()
 
 	// Enable memory patching for Outpost2.exe, and set relocation offset
 	memoryPatchingEnabled = true;
-	loadOffset = reinterpret_cast<std::uintptr_t>(op2ModuleBase) - ExpectedOutpost2Address;
+	loadOffset = reinterpret_cast<std::uintptr_t>(op2ModuleBaseAddress) - ExpectedOutpost2Address;
 	return true;
 }
 
