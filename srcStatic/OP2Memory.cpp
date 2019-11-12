@@ -116,14 +116,16 @@ bool Op2RelinkCall(std::uintptr_t callInstructionAddress, const void* newFunctio
 		return false;
 	}
 
+	const auto callInstructionRelocatedAddress = callInstructionAddress + loadOffset;
+
 	// Verify this is being run on a CALL instruction
-	if (*reinterpret_cast<unsigned char*>(callInstructionAddress + loadOffset) != 0xE8) {
+	if (*reinterpret_cast<unsigned char*>(callInstructionRelocatedAddress) != 0xE8) {
 		LogError("Op2RelinkCall error: No CALL instruction found at given address: " + AddrToHexString(callInstructionAddress));
 		return false;
 	}
 
 	constexpr std::size_t callInstructionSize = 1 + sizeof(void*); // Opcode byte + relativeOffset
-	const auto postCallInstructionAddress = callInstructionAddress + loadOffset + callInstructionSize;
+	const auto postCallInstructionAddress = callInstructionRelocatedAddress + callInstructionSize;
 	const auto relativeOffset = reinterpret_cast<std::uintptr_t>(newFunctionAddress) - postCallInstructionAddress;
 	return Op2MemSetDword(callInstructionAddress + 1, relativeOffset);
 }
