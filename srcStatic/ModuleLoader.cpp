@@ -142,9 +142,9 @@ void ModuleLoader::RegisterModule(std::unique_ptr<GameModule> newGameModule)
 
 void ModuleLoader::LoadModules()
 {
-	RegisterConsoleModules();
 	RegisterBuiltInModules();
 	RegisterIniModules();
+	RegisterConsoleModules();
 
 	// Abort early to avoid hooking file search path if not needed
 	if (modules.empty()) {
