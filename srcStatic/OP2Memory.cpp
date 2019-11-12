@@ -103,9 +103,9 @@ Op2MemCopy(std::uintptr_t destBaseAddress, Type& value)
 	return Op2MemCopy(destBaseAddress, sizeof(Type), &value);
 }
 
-bool Op2MemSetDword(std::uintptr_t destBaseAddress, const void* dword)
+bool Op2WriteAddress(std::uintptr_t destBaseAddress, const void* newAddress)
 {
-	return Op2MemCopy(destBaseAddress, dword);
+	return Op2MemCopy(destBaseAddress, newAddress);
 }
 
 // This is used to patch up CALL instructions to intra-module non-virtual functions
