@@ -103,11 +103,6 @@ Op2MemCopy(std::uintptr_t destBaseAddress, Type& value)
 	return Op2MemCopy(destBaseAddress, sizeof(Type), &value);
 }
 
-bool Op2MemSetDword(std::uintptr_t destBaseAddress, std::size_t dword)
-{
-	return Op2MemCopy(destBaseAddress, dword);
-}
-
 bool Op2MemSetDword(std::uintptr_t destBaseAddress, const void* dword)
 {
 	return Op2MemCopy(destBaseAddress, dword);
