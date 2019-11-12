@@ -122,6 +122,7 @@ bool Op2RelinkCall(std::uintptr_t callInstructionAddress, const void* newFunctio
 		return false;
 	}
 
-	const auto postCallInstructionAddress = callInstructionAddress + loadOffset + (1 + sizeof(void*));
+	constexpr std::size_t callInstructionSize = 1 + sizeof(void*); // Opcode byte + relativeOffset
+	const auto postCallInstructionAddress = callInstructionAddress + loadOffset + callInstructionSize;
 	return Op2MemSetDword(callInstructionAddress + 1, reinterpret_cast<std::size_t>(newFunctionAddress) - postCallInstructionAddress);
 }
