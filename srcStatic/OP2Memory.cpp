@@ -3,6 +3,7 @@
 #include "StringConversion.h"
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include <type_traits>
 
 
 bool memoryPatchingEnabled = false;
@@ -94,14 +95,22 @@ bool Op2MemCopy(std::uintptr_t destBaseAddress, std::size_t size, const void* so
 	);
 }
 
+// Copy value to memory location
+template <typename Type>
+std::enable_if_t<std::is_trivially_copyable_v<Type>, bool>
+Op2MemCopy(std::uintptr_t destBaseAddress, Type& value)
+{
+	return Op2MemCopy(destBaseAddress, sizeof(Type), &value);
+}
+
 bool Op2MemSetDword(std::uintptr_t destBaseAddress, std::size_t dword)
 {
-	return Op2MemCopy(destBaseAddress, sizeof(dword), &dword);
+	return Op2MemCopy(destBaseAddress, dword);
 }
 
 bool Op2MemSetDword(std::uintptr_t destBaseAddress, const void* dword)
 {
-	return Op2MemCopy(destBaseAddress, sizeof(dword), &dword);
+	return Op2MemCopy(destBaseAddress, dword);
 }
 
 // This is used to patch up CALL instructions to intra-module non-virtual functions
