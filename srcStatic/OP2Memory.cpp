@@ -40,8 +40,8 @@ bool Op2UnprotectMemory(std::uintptr_t destBaseAddress, std::size_t size)
 
 	void* destAddress = reinterpret_cast<void*>(destBaseAddress + loadOffset);
 	// Try to unprotect memory
-	DWORD oldAttr;
-	return VirtualProtect(destAddress, size, PAGE_EXECUTE_READWRITE, &oldAttr);
+	DWORD oldAttribute;
+	return VirtualProtect(destAddress, size, PAGE_EXECUTE_READWRITE, &oldAttribute);
 }
 
 
@@ -55,8 +55,8 @@ bool Op2MemEdit(std::uintptr_t destBaseAddress, std::size_t size, Function memor
 	void* destAddress = reinterpret_cast<void*>(destBaseAddress + loadOffset);
 
 	// Try to unprotect memory
-	DWORD oldAttr;
-	BOOL bSuccess = VirtualProtect(destAddress, size, PAGE_EXECUTE_READWRITE, &oldAttr);
+	DWORD oldAttribute;
+	BOOL bSuccess = VirtualProtect(destAddress, size, PAGE_EXECUTE_READWRITE, &oldAttribute);
 	if (!bSuccess) {
 		LogError("Error unprotecting memory at: 0x" + AddrToHexString(destAddress) + ".");
 		return false;
@@ -65,8 +65,8 @@ bool Op2MemEdit(std::uintptr_t destBaseAddress, std::size_t size, Function memor
 	memoryEditFunction(destAddress, size);
 
 	// Reprotect memory with the original attributes
-	DWORD ignoredAttr;
-	bSuccess = VirtualProtect(destAddress, size, oldAttr, &ignoredAttr);
+	DWORD ignoredAttribute;
+	bSuccess = VirtualProtect(destAddress, size, oldAttribute, &ignoredAttribute);
 
 	return (bSuccess != 0);
 }
