@@ -7,7 +7,7 @@
 
 bool memoryPatchingEnabled = false;
 std::uintptr_t loadOffset = 0;
-constexpr std::uintptr_t ExpectedOutpost2Addr = 0x00400000;
+constexpr std::uintptr_t ExpectedOutpost2Address = 0x00400000;
 
 
 // Enabled patching of Outpost2.exe memory
@@ -15,9 +15,9 @@ constexpr std::uintptr_t ExpectedOutpost2Addr = 0x00400000;
 // Returns true on success, or false on failure
 bool EnableOp2MemoryPatching()
 {
-	void* op2ModuleBase = GetModuleHandle(TEXT("Outpost2.exe"));
+	void* op2ModuleBaseAddress = GetModuleHandle(TEXT("Outpost2.exe"));
 
-	if (op2ModuleBase == nullptr) {
+	if (op2ModuleBaseAddress == nullptr) {
 		// Could not find Outpost2.exe module base address
 		// This can never happen if Outpost2.exe was the one that loaded op2ext.dll
 		// Failure likely means op2ext.dll was loaded elsewhere, such as a unit test
@@ -27,64 +27,77 @@ bool EnableOp2MemoryPatching()
 
 	// Enable memory patching for Outpost2.exe, and set relocation offset
 	memoryPatchingEnabled = true;
-	loadOffset = reinterpret_cast<std::uintptr_t>(op2ModuleBase) - ExpectedOutpost2Addr;
+	loadOffset = reinterpret_cast<std::uintptr_t>(op2ModuleBaseAddress) - ExpectedOutpost2Address;
 	return true;
 }
 
 
-template <typename Function>
-bool Op2MemEdit(std::uintptr_t destBaseAddr, std::size_t size, Function memoryEditFunction)
+bool Op2UnprotectMemory(std::uintptr_t destBaseAddress, std::size_t size)
 {
 	if (!memoryPatchingEnabled) {
 		return false;
 	}
 
-	void* destAddr = reinterpret_cast<void*>(destBaseAddr + loadOffset);
-
+	void* destAddress = reinterpret_cast<void*>(destBaseAddress + loadOffset);
 	// Try to unprotect memory
-	DWORD oldAttr;
-	BOOL bSuccess = VirtualProtect(destAddr, size, PAGE_EXECUTE_READWRITE, &oldAttr);
-	if (!bSuccess) {
-		LogError("Error unprotecting memory at: 0x" + AddrToHexString(destAddr) + ".");
+	DWORD oldAttribute;
+	return VirtualProtect(destAddress, size, PAGE_EXECUTE_READWRITE, &oldAttribute);
+}
+
+
+template <typename Function>
+bool Op2MemEdit(std::uintptr_t destBaseAddress, std::size_t size, Function memoryEditFunction)
+{
+	if (!memoryPatchingEnabled) {
 		return false;
 	}
 
-	memoryEditFunction(destAddr, size);
+	void* destAddress = reinterpret_cast<void*>(destBaseAddress + loadOffset);
+
+	// Try to unprotect memory
+	DWORD oldAttribute;
+	BOOL bSuccess = VirtualProtect(destAddress, size, PAGE_EXECUTE_READWRITE, &oldAttribute);
+	if (!bSuccess) {
+		LogError("Error unprotecting memory at: 0x" + AddrToHexString(destAddress) + ".");
+		return false;
+	}
+
+	memoryEditFunction(destAddress, size);
 
 	// Reprotect memory with the original attributes
-	DWORD ignoredAttr;
-	bSuccess = VirtualProtect(destAddr, size, oldAttr, &ignoredAttr);
+	DWORD ignoredAttribute;
+	bSuccess = VirtualProtect(destAddress, size, oldAttribute, &ignoredAttribute);
 
 	return (bSuccess != 0);
 }
 
 
-bool Op2MemSet(std::uintptr_t destBaseAddr, std::size_t size, unsigned char value)
+bool Op2MemSet(std::uintptr_t destBaseAddress, std::size_t size, unsigned char value)
 {
 	return Op2MemEdit(
-		destBaseAddr,
+		destBaseAddress,
 		size,
-		[value](void* destAddr, std::size_t size) { memset(destAddr, value, size); }
+		[value](void* destAddress, std::size_t size) { memset(destAddress, value, size); }
 	);
 }
 
-bool Op2MemCopy(std::uintptr_t destBaseAddr, std::size_t size, const void* sourceAddr)
+bool Op2MemCopy(std::uintptr_t destBaseAddress, std::size_t size, const void* sourceAddress)
 {
 	return Op2MemEdit(
-		destBaseAddr,
+		destBaseAddress,
 		size,
-		[sourceAddr](void* destAddr, std::size_t size) { memcpy(destAddr, sourceAddr, size); }
+		[sourceAddress](void* destAddress, std::size_t size) { memcpy(destAddress, sourceAddress, size); }
 	);
 }
 
-bool Op2MemSetDword(std::uintptr_t destBaseAddr, std::size_t dword)
+bool Op2MemSetDword(std::uintptr_t destBaseAddress, std::size_t dword)
 {
-	return Op2MemCopy(destBaseAddr, sizeof(dword), &dword);
+	return Op2MemCopy(destBaseAddress, sizeof(dword), &dword);
 }
 
-bool Op2MemSetDword(std::uintptr_t destBaseAddr, const void* dword)
+bool Op2MemSetDword(std::uintptr_t destBaseAddress, const void* dword)
 {
-	return Op2MemCopy(destBaseAddr, sizeof(dword), &dword);
+	return Op2MemCopy(destBaseAddress, sizeof(dword), &dword);
 }
 
 // This is used to patch up CALL instructions to intra-module non-virtual functions
@@ -92,32 +105,19 @@ bool Op2MemSetDword(std::uintptr_t destBaseAddr, const void* dword)
 // Example:  E8 = CALL, 00040000 = relative offset = <DWORD(&someMethod - &postCallInstruction)>
 //   CALL someMethod  ; Encoded as E8 00040000
 //   postCallInstruction:
-// The `callOffset` parameter is the address of the encoded DWORD
-bool Op2RelinkCall(std::uintptr_t callOffset, const void* newFunctionAddress)
+// Patch address is of the instruction opcode (E8), which is verified before patching
+bool Op2RelinkCall(std::uintptr_t callInstructionAddress, const void* newFunctionAddress)
 {
 	if (!memoryPatchingEnabled) {
 		return false;
 	}
 
 	// Verify this is being run on a CALL instruction
-	if (*reinterpret_cast<unsigned char*>(callOffset + loadOffset) != 0xE8) {
-		LogError("Op2RelinkCall error: No CALL instruction found at given address: " + AddrToHexString(callOffset));
+	if (*reinterpret_cast<unsigned char*>(callInstructionAddress + loadOffset) != 0xE8) {
+		LogError("Op2RelinkCall error: No CALL instruction found at given address: " + AddrToHexString(callInstructionAddress));
 		return false;
 	}
 
-	const auto postCallInstructionAddress = callOffset + loadOffset + (1 + sizeof(void*));
-	return Op2MemSetDword(callOffset + 1, reinterpret_cast<std::size_t>(newFunctionAddress) - postCallInstructionAddress);
-}
-
-
-bool Op2UnprotectMemory(std::uintptr_t destBaseAddr, std::size_t size)
-{
-	if (!memoryPatchingEnabled) {
-		return false;
-	}
-	
-	void* destAddr = reinterpret_cast<void*>(destBaseAddr + loadOffset);
-	// Try to unprotect memory
-	DWORD oldAttr;
-	return VirtualProtect(destAddr, size, PAGE_EXECUTE_READWRITE, &oldAttr);
+	const auto postCallInstructionAddress = callInstructionAddress + loadOffset + (1 + sizeof(void*));
+	return Op2MemSetDword(callInstructionAddress + 1, reinterpret_cast<std::size_t>(newFunctionAddress) - postCallInstructionAddress);
 }
