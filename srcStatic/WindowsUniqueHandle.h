@@ -1,6 +1,13 @@
 #include <windows.h>
 #include <memory>
-#include <cstdint>
+
+
+struct TraitNullValueInvalid {
+	static HANDLE NullValue() { return INVALID_HANDLE_VALUE; }
+};
+struct TraitNullValueNull {
+	static HANDLE NullValue() { return NULL; }
+};
 
 
 // Sentinel value guarded HANDLE deleter
@@ -9,12 +16,12 @@
 // The cast is equivalent to a reinterpret_cast, which makes it non-constexpr
 // As such, INVALID_HANDLE_VALUE can't be used as a non-type template parameter
 // Instead of HANDLE, use std::uintptr_t and an internal cast as a workaround
-template <std::uintptr_t nullValue>
+template <typename TraitNullValue>
 struct HandleDeleter {
 	using pointer = HANDLE;
 
 	void operator()(HANDLE handle) const {
-		if (handle != reinterpret_cast<HANDLE>(nullValue)) {
+		if (handle != TraitNullValue::NullValue()) {
 			CloseHandle(handle);
 		}
 	}
@@ -22,24 +29,24 @@ struct HandleDeleter {
 
 
 // Like unique_ptr, but with some overrides to account for custom nullValue
-template <std::uintptr_t nullValue>
-class UniqueHandle : public std::unique_ptr<HANDLE, HandleDeleter<nullValue>> {
-	using base = std::unique_ptr<HANDLE, HandleDeleter<nullValue>>;
+template <typename TraitNullValue>
+class UniqueHandle : public std::unique_ptr<HANDLE, HandleDeleter<TraitNullValue>> {
+	using base = std::unique_ptr<HANDLE, HandleDeleter<TraitNullValue>>;
 public:
 	// Override default/nullptr initialization to use custom nullValue
-	UniqueHandle(std::nullptr_t = nullptr) : base(reinterpret_cast<HANDLE>(nullValue)) {
+	UniqueHandle(std::nullptr_t = nullptr) : base(TraitNullValue::NullValue()) {
 	}
 	// Bring other constructors into scope, so override doesn't hide them
 	using base::unique_ptr;
 
 	explicit operator bool() {
-		return (reinterpret_cast<HANDLE>(nullValue) != base::get());
+		return (TraitNullValue::NullValue() != base::get());
 	}
 };
 
 
 // For APIs that return INVALID_HANDLE_VALUE (-1) on error
 // Replace INVALID_HANDLE_VALUE macro with an equivalent constexpr value
-using UniqueHandleOrInvalid = UniqueHandle<-1>;
+using UniqueHandleOrInvalid = UniqueHandle<TraitNullValueInvalid>;
 // For APIs that return NULL (0) on error
-using UniqueHandleOrNull = UniqueHandle<0>;
+using UniqueHandleOrNull = UniqueHandle<TraitNullValueNull>;
