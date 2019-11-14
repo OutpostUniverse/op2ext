@@ -37,8 +37,8 @@ void IPDropDown::Load()
 	constexpr std::uintptr_t nopDataAddr = 0x0041988F;
 
 	// patch the call to EnableWindow so we can add strings.
-	Op2MemSetDword(populateComboBoxAddr, &newEnableWindowAddr);
-	Op2MemSetDword(saveIpTextAddr, &newInetAddr);
+	Op2WriteAddress(populateComboBoxAddr, &newEnableWindowAddr);
+	Op2WriteAddress(saveIpTextAddr, &newInetAddr);
 	Op2MemSet(nopDataAddr, 14, 0x90);
 }
 

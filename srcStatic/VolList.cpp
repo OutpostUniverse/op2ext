@@ -60,27 +60,27 @@ void VolList::Activate()
 
 	// Patch instructions so hardcoded references to old array now point to new array
 
-	Op2MemSetDword(0x00471070, arrayStart1);
+	Op2WriteAddress(0x00471070, arrayStart1);
 
-	Op2MemSetDword(0x00471142, arrayStart2);
-	Op2MemSetDword(0x004711DA, arrayStart2);
-	Op2MemSetDword(0x00471206, arrayStart2);
-	Op2MemSetDword(0x0047136C, arrayStart2);
-	Op2MemSetDword(0x004713AA, arrayStart2);
-	Op2MemSetDword(0x004713D1, arrayStart2);
-	Op2MemSetDword(0x00471439, arrayStart2);
-	Op2MemSetDword(0x00471474, arrayStart2);
+	Op2WriteAddress(0x00471142, arrayStart2);
+	Op2WriteAddress(0x004711DA, arrayStart2);
+	Op2WriteAddress(0x00471206, arrayStart2);
+	Op2WriteAddress(0x0047136C, arrayStart2);
+	Op2WriteAddress(0x004713AA, arrayStart2);
+	Op2WriteAddress(0x004713D1, arrayStart2);
+	Op2WriteAddress(0x00471439, arrayStart2);
+	Op2WriteAddress(0x00471474, arrayStart2);
 
-	Op2MemSetDword(0x0047111F, arrayEnd1);
+	Op2WriteAddress(0x0047111F, arrayEnd1);
 
-	Op2MemSetDword(0x0047115E, arrayEnd2);
-	Op2MemSetDword(0x0047126E, arrayEnd2);
-	Op2MemSetDword(0x0047128B, arrayEnd2);
-	Op2MemSetDword(0x00471389, arrayEnd2);
-	Op2MemSetDword(0x004713E8, arrayEnd2);
-	Op2MemSetDword(0x004713EF, arrayEnd2);
-	Op2MemSetDword(0x00471408, arrayEnd2);
-	Op2MemSetDword(0x00471457, arrayEnd2);
+	Op2WriteAddress(0x0047115E, arrayEnd2);
+	Op2WriteAddress(0x0047126E, arrayEnd2);
+	Op2WriteAddress(0x0047128B, arrayEnd2);
+	Op2WriteAddress(0x00471389, arrayEnd2);
+	Op2WriteAddress(0x004713E8, arrayEnd2);
+	Op2WriteAddress(0x004713EF, arrayEnd2);
+	Op2WriteAddress(0x00471408, arrayEnd2);
+	Op2WriteAddress(0x00471457, arrayEnd2);
 }
 
 // After calling CreateVolSearchEntryList, do not change the contents of volPaths.

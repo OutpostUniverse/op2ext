@@ -88,7 +88,7 @@ bool InstallTAppEventHooks()
 	Op2RelinkCall(0x004A88A5, GetMethodVoidPointer(&TApp::ShutDown));
 
 	// Replace call to LoadLibrary with custom routine (address is indirect)
-	Op2MemSetDword(0x00486E0A, &replacementLoadLibrary);
+	Op2WriteAddress(0x00486E0A, &replacementLoadLibrary);
 
 	return true;
 }

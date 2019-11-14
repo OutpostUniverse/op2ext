@@ -3,6 +3,7 @@
 #include "StringConversion.h"
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include <type_traits>
 
 
 bool memoryPatchingEnabled = false;
@@ -15,9 +16,9 @@ constexpr std::uintptr_t ExpectedOutpost2Address = 0x00400000;
 // Returns true on success, or false on failure
 bool EnableOp2MemoryPatching()
 {
-	void* op2ModuleBaseAddress = GetModuleHandle(TEXT("Outpost2.exe"));
+	auto moduleHandle = GetModuleHandle(TEXT("Outpost2.exe"));
 
-	if (op2ModuleBaseAddress == nullptr) {
+	if (moduleHandle == NULL) {
 		// Could not find Outpost2.exe module base address
 		// This can never happen if Outpost2.exe was the one that loaded op2ext.dll
 		// Failure likely means op2ext.dll was loaded elsewhere, such as a unit test
@@ -25,9 +26,13 @@ bool EnableOp2MemoryPatching()
 		return false;
 	}
 
-	// Enable memory patching for Outpost2.exe, and set relocation offset
+	// Convert module handle to module base address
+	// Under Win32 these are the same
+	auto moduleBaseAddress = reinterpret_cast<std::uintptr_t>(moduleHandle);
+	// Determine module load offset (in case of relocation)
+	loadOffset = moduleBaseAddress - ExpectedOutpost2Address;
+	// Enable memory patching for Outpost2.exe
 	memoryPatchingEnabled = true;
-	loadOffset = reinterpret_cast<std::uintptr_t>(op2ModuleBaseAddress) - ExpectedOutpost2Address;
 	return true;
 }
 
@@ -90,14 +95,17 @@ bool Op2MemCopy(std::uintptr_t destBaseAddress, std::size_t size, const void* so
 	);
 }
 
-bool Op2MemSetDword(std::uintptr_t destBaseAddress, std::size_t dword)
+// Copy value to memory location
+template <typename Type>
+std::enable_if_t<std::is_trivially_copyable_v<Type>, bool>
+Op2MemCopy(std::uintptr_t destBaseAddress, Type& value)
 {
-	return Op2MemCopy(destBaseAddress, sizeof(dword), &dword);
+	return Op2MemCopy(destBaseAddress, sizeof(Type), &value);
 }
 
-bool Op2MemSetDword(std::uintptr_t destBaseAddress, const void* dword)
+bool Op2WriteAddress(std::uintptr_t destBaseAddress, const void* newAddress)
 {
-	return Op2MemCopy(destBaseAddress, sizeof(dword), &dword);
+	return Op2MemCopy(destBaseAddress, newAddress);
 }
 
 // This is used to patch up CALL instructions to intra-module non-virtual functions
@@ -112,12 +120,16 @@ bool Op2RelinkCall(std::uintptr_t callInstructionAddress, const void* newFunctio
 		return false;
 	}
 
+	const auto callInstructionRelocatedAddress = callInstructionAddress + loadOffset;
+
 	// Verify this is being run on a CALL instruction
-	if (*reinterpret_cast<unsigned char*>(callInstructionAddress + loadOffset) != 0xE8) {
+	if (*reinterpret_cast<unsigned char*>(callInstructionRelocatedAddress) != 0xE8) {
 		LogError("Op2RelinkCall error: No CALL instruction found at given address: " + AddrToHexString(callInstructionAddress));
 		return false;
 	}
 
-	const auto postCallInstructionAddress = callInstructionAddress + loadOffset + (1 + sizeof(void*));
-	return Op2MemSetDword(callInstructionAddress + 1, reinterpret_cast<std::size_t>(newFunctionAddress) - postCallInstructionAddress);
+	constexpr std::size_t callInstructionSize = 1 + sizeof(void*); // Opcode byte + relativeOffset
+	const auto postCallInstructionAddress = callInstructionRelocatedAddress + callInstructionSize;
+	const auto relativeOffset = reinterpret_cast<std::uintptr_t>(newFunctionAddress) - postCallInstructionAddress;
+	return Op2MemCopy(callInstructionAddress + 1, relativeOffset);
 }
