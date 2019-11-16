@@ -37,6 +37,9 @@
     <ClCompile Include="Log/LoggerMessageBox.cpp">
       <Filter>Log</Filter>
     </ClCompile>
+    <ClCompile Include="GameModules\GarageSaveLoadPatch.cpp">
+      <Filter>GameModules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GetCommandLineArguments.h" />
@@ -83,6 +86,9 @@
     </ClInclude>
     <ClInclude Include="Log/LoggerMessageBox.h">
       <Filter>Log</Filter>
+    </ClInclude>
+    <ClInclude Include="GameModules\GarageSaveLoadPatch.h">
+      <Filter>GameModules</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

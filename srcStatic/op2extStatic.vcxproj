@@ -131,6 +131,7 @@
   <ItemGroup>
     <ClCompile Include="GameModules\ConsoleModule.cpp" />
     <ClCompile Include="GameModules\DllModule.cpp" />
+    <ClCompile Include="GameModules\GarageSaveLoadPatch.cpp" />
     <ClCompile Include="GetCommandLineArguments.cpp" />
     <ClCompile Include="ConsoleArgumentParser.cpp" />
     <ClCompile Include="FileSystemHelper.cpp" />
@@ -153,6 +154,7 @@
   <ItemGroup>
     <ClInclude Include="GameModules\ConsoleModule.h" />
     <ClInclude Include="GameModules\DllModule.h" />
+    <ClInclude Include="GameModules\GarageSaveLoadPatch.h" />
     <ClInclude Include="GetCommandLineArguments.h" />
     <ClInclude Include="ConsoleArgumentParser.h" />
     <ClInclude Include="EventListener.h" />

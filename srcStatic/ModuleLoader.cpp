@@ -1,5 +1,6 @@
 #include "ModuleLoader.h"
 #include "GameModules/IpDropDown.h"
+#include "GameModules/GarageSaveLoadPatch.h"
 #include "GameModules/ConsoleModule.h"
 #include "GameModules/IniModule.h"
 #include "StringConversion.h"
@@ -28,6 +29,9 @@ void ModuleLoader::RegisterBuiltInModules()
 {
 	if (IsModuleRequested("BuiltInModules", "IPDropDown")) {
 		RegisterModule(std::make_unique<IPDropDown>());
+	}
+	if (IsModuleRequested("BuiltInModules", "GarageSaveLoadPatch")) {
+		RegisterModule(std::make_unique<GarageSaveLoadPatch>());
 	}
 }
 
