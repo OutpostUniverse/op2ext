@@ -30,7 +30,7 @@ void ModuleLoader::RegisterBuiltInModules()
 	if (IsModuleRequested("BuiltInModules", "IPDropDown")) {
 		RegisterModule(std::make_unique<IPDropDown>());
 	}
-	if (IsModuleRequested("BuiltInModules", "GarageSaveLoadPatch")) {
+	else if (IsModuleRequested("BuiltInModules", "GarageSaveLoadPatch")) {
 		RegisterModule(std::make_unique<GarageSaveLoadPatch>());
 	}
 }
