@@ -38,19 +38,19 @@ constexpr MethodPointerType GetMethodPointer(std::uintptr_t methodAddress) {
 	// MSVC will (in most cases) use a single field member function pointer as an optimization, so will be unaffected
 	union MethodPointerUnion {
 		MethodPointerType pointer;
-		struct {
+		struct MethodPointerStruct {
 			std::uintptr_t address;
 			std::size_t thisOffset;
-		};
+		} pointerStruct;
 
-		MethodPointerUnion() : address(0), thisOffset(0) {} // The optimizer may actually skip this code, so assume no effect
+		MethodPointerUnion() : pointerStruct{0, 0} {} // The optimizer may actually skip this code, so assume no effect
 	} methodPointer;
 
 	// This cast works for a single field MSVC member function pointer
 	// For GCC/Mingw it leaves a hidden thisOffset field uninitialized
 	methodPointer.pointer = reinterpret_cast<MethodPointerType&>(methodVoidPointer); // MSVC specific cast
 	// Explicitly initialize hidden field
-	methodPointer.thisOffset = 0;
+	methodPointer.pointerStruct.thisOffset = 0;
 
 	return methodPointer.pointer;
 }
