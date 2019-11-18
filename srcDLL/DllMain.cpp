@@ -37,7 +37,7 @@ std::unique_ptr<VolList> volList;
 AppEvents appEvents;
 
 
-BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
+BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID /*reserved*/)
 {
 	// This will be called once the program is unpacked and running
 	if (dwReason == DLL_PROCESS_ATTACH) {
