@@ -14,7 +14,7 @@ IniModule::IniModule(IniSection iniSection)
 	catch (const std::exception& error) {
 		throw std::runtime_error("Unable to load dll for module " + Name() + ". " + std::string(error.what()));
 	}
-};
+}
 
 
 std::string IniModule::Directory()
