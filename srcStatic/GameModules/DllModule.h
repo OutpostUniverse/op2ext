@@ -11,7 +11,7 @@
 class DllModule : public GameModule
 {
 public:
-	DllModule(const std::string& moduleName);
+	explicit DllModule(const std::string& moduleName);
 
 	void Load() override;
 	bool Unload() override;

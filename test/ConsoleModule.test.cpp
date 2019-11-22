@@ -20,7 +20,7 @@ TEST(ConsoleModuleLoader, ModuleWithoutDLL)
 
 	const std::string iniFileName{ GetExeDirectory() + "TestIniFile.NonExistentData.ini" };
 	IniFile iniFile(iniFileName);
-	ModuleLoader moduleLoader(iniFileName, {moduleName});
+	ModuleLoader moduleLoader(iniFile, {moduleName});
 	
 	EXPECT_NO_THROW(moduleLoader.LoadModules());
 	EXPECT_NO_THROW(moduleLoader.RunModules());
@@ -59,7 +59,7 @@ TEST(ConsoleModuleLoader, ModuleWithEmptyDLL)
 
 	const std::string iniFileName{ GetExeDirectory() + "TestIniFile.NonExistentData.ini" };
 	IniFile iniFile(iniFileName);
-	ModuleLoader moduleLoader(iniFileName, {moduleName});
+	ModuleLoader moduleLoader(iniFile, {moduleName});
 
 	// DLL file is empty and should be aborted
 	EXPECT_NO_THROW(moduleLoader.LoadModules());

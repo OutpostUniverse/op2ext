@@ -16,7 +16,7 @@ class ModuleLoaderTest : public LogMessageTest {
 class DifferentCasedNameModule : public GameModule
 {
 public:
-	DifferentCasedNameModule(const std::string& name) : GameModule(name) {}
+	explicit DifferentCasedNameModule(const std::string& name) : GameModule(name) {}
 
 	void Load() override {}
 	bool Unload() override { return true; }
@@ -50,9 +50,6 @@ TEST(ModuleLoader, BuiltInModulePassed)
 	std::unique_ptr<GameModule> ipDropDown = std::make_unique<IPDropDown>();
 
 	moduleLoader.RegisterModule(std::move(ipDropDown));
-	
-	// Ensure ipDropDown is transfered into moduleLoader
-	EXPECT_TRUE(ipDropDown == nullptr);
 	
 	EXPECT_EQ(1u, moduleLoader.Count());
 

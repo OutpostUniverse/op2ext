@@ -10,7 +10,7 @@ public:
 	// No ownership transfer of loggers occurs
 	// Caller is responsible for ensuring lifetime of loggers exceeds lifetime of distributor
 	// All loggers must be non-null pointers
-	LoggerDistributor(std::vector<Logger*> loggers);
+	explicit LoggerDistributor(std::vector<Logger*> loggers);
 
 	void Log(const std::string& message) override;
 

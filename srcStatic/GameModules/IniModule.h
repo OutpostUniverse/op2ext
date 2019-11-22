@@ -7,7 +7,7 @@
 class IniModule : public DllModule
 {
 public:
-	IniModule(IniSection iniSection);
+	explicit IniModule(IniSection iniSection);
 
 	std::string Directory() override;
 
