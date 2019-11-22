@@ -14,7 +14,7 @@ class VolList
 {
 public:
 	VolList();
-	VolList(std::vector<std::string> volPaths);
+	explicit VolList(std::vector<std::string> volPaths);
 
 	void Activate();
 
