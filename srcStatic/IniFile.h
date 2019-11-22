@@ -11,7 +11,7 @@ class IniSection;
 class IniFile {
 public:
 
-	IniFile(std::string fileName);
+	explicit IniFile(std::string fileName);
 
 	const std::string& FileName() const;
 	std::string GetValue(const std::string& sectionName, const std::string& keyName, const std::string& defaultValue = "") const;
