@@ -16,7 +16,7 @@ class ModuleLoaderTest : public LogMessageTest {
 class DifferentCasedNameModule : public GameModule
 {
 public:
-	DifferentCasedNameModule(const std::string& name) : GameModule(name) {}
+	explicit DifferentCasedNameModule(const std::string& name) : GameModule(name) {}
 
 	void Load() override {}
 	bool Unload() override { return true; }
