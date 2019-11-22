@@ -17,7 +17,7 @@ protected:
 	}
 
 	// sectionPairs is a non-line terminated list of keys and values. EG: TestModule = No
-	void WriteExternalModuleIniFile(const std::vector<std::string_view> sectionPairs)
+	void WriteExternalModuleIniFile(const std::vector<std::string_view>& sectionPairs)
 	{
 		std::ofstream iniFileStream(iniFilename.string());
 
