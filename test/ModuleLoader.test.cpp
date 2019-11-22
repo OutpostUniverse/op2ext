@@ -51,9 +51,6 @@ TEST(ModuleLoader, BuiltInModulePassed)
 
 	moduleLoader.RegisterModule(std::move(ipDropDown));
 	
-	// Ensure ipDropDown is transfered into moduleLoader
-	EXPECT_TRUE(ipDropDown == nullptr);
-	
 	EXPECT_EQ(1u, moduleLoader.Count());
 
 	// Check module name search is case insensitive
