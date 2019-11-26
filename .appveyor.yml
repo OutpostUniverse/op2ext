@@ -19,3 +19,19 @@ test_script:
   - cd %APPVEYOR_BUILD_FOLDER%\testDll
   - '%APPVEYOR_BUILD_FOLDER%\%CONFIGURATION%\testDll.exe'
   - cd %APPVEYOR_BUILD_FOLDER%
+after_build:
+  - set PackageBaseName="%APPVEYOR_PROJECT_NAME%-Build%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%"
+  - 7z a "%PackageBaseName%.zip" "%APPVEYOR_BUILD_FOLDER%\%CONFIGURATION%\*.dll"
+  - 7z a "%PackageBaseName%-DebugSymbolPdb.zip" "%APPVEYOR_BUILD_FOLDER%\%CONFIGURATION%\*.pdb"
+artifacts:
+  - path: "*.zip"
+    name: BuildArtifacts
+deploy:
+  on:
+    branch: master
+    APPVEYOR_REPO_TAG: true
+  artifact: BuildArtifacts
+  description: ''
+  provider: GitHub
+  auth_token:
+    secure: TmV7XiO84JvSaLJnbrRrtoOugcFLSogA4I55yBZ1Y+QAmv28EOgO1M8lX+NSJWA/
