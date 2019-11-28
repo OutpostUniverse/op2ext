@@ -20,7 +20,12 @@ test_script:
   - '%APPVEYOR_BUILD_FOLDER%\%CONFIGURATION%\testDll.exe'
   - cd %APPVEYOR_BUILD_FOLDER%
 after_build:
-  - set PackageBaseName="%APPVEYOR_PROJECT_NAME%-Build%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%"
+  # Set version/build tag
+  - set Version=Build%APPVEYOR_BUILD_VERSION%
+  - if defined APPVEYOR_REPO_TAG_NAME set Version=%APPVEYOR_REPO_TAG_NAME%
+  # Set overall build tag
+  - set PackageBaseName="%APPVEYOR_PROJECT_NAME%-%Version%-%CONFIGURATION%"
+  # Package artifacts
   - 7z a "%PackageBaseName%.zip" "%APPVEYOR_BUILD_FOLDER%\%CONFIGURATION%\*.dll"
   - 7z a "%PackageBaseName%-DebugSymbolPdb.zip" "%APPVEYOR_BUILD_FOLDER%\%CONFIGURATION%\*.pdb"
 artifacts:
