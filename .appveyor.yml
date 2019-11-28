@@ -23,8 +23,11 @@ after_build:
   # Set version/build tag
   - set Version=Build%APPVEYOR_BUILD_VERSION%
   - if defined APPVEYOR_REPO_TAG_NAME set Version=%APPVEYOR_REPO_TAG_NAME%
+  # Set platform/configuration tag
+  - set Config=%CONFIGURATION%
+  - if defined PLATFORM set Config=%PLATFORM%-%Config%
   # Set overall build tag
-  - set PackageBaseName="%APPVEYOR_PROJECT_NAME%-%Version%-%CONFIGURATION%"
+  - set PackageBaseName="%APPVEYOR_PROJECT_NAME%-%Version%-%Config%"
   # Package artifacts
   - 7z a "%PackageBaseName%.zip" "%APPVEYOR_BUILD_FOLDER%\%CONFIGURATION%\*.dll"
   - 7z a "%PackageBaseName%-DebugSymbolPdb.zip" "%APPVEYOR_BUILD_FOLDER%\%CONFIGURATION%\*.pdb"
