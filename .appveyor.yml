@@ -28,9 +28,12 @@ after_build:
   - if defined PLATFORM set Config=%PLATFORM%-%Config%
   # Set overall build tag
   - set PackageBaseName="%APPVEYOR_PROJECT_NAME%-%Version%-%Config%"
+  # Determine output folder
+  - set OutputFolder=%APPVEYOR_BUILD_FOLDER%\%PLATFORM%\%CONFIGURATION%\
+  - if not exist "%OutputFolder%" set OutputFolder=%APPVEYOR_BUILD_FOLDER%\%CONFIGURATION%\
   # Package artifacts
-  - 7z a "%PackageBaseName%.zip" "%APPVEYOR_BUILD_FOLDER%\%CONFIGURATION%\*.dll"
-  - 7z a "%PackageBaseName%-DebugSymbolPdb.zip" "%APPVEYOR_BUILD_FOLDER%\%CONFIGURATION%\*.pdb"
+  - 7z a "%PackageBaseName%.zip" "%OutputFolder%*.dll"
+  - 7z a "%PackageBaseName%-DebugSymbolPdb.zip" "%OutputFolder%*.pdb"
 artifacts:
   - path: "*.zip"
     name: BuildArtifacts
