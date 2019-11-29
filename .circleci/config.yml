@@ -13,3 +13,5 @@ jobs:
       - run: make --keep-going --jobs=2 testDll
       - run: make --keep-going --jobs=2 check-testLib
       - run: make --keep-going --jobs=2 check-testDll
+      - store_artifacts:
+          path: op2ext.dll
