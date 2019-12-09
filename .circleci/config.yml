@@ -13,3 +13,6 @@ jobs:
       - run: make --keep-going --jobs=2 testDll
       - run: make --keep-going --jobs=2 check-testLib
       - run: make --keep-going --jobs=2 check-testDll
+      - run: tar -czf op2ext.tar.gz op2ext.dll
+      - store_artifacts:
+          path: op2ext.tar.gz
