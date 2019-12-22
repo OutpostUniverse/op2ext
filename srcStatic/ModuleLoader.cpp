@@ -32,7 +32,7 @@ void ModuleLoader::RegisterBuiltInModules()
 	if (IsModuleRequested(sectionName, "IPDropDown")) {
 		RegisterModule(std::make_unique<IPDropDown>());
 	}
-	
+
 	if (IsModuleRequested(sectionName, "EarthworkerProximityTasking")) {
 		RegisterModule(std::make_unique<EarthworkerProximityTasking>());
 	}
