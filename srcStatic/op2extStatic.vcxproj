@@ -129,6 +129,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="GameModules\EarthworkerProximityTasking.cpp" />
     <ClCompile Include="GameModules\ConsoleModule.cpp" />
     <ClCompile Include="GameModules\DllModule.cpp" />
     <ClCompile Include="GetCommandLineArguments.cpp" />
@@ -151,6 +152,7 @@
     <ClCompile Include="WindowsModule.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GameModules\EarthworkerProximityTasking.h" />
     <ClInclude Include="GameModules\ConsoleModule.h" />
     <ClInclude Include="GameModules\DllModule.h" />
     <ClInclude Include="GetCommandLineArguments.h" />
