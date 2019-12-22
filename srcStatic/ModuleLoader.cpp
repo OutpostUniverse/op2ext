@@ -1,5 +1,6 @@
 #include "ModuleLoader.h"
 #include "GameModules/IpDropDown.h"
+#include "GameModules/EarthworkerProximityTasking.h"
 #include "GameModules/ConsoleModule.h"
 #include "GameModules/IniModule.h"
 #include "StringConversion.h"
@@ -26,8 +27,14 @@ ModuleLoader::ModuleLoader(IniFile iniFile, std::vector<std::string> consoleModu
 
 void ModuleLoader::RegisterBuiltInModules()
 {
-	if (IsModuleRequested("BuiltInModules", "IPDropDown")) {
+	const std::string sectionName("BuiltInModules");
+
+	if (IsModuleRequested(sectionName, "IPDropDown")) {
 		RegisterModule(std::make_unique<IPDropDown>());
+	}
+	
+	if (IsModuleRequested(sectionName, "EarthworkerProximityTasking")) {
+		RegisterModule(std::make_unique<EarthworkerProximityTasking>());
 	}
 }
 
