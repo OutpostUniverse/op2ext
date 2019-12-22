@@ -91,7 +91,9 @@ OP2EXT_API void SetSerialNumber(char major, char minor, char patch)
 	}
 }
 
-OP2EXT_API void Log(const char* message)
+
+template <typename LogFunction>
+void GenericLog(const char* message, LogFunction logFunction)
 {
 	// The return address will (normally) point into the code section
 	// of the caller. The address can then be used to lookup which
@@ -108,11 +110,27 @@ OP2EXT_API void Log(const char* message)
 	// calls across a module boundary (such as to exported methods).
 
 	try {
-		LogMessage(FormatLogMessage(message, FindModuleName(_ReturnAddress())));
-	} catch(const std::exception& e) {
+		logFunction(FormatLogMessage(message, FindModuleName(_ReturnAddress())));
+	}
+	catch (const std::exception& e) {
 		LogMessage("Error attempting to Log message from module. Return address to module is: " + AddrToHexString(_ReturnAddress()) + "  Error: " + e.what());
 		LogMessage(FormatLogMessage(message, "<UnknownModule>"));
 	}
+}
+
+OP2EXT_API void Log(const char* message)
+{
+	GenericLog(message, LogMessage);
+}
+
+OP2EXT_API void LogErrorMessage(const char* message)
+{
+	GenericLog(message, LogError);
+}
+
+OP2EXT_API void LogDebugMessage(const char* message)
+{
+	GenericLog(message, LogDebug);
 }
 
 
