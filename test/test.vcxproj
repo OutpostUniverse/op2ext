@@ -33,8 +33,8 @@
     <ClCompile Include="IniModule.test.cpp" />
     <ClCompile Include="Log.test.cpp" />
     <ClCompile Include="ModuleLoader.test.cpp" />
-    <ClCompile Include="LoggerDistributor.test.cpp" />
-    <ClCompile Include="LoggerFile.test.cpp" />
+    <ClCompile Include="LogDistributor.test.cpp" />
+    <ClCompile Include="LogFile.test.cpp" />
     <ClCompile Include="LogMessageTest.cpp" />
     <ClCompile Include="OP2Memory.test.cpp" />
     <ClCompile Include="StringConversion.test.cpp" />

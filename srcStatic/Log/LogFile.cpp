@@ -1,4 +1,4 @@
-#include "LoggerFile.h"
+#include "LogFile.h"
 #include "../Log.h"
 #include "../FileSystemHelper.h"
 #include "../StringConversion.h"

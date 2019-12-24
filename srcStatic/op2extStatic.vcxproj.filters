@@ -25,20 +25,20 @@
     <ClCompile Include="GameModules\ConsoleModule.cpp">
       <Filter>GameModules</Filter>
     </ClCompile>
-    <ClCompile Include="Log/LoggerDebug.cpp">
-      <Filter>Log</Filter>
-    </ClCompile>
-    <ClCompile Include="Log/LoggerDistributor.cpp">
-      <Filter>Log</Filter>
-    </ClCompile>
-    <ClCompile Include="Log/LoggerFile.cpp">
-      <Filter>Log</Filter>
-    </ClCompile>
-    <ClCompile Include="Log/LoggerMessageBox.cpp">
-      <Filter>Log</Filter>
-    </ClCompile>
     <ClCompile Include="GameModules\EarthworkerProximityTasking.cpp">
       <Filter>GameModules</Filter>
+    </ClCompile>
+    <ClCompile Include="Log\LogDebug.cpp">
+      <Filter>Log</Filter>
+    </ClCompile>
+    <ClCompile Include="Log\LogDistributor.cpp">
+      <Filter>Log</Filter>
+    </ClCompile>
+    <ClCompile Include="Log\LogFile.cpp">
+      <Filter>Log</Filter>
+    </ClCompile>
+    <ClCompile Include="Log\LogMessageBox.cpp">
+      <Filter>Log</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -72,22 +72,22 @@
     </ClInclude>
     <ClInclude Include="WindowsUniqueHandle.h" />
     <ClInclude Include="WindowsUniqueModule.h" />
-    <ClInclude Include="Log/LoggerDebug.h">
-      <Filter>Log</Filter>
-    </ClInclude>
-    <ClInclude Include="Log/LoggerDistributor.h">
-      <Filter>Log</Filter>
-    </ClInclude>
-    <ClInclude Include="Log/LoggerFile.h">
-      <Filter>Log</Filter>
-    </ClInclude>
-    <ClInclude Include="Log/LoggerMessageBox.h">
-      <Filter>Log</Filter>
-    </ClInclude>
     <ClInclude Include="GameModules\EarthworkerProximityTasking.h">
       <Filter>GameModules</Filter>
     </ClInclude>
     <ClInclude Include="Log\LogDestination.h">
+      <Filter>Log</Filter>
+    </ClInclude>
+    <ClInclude Include="Log\LogDebug.h">
+      <Filter>Log</Filter>
+    </ClInclude>
+    <ClInclude Include="Log\LogDistributor.h">
+      <Filter>Log</Filter>
+    </ClInclude>
+    <ClInclude Include="Log\LogFile.h">
+      <Filter>Log</Filter>
+    </ClInclude>
+    <ClInclude Include="Log\LogMessageBox.h">
       <Filter>Log</Filter>
     </ClInclude>
   </ItemGroup>
