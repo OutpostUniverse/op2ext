@@ -61,11 +61,11 @@ OP2EXT_API void SetSerialNumber(char major, char minor, char patch);
 OP2EXT_API void Log(const char* message);
 
 // Error logging. Reserve for logging critical information that is important enough it may modally interrupt the user.
-OP2EXT_API void LogErrorMessage(const char* message);
+OP2EXT_API void LogError(const char* message);
 
 // Log debug messaging. Reserve for logging detailed or lenghty information that could bloat the log file long term. 
 // Use for information that could be useful during debugging, but not necessarily actionable by an end user.
-OP2EXT_API void LogDebugMessage(const char* message);
+OP2EXT_API void LogDebug(const char* message);
 
 // Performs a case insensitive search of loaded module names, returning true if found.
 // Returns false if passed an empty string (Module name cannot be empty).
