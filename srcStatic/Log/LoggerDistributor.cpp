@@ -2,7 +2,7 @@
 #include <utility>
 
 
-LoggerDistributor::LoggerDistributor(std::vector<Logger*> loggers) :
+LoggerDistributor::LoggerDistributor(std::vector<LogDestination*> loggers) :
 	loggers(std::move(loggers))
 {
 }

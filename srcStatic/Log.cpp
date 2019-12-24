@@ -11,9 +11,9 @@ namespace {
 	// Static (constant and zero) initialization happens before dynamic initialization
 	// Such values are well defined if accessed by a global object constructor before Main/DllMain starts
 	// This pointer is safely set to null before other globals are initialized
-	Logger* loggerError = nullptr;
-	Logger* loggerMessage = nullptr;
-	Logger* loggerDebug = nullptr;
+	LogDestination* loggerError = nullptr;
+	LogDestination* loggerMessage = nullptr;
+	LogDestination* loggerDebug = nullptr;
 }
 
 
@@ -22,17 +22,17 @@ namespace {
 // Use `SetLoggerX(nullptr);` to unset a logger
 
 // Set logger for error logging level
-void SetLoggerError(Logger* newLogger) {
+void SetLoggerError(LogDestination* newLogger) {
 	loggerError = newLogger;
 }
 
 // Set logger for standard logging level
-void SetLoggerMessage(Logger* newLogger) {
+void SetLoggerMessage(LogDestination* newLogger) {
 	loggerMessage = newLogger;
 }
 
 // Set logger for debug logging level
-void SetLoggerDebug(Logger* newLogger) {
+void SetLoggerDebug(LogDestination* newLogger) {
 	loggerDebug = newLogger;
 }
 

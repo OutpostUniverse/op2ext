@@ -5,7 +5,7 @@
 #include "LogDestination.h"
 
 
-class LoggerFile : public Logger
+class LoggerFile : public LogDestination
 {
 public:
 	LoggerFile();

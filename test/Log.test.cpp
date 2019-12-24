@@ -11,7 +11,7 @@ TEST(Log, UnsetLoggerIsSafe) {
 
 
 TEST_F(LogMessageTest, ActiveLoggerReceivesMessages) {
-	const auto message = std::string("Logger should receive this");
+	const auto message = std::string("LogDestination should receive this");
 	EXPECT_CALL(loggerMessage, Log(message));
 	EXPECT_NO_THROW(LogMessage(message));
 }

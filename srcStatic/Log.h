@@ -3,13 +3,13 @@
 #include <string>
 
 
-class Logger;
+class LogDestination;
 
 
 // Set logger for each of the logging levels
-void SetLoggerError(Logger* newLogger);
-void SetLoggerMessage(Logger* newLogger);
-void SetLoggerDebug(Logger* newLogger);
+void SetLoggerError(LogDestination* newLogger);
+void SetLoggerMessage(LogDestination* newLogger);
+void SetLoggerDebug(LogDestination* newLogger);
 
 // Log messages for each of the logging levels
 void LogError(const std::string& message);

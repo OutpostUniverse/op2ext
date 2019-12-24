@@ -3,7 +3,7 @@
 #include <gmock/gmock.h>
 
 
-class LoggerMock : public Logger {
+class LoggerMock : public LogDestination {
 public:
 	LoggerMock();
 	virtual ~LoggerMock();

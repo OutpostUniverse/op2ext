@@ -3,7 +3,7 @@
 #include <string>
 
 
-class Logger
+class LogDestination
 {
 public:
 	virtual void Log(const std::string& message) = 0;
