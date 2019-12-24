@@ -29,10 +29,10 @@ void OnShutdown();
 // Globals from other files should not use these before DllMain has started
 // Similarly these should not use globals from other files before DllMain has started
 // Pay careful attention to anything passed to a constructor, or called by a constructor
-LoggerFile loggerFile; // Logging to file in Outpost 2 folder
-LoggerMessageBox loggerMessageBox; // Logging to pop-up message box
-LoggerDistributor loggerDistributor({&loggerFile, &loggerMessageBox});
-LoggerDebug loggerDebug;
+LogFile logFile; // Logging to file in Outpost 2 folder
+LogMessageBox logMessageBox; // Logging to pop-up message box
+LogDistributor logDistributor({&logFile, &logMessageBox});
+LogDestinationDebug logDestinationDebug;
 std::unique_ptr<VolList> volList;
 AppEvents appEvents;
 
@@ -42,9 +42,9 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID /*reserved*/)
 	// This will be called once the program is unpacked and running
 	if (dwReason == DLL_PROCESS_ATTACH) {
 		// Setup logging
-		SetLoggerError(&loggerDistributor);
-		SetLoggerMessage(&loggerFile);
-		SetLoggerDebug(&loggerDebug);
+		SetLogDestinationError(&logDistributor);
+		SetLogDestinationMessage(&logFile);
+		SetLogDestinationDebug(&logDestinationDebug);
 
 		// Construct global objects
 		vols = std::make_unique<std::vector<std::string>>();

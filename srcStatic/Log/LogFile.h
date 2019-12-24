@@ -5,10 +5,10 @@
 #include "LogDestination.h"
 
 
-class LoggerFile : public LogDestination
+class LogFile : public LogDestination
 {
 public:
-	LoggerFile();
+	LogFile();
 
 	void Log(const std::string& message) override;
 

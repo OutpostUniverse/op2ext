@@ -3,7 +3,7 @@
 #include "LogDestination.h"
 
 
-class LoggerDebug : public LogDestination
+class LogDestinationDebug : public LogDestination
 {
 public:
 	void Log(const std::string& message) override;

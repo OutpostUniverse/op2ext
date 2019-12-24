@@ -7,19 +7,19 @@
 const auto logPath = fs::path(GetExeDirectory()).append("Outpost2Log.txt").string();
 
 
-TEST(LoggerFile, LogFileExists)
+TEST(LogFile, LogFileExists)
 {
-	// Creating a logger should open or create a log file
-	LoggerFile logger;
+	// Creating a log destination should open or create a log file
+	LogFile logDestination;
 	ASSERT_TRUE(Exists(logPath));
 }
 
-TEST(LoggerFile, MessageLogged)
+TEST(LogFile, MessageLogged)
 {
-	LoggerFile logger;
+	LogFile logDestination;
 
 	const auto preFileSize = fs::file_size(logPath);
-	EXPECT_NO_THROW(logger.Log("Test Log Message"));
+	EXPECT_NO_THROW(logDestination.Log("Test Log Message"));
 
 	ASSERT_GT(fs::file_size(logPath), preFileSize);
 }

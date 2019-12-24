@@ -2,13 +2,13 @@
 #include <utility>
 
 
-LoggerDistributor::LoggerDistributor(std::vector<LogDestination*> loggers) :
-	loggers(std::move(loggers))
+LogDistributor::LogDistributor(std::vector<LogDestination*> logDestinations) :
+	logDestinations(std::move(logDestinations))
 {
 }
 
-void LoggerDistributor::Log(const std::string& message) {
-	for (const auto logger: loggers) {
-		logger->Log(message);
+void LogDistributor::Log(const std::string& message) {
+	for (const auto logDestination : logDestinations) {
+		logDestination->Log(message);
 	}
 }

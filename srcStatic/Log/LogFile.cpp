@@ -5,7 +5,7 @@
 #include <cstddef>
 
 
-LoggerFile::LoggerFile() :
+LogFile::LogFile() :
 	logFile(GetExeDirectory() + "\\Outpost2Log.txt", std::ios::app | std::ios::out | std::ios::binary)
 {
 	if (!logFile.is_open()) {
@@ -13,7 +13,7 @@ LoggerFile::LoggerFile() :
 	}
 }
 
-void LoggerFile::Log(const std::string& message)
+void LogFile::Log(const std::string& message)
 {
 	logFile << GetDateTime() << " " << message << std::endl;
 }

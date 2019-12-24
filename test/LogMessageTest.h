@@ -3,10 +3,10 @@
 #include <gmock/gmock.h>
 
 
-class LoggerMock : public LogDestination {
+class LogDestinationMock : public LogDestination {
 public:
-	LoggerMock();
-	virtual ~LoggerMock();
+	LogDestinationMock();
+	virtual ~LogDestinationMock();
 
 	MOCK_METHOD1(Log, void(const std::string& message));
 };
@@ -17,7 +17,7 @@ protected:
 	void SetUp() override;
 	void TearDown() override;
 
-	LoggerMock loggerError;
-	LoggerMock loggerMessage;
-	LoggerMock loggerDebug;
+	LogDestinationMock logDestinationError;
+	LogDestinationMock logDestinationMessage;
+	LogDestinationMock logDestinationDebug;
 };

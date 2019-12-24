@@ -6,10 +6,10 @@
 class LogDestination;
 
 
-// Set logger for each of the logging levels
-void SetLoggerError(LogDestination* newLogger);
-void SetLoggerMessage(LogDestination* newLogger);
-void SetLoggerDebug(LogDestination* newLogger);
+// Set log destination for each of the logging levels
+void SetLogDestinationError(LogDestination* newLogDestination);
+void SetLogDestinationMessage(LogDestination* newLogDestination);
+void SetLogDestinationDebug(LogDestination* newLogDestination);
 
 // Log messages for each of the logging levels
 void LogError(const std::string& message);

@@ -11,29 +11,29 @@ namespace {
 	// Static (constant and zero) initialization happens before dynamic initialization
 	// Such values are well defined if accessed by a global object constructor before Main/DllMain starts
 	// This pointer is safely set to null before other globals are initialized
-	LogDestination* loggerError = nullptr;
-	LogDestination* loggerMessage = nullptr;
-	LogDestination* loggerDebug = nullptr;
+	LogDestination* logDestinationError = nullptr;
+	LogDestination* logDestinationMessage = nullptr;
+	LogDestination* logDestinationDebug = nullptr;
 }
 
 
 // Set logging output destination for each logging level
-// Caller owns the logger and is responsible for cleanup when logger is no longer required
-// Use `SetLoggerX(nullptr);` to unset a logger
+// Caller owns the log destination and is responsible for cleanup when log destination is no longer required
+// Use `SetLogDestinationXXXX(nullptr);` to unset a log destination
 
-// Set logger for error logging level
-void SetLoggerError(LogDestination* newLogger) {
-	loggerError = newLogger;
+// Set log destination for error logging level
+void SetLogDestinationError(LogDestination* newLogLogDestination) {
+	logDestinationError = newLogLogDestination;
 }
 
-// Set logger for standard logging level
-void SetLoggerMessage(LogDestination* newLogger) {
-	loggerMessage = newLogger;
+// Set log destination for standard logging level
+void SetLogDestinationMessage(LogDestination* newLogDestination) {
+	logDestinationMessage = newLogDestination;
 }
 
-// Set logger for debug logging level
-void SetLoggerDebug(LogDestination* newLogger) {
-	loggerDebug = newLogger;
+// Set log destination for debug logging level
+void SetLogDestinationDebug(LogDestination* newLogDestination) {
+	logDestinationDebug = newLogDestination;
 }
 
 
@@ -41,16 +41,16 @@ void SetLoggerDebug(LogDestination* newLogger) {
 // This is likely to produce some kind of pop-up to immediately inform the user
 void LogError(const std::string& message)
 {
-	if (loggerError) {
-		loggerError->Log(message);
+	if (logDestinationError) {
+		logDestinationError->Log(message);
 	}
 }
 
 // Output log message at Message logging level
 // This is likely to appear in some kind of log file
 void LogMessage(const std::string& message) {
-	if (loggerMessage) {
-		loggerMessage->Log(message);
+	if (logDestinationMessage) {
+		logDestinationMessage->Log(message);
 	}
 }
 
@@ -58,8 +58,8 @@ void LogMessage(const std::string& message) {
 // This is likely to show only with the help of special debugging tools
 void LogDebug(const std::string& message)
 {
-	if (loggerDebug) {
-		loggerDebug->Log(message);
+	if (logDestinationDebug) {
+		logDestinationDebug->Log(message);
 	}
 }
 

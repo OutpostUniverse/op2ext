@@ -3,7 +3,7 @@
 #include <windows.h>
 
 
-void LoggerDebug::Log(const std::string& message)
+void LogDestinationDebug::Log(const std::string& message)
 {
 	OutputDebugString(message.c_str());
 }
