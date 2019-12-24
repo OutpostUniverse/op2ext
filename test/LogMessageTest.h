@@ -1,4 +1,4 @@
-#include "Log/Logger.h"
+#include "Log/LogDestination.h"
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 

@@ -72,9 +72,6 @@
     </ClInclude>
     <ClInclude Include="WindowsUniqueHandle.h" />
     <ClInclude Include="WindowsUniqueModule.h" />
-    <ClInclude Include="Log/Logger.h">
-      <Filter>Log</Filter>
-    </ClInclude>
     <ClInclude Include="Log/LoggerDebug.h">
       <Filter>Log</Filter>
     </ClInclude>
@@ -89,6 +86,9 @@
     </ClInclude>
     <ClInclude Include="GameModules\EarthworkerProximityTasking.h">
       <Filter>GameModules</Filter>
+    </ClInclude>
+    <ClInclude Include="Log\LogDestination.h">
+      <Filter>Log</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

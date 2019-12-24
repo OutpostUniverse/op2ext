@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Logger.h"
+#include "LogDestination.h"
 
 
 class LoggerDebug : public Logger

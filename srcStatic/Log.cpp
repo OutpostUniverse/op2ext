@@ -1,5 +1,5 @@
 #include "Log.h"
-#include "Log/Logger.h"
+#include "Log/LogDestination.h"
 #include "FsInclude.h"
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>

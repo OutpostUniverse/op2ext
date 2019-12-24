@@ -2,7 +2,7 @@
 
 #include <fstream>
 #include <string>
-#include "Logger.h"
+#include "LogDestination.h"
 
 
 class LoggerFile : public Logger
