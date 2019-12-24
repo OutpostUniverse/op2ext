@@ -120,20 +120,17 @@ void GenericLog(const char* message, const void* moduleAddress, LogFunctionType 
 
 OP2EXT_API void Log(const char* message)
 {
-	const void* moduleAddress = _ReturnAddress();
-	GenericLog(message, moduleAddress, LogMessage);
+	GenericLog(message, _ReturnAddress(), LogMessage);
 }
 
 OP2EXT_API void LogError(const char* message)
 {
-	const void* moduleAddress = _ReturnAddress();
-	GenericLog(message, moduleAddress, LogError);
+	GenericLog(message, _ReturnAddress(), LogError);
 }
 
 OP2EXT_API void LogDebug(const char* message)
 {
-	const void* moduleAddress = _ReturnAddress();
-	GenericLog(message, moduleAddress, LogDebug);
+	GenericLog(message, _ReturnAddress(), LogDebug);
 }
 
 
