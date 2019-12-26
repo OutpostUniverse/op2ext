@@ -151,7 +151,10 @@ TEST(op2ext, SetSerialNumber) {
 
 TEST(op2ext, Log) {
 	// Can log any text message
-	EXPECT_NO_THROW(Log("Test adding a message to log file"));
+	EXPECT_NO_THROW(Log("Test calling a standard log"));
+	//Calling LogError will force a modal dialog to pop up.
+	//EXPECT_NO_THROW(LogError("Test calling an error message"));
+	EXPECT_NO_THROW(LogDebug("Test calling a debug message \n"));
 }
 
 TEST(op2ext, IsModuleLoaded) {

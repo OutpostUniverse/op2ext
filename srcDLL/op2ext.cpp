@@ -19,6 +19,10 @@
 extern "C" OP2EXT_API int StubExt;
 int StubExt = 0;
 
+using LogFunctionType = void(*)(const std::string&);
+void GenericLog(const char* message, const void* moduleAddress, LogFunctionType logFunction);
+
+
 OP2EXT_API size_t GetGameDir_s(char* buffer, size_t bufferSize)
 {
 	// Adding "\\" to end of directory is required for backward compatibility.
@@ -91,7 +95,23 @@ OP2EXT_API void SetSerialNumber(char major, char minor, char patch)
 	}
 }
 
+
 OP2EXT_API void Log(const char* message)
+{
+	GenericLog(message, _ReturnAddress(), LogMessage);
+}
+
+OP2EXT_API void LogError(const char* message)
+{
+	GenericLog(message, _ReturnAddress(), LogError);
+}
+
+OP2EXT_API void LogDebug(const char* message)
+{
+	GenericLog(message, _ReturnAddress(), LogDebug);
+}
+
+void GenericLog(const char* message, const void* moduleAddress, LogFunctionType logFunction)
 {
 	// The return address will (normally) point into the code section
 	// of the caller. The address can then be used to lookup which
@@ -108,8 +128,9 @@ OP2EXT_API void Log(const char* message)
 	// calls across a module boundary (such as to exported methods).
 
 	try {
-		LogMessage(FormatLogMessage(message, FindModuleName(_ReturnAddress())));
-	} catch(const std::exception& e) {
+		logFunction(FormatLogMessage(message, FindModuleName(moduleAddress)));
+	}
+	catch (const std::exception& e) {
 		LogMessage("Error attempting to Log message from module. Return address to module is: " + AddrToHexString(_ReturnAddress()) + "  Error: " + e.what());
 		LogMessage(FormatLogMessage(message, "<UnknownModule>"));
 	}
