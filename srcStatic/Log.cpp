@@ -22,8 +22,8 @@ namespace {
 // Use `SetLogDestinationXXXX(nullptr);` to unset a log destination
 
 // Set log destination for error logging level
-void SetLogDestinationError(LogDestination* newLogLogDestination) {
-	logDestinationError = newLogLogDestination;
+void SetLogDestinationError(LogDestination* newLogDestination) {
+	logDestinationError = newLogDestination;
 }
 
 // Set log destination for standard logging level
