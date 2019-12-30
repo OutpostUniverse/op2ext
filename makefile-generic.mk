@@ -152,13 +152,13 @@ $(1)_inputSourceFolderIncludeOptions := $(foreach dep,$(4),-I$$($(dep)_SRCDIR))
 
 # Determine ouputs of dependencies, and filter for .lib files
 $(1)_inputs := $(foreach dep,$(4),$$($(dep)_OUTPUT))
-$(1)_inputLibs := $$(filter %.lib,$$($(1)_inputs)) $$(filter %.dll,$$($(1)_inputs))
+$(1)_inputLibs := $$(filter %.lib,$$($(1)_inputs)) $$(filter lib%.a,$$($(1)_inputs)) $$(filter %.dll,$$($(1)_inputs))
 # Convert to folder list and library list
 $(1)_inputLibFolders := $$(dir $$($(1)_inputLibs))
 $(1)_inputLibFiles := $$(notdir $$($(1)_inputLibs))
 # Convert to list of libraries to list of includes
 $(1)_inputLibFolderIncludeOptions := $$(foreach folder,$$($(1)_inputLibFolders),-L$$(folder))
-$(1)_inputLibFileIncludeOptions := $$(foreach lib,$$(basename $$($(1)_inputLibFiles)),-l$$(lib))
+$(1)_inputLibFileIncludeOptions := $$(foreach lib,$$(basename $$(patsubst lib%.a,%,$$($(1)_inputLibFiles))),-l$$(lib))
 
 ## Define project specific variables ##
 
