@@ -90,6 +90,10 @@ White := \e[0m
 	@$(MKDIR)
 	ar rcs "$@" $^
 
+lib%.a:
+	@$(MKDIR)
+	ar rcs "$@" $^
+
 # Rule to build intermediate files from C
 %.c.o:
 	@$(MKDIR)
