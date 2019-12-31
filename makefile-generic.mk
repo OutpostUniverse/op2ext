@@ -312,6 +312,9 @@ $(1)_LDLIBS ?= $$($(3)_LDLIBS) $$($(1)_inputLibFileIncludeOptions) $(gtest_LINK_
 # Define the Unit Test project
 $(call DefineCppProject,$(1),$(BUILDDIR)/$(config)/$(1)/unitTest.exe,$(2),$(3))
 
+# Unit Test Project run command
+$(1)_RUN ?= $(gtest_$(config)_RUNPREFIX) "$$($(1)_OUTPUT)"
+
 # Define unit test building rules
 .PHONY: test
 # Master rule to build all unit tests
@@ -321,7 +324,7 @@ test: $(1)
 .PHONY: check check-$(1)
 # Rule to run this specific unit test
 check-$(1): $(1)
-	$(gtest_$(config)_RUNPREFIX) "$$($(1)_OUTPUT)"
+	$$($(1)_RUN)
 # Master rule to run all unit tests
 check: check-$(1)
 
