@@ -3,7 +3,7 @@
 #include "../GameModule.h"
 
 // Allows designating walls for construction in a 3x3 area around where
-// other earthworkers are already working.
+// other earthworkers are already working and next to lava flows.  
 // Adapted from Caught in the Crossfire 2 mission code
 
 class EarthworkerProximityTasking : public GameModule
