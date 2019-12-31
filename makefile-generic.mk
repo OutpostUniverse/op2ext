@@ -90,6 +90,10 @@ White := \e[0m
 	@$(MKDIR)
 	ar rcs "$@" $^
 
+lib%.a:
+	@$(MKDIR)
+	ar rcs "$@" $^
+
 # Rule to build intermediate files from C
 %.c.o:
 	@$(MKDIR)
@@ -148,13 +152,13 @@ $(1)_inputSourceFolderIncludeOptions := $(foreach dep,$(4),-I$$($(dep)_SRCDIR))
 
 # Determine ouputs of dependencies, and filter for .lib files
 $(1)_inputs := $(foreach dep,$(4),$$($(dep)_OUTPUT))
-$(1)_inputLibs := $$(filter %.lib,$$($(1)_inputs)) $$(filter %.dll,$$($(1)_inputs))
+$(1)_inputLibs := $$(filter %.dll %.lib lib%.a,$$($(1)_inputs))
 # Convert to folder list and library list
 $(1)_inputLibFolders := $$(dir $$($(1)_inputLibs))
 $(1)_inputLibFiles := $$(notdir $$($(1)_inputLibs))
 # Convert to list of libraries to list of includes
 $(1)_inputLibFolderIncludeOptions := $$(foreach folder,$$($(1)_inputLibFolders),-L$$(folder))
-$(1)_inputLibFileIncludeOptions := $$(foreach lib,$$(basename $$($(1)_inputLibFiles)),-l$$(lib))
+$(1)_inputLibFileIncludeOptions := $$(foreach lib,$$(basename $$(patsubst lib%.a,%,$$($(1)_inputLibFiles))),-l$$(lib))
 
 ## Define project specific variables ##
 
@@ -271,7 +275,7 @@ gtest_DEFINES = $(gtest_$(config)_DEFINES)
 
 # To ease configuring test projects to use a local build
 gtest_LOCALBUILD_LDFLAGS = -L$(gtest_BUILDDIR)googlemock/ -L$(gtest_BUILDDIR)googlemock/gtest/
-gtest_LINK_LDLIBS := -lgtest_main -lgtest -lgmock
+gtest_LINK_LDLIBS := -lgtest_main -lgtest -lgmock -lpthread
 
 # To help running of unit tests
 gtest_mingw_RUNPREFIX := wine
@@ -308,6 +312,9 @@ $(1)_LDLIBS ?= $$($(3)_LDLIBS) $$($(1)_inputLibFileIncludeOptions) $(gtest_LINK_
 # Define the Unit Test project
 $(call DefineCppProject,$(1),$(BUILDDIR)/$(config)/$(1)/unitTest.exe,$(2),$(3))
 
+# Unit Test Project run command
+$(1)_RUN ?= $(gtest_$(config)_RUNPREFIX) "$$($(1)_OUTPUT)"
+
 # Define unit test building rules
 .PHONY: test
 # Master rule to build all unit tests
@@ -317,7 +324,7 @@ test: $(1)
 .PHONY: check check-$(1)
 # Rule to run this specific unit test
 check-$(1): $(1)
-	$(gtest_$(config)_RUNPREFIX) "$$($(1)_OUTPUT)"
+	$$($(1)_RUN)
 # Master rule to run all unit tests
 check: check-$(1)
 
