@@ -8,6 +8,7 @@
 #include "WindowsModule.h"
 #include "WindowsUniqueHandle.h"
 #include <tlhelp32.h> // CreateToolhelp32Snapshot, Module32First, Module32Next
+#include <stdexcept>
 
 
 // The definition of MODULEENTRY32 is affected by the UNICODE setting
