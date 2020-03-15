@@ -5,5 +5,5 @@
 
 void LoggerDebug::Log(const std::string& message)
 {
-	OutputDebugString(message.c_str());
+	OutputDebugString((message + "\n").c_str());
 }
