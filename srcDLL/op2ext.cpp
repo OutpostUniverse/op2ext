@@ -31,15 +31,15 @@ OP2EXT_API size_t GetGameDir_s(char* buffer, size_t bufferSize)
 
 OP2EXT_API size_t GetConsoleModDir_s(char* buffer, size_t bufferSize)
 {
-	std::string consoleModuleDirectory;
+	std::string moduleDirectory;
 
 	// Try to determine calling module
 	auto module = moduleLoader->FindModule(FindModuleHandle(_ReturnAddress()));
 	if (module) {
-		consoleModuleDirectory = module->Directory();
+		moduleDirectory = module->Directory();
 	}
 	// Copy module directory to supplied buffer
-	return CopyStringViewIntoCharBuffer(consoleModuleDirectory, buffer, bufferSize);
+	return CopyStringViewIntoCharBuffer(moduleDirectory, buffer, bufferSize);
 }
 
 OP2EXT_API void GetGameDir(char* buffer)
