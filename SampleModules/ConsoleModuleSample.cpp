@@ -4,7 +4,7 @@
 // op2ext will call the following 3 functions to support setup, running and destruction of module. Each function is optional to implement.
 // The functions must be exported from the module's dll as shown belore for op2ext to register them. See the ReadMe file for more details.
 
-//#include "op2ext.h" // Provides access to op2ext's public functions.
+#include "op2ext.h" // Provides access to op2ext's public functions.
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 

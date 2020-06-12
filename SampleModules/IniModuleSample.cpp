@@ -17,7 +17,7 @@ Dll = "ModuleSectionName\ModuleDllName.dll"
 */
 
 
-//#include "op2ext.h" // Provides access to op2ext's public functions.
+#include "op2ext.h" // Provides access to op2ext's public functions.
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
