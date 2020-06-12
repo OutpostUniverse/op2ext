@@ -23,7 +23,7 @@ Dll = "ModuleSectionName\ModuleDllName.dll"
 
 #define EXPORT extern "C" __declspec(dllexport)
 
-EXPORT void InitMod(char* iniSectionName) {
+EXPORT void InitMod(char* iniSectionName)
 {
 	// This code will be called during the DLL_PROCESS_ATTACH event of DllMain in op2ext.dll.
 	// No other code will have been run before this time.
