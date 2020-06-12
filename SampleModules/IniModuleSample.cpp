@@ -7,7 +7,8 @@
 // Additions to Outpost2.ini file
 /*
 . . .
-LoadAddons = ". . . other modules . . ., ModuleSectionName"
+[ExternalModules]
+ModuleName = yes
 . . .
 
 [ModuleSectionName]
@@ -32,6 +33,15 @@ EXPORT void InitMod(char* iniSectionName) {
 	// sectionName is the name of this module's section as defined in Outpost2.ini.
 	// Call Windows function family GetPrivateProfileXXX to retrieve settings stored in the .ini file.
 	// Call Windows function family WritePrivateProfileXXX to write settings to the .ini file.
+}
+
+EXPORT void RunMod()
+{
+	// This code is called immediately after OP2Shell.dll is loaded and the language data is localized.
+	// (Right before the OP2 menu displays)
+	// It is too late to add VOLs or set the serial number (the game has already initialized this stuff)
+	// Use it to setup things that aren't already setup in InitMod. (The ResManager will be inited as well
+	// as the language strings)
 }
 
 EXPORT bool DestroyMod()
