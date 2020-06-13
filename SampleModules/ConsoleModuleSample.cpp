@@ -4,7 +4,7 @@
 // op2ext will call the following 3 functions to support setup, running and destruction of module. Each function is optional to implement.
 // The functions must be exported from the module's dll as shown belore for op2ext to register them. See the ReadMe file for more details.
 
-#include "op2ext.h" // Provides access to op2ext's public functions.
+#include "op2ext.h" // Optional include for access to op2ext's public functions.
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
@@ -20,11 +20,8 @@ EXPORT void mod_init()
 
 EXPORT void mod_run()
 {
-	// This code is called immediately after OP2Shell.dll is loaded and the language data is localized.
-	// (Right before the OP2 menu displays)
-	// It is too late to add VOLs or set the serial number (the game has already initialized this stuff)
-	// Use it to setup things that aren't already setup in mod_init. (The ResManager will be inited as well
-	// as the language strings)
+	// This function is called after OP2Shell.dll but before the OP2 menu displays.
+	// The ResManager will be initialized. New VOLs cannot be added and the game serial number cannot be updated.
 }
 
 EXPORT void mod_destroy()

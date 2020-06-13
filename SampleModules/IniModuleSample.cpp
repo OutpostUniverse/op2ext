@@ -17,7 +17,7 @@ Dll = "ModuleSectionName\ModuleDllName.dll"
 */
 
 
-#include "op2ext.h" // Provides access to op2ext's public functions.
+#include "op2ext.h" // Optional include for access to op2ext's public functions.
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
@@ -37,11 +37,8 @@ EXPORT void InitMod(char* iniSectionName)
 
 EXPORT void RunMod()
 {
-	// This code is called immediately after OP2Shell.dll is loaded and the language data is localized.
-	// (Right before the OP2 menu displays)
-	// It is too late to add VOLs or set the serial number (the game has already initialized this stuff)
-	// Use it to setup things that aren't already setup in InitMod. (The ResManager will be inited as well
-	// as the language strings)
+	// This function is called after OP2Shell.dll but before the OP2 menu displays.
+	// The ResManager will be initialized. New VOLs cannot be added and the game serial number cannot be updated.
 }
 
 EXPORT bool DestroyMod()
