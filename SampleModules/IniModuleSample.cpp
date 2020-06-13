@@ -47,4 +47,5 @@ EXPORT bool DestroyMod()
 	// Use it to cleanup any loose ends you created earlier in mod_init or mod_run.
 
 	// Return true/false based on success of module asset destruction.
+	return true;
 }
