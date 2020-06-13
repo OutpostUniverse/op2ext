@@ -7,7 +7,8 @@
 // Additions to Outpost2.ini file
 /*
 . . .
-LoadAddons = ". . . other modules . . ., ModuleSectionName"
+[ExternalModules]
+ModuleName = yes
 . . .
 
 [ModuleSectionName]
@@ -16,13 +17,13 @@ Dll = "ModuleSectionName\ModuleDllName.dll"
 */
 
 
-//#include "op2ext.h" // Provides access to op2ext's public functions.
+#include "op2ext.h" // Optional include for access to op2ext's public functions.
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
 #define EXPORT extern "C" __declspec(dllexport)
 
-EXPORT void InitMod(char* iniSectionName) {
+EXPORT void InitMod(char* iniSectionName)
 {
 	// This code will be called during the DLL_PROCESS_ATTACH event of DllMain in op2ext.dll.
 	// No other code will have been run before this time.
@@ -34,10 +35,17 @@ EXPORT void InitMod(char* iniSectionName) {
 	// Call Windows function family WritePrivateProfileXXX to write settings to the .ini file.
 }
 
+EXPORT void RunMod()
+{
+	// This function is called after OP2Shell.dll but before the OP2 menu displays.
+	// The ResManager will be initialized. New VOLs cannot be added and the game serial number cannot be updated.
+}
+
 EXPORT bool DestroyMod()
 {
 	// This is called in the DLL_PROCESS_DETACH event of DllMain as op2ext.dll is unloading.
 	// Use it to cleanup any loose ends you created earlier in mod_init or mod_run.
 
 	// Return true/false based on success of module asset destruction.
+	return true;
 }

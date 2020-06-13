@@ -5,6 +5,8 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
+#include "../SampleModules/ConsoleModuleSample.cpp"
+#include "../SampleModules/IniModuleSample.cpp"
 
 #ifdef __MINGW32__
 #define DISABLE_DEPRECATED_WARNING \
