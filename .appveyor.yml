@@ -32,9 +32,8 @@ after_build:
   - set OutputFolder=%APPVEYOR_BUILD_FOLDER%\%PLATFORM%\%CONFIGURATION%\
   - if not exist "%OutputFolder%" set OutputFolder=%APPVEYOR_BUILD_FOLDER%\%CONFIGURATION%\
   # Package artifacts
-  - 7z a "%PackageBaseName%.zip" "%OutputFolder%*.exe" "%OutputFolder%*.dll"
-  # - 7z a "%PackageBaseName%.zip" "%OutputFolder%*.lib"
-  - 7z a "%PackageBaseName%-DebugSymbolPdb.zip" "%OutputFolder%*.pdb"
+  - 7z a "%PackageBaseName%.zip" "%OutputFolder%op2ext.dll"
+  - 7z a "%PackageBaseName%-DebugSymbolPdb.zip" "%OutputFolder%op2ext.pdb"
 artifacts:
   - path: "*.zip"
     name: BuildArtifacts
