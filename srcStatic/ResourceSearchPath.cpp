@@ -1,11 +1,36 @@
 #include "ResourceSearchPath.h"
 #include "StringConversion.h"
+#include "FSInclude.h"
+#include "FileSystemHelper.h"
 #include "OP2Memory.h"
 #include "Log.h"
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <cstddef>
 #include <cstdint>
+
+
+static std::wstring GetPathEnv()
+{
+	std::unique_ptr<wchar_t[]> pTmp(new wchar_t[_MAX_ENV]);
+	pTmp[0] = L'\0';
+	GetEnvironmentVariableW(L"PATH", pTmp.get(), _MAX_ENV);
+	return std::wstring(pTmp.get());
+}
+
+static void SetPathEnv(const std::wstring_view& value)
+{
+	SetEnvironmentVariableW(L"PATH", value.data());
+}
+
+void AddOsSearchPaths(const std::vector<fs::path>& paths)
+{
+	std::wstring pathEnv = GetPathEnv();
+	for (const auto& path : paths) {
+		pathEnv.insert(0, path.wstring() + (pathEnv.empty() ? L"" : L";"));
+	}
+	SetPathEnv(pathEnv);
+}
 
 
 // For compatibility with Outpost2.exe's built in class
@@ -25,6 +50,9 @@ void ResourceSearchPath::Set(std::vector<std::string> paths)
 void ResourceSearchPath::Activate()
 {
 	HookFileSearchPath();
+
+	// Add Outpost2 and OPU directories to PATH so module DLLs loaded from subdirs can locate DLL dependencies there.
+	AddOsSearchPaths({ GetExeDirectory(), GetOpuDirectory() });
 }
 
 
@@ -75,17 +103,32 @@ bool ResourceSearchPath::CallOriginalGetFilePath(const char* resourceName, /* [o
 
 bool ResManager::GetFilePath(const char* resourceName, /* [out] */ char* filePath) const
 {
-	// Get access to private static
-	auto moduleDirectories = ResourceSearchPath::ModuleDirectories();
+	constexpr auto SearchOptions = fs::directory_options::follow_directory_symlink |
+		                             fs::directory_options::skip_permission_denied;
 
-	for (const auto& moduleDirectory : moduleDirectories) {
-		// Search for resource in module folder
-		const auto path = moduleDirectory + resourceName;
-		if (INVALID_FILE_ATTRIBUTES != GetFileAttributesA(path.c_str())) {
-			if (0 == CopyStringViewIntoCharBuffer(path, filePath, MAX_PATH)) {
-				return true; // Resource found
-			} else {
-				LogMessage("MAX_PATH exceeded while trying to return path to resource: " + std::string(resourceName));
+	auto CheckResult = [filePath](const fs::path& curPath) {
+		const std::string str = curPath.string();
+		bool result = Exists(str);
+		if (result && (CopyStringViewIntoCharBuffer(str, filePath, MAX_PATH) != 0)) {
+			LogMessage("MAX_PATH exceeded while trying to return path to resource: " + curPath.filename().string());
+			result = false;
+		}
+		return result;
+	};
+
+	const std::string exeDirectory = GetExeDirectory();
+	const std::string opuDirectory = GetOpuDirectory();
+
+	for (const auto& moduleDirectory : ResourceSearchPath::ModuleDirectories()) {
+		if ((moduleDirectory != exeDirectory) && (moduleDirectory != opuDirectory)) {
+			// Search for resource in module folder
+			if (CheckResult(fs::path(moduleDirectory) / resourceName)) {
+				return true;
+			}
+			else for (const auto& entry : fs::recursive_directory_iterator(moduleDirectory, SearchOptions)) {
+				if (IsDirectory(entry.path().string()) && CheckResult(entry / resourceName)) {
+					return true;
+				}
 			}
 		}
 	}

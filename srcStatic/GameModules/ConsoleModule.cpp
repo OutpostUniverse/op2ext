@@ -8,7 +8,7 @@
 ConsoleModule::ConsoleModule(const std::string& moduleName) : DllModule(moduleName), 
 	moduleDirectory(moduleName + "\\")
 {
-	auto absoluteModuleDirectory = fs::path(GetExeDirectory()) / moduleDirectory;
+	auto absoluteModuleDirectory = fs::path(GetOpuDirectory()) / moduleDirectory;
 
 	if (!IsDirectory(absoluteModuleDirectory.string())) {
 		throw std::runtime_error("Unable to access the provided module directory: " + 

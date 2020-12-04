@@ -4,7 +4,7 @@
 #include <gtest/gtest.h>
 
 
-const auto logPath = fs::path(GetExeDirectory()).append("Outpost2Log.txt").string();
+const auto logPath = fs::path(GetOpuDirectory()).append("Outpost2Log.txt").string();
 
 
 TEST(LoggerFile, LogFileExists)

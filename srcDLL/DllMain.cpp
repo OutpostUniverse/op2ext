@@ -6,6 +6,7 @@
 #include "OP2Memory.h"
 #include "FileSystemHelper.h"
 #include "FsInclude.h"
+#include "ConsoleArgumentParser.h"
 #include "Log.h"
 #include "Log/LoggerFile.h"
 #include "Log/LoggerMessageBox.h"
@@ -40,34 +41,39 @@ AppEvents appEvents;
 BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID /*reserved*/)
 {
 	// This will be called once the program is unpacked and running
-	if (dwReason == DLL_PROCESS_ATTACH) {
-		// Setup logging
-		SetLoggerError(&loggerDistributor);
-		SetLoggerMessage(&loggerFile);
-		SetLoggerDebug(&loggerDebug);
+	if ((dwReason == DLL_PROCESS_ATTACH) && CommandOptionExists("OPU")) {
+		wchar_t filename[MAX_PATH] = L"";
+		GetModuleFileNameW(NULL, &filename[0], MAX_PATH);
 
-		// Construct global objects
-		vols = std::make_unique<std::vector<std::string>>();
-		moduleLoader = std::make_unique<ModuleLoader>();
+		if (fs::path(filename).filename() == "Outpost2.exe") {
+			// Setup logging
+			SetLoggerError(&loggerDistributor);
+			SetLoggerMessage(&loggerFile);
+			SetLoggerDebug(&loggerDebug);
 
-		// Set load offset for Outpost2.exe module, used during memory patching
-		// If this fails, it's because Outpost2.exe is not loaded
-		// Failure means op2ext.dll was loaded by something else, such as a unit test
-		// For unit tests, just stay in memory, it's not an error if this fails
-		if (EnableOp2MemoryPatching()) {
-			// These hooks are needed to further bootstrap the rest of module loading
-			if (!InstallTAppEventHooks()) {
-				LogError("Failed to install initial TApp event hooks. Module loading and patching disabled.");
-				return FALSE;
+			// Construct global objects
+			vols = std::make_unique<std::vector<std::string>>();
+			moduleLoader = std::make_unique<ModuleLoader>();
+
+			// Set load offset for Outpost2.exe module, used during memory patching
+			// If this fails, it's because Outpost2.exe is not loaded
+			// Failure means op2ext.dll was loaded by something else, such as a unit test
+			// For unit tests, just stay in memory, it's not an error if this fails
+			if (EnableOp2MemoryPatching()) {
+				// These hooks are needed to further bootstrap the rest of module loading
+				if (!InstallTAppEventHooks()) {
+					LogError("Failed to install initial TApp event hooks. Module loading and patching disabled.");
+					return FALSE;
+				}
+
+				// Setup event handlers
+				appEvents.onInit.Add(&OnInit);
+				appEvents.onLoadShell.Add(&OnLoadShell);
+				appEvents.onShutDown.Add(&OnShutdown);
+
+				// Set active events
+				appEvents.Activate();
 			}
-
-			// Setup event handlers
-			appEvents.onInit.Add(&OnInit);
-			appEvents.onLoadShell.Add(&OnLoadShell);
-			appEvents.onShutDown.Add(&OnShutdown);
-
-			// Set active events
-			appEvents.Activate();
 		}
 
 		// Disable any more thread attach calls
@@ -104,10 +110,21 @@ bool InstallDepPatch()
 }
 
 
+// Redirects Outpost2.ini to be accessed from the OPU directory.
+void RedirectIniFile()
+{
+	const auto iniPath = GetOutpost2IniPath();
+	Op2MemCopy(0x00547090, iniPath.length() + 1, iniPath.data());  // Overwrite gConfigFile.iniPath
+}
+
+
 void OnInit()
 {
 	// Install DEP patch so newer versions of Windows don't terminate the game
 	InstallDepPatch();
+
+	// Set the game to look for Outpost2.ini under the OPU directory
+	RedirectIniFile();
 
 	// Order of precedence for loading vol files is:
 	// ART_PATH (from console module), Console Module, Ini Modules, Addon directory, Game directory

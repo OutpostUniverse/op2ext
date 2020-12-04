@@ -1,6 +1,5 @@
 #include "ModuleLoader.h"
 #include "GameModules/IpDropDown.h"
-#include "GameModules/EarthworkerProximityTasking.h"
 #include "GameModules/ConsoleModule.h"
 #include "GameModules/IniModule.h"
 #include "StringConversion.h"
@@ -29,12 +28,8 @@ void ModuleLoader::RegisterBuiltInModules()
 {
 	const std::string sectionName("BuiltInModules");
 
-	if (IsModuleRequested(sectionName, "IPDropDown")) {
+	if (IsModuleRequested(sectionName, "IPDropDown", true)) {
 		RegisterModule(std::make_unique<IPDropDown>());
-	}
-
-	if (IsModuleRequested(sectionName, "EarthworkerProximityTasking")) {
-		RegisterModule(std::make_unique<EarthworkerProximityTasking>());
 	}
 }
 
@@ -55,8 +50,11 @@ void ModuleLoader::RegisterConsoleModules()
 	for (const auto& moduleName : consoleModuleNames)
 	{
 		try {
-			auto consoleModule = std::make_unique<ConsoleModule>(moduleName);
-			moduleDirectories.push_back((fs::path(GetExeDirectory()) / consoleModule->Directory()).string());
+			auto consoleModule        = std::make_unique<ConsoleModule>(moduleName);
+			const fs::path modulePath = fs::path(GetOpuDirectory()) / consoleModule->Directory();
+
+			moduleDirectories.push_back(modulePath.string());
+			AddOsSearchPaths({ modulePath });  // ** TODO moduleDirectories should be vector<path>, then this can be outside
 
 			RegisterModule(std::move(consoleModule));
 		}
@@ -75,7 +73,18 @@ void ModuleLoader::RegisterIniModules()
 		if (IsModuleRequested("ExternalModules", moduleName)) 
 		{
 			try {
-				RegisterModule(std::make_unique<IniModule>(iniFile[moduleName]));
+				auto iniModule = std::make_unique<IniModule>(iniFile[moduleName]);
+
+				fs::path modulePath = iniModule->Directory();
+				if (modulePath.is_relative()) {
+					modulePath = GetOpuDirectory() / modulePath;
+				}
+
+				if ((modulePath != GetExeDirectory()) && (modulePath != GetOpuDirectory())) {
+					AddOsSearchPaths({ modulePath });  // ** TODO this function should build a vector of moduleDirectories as well
+				}
+
+				RegisterModule(std::move(iniModule));
 			}
 			catch (const std::exception& e) {
 				LogError("Unable to load ini module " + moduleName + ". " + e.what());
@@ -84,15 +93,18 @@ void ModuleLoader::RegisterIniModules()
 	}
 }
 
-bool ModuleLoader::IsModuleRequested(const std::string& sectionName, const std::string& moduleName)
+bool ModuleLoader::IsModuleRequested(const std::string& sectionName, const std::string& moduleName, bool defaultValue)
 {
 	const auto isModuleRequested = ToLower(iniFile.GetValue(sectionName, moduleName));
 
 	if (isModuleRequested == "yes") {
 		return true;
 	}
-	else if (isModuleRequested == "no" || isModuleRequested == "") {
+	else if (isModuleRequested == "no") {
 		return false;
+	}
+	else if (isModuleRequested == "") {
+		return defaultValue;
 	}
 
 	LogError("Module named " + moduleName + " contains an innapropriate setting of " + isModuleRequested + ". It must be set to Yes or No");
@@ -149,22 +161,14 @@ void ModuleLoader::RegisterModule(std::unique_ptr<GameModule> newGameModule)
 
 void ModuleLoader::LoadModules()
 {
+	// Setup loading of additional resources from module folders
+	ResourceSearchPath::Activate();
+
 	RegisterBuiltInModules();
 	RegisterIniModules();
 	RegisterConsoleModules();
 
-	// Abort early to avoid hooking file search path if not needed
-	if (modules.empty()) {
-		return;
-	}
-
-	// Setup loading of additional resources from module folders
-	ResourceSearchPath::Activate();
-
-
-
-	for (auto& gameModule : modules)
-	{
+	for (auto& gameModule : modules){
 		try {
 			gameModule->Load();
 		}
@@ -178,8 +182,7 @@ bool ModuleLoader::UnloadModules()
 {
 	bool areAllModulesProperlyDestroyed = true;
 
-	for (auto& gameModule : modules)
-	{
+	for (auto& gameModule : modules) {
 		try {
 			bool isModuleProperlyDestroyed = gameModule->Unload();
 

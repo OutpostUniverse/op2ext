@@ -5,6 +5,7 @@
 
 
 std::string GetExeDirectory();
+std::string GetOpuDirectory();
 std::string GetOutpost2IniPath();
 std::string GetOutpost2IniSetting(const std::string& sectionName, const std::string& key);
 

@@ -15,7 +15,7 @@ TEST(ConsoleModuleLoader, ModuleWithoutDLL)
 
 	// Test will need temporary module directory with no DLL present
 	// Ensure module directory ends with a trailing slash
-	const auto moduleDirectory = fs::path(GetExeDirectory()) / moduleName;
+	const auto moduleDirectory = fs::path(GetOpuDirectory()) / moduleName;
 	fs::create_directory(moduleDirectory);
 
 	const std::string iniFileName{ GetExeDirectory() + "TestIniFile.NonExistentData.ini" };
@@ -47,7 +47,7 @@ TEST(ConsoleModuleLoader, ModuleWithEmptyDLL)
 
 	// Test will need temporary module directory and invalid DLL file
 	// Ensure module directory ends with a trailing slash
-	const auto moduleDirectory = fs::path(GetExeDirectory()) / moduleName;
+	const auto moduleDirectory = fs::path(GetOpuDirectory()) / moduleName;
 	const auto dllFile = moduleDirectory / "op2mod.dll";
 	
 	// Create temporary module directory
@@ -86,12 +86,12 @@ TEST(ConsoleModuleLoader, ModuleWithEmptyDLL)
 }
 
 TEST(ConsoleModuleLoader, MultiModule) {
-	const auto exeDirectory = fs::path(GetExeDirectory());
+	const auto opuDirectory = fs::path(GetOpuDirectory());
 	const std::vector<std::string> moduleNames{"Module1", "Module2"};
 
 	// Create some empty test module directories
 	for (const auto& moduleName : moduleNames) {
-		fs::create_directory(exeDirectory / moduleName);
+		fs::create_directory(opuDirectory / moduleName);
 	}
 
 	const std::string iniFileName{ GetExeDirectory() + "TestIniFile.NonExistentData.ini" };
@@ -115,6 +115,6 @@ TEST(ConsoleModuleLoader, MultiModule) {
 	// Cleanup test module directories
 	for (const auto& moduleName : moduleNames) {
 		// Use Win API directly since fs::remove doesn't work under Mingw
-		EXPECT_NE(0, RemoveDirectoryW((exeDirectory / moduleName).wstring().c_str()));
+		EXPECT_NE(0, RemoveDirectoryW((opuDirectory / moduleName).wstring().c_str()));
 	}
 }

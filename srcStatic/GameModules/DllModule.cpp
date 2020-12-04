@@ -1,5 +1,6 @@
 #include "DllModule.h"
 #include "../Log.h"
+#include "../FsInclude.h"
 #include "../WindowsErrorCode.h"
 #include <stdexcept>
 
@@ -10,7 +11,8 @@ DllModule::DllModule(const std::string& moduleName)
 void DllModule::LoadModuleDll(const std::string& dllPath)
 {
 	// Try to load a DLL with the given name (possibly an empty string)
-	moduleDllHandle.reset(LoadLibraryA(dllPath.c_str()));
+	moduleDllHandle.reset(
+		LoadLibraryExA(dllPath.c_str(), NULL, fs::path(dllPath).is_absolute() ? LOAD_WITH_ALTERED_SEARCH_PATH : 0));
 
 	if (!moduleDllHandle) {
 		throw std::runtime_error(
@@ -29,9 +31,9 @@ void DllModule::DetectExportedModuleFunctions()
 		loadModuleFunctionConsole = GetExportAddress<LoadModuleFunctionConsole>("mod_init");
 	}
 
-	unloadModuleFunctionIni = GetExportAddress<UnloadModuleFunctionIni>("DestroyMod");
-	if (!unloadModuleFunctionIni) {
-		unloadModuleFunctionConsole = GetExportAddress<UnloadModuleFunctionConsole>("mod_destroy");
+	unloadModuleFunction = GetExportAddress<UnloadModuleFunction>("DestroyMod");
+	if (!unloadModuleFunction) {
+		unloadModuleFunction = GetExportAddress<UnloadModuleFunction>("mod_destroy");
 	}
 
 	runModuleFunction = GetExportAddress<RunModuleFunction>("RunMod");
@@ -54,14 +56,8 @@ bool DllModule::Unload()
 {
 	bool success = true;
 
-	if (unloadModuleFunctionIni) {
-		unloadModuleFunctionIni();
-	}
-	else if (unloadModuleFunctionConsole) {
-		success = unloadModuleFunctionConsole();
-		if (!success) {
-			LogMessage("Module reports error during unload: " + Name());
-		}
+	if (unloadModuleFunction) {
+		unloadModuleFunction();
 	}
 
 	moduleDllHandle.reset(nullptr);
