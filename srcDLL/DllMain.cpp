@@ -42,42 +42,34 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID /*reserved*/)
 {
 	// This will be called once the program is unpacked and running
 	if ((dwReason == DLL_PROCESS_ATTACH) && CommandOptionExists("OPU")) {
-		wchar_t filename[MAX_PATH] = L"";
-		GetModuleFileNameW(NULL, &filename[0], MAX_PATH);
+		// Setup logging
+		SetLoggerError(&loggerDistributor);
+		SetLoggerMessage(&loggerFile);
+		SetLoggerDebug(&loggerDebug);
 
-		if (fs::path(filename).filename() == "Outpost2.exe") {
-			// Setup logging
-			SetLoggerError(&loggerDistributor);
-			SetLoggerMessage(&loggerFile);
-			SetLoggerDebug(&loggerDebug);
+		// Construct global objects
+		vols = std::make_unique<std::vector<std::string>>();
+		moduleLoader = std::make_unique<ModuleLoader>();
 
-			// Construct global objects
-			vols = std::make_unique<std::vector<std::string>>();
-			moduleLoader = std::make_unique<ModuleLoader>();
-
-			// Set load offset for Outpost2.exe module, used during memory patching
-			// If this fails, it's because Outpost2.exe is not loaded
-			// Failure means op2ext.dll was loaded by something else, such as a unit test
-			// For unit tests, just stay in memory, it's not an error if this fails
-			if (EnableOp2MemoryPatching()) {
-				// These hooks are needed to further bootstrap the rest of module loading
-				if (!InstallTAppEventHooks()) {
-					LogError("Failed to install initial TApp event hooks. Module loading and patching disabled.");
-					return FALSE;
-				}
-
-				// Setup event handlers
-				appEvents.onInit.Add(&OnInit);
-				appEvents.onLoadShell.Add(&OnLoadShell);
-				appEvents.onShutDown.Add(&OnShutdown);
-
-				// Set active events
-				appEvents.Activate();
+		// Set load offset for Outpost2.exe module, used during memory patching
+		// If this fails, it's because Outpost2.exe is not loaded
+		// Failure means op2ext.dll was loaded by something else, such as a unit test
+		// For unit tests, just stay in memory, it's not an error if this fails
+		if (EnableOp2MemoryPatching()) {
+			// These hooks are needed to further bootstrap the rest of module loading
+			if (!InstallTAppEventHooks()) {
+				LogError("Failed to install initial TApp event hooks. Module loading and patching disabled.");
+				return FALSE;
 			}
-		}
 
-		// Disable any more thread attach calls
-		DisableThreadLibraryCalls(hInstance);
+			// Setup event handlers
+			appEvents.onInit.Add(&OnInit);
+			appEvents.onLoadShell.Add(&OnLoadShell);
+			appEvents.onShutDown.Add(&OnShutdown);
+
+			// Set active events
+			appEvents.Activate();
+		}
 	}
 
 	return TRUE;

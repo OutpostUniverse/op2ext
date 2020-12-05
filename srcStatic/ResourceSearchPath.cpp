@@ -52,7 +52,8 @@ void ResourceSearchPath::Activate()
 	HookFileSearchPath();
 
 	// Add Outpost2 and OPU directories to PATH so module DLLs loaded from subdirs can locate DLL dependencies there.
-	AddOsSearchPaths({ GetExeDirectory(), GetOpuDirectory() });
+	const fs::path opuPath(GetOpuDirectory());
+	AddOsSearchPaths({ GetExeDirectory(), opuPath, opuPath / "libs" });
 }
 
 
