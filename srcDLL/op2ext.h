@@ -81,7 +81,7 @@ OP2EXT_API size_t GetLoadedModuleCount();
 // Use function GetLoadedModuleCount to determine how many module names exist.
 // If an index is beyond the loaded module count, returns 0 and clears the buffer.
 // A console module's name is the directory name parameter passed in via the /loadmod command. 
-// The directory name is relative to the executable's folder, with no trailing slash
+// The directory name is relative to the OPU folder, with no trailing slash
 // An ini module name is the module's [section name] within the ini file.
 // Returns 0 on success. Returns the required minimum size of the buffer on failure.
 OP2EXT_API size_t GetLoadedModuleName(size_t moduleIndex, char* buffer, size_t bufferSize);
