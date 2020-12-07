@@ -82,11 +82,9 @@ void ModuleLoader::RegisterIniModules(std::vector<std::string>& moduleDirectorie
 				}
 				modulePath /= "";
 
-				if (((modulePath) != (fs::path(GetExeDirectory()) / "")) &&
-				    ((modulePath) != (fs::path(GetOpuDirectory()) / "")))
-				{
+				if ((modulePath != (fs::path(GetExeDirectory()) / "")) && (modulePath != (fs::path(GetOpuDirectory()) / ""))) {
 					moduleDirectories.push_back(modulePath.string());
-					AddOsSearchPaths({ modulePath });  // ** TODO this function should build a vector of moduleDirectories as well
+					AddOsSearchPaths({ modulePath });
 				}
 
 				RegisterModule(std::move(iniModule));
