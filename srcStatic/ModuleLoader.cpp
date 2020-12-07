@@ -53,7 +53,8 @@ void ModuleLoader::RegisterConsoleModules(std::vector<std::string>& moduleDirect
 			const fs::path modulePath = fs::path(GetOpuDirectory()) / consoleModule->Directory();
 
 			moduleDirectories.push_back(modulePath.string());
-			AddOsSearchPaths({ modulePath });  // ** TODO moduleDirectories should be vector<path>, then this can be outside
+			// ** TODO moduleDirectories should be vector<path>, then this can be outside
+			AddOsSearchPaths({ modulePath, modulePath / "libs" });
 
 			RegisterModule(std::move(consoleModule));
 		}
@@ -84,7 +85,7 @@ void ModuleLoader::RegisterIniModules(std::vector<std::string>& moduleDirectorie
 
 				if ((modulePath != (fs::path(GetExeDirectory()) / "")) && (modulePath != (fs::path(GetOpuDirectory()) / ""))) {
 					moduleDirectories.push_back(modulePath.string());
-					AddOsSearchPaths({ modulePath });
+					AddOsSearchPaths({ modulePath, modulePath / "libs" });
 				}
 
 				RegisterModule(std::move(iniModule));
