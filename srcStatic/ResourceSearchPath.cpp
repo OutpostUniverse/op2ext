@@ -104,30 +104,17 @@ bool ResourceSearchPath::CallOriginalGetFilePath(const char* resourceName, /* [o
 
 bool ResManager::GetFilePath(const char* resourceName, /* [out] */ char* filePath) const
 {
-	constexpr auto SearchOptions = fs::directory_options::follow_directory_symlink |
-		                             fs::directory_options::skip_permission_denied;
-
-	auto CheckResult = [filePath](const fs::path& curPath) {
-		const std::string str = curPath.string();
-		bool result = Exists(str);
-		if (result && (CopyStringViewIntoCharBuffer(str, filePath, MAX_PATH) != 0)) {
-			LogMessage("MAX_PATH exceeded while trying to return path to resource: " + curPath.filename().string());
-			result = false;
-		}
-		return result;
-	};
-
-	const std::string exeDirectory = GetExeDirectory();
-	const std::string opuDirectory = GetOpuDirectory();
-
 	for (const auto& moduleDirectory : ResourceSearchPath::ModuleDirectories()) {
 		// Search for resource in module folder
-		if (CheckResult(fs::path(moduleDirectory) / resourceName)) {
-			return true;
-		}
-		else for (const auto& entry : fs::recursive_directory_iterator(moduleDirectory, SearchOptions)) {
-			if (IsDirectory(entry.path().string()) && CheckResult(entry / resourceName)) {
+		const fs::path    curPath = fs::path(moduleDirectory) / resourceName;
+		const std::string str     = curPath.string();
+
+		if (Exists(str)) {
+			if (CopyStringViewIntoCharBuffer(str, filePath, MAX_PATH) == 0) {
 				return true;
+			}
+			else {
+				LogMessage("MAX_PATH exceeded while trying to return path to resource: " + curPath.filename().string());
 			}
 		}
 	}
