@@ -105,8 +105,8 @@ bool InstallDepPatch()
 // Redirects Outpost2.ini to be accessed from the OPU directory.
 void RedirectIniFile()
 {
-	const auto iniPath = GetOutpost2IniPath();
-	Op2MemCopy(0x00547090, iniPath.length() + 1, iniPath.data());  // Overwrite gConfigFile.iniPath
+	// Overwrite gConfigFile.iniPath
+	CopyStringViewIntoCharBuffer(GetOutpost2IniPath(), static_cast<char*>(Op2RelocatePointer(0x00547090)), MAX_PATH);
 }
 
 

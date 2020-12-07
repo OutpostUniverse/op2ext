@@ -33,7 +33,7 @@ void ModuleLoader::RegisterBuiltInModules()
 	}
 }
 
-void ModuleLoader::RegisterConsoleModules()
+void ModuleLoader::RegisterConsoleModules(std::vector<std::string>& moduleDirectories)
 {
 	if (consoleModuleNames.empty()) {
 		return; // No console modules to load
@@ -44,8 +44,7 @@ void ModuleLoader::RegisterConsoleModules()
 		return;
 	}
 
-	std::vector<std::string> moduleDirectories;
-	moduleDirectories.reserve(consoleModuleNames.size());
+	moduleDirectories.reserve(moduleDirectories.size() + consoleModuleNames.size());
 
 	for (const auto& moduleName : consoleModuleNames)
 	{
@@ -63,12 +62,14 @@ void ModuleLoader::RegisterConsoleModules()
 		}
 	}
 
-	ResourceSearchPath::Set(std::move(moduleDirectories));
 }
 
-void ModuleLoader::RegisterIniModules()
+void ModuleLoader::RegisterIniModules(std::vector<std::string>& moduleDirectories)
 {
-	for (const auto moduleName : iniFile.GetKeyNames("ExternalModules"))
+	const auto keyNames = iniFile.GetKeyNames("ExternalModules");
+	moduleDirectories.reserve(moduleDirectories.size() + keyNames.size());
+
+	for (const auto moduleName : keyNames)
 	{
 		if (IsModuleRequested("ExternalModules", moduleName)) 
 		{
@@ -79,8 +80,12 @@ void ModuleLoader::RegisterIniModules()
 				if (modulePath.is_relative()) {
 					modulePath = GetOpuDirectory() / modulePath;
 				}
+				modulePath /= "";
 
-				if ((modulePath != GetExeDirectory()) && (modulePath != GetOpuDirectory())) {
+				if (((modulePath) != (fs::path(GetExeDirectory()) / "")) &&
+				    ((modulePath) != (fs::path(GetOpuDirectory()) / "")))
+				{
+					moduleDirectories.push_back(modulePath.string());
 					AddOsSearchPaths({ modulePath });  // ** TODO this function should build a vector of moduleDirectories as well
 				}
 
@@ -164,9 +169,14 @@ void ModuleLoader::LoadModules()
 	// Setup loading of additional resources from module folders
 	ResourceSearchPath::Activate();
 
+	std::vector<std::string> moduleDirectories;
+	moduleDirectories.reserve(consoleModuleNames.size());
+
 	RegisterBuiltInModules();
-	RegisterIniModules();
-	RegisterConsoleModules();
+	RegisterIniModules(moduleDirectories);
+	RegisterConsoleModules(moduleDirectories);
+
+	ResourceSearchPath::Set(std::move(moduleDirectories));
 
 	for (auto& gameModule : modules){
 		try {

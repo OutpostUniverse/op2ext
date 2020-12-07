@@ -11,6 +11,19 @@ std::uintptr_t loadOffset = 0;
 constexpr std::uintptr_t ExpectedOutpost2Address = 0x00400000;
 
 
+// Calls Outpost2.exe's gTApp.Version() exported function.
+static uint32_t GetOp2Version(HMODULE moduleHandle)
+{
+	// Use GetProcAddress instead of load-time importing (needs C++ decorated names).
+	// We avoid importing since it is possible op2ext.dll could get loaded into non-OP2 processes via the loader shim DLL.
+	auto*const gTApp      = reinterpret_cast<void*>(GetProcAddress(moduleHandle, "?gTApp@@3VTApp@@A"));
+	auto*const GetVersion =
+		reinterpret_cast<unsigned long (__thiscall*)(void*)>(GetProcAddress(moduleHandle, "?Version@TApp@@QAEKXZ"));
+
+	return ((gTApp != nullptr) && (GetVersion != nullptr)) ? GetVersion(gTApp) : 0;
+}
+
+
 // Enabled patching of Outpost2.exe memory
 // Adjust offsets in case Outpost2.exe module is relocated
 // Returns true on success, or false on failure
@@ -26,6 +39,13 @@ bool EnableOp2MemoryPatching()
 		return false;
 	}
 
+	const uint32_t op2Version = GetOp2Version(moduleHandle);
+	if ((op2Version < 0x01020007) || (op2Version >= 0x20000000)) {
+		// op2ext requires Outpost2 1.2.7 (English CD version with official updates 1-3, or GOG).
+		// Unpatched English CD version is 1.2.5, and unpatched translationed versions are {2-5}.2.{7-9}.
+		return false;
+	}
+
 	// Convert module handle to module base address
 	// Under Win32 these are the same
 	auto moduleBaseAddress = reinterpret_cast<std::uintptr_t>(moduleHandle);
@@ -37,13 +57,19 @@ bool EnableOp2MemoryPatching()
 }
 
 
+void* Op2RelocatePointer(std::uintptr_t destBaseAddress)
+{
+	return reinterpret_cast<void*>(destBaseAddress + loadOffset);
+}
+
+
 bool Op2UnprotectMemory(std::uintptr_t destBaseAddress, std::size_t size)
 {
 	if (!memoryPatchingEnabled) {
 		return false;
 	}
 
-	void* destAddress = reinterpret_cast<void*>(destBaseAddress + loadOffset);
+	void*const destAddress = Op2RelocatePointer(destBaseAddress);
 	// Try to unprotect memory
 	DWORD oldAttribute;
 	return VirtualProtect(destAddress, size, PAGE_EXECUTE_READWRITE, &oldAttribute);
@@ -57,7 +83,7 @@ bool Op2MemEdit(std::uintptr_t destBaseAddress, std::size_t size, Function memor
 		return false;
 	}
 
-	void* destAddress = reinterpret_cast<void*>(destBaseAddress + loadOffset);
+	void*const destAddress = Op2RelocatePointer(destBaseAddress);
 
 	// Try to unprotect memory
 	DWORD oldAttribute;

@@ -180,7 +180,7 @@ TEST(op2ext, GetLoadedModuleCount) {
 
 TEST(op2ext, GetLoadedModuleName) {
 	constexpr char Nonce = 'Z';
-	char moduleName[256] = {Nonce};
+	char moduleName[256] = { Nonce, '\0' };
 
 	// No crash on nullptr buffer
 	// Returns required buffer size (must include space for null terminator)
@@ -198,5 +198,32 @@ TEST(op2ext, GetLoadedModuleName) {
 	// Module name plus null terminator should fit within buffer size
 	ASSERT_TRUE(moduleNameView.length() < sizeof(moduleName));
 	// Module name is null terminated (this is outside the string_view window)
-	EXPECT_EQ(0, moduleName[moduleNameView.length()]);
+	EXPECT_EQ('\0', moduleName[moduleNameView.length()]);
+}
+
+TEST(op2ext, GetModuleDirectoryCount) {
+	EXPECT_EQ(0u, GetModuleDirectoryCount());
+}
+
+TEST(op2ext, GetModuleDirectory) {
+	constexpr char Nonce     = 'Z';
+	char moduleDir[MAX_PATH] = { Nonce, '\0' };
+
+	// No crash on nullptr buffer
+	// Returns required buffer size (must include space for null terminator)
+	EXPECT_NE(0u, GetModuleDirectory(0, nullptr, 0));
+	EXPECT_NE(0u, GetModuleDirectory(0, nullptr, sizeof(moduleDir)));
+
+	// Returns needed buffer size when supplied buffer is too small
+	// Buffer is not modified beyond specified length
+	EXPECT_NE(0u, GetModuleDirectory(0, moduleDir, 0));
+	EXPECT_EQ(Nonce, moduleDir[0]);
+
+	// On success return value is 0, and buffer contains module name
+	EXPECT_EQ(0u, GetModuleDirectory(0, moduleDir, sizeof(moduleDir)));
+	std::string_view moduleDirView{moduleDir};
+	// Module name plus null terminator should fit within buffer size
+	ASSERT_TRUE(moduleDirView.length() < sizeof(moduleDir));
+	// Module name is null terminated (this is outside the string_view window)
+	EXPECT_EQ('\0', moduleDir[moduleDirView.length()]);
 }

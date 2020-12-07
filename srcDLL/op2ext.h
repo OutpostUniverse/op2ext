@@ -86,6 +86,15 @@ OP2EXT_API size_t GetLoadedModuleCount();
 // Returns 0 on success. Returns the required minimum size of the buffer on failure.
 OP2EXT_API size_t GetLoadedModuleName(size_t moduleIndex, char* buffer, size_t bufferSize);
 
+// Returns the number of module directories.
+OP2EXT_API size_t GetModuleDirectoryCount();
+
+// Retrieves the module directory path at the specified index.
+// Use function GetModuleDirectoryCount() to determine how many module directories exist.
+// If an index is beyond the loaded module count, returns 0 and clears the buffer.
+// Returns 0 on success. Returns the required minimum size of the buffer on failure.
+OP2EXT_API size_t GetModuleDirectory(size_t moduleIndex, char* buffer, size_t bufferSize);
+
 #ifdef __cplusplus
 } // extern "C"
 #endif

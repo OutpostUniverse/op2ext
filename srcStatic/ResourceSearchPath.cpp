@@ -121,15 +121,13 @@ bool ResManager::GetFilePath(const char* resourceName, /* [out] */ char* filePat
 	const std::string opuDirectory = GetOpuDirectory();
 
 	for (const auto& moduleDirectory : ResourceSearchPath::ModuleDirectories()) {
-		if ((moduleDirectory != exeDirectory) && (moduleDirectory != opuDirectory)) {
-			// Search for resource in module folder
-			if (CheckResult(fs::path(moduleDirectory) / resourceName)) {
+		// Search for resource in module folder
+		if (CheckResult(fs::path(moduleDirectory) / resourceName)) {
+			return true;
+		}
+		else for (const auto& entry : fs::recursive_directory_iterator(moduleDirectory, SearchOptions)) {
+			if (IsDirectory(entry.path().string()) && CheckResult(entry / resourceName)) {
 				return true;
-			}
-			else for (const auto& entry : fs::recursive_directory_iterator(moduleDirectory, SearchOptions)) {
-				if (IsDirectory(entry.path().string()) && CheckResult(entry / resourceName)) {
-					return true;
-				}
 			}
 		}
 	}
