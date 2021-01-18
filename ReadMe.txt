@@ -125,6 +125,13 @@ Order of vol file precedence is below:
 Change Log
 ------------------------------------------
 
+Version 3.1.0
+ * Check if the base module is Outpost2.exe and that the game version is valid before attempting to activate patches
+ * Look for Outpost2.ini and other OPU modded game files under the "Outpost2\OPU" directory instead of "Outpost2"
+ * Removed Earthworker Proximity Tasking as a Built in Module
+ * Add external API functions GetModuleDirectoryCount and GetModuleDirectory to get loaded module directories
+ * Changed how multiple console mods can be loaded - you should now specify "/loadmod" multiple times
+
 Version 3.0.0
 
  * Remove public functions IsConsoleModuleLoaded & IsIniModuleLoaded
@@ -159,7 +166,6 @@ LoadAddons = "NetFix, NetHelper"
 Add the following sections to the ini file:
 
 [BuiltInModules]
-EarthworkerProximityTasking = yes
 IPDropDown = yes
 
 [ExternalModules]
