@@ -31,6 +31,9 @@ std::string& ToLowerInPlace(std::string& x);
 // Returns a new string where all characters have been converted to lower case
 std::string ToLower(std::string x);
 
+// Lexographically compares two strings in a case-insensitive manner
+int StringInsensitiveCompare(const std::string_view& left, const std::string_view& right);
+
 
 // Convert hex address value to string
 std::string AddrToHexString(std::uintptr_t addr);

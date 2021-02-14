@@ -3,10 +3,12 @@
 #include "StringConversion.h"
 #include "Log.h"
 
+#include <algorithm>
+
 static CommandIterator FindCommandSwitch(CommandIterator begin, CommandIterator end, const std::string& option)
 {
 	return std::find_if(begin, end, [&option](const std::string& argument)
-		{ return ((argument[0] == '/') || (argument[0] == '-')) && (_stricmp(&argument[1], option.data()) == 0); });
+		{ return ((argument[0] == '/') || (argument[0] == '-')) && (StringInsensitiveCompare(&argument[1], option) == 0); });
 }
 
 

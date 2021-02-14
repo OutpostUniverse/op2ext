@@ -9,6 +9,10 @@
 #include <chrono> // std::chrono::system_clock::now
 #include <ctime> // gmtime
 
+#ifdef __GNUC__
+#include <strings.h>
+#endif
+
 
 std::string WrapRawString(const char* str)
 {
@@ -62,6 +66,15 @@ std::string ToLower(std::string x) {
 	std::transform(x.begin(), x.end(), x.begin(), ::tolower);
 
 	return x;
+}
+
+int StringInsensitiveCompare(const std::string_view& left, const std::string_view& right)
+{
+#ifdef __GNUC__
+	return strcasecmp(left.data(), right.data());
+#else
+	return _stricmp(left.data(), right.data());
+#endif
 }
 
 
