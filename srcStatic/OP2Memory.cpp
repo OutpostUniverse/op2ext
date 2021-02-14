@@ -18,7 +18,7 @@ static uint32_t GetOp2Version(HMODULE moduleHandle)
 	// We avoid importing since it is possible op2ext.dll could get loaded into non-OP2 processes via the loader shim DLL.
 	auto*const gTApp      = reinterpret_cast<void*>(GetProcAddress(moduleHandle, "?gTApp@@3VTApp@@A"));
 	auto*const GetVersion =
-		reinterpret_cast<unsigned long (__thiscall*)(void*)>(GetProcAddress(moduleHandle, "?Version@TApp@@QAEKXZ"));
+		reinterpret_cast<unsigned long (__fastcall*)(void*)>(GetProcAddress(moduleHandle, "?Version@TApp@@QAEKXZ"));
 
 	return ((gTApp != nullptr) && (GetVersion != nullptr)) ? GetVersion(gTApp) : 0;
 }

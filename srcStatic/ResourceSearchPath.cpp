@@ -1,6 +1,6 @@
 #include "ResourceSearchPath.h"
 #include "StringConversion.h"
-#include "FSInclude.h"
+#include "FsInclude.h"
 #include "FileSystemHelper.h"
 #include "OP2Memory.h"
 #include "Log.h"
