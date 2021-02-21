@@ -15,6 +15,10 @@ TEST(ConsoleModuleLoader, ModuleWithoutDLL)
 
 	// Test will need temporary module directory with no DLL present
 	// Ensure module directory ends with a trailing slash
+
+	const auto opuDirectory = GetOpuDirectory();
+	fs::create_directory(opuDirectory); // create_directory throws if parent directory does not exist
+
 	const auto moduleDirectory = fs::path(GetOpuDirectory()) / moduleName;
 	fs::create_directory(moduleDirectory);
 
@@ -25,14 +29,17 @@ TEST(ConsoleModuleLoader, ModuleWithoutDLL)
 	EXPECT_NO_THROW(moduleLoader.LoadModules());
 	EXPECT_NO_THROW(moduleLoader.RunModules());
 
-	EXPECT_EQ(moduleName + "\\", moduleLoader.GetModuleDirectory(0));
-	EXPECT_EQ(moduleName, moduleLoader.GetModuleName(0));
-
 	EXPECT_TRUE(moduleLoader.IsModuleLoaded(moduleName));
 	EXPECT_FALSE(moduleLoader.IsModuleLoaded(""));
 	EXPECT_FALSE(moduleLoader.IsModuleLoaded("UnknownModule"));
 
-	EXPECT_EQ(1u, moduleLoader.Count());
+	// Because IsModuleLoaded returned true previously, moduleName will find a match
+	for (std::size_t i = 0; i < moduleLoader.Count(); ++i) {
+		if (moduleName == moduleLoader.GetModuleName(i)) {
+			EXPECT_EQ(moduleName + "\\", moduleLoader.GetModuleDirectory(i));
+			break;
+		}
+	}
 
 	EXPECT_NO_THROW(moduleLoader.UnloadModules());
 
