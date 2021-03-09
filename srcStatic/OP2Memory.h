@@ -9,11 +9,12 @@
 
 bool EnableOp2MemoryPatching();
 
-bool Op2UnprotectMemory(std::uintptr_t destBaseAddress, std::size_t size);
-bool Op2MemSet(std::uintptr_t destBaseAddress, std::size_t size, unsigned char value);
-bool Op2MemCopy(std::uintptr_t destBaseAddress, std::size_t size, const void* sourceAddress);
-bool Op2WriteAddress(std::uintptr_t destBaseAddress, const void* newAddress);
-bool Op2RelinkCall(std::uintptr_t callInstructionAddress, const void* newFunctionAddress);
+void* Op2RelocatePointer(std::uintptr_t destBaseAddress);
+bool  Op2UnprotectMemory(std::uintptr_t destBaseAddress, std::size_t size);
+bool  Op2MemSet(std::uintptr_t destBaseAddress, std::size_t size, unsigned char value);
+bool  Op2MemCopy(std::uintptr_t destBaseAddress, std::size_t size, const void* sourceAddress);
+bool  Op2WriteAddress(std::uintptr_t destBaseAddress, const void* newAddress);
+bool  Op2RelinkCall(std::uintptr_t callInstructionAddress, const void* newFunctionAddress);
 
 
 template <typename MethodPointerType>

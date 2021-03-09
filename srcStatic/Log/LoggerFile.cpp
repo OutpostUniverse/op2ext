@@ -6,7 +6,7 @@
 
 
 LoggerFile::LoggerFile() :
-	logFile(GetExeDirectory() + "\\Outpost2Log.txt", std::ios::app | std::ios::out | std::ios::binary)
+	logFile(GetOpuDirectory() + "\\Outpost2Log.txt", std::ios::app | std::ios::out | std::ios::binary)
 {
 	if (!logFile.is_open()) {
 		LogError("Unable to create or open Outpost2Log.txt");

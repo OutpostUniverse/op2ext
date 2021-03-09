@@ -1,7 +1,9 @@
 #include "GetCommandLineArguments.h"
 #include "StringConversion.h"
 #include "LocalResource.h"
-#include <windows.h> // Cannot use WIN32_LEAN_AND_MEAN (it does not contain CommandLineToArgvW)
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#include <shellapi.h>
 #include <stdexcept>
 
 

@@ -29,8 +29,7 @@ private:
 	// The exported naming schema is different between console and ini functions
 	using LoadModuleFunctionIni = void(*)(const char* iniSectionName);
 	using LoadModuleFunctionConsole = void(*)();
-	using UnloadModuleFunctionIni = void(*)();
-	using UnloadModuleFunctionConsole = bool(*)();
+	using UnloadModuleFunction = void(*)();
 	using RunModuleFunction = void(*)();
 
 	// Search for dll's initialization, run & destroy functions
@@ -44,7 +43,6 @@ private:
 
 	LoadModuleFunctionIni loadModuleFunctionIni = nullptr;
 	LoadModuleFunctionConsole loadModuleFunctionConsole = nullptr;
-	UnloadModuleFunctionIni unloadModuleFunctionIni = nullptr;
-	UnloadModuleFunctionConsole unloadModuleFunctionConsole = nullptr;
+	UnloadModuleFunction unloadModuleFunction = nullptr;
 	RunModuleFunction runModuleFunction = nullptr;
 };

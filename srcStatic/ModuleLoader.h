@@ -36,8 +36,8 @@ private:
 	std::vector<std::unique_ptr<GameModule>> modules;
 
 	void RegisterBuiltInModules();
-	// Console module names are the relative path from the game folder (no trailing slash)
-	void RegisterConsoleModules();
-	void RegisterIniModules();
-	bool IsModuleRequested(const std::string& sectionName, const std::string& moduleName);
+	// Console module names are the relative path from the OPU folder (no trailing slash)
+	void RegisterConsoleModules(std::vector<std::string>& moduleDirectories);
+	void RegisterIniModules(std::vector<std::string>& moduleDirectories);
+	bool IsModuleRequested(const std::string& sectionName, const std::string& moduleName, bool defaultValue = false);
 };

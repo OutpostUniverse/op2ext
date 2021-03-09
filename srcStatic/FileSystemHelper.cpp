@@ -15,9 +15,14 @@ std::string GetExeDirectory()
 	return fs::path(moduleFilename).remove_filename().string();
 }
 
+std::string GetOpuDirectory()
+{
+	return (fs::path(GetExeDirectory())/"OPU").string();
+}
+
 std::string GetOutpost2IniPath()
 {
-	return fs::path(GetExeDirectory()).append("outpost2.ini").string();
+	return fs::path(GetOpuDirectory()).append("outpost2.ini").string();
 }
 
 std::string GetOutpost2IniSetting(const std::string& sectionName, const std::string& key)

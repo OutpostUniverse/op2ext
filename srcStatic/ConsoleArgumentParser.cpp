@@ -2,66 +2,62 @@
 #include "ConsoleArgumentParser.h"
 #include "StringConversion.h"
 #include "Log.h"
-#include <stdexcept>
+
+#include <algorithm>
+
+static CommandIterator FindCommandSwitch(CommandIterator begin, CommandIterator end, const std::string& option)
+{
+	return std::find_if(begin, end, [&option](const std::string& argument)
+		{ return ((argument[0] == '/') || (argument[0] == '-')) && (StringInsensitiveCompare(&argument[1], option) == 0); });
+}
 
 
-std::vector<std::string> GetCommandLineArguments();
-std::string GetSwitch(std::vector<std::string>& arguments);
-std::string ParseSwitchName(std::string switchName);
+// Returns iterator to option's argument, or end if not found
+CommandIterator GetCommandOption(CommandIterator begin, CommandIterator end, const std::string& option)
+{
+	auto it = FindCommandSwitch(begin, end, option);
+	return ((it != end) && (++it != end)) ? it : end;
+}
 
+// Returns option's argument, or empty string if not found
+std::string GetCommandOption(const std::string& option)
+{
+	const auto arguments = GetCommandLineArguments();
+	const auto it        = GetCommandOption(arguments.cbegin(), arguments.cend(), option);
+	return (it != arguments.end()) ? *it : "";
+}
+
+
+bool CommandOptionExists(CommandIterator begin, CommandIterator end, const std::string& option)
+{
+	return (FindCommandSwitch(begin, end, option) != end);
+}
+
+bool CommandOptionExists(const std::string& option)
+{
+	const auto arguments = GetCommandLineArguments();
+	return CommandOptionExists(arguments.cbegin(), arguments.cend(), option);
+}
+
+
+std::vector<std::string> FindModuleDirectories(const std::vector<std::string>& arguments)
+{
+	std::vector<std::string> directories;
+
+	for (auto it = arguments.cbegin(); (it = GetCommandOption(it, arguments.cend(), "loadmod")) != arguments.cend();) {
+		auto& option = *it;
+		if ((option[0] == '/') || (option[0] == '-')) {
+			LogMessage("Ignoring parsing ill-formed command line arguments " + (*(it - 1)) + " " + option);
+		}
+		else {
+			directories.push_back(option);
+		}
+	}
+
+	return directories;
+}
 
 std::vector<std::string> FindModuleDirectories()
 {
-	try {
-		const auto arguments = GetCommandLineArguments();
-		return FindModuleDirectories(arguments);
-	} catch(const std::exception& e) {
-		LogError("Error parsing command line arguments: " + std::string(e.what()));
-		return {};
-	}
-}
-
-std::vector<std::string> FindModuleDirectories(std::vector<std::string> arguments)
-{
-	const std::string switchName = GetSwitch(arguments);
-
-	if (switchName.empty()) {
-		return {};
-	}
-
-	if (switchName == "loadmod") {
-		if (arguments.empty()) {
-			throw std::runtime_error("No relative directory argument provided for the switch loadmod");
-		}
-
-		return arguments;
-	}
-
-	throw std::runtime_error("Provided switch is not supported: " + switchName);
-}
-
-std::string GetSwitch(std::vector<std::string>& arguments)
-{
-	if (arguments.size() == 0) {
-		return std::string(); // Switch is not present
-	}
-
-	const std::string rawSwitch = arguments[0];
-	arguments.erase(arguments.begin()); // Remove rawSwitch from arguments
-
-	return ParseSwitchName(rawSwitch);
-}
-
-// Returns empty string on failure
-std::string ParseSwitchName(std::string switchName)
-{
-	if (switchName[0] != '/' && switchName[0] != '-') {
-		const std::string message("A switch was expected but not found. Prefix switch name with '/' or '-'. The following statement was found instead: " + switchName);
-		throw std::runtime_error(message);
-	}
-
-	switchName.erase(switchName.begin(), switchName.begin() + 1); //Removes leading - or /
-	ToLowerInPlace(switchName);
-
-	return switchName;
+	return FindModuleDirectories(GetCommandLineArguments());
 }

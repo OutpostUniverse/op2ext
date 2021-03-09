@@ -17,7 +17,7 @@ protected:
 	}
 
 	// sectionPairs is a non-line terminated list of keys and values. EG: TestModule = No
-	void WriteExternalModuleIniFile(const std::vector<std::string_view>& sectionPairs)
+	void WriteExternalModuleSectionToIniFile(const std::vector<std::string_view>& sectionPairs)
 	{
 		std::ofstream iniFileStream(iniFilename.string());
 
@@ -33,24 +33,29 @@ protected:
 
 TEST_F(IniModuleTest, NoDll)
 {
-	WriteExternalModuleIniFile({ "Test = yes" });
+	// Add active module named test to ini file
+	WriteExternalModuleSectionToIniFile({ "Test = yes" });
+
+	// Register a non-existent dll filename to the test module in the ini file
+	std::ofstream iniFileStream(iniFilename.string(), std::ios_base::app);
+	iniFileStream << std::endl;
+	iniFileStream << "[Test]" << std::endl;
+	iniFileStream << "Dll = Missing.dll" << std::endl;
 
 	ModuleLoader moduleLoader(IniFile(iniFilename.string()), {});
 
 	// No DLL found. An error should post, but program continues to run 
 	EXPECT_CALL(loggerError, Log(::testing::HasSubstr("Unable to load dll for module"))).Times(1);
 	EXPECT_NO_THROW(moduleLoader.LoadModules());
-	EXPECT_EQ(0u, moduleLoader.Count());
 }
 
 TEST_F(IniModuleTest, InappropriateValue)
 {
-	WriteExternalModuleIniFile({ "Test = InappropriateValue" });
+	WriteExternalModuleSectionToIniFile({ "Test = InappropriateValue" });
 
 	ModuleLoader moduleLoader(IniFile(iniFilename.string()), {});
 
 	// Inappropriate value for if module should be loaded. An error should post, but program continues to run 
 	EXPECT_CALL(loggerError, Log(::testing::HasSubstr("contains an innapropriate setting of"))).Times(1);
 	EXPECT_NO_THROW(moduleLoader.LoadModules());
-	EXPECT_EQ(0u, moduleLoader.Count());
 }

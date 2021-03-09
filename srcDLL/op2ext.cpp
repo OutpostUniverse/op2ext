@@ -3,6 +3,7 @@
 #include "StringConversion.h"
 #include "OP2Memory.h"
 #include "FileSystemHelper.h"
+#include "ResourceSearchPath.h"
 #include "Log.h"
 #include "WindowsModule.h"
 #define WIN32_LEAN_AND_MEAN
@@ -13,8 +14,8 @@
 #include <cstdint>
 
 
-// Dummy export for linking requirements from Outpost2.exe and OP2Shell.dll.
-// Outpost2.exe and OP2Shell.dll reference this dummy entry, causing op2ext.dll to load.
+// Dummy export for linking requirements from winmm.dll injector shim loaded by Outpost2.exe.
+// The winmm.dll shim references this dummy entry, causing op2ext.dll to load.
 // It is not used in any way, but must exist to prevent Windows loader errors.
 extern "C" OP2EXT_API int StubExt;
 int StubExt = 0;
@@ -162,5 +163,17 @@ OP2EXT_API size_t GetLoadedModuleName(size_t moduleIndex, char* buffer, size_t b
 			std::to_string(moduleIndex) + ". Details: " + std::string(e.what()));
 	}
 
+	return CopyStringViewIntoCharBuffer(moduleName, buffer, bufferSize);
+}
+
+OP2EXT_API size_t GetModuleDirectoryCount()
+{
+	return ResourceSearchPath::GetSearchPaths().size();
+}
+
+OP2EXT_API size_t GetModuleDirectory(size_t moduleIndex, char* buffer, size_t bufferSize)
+{
+	const auto&       searchPaths = ResourceSearchPath::GetSearchPaths();
+	const std::string moduleName  = (moduleIndex < searchPaths.size()) ? searchPaths[moduleIndex] : "";
 	return CopyStringViewIntoCharBuffer(moduleName, buffer, bufferSize);
 }

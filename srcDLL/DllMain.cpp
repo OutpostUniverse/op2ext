@@ -6,6 +6,7 @@
 #include "OP2Memory.h"
 #include "FileSystemHelper.h"
 #include "FsInclude.h"
+#include "ConsoleArgumentParser.h"
 #include "Log.h"
 #include "Log/LoggerFile.h"
 #include "Log/LoggerMessageBox.h"
@@ -40,7 +41,7 @@ AppEvents appEvents;
 BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID /*reserved*/)
 {
 	// This will be called once the program is unpacked and running
-	if (dwReason == DLL_PROCESS_ATTACH) {
+	if ((dwReason == DLL_PROCESS_ATTACH) && CommandOptionExists("OPU")) {
 		// Setup logging
 		SetLoggerError(&loggerDistributor);
 		SetLoggerMessage(&loggerFile);
@@ -69,9 +70,6 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID /*reserved*/)
 			// Set active events
 			appEvents.Activate();
 		}
-
-		// Disable any more thread attach calls
-		DisableThreadLibraryCalls(hInstance);
 	}
 
 	return TRUE;
@@ -104,10 +102,21 @@ bool InstallDepPatch()
 }
 
 
+// Redirects Outpost2.ini to be accessed from the OPU directory.
+void RedirectIniFile()
+{
+	// Overwrite gConfigFile.iniPath
+	CopyStringViewIntoCharBuffer(GetOutpost2IniPath(), static_cast<char*>(Op2RelocatePointer(0x00547090)), MAX_PATH);
+}
+
+
 void OnInit()
 {
 	// Install DEP patch so newer versions of Windows don't terminate the game
 	InstallDepPatch();
+
+	// Set the game to look for Outpost2.ini under the OPU directory
+	RedirectIniFile();
 
 	// Order of precedence for loading vol files is:
 	// ART_PATH (from console module), Console Module, Ini Modules, Addon directory, Game directory
