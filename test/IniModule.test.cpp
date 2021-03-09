@@ -33,8 +33,14 @@ protected:
 
 TEST_F(IniModuleTest, NoDll)
 {
-	WriteExternalModuleIniFile({ "Test = yes" });
+	// Add active module named test to ini file
 	WriteExternalModuleSectionToIniFile({ "Test = yes" });
+
+	// Register a non-existent dll filename to the test module in the ini file
+	std::ofstream iniFileStream(iniFilename.string(), std::ios_base::app);
+	iniFileStream << std::endl;
+	iniFileStream << "[Test]" << std::endl;
+	iniFileStream << "Dll = Missing.dll" << std::endl;
 
 	ModuleLoader moduleLoader(IniFile(iniFilename.string()), {});
 
