@@ -16,11 +16,8 @@ TEST(ConsoleModuleLoader, ModuleWithoutDLL)
 	// Test will need temporary module directory with no DLL present
 	// Ensure module directory ends with a trailing slash
 
-	const auto opuDirectory = GetOpuDirectory();
-	fs::create_directory(opuDirectory); // create_directory throws if parent directory does not exist
-
 	const auto moduleDirectory = fs::path(GetOpuDirectory()) / moduleName;
-	fs::create_directory(moduleDirectory);
+	fs::create_directories(moduleDirectory);
 
 	const std::string iniFileName{ GetExeDirectory() + "TestIniFile.NonExistentData.ini" };
 	IniFile iniFile(iniFileName);
@@ -58,7 +55,7 @@ TEST(ConsoleModuleLoader, ModuleWithEmptyDLL)
 	const auto dllFile = moduleDirectory / "op2mod.dll";
 	
 	// Create temporary module directory
-	fs::create_directory(moduleDirectory);
+	fs::create_directories(moduleDirectory);
 
 	// Create empty DLL file
 	// Temporary object, immediately destructed, side effect creates file of size 0
@@ -98,7 +95,7 @@ TEST(ConsoleModuleLoader, MultiModule) {
 
 	// Create some empty test module directories
 	for (const auto& moduleName : moduleNames) {
-		fs::create_directory(opuDirectory / moduleName);
+		fs::create_directories(opuDirectory / moduleName);
 	}
 
 	const std::string iniFileName{ GetExeDirectory() + "TestIniFile.NonExistentData.ini" };
