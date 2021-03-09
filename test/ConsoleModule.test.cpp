@@ -65,21 +65,12 @@ TEST(ConsoleModuleLoader, ModuleWithEmptyDLL)
 	IniFile iniFile(iniFileName);
 	ModuleLoader moduleLoader(iniFile, {moduleName});
 
-	// DLL file is empty and should be aborted
+	// Check that an invalid module does not throw an exception when loaded
 	EXPECT_NO_THROW(moduleLoader.LoadModules());
-
-	// Functions should return without doing anything since module load is aborted
 	EXPECT_NO_THROW(moduleLoader.RunModules());
 
-	// Due to invalid dll, no module exists to get directory from
-	EXPECT_THROW(moduleLoader.GetModuleDirectory(0), std::out_of_range);
-	EXPECT_THROW(moduleLoader.GetModuleName(0), std::out_of_range);
-
+	// Ensure module does not exist
 	EXPECT_FALSE(moduleLoader.IsModuleLoaded(moduleName));
-	EXPECT_FALSE(moduleLoader.IsModuleLoaded(""));
-	EXPECT_FALSE(moduleLoader.IsModuleLoaded("UnknownModule"));
-
-	EXPECT_EQ(0u, moduleLoader.Count());
 
 	EXPECT_NO_THROW(moduleLoader.UnloadModules());
 
@@ -105,9 +96,8 @@ TEST(ConsoleModuleLoader, MultiModule) {
 	EXPECT_NO_THROW(moduleLoader.LoadModules());
 	EXPECT_NO_THROW(moduleLoader.RunModules());
 
-	EXPECT_EQ(2u, moduleLoader.Count());
-	EXPECT_EQ(moduleNames[0], moduleLoader.GetModuleName(0));
-	EXPECT_EQ(moduleNames[1], moduleLoader.GetModuleName(1));
+	// Ensure both modules are loaded. (More modules could load if built in modules are present)
+	EXPECT_GE(moduleLoader.Count(), 2u);
 
 	EXPECT_TRUE(moduleLoader.IsModuleLoaded(moduleNames[0]));
 	EXPECT_TRUE(moduleLoader.IsModuleLoaded(moduleNames[1]));

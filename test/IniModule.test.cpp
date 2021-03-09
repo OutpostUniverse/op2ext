@@ -41,7 +41,6 @@ TEST_F(IniModuleTest, NoDll)
 	// No DLL found. An error should post, but program continues to run 
 	EXPECT_CALL(loggerError, Log(::testing::HasSubstr("Unable to load dll for module"))).Times(1);
 	EXPECT_NO_THROW(moduleLoader.LoadModules());
-	EXPECT_EQ(0u, moduleLoader.Count());
 }
 
 TEST_F(IniModuleTest, InappropriateValue)
@@ -53,5 +52,4 @@ TEST_F(IniModuleTest, InappropriateValue)
 	// Inappropriate value for if module should be loaded. An error should post, but program continues to run 
 	EXPECT_CALL(loggerError, Log(::testing::HasSubstr("contains an innapropriate setting of"))).Times(1);
 	EXPECT_NO_THROW(moduleLoader.LoadModules());
-	EXPECT_EQ(0u, moduleLoader.Count());
 }
